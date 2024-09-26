@@ -9,7 +9,6 @@ public class TankMovement : MonoBehaviour
     [SerializeField] private float m_speed = 25.0f;
     [SerializeField] private float m_rotationSpeed = 1.0f;
     private Vector2 m_movementVector = Vector2.zero;
-    //private Vector2 m_lookVector;
 
     // Start is called before the first frame update
     void Start()
@@ -26,12 +25,15 @@ public class TankMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        var targetAngle = Mathf.Atan2(m_movementVector.y,m_movementVector.x)*Mathf.Rad2Deg;
-        var rotDir = m_tankRB.rotation >= targetAngle ? -1 : 1;
+        if (m_movementVector.magnitude <= Mathf.Epsilon) return;
+        
+        var targetAngle = Vector2.SignedAngle(transform.right, m_movementVector);
+        var rotDir = Mathf.Sign(targetAngle);
 
-        if (Mathf.Abs(m_tankRB.rotation-targetAngle) >= Time.fixedDeltaTime*m_rotationSpeed)
+        if (Mathf.Abs(targetAngle) >= Time.fixedDeltaTime*m_rotationSpeed)
         {
             var rotDeg = rotDir*Time.fixedDeltaTime*m_rotationSpeed;
+            
             m_tankRB.MoveRotation(m_tankRB.rotation+rotDeg);
         }
 
@@ -43,10 +45,5 @@ public class TankMovement : MonoBehaviour
         var input = context.ReadValue<Vector2>();
         m_movementVector = new Vector2(input.x, input.y);
     }
-
-    //public void OnLook(InputAction.CallbackContext context)
-    //{
-    //    var input = context.ReadValue<Vector2>();
-    //    m_lookVector = new Vector2(input.x, input.y);
-    //}
 }
+
