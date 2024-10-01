@@ -22,16 +22,14 @@ public class TankAim : MonoBehaviour
         {
             m_lastInputVector = m_lookVector;
         }
+        else return;
 
         var targetAngle = Vector2.SignedAngle(transform.right, m_lastInputVector);
 
         var rotDir = Mathf.Sign(targetAngle);
-        if (Mathf.Abs(targetAngle) >= Time.fixedDeltaTime*m_aimSpeed)
-        {
-            var rotDeg = rotDir*Time.fixedDeltaTime*m_aimSpeed;
-            
-            transform.rotation = Quaternion.Euler(0,0,transform.eulerAngles.z+rotDeg);
-        }
+        var rotDeg = rotDir*Time.fixedDeltaTime*m_aimSpeed;
+
+        transform.rotation = Quaternion.Euler(0,0,transform.eulerAngles.z+rotDeg);
     }
 
     public void OnLook(InputAction.CallbackContext ctx)
