@@ -18,18 +18,28 @@ public class TankAim : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (m_lookVector.magnitude > Mathf.Epsilon)
-        {
-            m_lastInputVector = m_lookVector;
-        }
-        else return;
+        // [ Mathf.Epsilon probablemente habria que cambiarlo por un grado de deadzone para lidiar con el stick drift ]
+        // [ o a lo mejor no, porque el propio input system implementa procesadores para el deadzone, etc. Hay que verlo ]
+        
+        // Actualizar direcc. de apuntado solo si el joystick esta siendo desplazado
+        m_lastInputVector = (m_lookVector.magnitude > Mathf.Epsilon) ? m_lookVector : m_lastInputVector;
 
         var targetAngle = Vector2.SignedAngle(transform.right, m_lastInputVector);
+        float rotDeg = 0f;
 
-        var rotDir = Mathf.Sign(targetAngle);
-        var rotDeg = rotDir*Time.fixedDeltaTime*m_aimSpeed;
+        if(Mathf.Abs(targetAngle) >= Time.fixedDeltaTime*m_aimSpeed)
+        {
+            rotDeg = Mathf.Sign(targetAngle)*Time.fixedDeltaTime*m_aimSpeed;
+        }
+        else
+        {
+            rotDeg = targetAngle;
+        }
 
-        transform.rotation = Quaternion.Euler(0,0,transform.eulerAngles.z+rotDeg);
+        if (Mathf.Abs(rotDeg) > Mathf.Epsilon)
+        {
+            transform.rotation = Quaternion.Euler(0,0,transform.eulerAngles.z+rotDeg);
+        }
     }
 
     public void OnLook(InputAction.CallbackContext ctx)

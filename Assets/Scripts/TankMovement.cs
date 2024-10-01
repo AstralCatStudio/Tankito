@@ -51,6 +51,7 @@ public class TankMovement : MonoBehaviour
             m_tankRB.MoveRotation(m_tankRB.rotation+rotDeg);
             m_turret.Rotate(new Vector3(0,0,-rotDeg));
         }
+        
         m_tankRB.MovePosition(m_tankRB.position + m_movementVector*Time.fixedDeltaTime*m_speed);
     }
 
