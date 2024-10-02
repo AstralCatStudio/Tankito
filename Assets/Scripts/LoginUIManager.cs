@@ -7,10 +7,11 @@ using Unity.Services.Relay.Models;
 using Unity.Services.Relay;
 using UnityEngine;
 
-public class InitUIManager : MonoBehaviour
+public class LoginGUIManager : MonoBehaviour
 {
-    private int maxConnections = 4;
+    const int maxConnections = 4;
     string joinCode = "Enter room code...";
+
 
     void OnGUI()
     {
@@ -27,14 +28,14 @@ public class InitUIManager : MonoBehaviour
         GUILayout.EndArea();
     }
 
-    static void StartButtons()
+    void StartButtons()
     {
-        if (GUILayout.Button("Host")) NetworkManager.Singleton.StartHost();
-        if (GUILayout.Button("Client")) NetworkManager.Singleton.StartClient();
-        if (GUILayout.Button("Server")) NetworkManager.Singleton.StartServer();
+        if (GUILayout.Button("Host")) StartHost();
+        if (GUILayout.Button("Client")) StartClient();
+        joinCode = GUILayout.TextField(joinCode);
     }
 
-    static void StatusLabels()
+    void StatusLabels()
     {
         var mode = NetworkManager.Singleton.IsHost ?
             "Host" : NetworkManager.Singleton.IsServer ? "Server" : "Client";
@@ -42,6 +43,8 @@ public class InitUIManager : MonoBehaviour
         GUILayout.Label("Transport: " +
             NetworkManager.Singleton.NetworkConfig.NetworkTransport.GetType().Name);
         GUILayout.Label("Mode: " + mode);
+        GUILayout.Label("Room: " + joinCode);
+
     }
 
     async void StartHost()
