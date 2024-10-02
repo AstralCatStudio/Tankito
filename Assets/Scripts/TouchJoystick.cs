@@ -116,7 +116,7 @@ namespace Tankito.Mobile
                 default:
                     Debug.LogWarning("Invalid hotspotPosition configured");
                     return;
-                break;
+                //break;
             }
             
             JoystickFinger = TouchedFinger;
