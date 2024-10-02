@@ -1,8 +1,12 @@
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Controls;
 using UnityEngine.InputSystem.EnhancedTouch;
 using UnityEngine.InputSystem.Layouts;
+using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.InputSystem.OnScreen;
 using ETouch = UnityEngine.InputSystem.EnhancedTouch;
 
@@ -58,6 +62,14 @@ namespace Tankito.Mobile
             EnhancedTouchSupport.Disable();
         }
 
+        // Ayuda no se como arreglar este bug nada funciona // void FixedUpdate()
+        // Ayuda no se como arreglar este bug nada funciona // {
+        // Ayuda no se como arreglar este bug nada funciona //     if (JoystickFinger != null && JoystickFinger.isActive)
+        // Ayuda no se como arreglar este bug nada funciona //     {
+        // Ayuda no se como arreglar este bug nada funciona //         SendValueToControl(DisplacementAmount);
+        // Ayuda no se como arreglar este bug nada funciona //     }
+        // Ayuda no se como arreglar este bug nada funciona // }
+
         private void HandleFingerMove(Finger MovedFinger)
         {
             if (MovedFinger == JoystickFinger)
@@ -66,15 +78,9 @@ namespace Tankito.Mobile
                 float maxMovement = JoystickSize.x / 2f;
                 ETouch.Touch currentTouch = MovedFinger.currentTouch;
 
-                if (Vector2.Distance(
-                        currentTouch.screenPosition,
-                        Joystick.RectTransform.anchoredPosition
-                    ) > maxMovement)
+                if (Vector2.Distance(currentTouch.screenPosition, Joystick.RectTransform.anchoredPosition) > maxMovement)
                 {
-                    knobPosition = (
-                        currentTouch.screenPosition - Joystick.RectTransform.anchoredPosition
-                        ).normalized
-                        * maxMovement;
+                    knobPosition = (currentTouch.screenPosition - Joystick.RectTransform.anchoredPosition).normalized * maxMovement;
                 }
                 else
                 {
@@ -171,24 +177,6 @@ namespace Tankito.Mobile
 
             GUI.Label(new Rect(10, 10, 500, 20), $"Screen Size ({Screen.width}, {Screen.height})", labelStyle);
         }
-
-        /* #if UNITY_EDITOR
-            [CustomEditor(typeof(PlayerTouchMovement))]
-            internal class PlayerTouchMovementEditor : UnityEditor.Editor
-            {
-                private SerializedProperty m_ControlPathInternal;
-                public void OnEnable()
-                {
-                    m_ControlPathInternal = serializedObject.FindProperty(nameof(PlayerTouchMovement.m_ControlPath));
-                }
-                public override void OnInspectorGUI()
-                {
-                    EditorGUILayout.PropertyField(m_ControlPathInternal);
-
-                    serializedObject.ApplyModifiedProperties();
-                }
-            }
-        #endif */
     }
 
 }

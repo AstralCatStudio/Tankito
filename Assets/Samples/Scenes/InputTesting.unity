@@ -1130,6 +1130,7 @@ GameObject:
   - component: {fileID: 1901236626}
   - component: {fileID: 1901236628}
   - component: {fileID: 1901236629}
+  - component: {fileID: 1901236630}
   m_Layer: 0
   m_Name: PlayerInput
   m_TagString: Untagged
@@ -1239,7 +1240,7 @@ MonoBehaviour:
     m_ActionId: ba1d9813-e053-4d32-848a-0af61003571e
     m_ActionName: UI/TrackedDeviceOrientation
   m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: 
+  m_DefaultControlScheme: Gamepad
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 662945600}
@@ -1275,6 +1276,7 @@ MonoBehaviour:
   m_ControlPath: <Gamepad>/leftStick
   m_hotspotPosition: 0
   m_hotspotDeadzone: 100
+  debugGUI: 0
 --- !u!114 &1901236629
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1292,6 +1294,19 @@ MonoBehaviour:
   m_ControlPath: <Gamepad>/rightStick
   m_hotspotPosition: 1
   m_hotspotDeadzone: 100
+  debugGUI: 0
+--- !u!114 &1901236630
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1901236625}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83e5c44f3268a61458ea1e1f373bc02b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
