@@ -462,7 +462,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_tankRB: {fileID: 694008888}
   m_speed: 4
-  m_rotationSpeed: 270
+  m_rotationSpeed: 320
   m_turret: {fileID: 1454920368}
 --- !u!50 &694008888
 Rigidbody2D:
@@ -1042,7 +1042,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0926dc78b4e91b745bf93adabf7b4246, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_aimSpeed: 720
+  m_aimSpeed: 900
 --- !u!1 &1896859534
 GameObject:
   m_ObjectHideFlags: 0

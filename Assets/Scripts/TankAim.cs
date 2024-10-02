@@ -45,6 +45,22 @@ public class TankAim : MonoBehaviour
     public void OnLook(InputAction.CallbackContext ctx)
     {
         var input = ctx.ReadValue<Vector2>();
-        m_lookVector = new Vector2(input.x, input.y);
+
+        if (ctx.control.path != "/Mouse/position")
+        {
+            m_lookVector = new Vector2(input.x, input.y);
+        }
+        else
+        {
+            // Mouse control fallback/input processing
+            m_lookVector = input - (Vector2)Camera.main.WorldToScreenPoint(transform.position);
+        }
+
+        if (m_lookVector.magnitude > 1)
+        {
+            m_lookVector.Normalize();
+        }
+
+        Debug.Log($"OnLook m_lookVector: {m_lookVector}");
     }
 }
