@@ -36,9 +36,9 @@ public class TankMovement : MonoBehaviour
         var targetAngle = Vector2.SignedAngle(transform.right, m_movementVector);
         float rotDeg = 0f;
 
-        if (Mathf.Abs(targetAngle) >= Time.fixedDeltaTime*m_rotationSpeed)
+        if (Mathf.Abs(targetAngle) >= Time.fixedDeltaTime * m_rotationSpeed)
         {
-            rotDeg = Mathf.Sign(targetAngle)*Time.fixedDeltaTime*m_rotationSpeed;
+            rotDeg = Mathf.Sign(targetAngle) * Time.fixedDeltaTime * m_rotationSpeed;
         }
         else
         {
@@ -52,13 +52,14 @@ public class TankMovement : MonoBehaviour
             m_turret.Rotate(new Vector3(0,0,-rotDeg));
         }
         
-        m_tankRB.MovePosition(m_tankRB.position + m_movementVector*Time.fixedDeltaTime*m_speed);
+        m_tankRB.MovePosition(m_tankRB.position + m_speed * Time.fixedDeltaTime * m_movementVector);
     }
 
     public void OnMove(InputAction.CallbackContext context)
     {
         var input = context.ReadValue<Vector2>();
         m_movementVector = new Vector2(input.x, input.y);
+        Debug.Log($"OnMove input: {input}");
     }
 }
 

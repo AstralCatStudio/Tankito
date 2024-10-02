@@ -34,6 +34,8 @@ namespace Tankito.Mobile
         [SerializeField] private ScreenHotspot m_hotspotPosition;
         [SerializeField] private float m_hotspotDeadzone = 100f;
 
+        public bool debugGUI;
+
 
 
         protected override void OnEnable()
@@ -93,8 +95,8 @@ namespace Tankito.Mobile
                 Joystick.Knob.anchoredPosition = Vector2.zero;
                 Joystick.gameObject.SetActive(false);
                 DisplacementAmount = Vector2.zero;
+                SendValueToControl(Vector2.zero);
             }
-            SendValueToControl(Vector2.zero);
         }
 
         private void HandleFingerDown(Finger TouchedFinger)
@@ -147,6 +149,8 @@ namespace Tankito.Mobile
 
         private void OnGUI()
         {
+            if (!debugGUI) return;
+
             GUIStyle labelStyle = new GUIStyle()
             {
                 fontSize = 24,
