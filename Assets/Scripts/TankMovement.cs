@@ -46,11 +46,8 @@ public class TankMovement : MonoBehaviour
             rotDeg = targetAngle;
         }
 
-        if(Mathf.Abs(rotDeg) > Mathf.Epsilon)
-        {
-            m_tankRB.MoveRotation(m_tankRB.rotation+rotDeg);
-            m_turret.Rotate(new Vector3(0,0,-rotDeg));
-        }
+        m_tankRB.MoveRotation(m_tankRB.rotation+rotDeg);
+        m_turret.Rotate(new Vector3(0,0,-rotDeg));
         
         m_tankRB.MovePosition(m_tankRB.position + m_speed * Time.fixedDeltaTime * m_movementVector);
     }
