@@ -51,8 +51,6 @@ public class TankMovement : MonoBehaviour
             // Si el angulo es demasiado pequeño entonces snapeamos a él (inferior a la mínima rotación por frame)
             rotDeg = targetAngle;
         }
-
-        
             m_tankRB.MoveRotation(m_tankRB.rotation+rotDeg);
             m_turret.Rotate(new Vector3(0,0,-rotDeg));
         
