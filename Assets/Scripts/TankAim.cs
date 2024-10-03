@@ -61,6 +61,6 @@ public class TankAim : MonoBehaviour
             m_lookVector.Normalize();
         }
 
-        Debug.Log($"OnLook m_lookVector: {m_lookVector}");
+        //Debug.Log($"OnLook m_lookVector: {m_lookVector}");
     }
 }
