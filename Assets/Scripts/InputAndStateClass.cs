@@ -8,8 +8,14 @@ public class ClientInputState<T>
     public int simulationFrame;
 }
 
-public class SimulationState<T> where T: Object
+public class SimulationState<T>
 {
-    public List<T> simulationList;
+    public List<T> simulationList = new List<T>();
     public int simulationFrame;
+
+    public SimulationState(List<T> list, int simulationFrame)
+    {
+        simulationList = new List<T>(list);
+        this.simulationFrame = simulationFrame;
+    }
 }

@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Unity.Netcode;
 using System.Globalization;
+using System.Runtime.InteropServices.WindowsRuntime;
 
 public class TankMovement : NetworkBehaviour
 {
@@ -18,6 +19,15 @@ public class TankMovement : NetworkBehaviour
         NetworkVariableWritePermission.Server);
 
     private ClientInputState<Vector2> inputState = new ClientInputState<Vector2>(); //Clase que guarda los input y sus frames
+    private SimulationState<object> simulationState; //Clase que guarda las salidas de simulación(en este caso posición y rotación)
+
+    private const int SIZE_CACHE = 1024;
+    private int cache_index = 0;
+    private ClientInputState<Vector2>[] inputStateCache = new ClientInputState<Vector2>[SIZE_CACHE];
+    private SimulationState<object>[] simulationStateCache = new SimulationState<object>[SIZE_CACHE];
+
+    private enum SimulationStateTankMovement{Position, Rotation}
+
     private int simulationFrame = 0;
 
 
@@ -43,6 +53,17 @@ public class TankMovement : NetworkBehaviour
         }
     }
 
+    /*private void Update()
+    {
+        if (IsOwner)
+        {
+            inputState = new ClientInputState<Vector2>
+            {
+                input = m_movementVector,
+            };
+        }
+    }*/
+
     void FixedUpdate()
     {
         if (IsServer)
@@ -57,18 +78,45 @@ public class TankMovement : NetworkBehaviour
         }
         else
         {
-            transform.position = _TankPosition.Value;
-            transform.rotation = _TankRotation.Value;
+            if (inputState.input.magnitude <= Mathf.Epsilon) 
+            {
+                simulationFrame++;
+                return;
+            }
+            
+            inputState.simulationFrame = simulationFrame;
+
+            ProcessInput(inputState.input);
+
+            simulationState = GetSimulationState(inputState);
+
+            cache_index = simulationFrame % SIZE_CACHE;
+
+            inputStateCache[cache_index] = inputState;
+            simulationStateCache[cache_index] = simulationState;
+
+            simulationFrame++;
+            /*transform.position = _TankPosition.Value;
+            transform.rotation = _TankRotation.Value;*/
+            
         }
         
     }
 
     public void OnMove(InputAction.CallbackContext context)
     {
-        var input = context.ReadValue<Vector2>();
-        //m_movementVector = new Vector2(input.x, input.y);
-        Debug.Log($"OnMove input: {input}");
-        OnMoveServerRpc(input);
+        var newInput = context.ReadValue<Vector2>();
+
+        if (IsOwner)
+        {
+            inputState = new ClientInputState<Vector2>
+            {
+                input = newInput
+            };
+        }
+        //m_movementVector = new Vector2(newInput.x, newInput.y);
+        Debug.Log($"OnMove input: {newInput}");
+        //OnMoveServerRpc(newInput);
     }
 
     [ServerRpc]
@@ -79,7 +127,7 @@ public class TankMovement : NetworkBehaviour
 
     private void ProcessInput(Vector2 input)
     {
-        var targetAngle = Vector2.SignedAngle(transform.right, m_movementVector);
+        var targetAngle = Vector2.SignedAngle(transform.right, input);
         float rotDeg = 0f;
 
         if (Mathf.Abs(targetAngle) >= Time.fixedDeltaTime * m_rotationSpeed)
@@ -98,7 +146,12 @@ public class TankMovement : NetworkBehaviour
             m_turret.Rotate(new Vector3(0, 0, -rotDeg));
         }
 
-        m_tankRB.MovePosition(m_tankRB.position + m_speed * Time.fixedDeltaTime * m_movementVector);
+        m_tankRB.MovePosition(m_tankRB.position + m_speed * Time.fixedDeltaTime * input);
+    }
+
+    private SimulationState<object> GetSimulationState(ClientInputState<Vector2> inputState)
+    {
+        return new SimulationState<object> (new List<object> {transform.position, transform.rotation}, inputState.simulationFrame);       
     }
 }
 
