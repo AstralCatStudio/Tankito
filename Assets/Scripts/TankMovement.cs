@@ -203,6 +203,7 @@ public class TankMovement : NetworkBehaviour
 
     private void Reconciliate()
     {
+        Debug.Log("Comienza la reconciliación");
         if (serverSimulationState.simulationFrame <= lastCorrectedFrame) return;
 
         int cache_index = serverSimulationState.simulationFrame % SIZE_CACHE;
@@ -245,12 +246,12 @@ public class TankMovement : NetworkBehaviour
                 rewindCachedInput.simulationFrame = rewindFrame;
 
                 SimulationState rewoundSimulationState = GetSimulationState(rewindCachedInput);
-                simulationStateCache[rewindFrame] = rewoundSimulationState;
+                simulationStateCache[cache_index] = rewoundSimulationState;
+                rewindFrame++;
             }
         }
 
         lastCorrectedFrame = serverSimulationState.simulationFrame;
-        //serverSimulationState = null;
     }
 }
 
