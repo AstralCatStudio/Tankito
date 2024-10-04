@@ -7,6 +7,8 @@ public class GameManager : NetworkBehaviour
     private NetworkManager _networkManager;
     private GameObject _playerPrefab;
 
+    private string _playerName;
+
     public static GameManager Instance { get; private set; }
 
     void Awake()
@@ -30,6 +32,7 @@ public class GameManager : NetworkBehaviour
         _networkManager.OnServerStarted += OnServerStarted;
         _networkManager.OnClientConnectedCallback += OnClientConnected;
 
+        _playerName = "Default name";
     }
 
     private void OnServerStarted()
@@ -45,5 +48,12 @@ public class GameManager : NetworkBehaviour
             var newPlayer = Instantiate(_playerPrefab);
             newPlayer.GetComponent<NetworkObject>().SpawnAsPlayerObject(obj);
         }
+    }
+
+    public void SavePlayerName(string name)
+    {
+        _playerName = name;
+        Debug.Log("GameManager guarda el nombre:" + _playerName);
+        SceneManager.LoadScene("NetcodeScene");
     }
 }
