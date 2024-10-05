@@ -54,6 +54,6 @@ public class GameManager : NetworkBehaviour
     {
         _playerName = name;
         Debug.Log("GameManager guarda el nombre:" + _playerName);
-        SceneManager.LoadScene("NetcodeScene");
+        SceneManager.LoadScene("PlayMenu");
     }
 }
