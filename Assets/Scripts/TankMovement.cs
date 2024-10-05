@@ -75,7 +75,7 @@ public class TankMovement : MonoBehaviour
     }
     public void OnDash(InputAction.CallbackContext context)
     {
-        if(m_dashTimer<= -m_dashCooldown)
+        if(context.performed && m_dashTimer<= -m_dashCooldown)
         {
             m_DashVector = Vector3.Normalize(m_movementVector);
             m_dashTimer = m_dashDuration;
