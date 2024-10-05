@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class UIName : MonoBehaviour
 {
@@ -27,7 +28,8 @@ public class UIName : MonoBehaviour
         string name = inputName.text;
         if(name != "")
         {
-            GameManager.Instance.SavePlayerName(name);
+            GameManager.Instance.SetPlayerName(name);
+            SceneManager.LoadScene("StartMenu");
         }
         else
         {
