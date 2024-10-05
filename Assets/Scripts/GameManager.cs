@@ -1,13 +1,12 @@
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class GameManager : NetworkBehaviour
 {
     private NetworkManager _networkManager;
     private GameObject _playerPrefab;
 
-    private string _playerName;
+    private string _playerName = "Invited";
 
     public static GameManager Instance { get; private set; }
 
@@ -32,7 +31,7 @@ public class GameManager : NetworkBehaviour
         _networkManager.OnServerStarted += OnServerStarted;
         _networkManager.OnClientConnectedCallback += OnClientConnected;
 
-        _playerName = "Default name";
+        //_playerName = "Invited";
     }
 
     private void OnServerStarted()
@@ -50,10 +49,14 @@ public class GameManager : NetworkBehaviour
         }
     }
 
-    public void SavePlayerName(string name)
+    public void SetPlayerName(string name)
     {
         _playerName = name;
         Debug.Log("GameManager guarda el nombre:" + _playerName);
-        SceneManager.LoadScene("PlayMenu");
+    }
+
+    public string GetPlayerName()
+    {
+        return _playerName;
     }
 }
