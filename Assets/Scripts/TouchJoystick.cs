@@ -86,14 +86,6 @@ namespace Tankito.Mobile
             EnhancedTouchSupport.Disable();
         }
 
-        // Ayuda no se como arreglar este bug nada funciona // void FixedUpdate()
-        // Ayuda no se como arreglar este bug nada funciona // {
-        // Ayuda no se como arreglar este bug nada funciona //     if (JoystickFinger != null && JoystickFinger.isActive)
-        // Ayuda no se como arreglar este bug nada funciona //     {
-        // Ayuda no se como arreglar este bug nada funciona //         SendValueToControl(DisplacementAmount);
-        // Ayuda no se como arreglar este bug nada funciona //     }
-        // Ayuda no se como arreglar este bug nada funciona // }
-
         private void HandleFingerMove(Finger MovedFinger)
         {
             if (MovedFinger == JoystickFinger)
@@ -101,24 +93,24 @@ namespace Tankito.Mobile
                 Vector2 knobPosition;
                 float maxMovement = JoystickSize.x / 2f ;
                 ETouch.Touch currentTouch = MovedFinger.currentTouch;
+                Vector2 currentTouchScreenPosition = currentTouch.screenPosition * 1f/m_parentCanvas.scaleFactor;
 
-                if (Vector2.Distance(currentTouch.screenPosition * 1f/m_parentCanvas.scaleFactor, JoystickRect.anchoredPosition) > maxMovement)
+                if (Vector2.Distance(currentTouchScreenPosition, JoystickRect.anchoredPosition) > maxMovement)
                 {
-                    Debug.Log("Finger outside yolk");
+                    //Debug.Log("Finger outside yolk");
                     if (m_stickType == StickType.Follow)
                     {
                         Debug.Log("TODO: Implement Follow stick");
                     }
-                    knobPosition = (currentTouch.screenPosition * 1f/m_parentCanvas.scaleFactor - JoystickRect.anchoredPosition).normalized * maxMovement;
+                    knobPosition = (currentTouchScreenPosition - JoystickRect.anchoredPosition).normalized * maxMovement;
                 }
                 else
                 {
-                    knobPosition = currentTouch.screenPosition * 1f/m_parentCanvas.scaleFactor - JoystickRect.anchoredPosition;
+                    knobPosition = currentTouchScreenPosition - JoystickRect.anchoredPosition;
                 }
 
                 JoystickHandleRect.anchoredPosition = knobPosition;
                 DisplacementAmount = knobPosition / maxMovement;
-                Debug.Log($"Joystick displacement vector: {DisplacementAmount} | {DisplacementAmount.magnitude}");
                 SendValueToControl(DisplacementAmount);
             }
         }
@@ -139,74 +131,84 @@ namespace Tankito.Mobile
         {
             if (JoystickFinger != null) return;
 
+            Vector2 touchScreenPosition = TouchedFinger.screenPosition * 1f/m_parentCanvas.scaleFactor;
+
             switch(m_stickType)
             {
                 case StickType.Fixed:
-                    if (Vector2.Distance(TouchedFinger.screenPosition, JoystickRect.position) > JoystickSize.x/2f)
+                    
+                    if (Vector2.Distance(touchScreenPosition, JoystickRect.anchoredPosition) > JoystickSize.x/2f)
+                    {
+                    Debug.Log($"FAILED touch at {touchScreenPosition} | stick anchor {JoystickRect.anchoredPosition}");
                         return;
+                    }
+                    Debug.Log($"SUCCESFUL touch at {touchScreenPosition} | stick anchor {JoystickRect.anchoredPosition}");
 
                 break;
 
                 case StickType.Follow:
                 case StickType.Floating:
-
+                    var scaledDeadzone = m_hotspotDeadzone * 1f/m_parentCanvas.scaleFactor;
                     switch(m_hotspotPosition)
                     {
                         case ScreenHotspot.Left:
-                            if (TouchedFinger.screenPosition.x+Mathf.Abs(m_hotspotDeadzone * m_parentCanvas.scaleFactor) >= Screen.width / 2f)
+                            if (touchScreenPosition.x+Mathf.Abs(scaledDeadzone) >= Screen.width / 2f * 1f/m_parentCanvas.scaleFactor)
                                 return;
                         break;
 
                         case ScreenHotspot.Right:
-                            if (TouchedFinger.screenPosition.x-Mathf.Abs(m_hotspotDeadzone * m_parentCanvas.scaleFactor) <= Screen.width / 2f)
+                            if (touchScreenPosition.x-Mathf.Abs(scaledDeadzone) <= Screen.width / 2f * 1f/m_parentCanvas.scaleFactor)
                                 return;
                         break;
                         
                         default:
                             Debug.LogWarning("Invalid hotspotPosition configured");
                             return;
-                        //break;
                     }
                     
-                    // NO FUNCIONA AYUDA!!!
-                    JoystickRect.anchoredPosition = ClampStartPosition(TouchedFinger.screenPosition);
+                    
+                    JoystickRect.anchoredPosition = ClampStartPosition(touchScreenPosition);
+                    DisplacementAmount = Vector2.zero;
                     
                 break;
             }
 
     
             JoystickFinger = TouchedFinger;
-            DisplacementAmount = Vector2.zero;
             if (m_hideStick)    JoystickRect.gameObject.SetActive(true);
             JoystickRect.sizeDelta = JoystickSize;
-            
+            JoystickHandleRect.sizeDelta *= JoystickSize/JoystickRect.sizeDelta;
+            HandleFingerMove(TouchedFinger);
         }
 
-/// <summary>
-/// "scaledStartPosition" must be in Cavnas coordinates
-/// </summary>
-/// <param name="scaledStartPosition"></param>
-/// <returns></returns>
-        private Vector2 ClampStartPosition(Vector2 scaledStartPosition) // NO FUNCIONA AYUDA!!!
+        /// <summary>
+        /// "scaledStartPosition" must be in Cavnas coordinates
+        /// </summary>
+        /// <param name="scaledStartPosition"></param>
+        /// <returns></returns>
+        private Vector2 ClampStartPosition(Vector2 scaledStartPosition)
         {
-            var scaledJoystickSize =  JoystickSize * 1f/m_parentCanvas.scaleFactor;
             var scaledScreenSize = new Vector2(Screen.width * 1f/m_parentCanvas.scaleFactor, Screen.height * 1f/m_parentCanvas.scaleFactor);
             
-            if (scaledStartPosition.x < scaledJoystickSize.x / 2)
+            if (scaledStartPosition.x < JoystickSize.x / 2)
             {
-                scaledStartPosition.x = scaledJoystickSize.x / 2;
+                scaledStartPosition.x = JoystickSize.x / 2;
+            }
+            else if (m_hotspotPosition == ScreenHotspot.Right && scaledStartPosition.x > scaledScreenSize.x - JoystickSize.x / 2)
+            {
+                scaledStartPosition.x = scaledScreenSize.x - JoystickSize.x / 2;
             }
 
-            if (scaledStartPosition.y < scaledJoystickSize.y / 2)
+            if (scaledStartPosition.y < JoystickSize.y / 2)
             {
-                scaledStartPosition.y = scaledJoystickSize.y / 2;
+                scaledStartPosition.y = JoystickSize.y / 2;
             }
-            else if (scaledStartPosition.y > scaledScreenSize.y - scaledJoystickSize.y / 2)
+            else if (scaledStartPosition.y > scaledScreenSize.y - JoystickSize.y / 2)
             {
-                scaledStartPosition.y = scaledScreenSize.y - scaledJoystickSize.y / 2;
+                scaledStartPosition.y = scaledScreenSize.y - JoystickSize.y / 2;
             }
 
-            return scaledStartPosition * 1f/m_parentCanvas.scaleFactor;
+            return scaledStartPosition ;
         }
 
         private void OnGUI()
@@ -236,35 +238,6 @@ namespace Tankito.Mobile
             
         }
 
-        // private void OnDrawGizmosSelected()
-        // {
-        //     if (m_stickType == StickType.Floating)
-        //     {
-        //         
-        //         float side = 0;
-        //         switch (m_hotspotPosition)
-        //         {
-        //             case ScreenHotspot.Left:
-        //             Gizmos.color = Color.blue;
-        //             side = -1;
-        //             break;
-// 
-        //             case ScreenHotspot.Right:
-        //             Gizmos.color = Color.red;
-        //             side = 1;
-        //             break;
-        //             
-        //             default:
-        //             Gizmos.color = Color.white;
-        //             break;
-        //         }
-// 
-        //         Vector3 hotspotSize = Camera.main.ScreenToWorldPoint(new Vector2 (Screen.width/2f - m_hotspotDeadzone, Screen.height)) - Camera.main.ScreenToWorldPoint(Vector2.zero);
-        //         Debug.Log($"hotspotSize = {hotspotSize}");
-        //         Vector3 hotspotCenter = Camera.main.transform.position + (Camera.main.ScreenToWorldPoint(new Vector2(Screen.width/2f + m_hotspotDeadzone,0)) - Camera.main.ScreenToWorldPoint(Vector2.zero))*side;
-        //         Gizmos.DrawWireCube(hotspotCenter, hotspotSize);
-        //     }       
-        // }
 
         #if UNITY_EDITOR
         [CustomEditor(typeof(TouchJoystick))]

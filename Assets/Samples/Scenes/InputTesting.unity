@@ -565,7 +565,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 694008883}
-  m_BodyType: 0
+  m_BodyType: 1
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
@@ -1107,9 +1107,9 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 335940564}
   - {fileID: 777308210}
   - {fileID: 1216894313}
+  - {fileID: 335940564}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -1459,11 +1459,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 978e576d737a6e649bc9c49e0f89ce10, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  JoystickSize: {x: 400, y: 400}
+  JoystickSize: {x: 375, y: 375}
   JoystickRect: {fileID: 777308210}
   JoystickHandleRect: {fileID: 1896859535}
   m_ControlPath: <Gamepad>/leftStick
-  m_hideStick: 0
+  m_hideStick: 1
   m_stickType: 1
   m_hotspotPosition: 0
   m_hotspotDeadzone: 100
@@ -1480,11 +1480,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 978e576d737a6e649bc9c49e0f89ce10, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  JoystickSize: {x: 400, y: 400}
+  JoystickSize: {x: 375, y: 375}
   JoystickRect: {fileID: 1216894313}
   JoystickHandleRect: {fileID: 610402639}
   m_ControlPath: <Gamepad>/rightStick
-  m_hideStick: 0
+  m_hideStick: 1
   m_stickType: 1
   m_hotspotPosition: 1
   m_hotspotDeadzone: 100
