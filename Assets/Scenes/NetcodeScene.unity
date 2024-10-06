@@ -164,6 +164,7 @@ GameObject:
   - component: {fileID: 379649210}
   - component: {fileID: 379649215}
   - component: {fileID: 379649209}
+  - component: {fileID: 379649216}
   m_Layer: 0
   m_Name: '@GameManager'
   m_TagString: Untagged
@@ -212,12 +213,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   GlobalObjectIdHash: 3162104120
   AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
+  SynchronizeTransform: 0
   ActiveSceneSynchronization: 0
   SceneMigrationSynchronization: 1
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
-  AutoObjectParentSync: 1
+  AutoObjectParentSync: 0
+--- !u!114 &379649216
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 379649207}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6abb2d47833511449e24b3fcee7d040, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &481387868
 GameObject:
   m_ObjectHideFlags: 0
