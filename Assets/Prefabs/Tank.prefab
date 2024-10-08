@@ -178,9 +178,9 @@ GameObject:
   m_Component:
   - component: {fileID: 6924379706836283280}
   - component: {fileID: 8019476000441952616}
-  - component: {fileID: 2613896930739194085}
   - component: {fileID: 8520293575514935909}
   - component: {fileID: 2861594592835815605}
+  - component: {fileID: -2842732508969095161}
   m_Layer: 0
   m_Name: Tank
   m_TagString: Untagged
@@ -225,22 +225,6 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
---- !u!114 &2613896930739194085
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5904161972637957731}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3149a099f6eedd140a349af6241a2336, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_tankRB: {fileID: 8520293575514935909}
-  m_speed: 7.5
-  m_rotationSpeed: 720
-  m_turret: {fileID: 468154111747707519}
 --- !u!50 &8520293575514935909
 Rigidbody2D:
   serializedVersion: 4
@@ -275,7 +259,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5904161972637957731}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
   m_Name: 
@@ -295,8 +279,9 @@ MonoBehaviour:
   m_ActionEvents:
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2613896930739194085}
-        m_TargetAssemblyTypeName: TankMovement, Assembly-CSharp
+      - m_Target: {fileID: -2842732508969095161}
+        m_TargetAssemblyTypeName: Tankito.Netcode.ClientPredictedTankController,
+          Assembly-CSharp
         m_MethodName: OnMove
         m_Mode: 0
         m_Arguments:
@@ -306,11 +291,24 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
-        m_CallState: 2
+        m_CallState: 1
     m_ActionId: 667483b5-0a25-42a1-b919-9fa829a129ad
     m_ActionName: Player/Move[/Keyboard/w,/Keyboard/upArrow,/Keyboard/s,/Keyboard/downArrow,/Keyboard/a,/Keyboard/leftArrow,/Keyboard/d,/Keyboard/rightArrow]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: -2842732508969095161}
+        m_TargetAssemblyTypeName: Tankito.Netcode.ClientPredictedTankController,
+          Assembly-CSharp
+        m_MethodName: OnAim
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: b1d11c1c-0839-464f-b04b-8526cc7d7fe4
     m_ActionName: Player/Look[/Mouse/position]
   - m_PersistentCalls:
@@ -362,6 +360,23 @@ MonoBehaviour:
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &-2842732508969095161
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5904161972637957731}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4178e24b6e7d7344aacebb82b7e01d39, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_tankRB: {fileID: 8520293575514935909}
+  m_speed: 7.5
+  m_rotationSpeed: 270
+  m_turret: {fileID: 468154111747707519}
+  m_aimSpeed: 800
 --- !u!1 &6459951814770460290
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Unity.Netcode;
@@ -66,6 +66,7 @@ namespace Tankito.Netcode
             while(ClockManager.simulationClock.TicksLeft())
             {
                 int currentTick = ClockManager.simulationClock.CurrentTick;
+                Debug.Log("Tick: currentTick");
 
                 if (IsOwner)
                 {
@@ -92,19 +93,18 @@ namespace Tankito.Netcode
                     while (m_serverInputQueue.Count > 0)
                     {
                         InputPayload clientInput = m_serverInputQueue.Dequeue();
-                        Debug.Log("La psoición inicial en el SERVIDOR antes de procesar FRAME" + clientInput.timestamp + " es: " + m_tankRB.position + "-" + m_tankRB.rotation);
+                        //Debug.Log("La psoición inicial en el SERVIDOR antes de procesar FRAME" + clientInput.timestamp + " es: " + m_tankRB.position + "-" + m_tankRB.rotation);
                         // Process the input.
                         ProcessInput(clientInput);
-
-                        // Obtain the current SimulationState.
-                        StatePayload newAuthState = GetSimulationState(currentTick);
-
-                        // Send the state back to the client.
-                        SendAuthStateClientRpc(newAuthState);
                     }
+
+                    // Obtain the current SimulationState.
+                    StatePayload newAuthState = GetSimulationState(currentTick);
+
+                    // Send the state back to the client.
+                    SendAuthStateClientRpc(newAuthState);
                 }
             }
-            
         }
 
 
@@ -155,7 +155,6 @@ namespace Tankito.Netcode
 
             }
             */
-
         }
 
         private void MoveTank(Vector2 movementVector)
@@ -193,10 +192,7 @@ namespace Tankito.Netcode
                 rotDeg = targetAngle;
             }
 
-            if (Mathf.Abs(rotDeg) > Mathf.Epsilon)
-            {
-                transform.rotation = Quaternion.Euler(0,0,transform.eulerAngles.z+rotDeg);
-            }
+            transform.rotation = Quaternion.Euler(0,0,transform.eulerAngles.z+rotDeg);
         }
 
         private StatePayload GetSimulationState(int timestamp)
@@ -207,7 +203,7 @@ namespace Tankito.Netcode
                 position = m_tankRB.position,
                 rotation = m_tankRB.rotation,
                 velocity = m_tankRB.velocity
-            };       
+            };
         }
 
 #region RPC Calls
@@ -234,6 +230,8 @@ namespace Tankito.Netcode
                     m_lastAuthState = authState;
                 }
                 //Debug.Log("La simulación del SERVIDOR en el frame " + serverSimulationState.simulationFrame + " es: " + serverSimulationState.position + "-" + serverSimulationState.rotation);
+
+                SetState(authState);
             }   
         }
 
@@ -315,6 +313,7 @@ namespace Tankito.Netcode
             lastCorrectedFrame = m_lastAuthState.simulationFrame;
         }
         */
+
 #endregion
     }
 }

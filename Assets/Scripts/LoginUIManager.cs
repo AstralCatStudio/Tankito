@@ -33,6 +33,7 @@ namespace Tankito.Netcode
         void StartButtons()
         {
             if (GUILayout.Button("Host")) StartHost();
+            if (GUILayout.Button("Server")) StartServer();
             if (GUILayout.Button("Client")) StartClient();
             joinCode = GUILayout.TextField(joinCode);
         }
@@ -57,7 +58,7 @@ namespace Tankito.Netcode
                 await AuthenticationService.Instance.SignInAnonymouslyAsync();
             }
             Allocation allocation = await RelayService.Instance.CreateAllocationAsync(maxConnections);
-            NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(new RelayServerData(allocation, "wss"));
+            NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(new RelayServerData(allocation, "dtls"));
             joinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
             TextEditor te = new TextEditor(); te.text = joinCode; te.SelectAll(); te.Copy();
             NetworkManager.Singleton.StartHost();
@@ -72,8 +73,22 @@ namespace Tankito.Netcode
             }
 
             var joinAllocation = await RelayService.Instance.JoinAllocationAsync(joinCode: joinCode);
-            NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(new RelayServerData(joinAllocation, "wss"));
+            NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(new RelayServerData(joinAllocation, "dtls"));
             NetworkManager.Singleton.StartClient();
+        }
+
+        async void StartServer()
+        {
+            await UnityServices.InitializeAsync();
+            if (!AuthenticationService.Instance.IsSignedIn)
+            {
+                await AuthenticationService.Instance.SignInAnonymouslyAsync();
+            }
+            Allocation allocation = await RelayService.Instance.CreateAllocationAsync(maxConnections);
+            NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(new RelayServerData(allocation, "dtls"));
+            joinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
+            TextEditor te = new TextEditor(); te.text = joinCode; te.SelectAll(); te.Copy();
+            NetworkManager.Singleton.StartServer();
         }
     }
 }
