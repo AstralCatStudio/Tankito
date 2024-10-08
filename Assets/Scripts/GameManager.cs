@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Tankito.Netcode;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -31,6 +33,8 @@ public class GameManager : NetworkBehaviour
         _networkManager.OnServerStarted += OnServerStarted;
         _networkManager.OnClientConnectedCallback += OnClientConnected;
 
+        AutoPhysics2DUpdate(false);
+
         //_playerName = "Invited";
     }
 
@@ -58,5 +62,17 @@ public class GameManager : NetworkBehaviour
     public string GetPlayerName()
     {
         return _playerName;
+    }
+
+    public void AutoPhysics2DUpdate(bool auto)
+    {
+        if (!auto)
+        {
+            Physics2D.simulationMode = SimulationMode2D.Script;
+        }
+        else
+        {
+            Physics2D.simulationMode = SimulationMode2D.FixedUpdate;
+        }
     }
 }

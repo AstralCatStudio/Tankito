@@ -11,27 +11,27 @@ namespace Tankito.Netcode
             Manual
         }
 
-        const uint DEFAULT_TICKRATE = 60;
+        const int DEFAULT_TICKRATE = 60;
         /// <summary>
         /// In Ticks Per Second (t/s).
         /// </summary>
-        public uint TickRate { get => m_tickRate; }
-        public uint CurrentTick { get => m_currentTick; }
+        public int TickRate { get => m_tickRate; }
+        public int CurrentTick { get => m_currentTick; }
         public float TickPeriod { get => m_tickPeriod; }
         public TickTriggerMode Mode { get => m_mode; }
         public bool IsRunning { get => m_active; }
         
-        private readonly uint m_tickRate;
+        private readonly int m_tickRate;
         private readonly float m_tickPeriod;
         private TickTriggerMode m_mode;
         private bool m_active;
         public TickDelegate OnTick;
 
         public delegate void TickDelegate();
-        private uint m_currentTick;
+        private int m_currentTick;
         private float time;
 
-        public Clock(uint tickRate = DEFAULT_TICKRATE, TickTriggerMode mode = TickTriggerMode.Auto, bool startRunning = false)
+        public Clock(int tickRate = DEFAULT_TICKRATE, TickTriggerMode mode = TickTriggerMode.Auto, bool startRunning = false)
         {
             m_tickRate = tickRate;
             m_tickPeriod = 1f/tickRate;
@@ -41,6 +41,7 @@ namespace Tankito.Netcode
 
         public void Tick()
         {
+            //Debug.Log("TICK");
             m_currentTick++;
         }
 
