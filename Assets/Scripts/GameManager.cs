@@ -2,77 +2,100 @@ using System.Collections.Generic;
 using Tankito.Netcode;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
-public class GameManager : NetworkBehaviour
+namespace Tankito
 {
-    private NetworkManager _networkManager;
-    private GameObject _playerPrefab;
-
-    private string _playerName = "Invited";
-
-    public static GameManager Instance { get; private set; }
-
-    void Awake()
+    public class GameManager : NetworkBehaviour
     {
-        if (Instance == null)
+        private NetworkManager m_networkManager;
+        [SerializeField]
+        private PlayerInput m_playerInput;
+        private TankitoInputActions m_inputActions;
+
+        [SerializeField]
+        private GameObject m_playerPrefab;
+
+        private string m_playerName = "Invited";
+
+        public static GameManager Instance { get; private set; }
+
+        void Awake()
         {
-            Instance = this;
+            if (Instance == null)
+            {
+                Instance = this;
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
+            DontDestroyOnLoad(gameObject);
         }
-        else
+
+        private void Start()
         {
-            Destroy(gameObject);
+            m_networkManager = NetworkManager.Singleton;
+
+            if (m_playerPrefab == null) m_playerPrefab = m_networkManager.NetworkConfig.Prefabs.Prefabs[0].Prefab;
+            if (m_playerPrefab == null) Debug.LogWarning("Something went wron, couldn't obtain player prefab (frist prefab in networkconfig)");
+
+            m_networkManager.OnServerStarted += OnServerStarted;
+            m_networkManager.OnClientConnectedCallback += OnClientConnected;
+
+            AutoPhysics2DUpdate(false);
+
+            m_inputActions = new TankitoInputActions();
+            m_playerInput.actions = m_inputActions.asset;
+            Debug.Log($"{m_inputActions.GetHashCode()}");
+
+            //_playerName = "Invited";
         }
-        DontDestroyOnLoad(gameObject);
-    }
 
-    private void Start()
-    {
-        _networkManager = NetworkManager.Singleton;
-        _playerPrefab = _networkManager.NetworkConfig.Prefabs.Prefabs[0].Prefab;
-
-        _networkManager.OnServerStarted += OnServerStarted;
-        _networkManager.OnClientConnectedCallback += OnClientConnected;
-
-        AutoPhysics2DUpdate(false);
-
-        //_playerName = "Invited";
-    }
-
-    private void OnServerStarted()
-    {
-        print("Servidor inicalizado.");
-    }
-
-    private void OnClientConnected(ulong obj)
-    {
-        if (IsServer)
+        private void OnServerStarted()
         {
-            print("Cliente se conecta");
-            var newPlayer = Instantiate(_playerPrefab);
-            newPlayer.GetComponent<NetworkObject>().SpawnAsPlayerObject(obj);
+            print("Servidor inicalizado.");        
         }
-    }
 
-    public void SetPlayerName(string name)
-    {
-        _playerName = name;
-        Debug.Log("GameManager guarda el nombre:" + _playerName);
-    }
-
-    public string GetPlayerName()
-    {
-        return _playerName;
-    }
-
-    public void AutoPhysics2DUpdate(bool auto)
-    {
-        if (!auto)
+        private void OnClientConnected(ulong clientId)
         {
-            Physics2D.simulationMode = SimulationMode2D.Script;
+            if (IsServer)
+            {
+                print("Cliente se conecta");
+                var newPlayer = Instantiate(m_playerPrefab).GetComponent<NetworkObject>();
+
+                newPlayer.SpawnAsPlayerObject(clientId);
+                if (newPlayer.IsOwner)
+                {
+                    var predictedController = newPlayer.GetComponent<ClientPredictedTankController>();
+                    Debug.Log($"{predictedController}");
+                    m_inputActions.Player.Move.performed += predictedController.OnMove;
+                    m_inputActions.Player.Look.performed += predictedController.OnAim;
+                }
+            }
         }
-        else
+
+        public void SetPlayerName(string name)
         {
-            Physics2D.simulationMode = SimulationMode2D.FixedUpdate;
+            m_playerName = name;
+            Debug.Log("GameManager guarda el nombre:" + m_playerName);
+        }
+
+        public string GetPlayerName()
+        {
+            return m_playerName;
+        }
+
+        public void AutoPhysics2DUpdate(bool auto)
+        {
+            if (!auto)
+            {
+                Physics2D.simulationMode = SimulationMode2D.Script;
+            }
+            else
+            {
+                Physics2D.simulationMode = SimulationMode2D.FixedUpdate;
+            }
         }
     }
 }
