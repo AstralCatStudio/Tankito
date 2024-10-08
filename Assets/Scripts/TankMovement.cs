@@ -13,6 +13,11 @@ public class SimulationState
     public Vector3 position;
     public Quaternion rotation;
     public int simulationFrame;
+
+    public override string ToString()
+    {
+        return $"State[{simulationFrame}] Position: " + position + ", Rotation: " + rotation.eulerAngles;
+    }
 }
 
 public class TankMovement : NetworkBehaviour
@@ -79,6 +84,7 @@ public class TankMovement : NetworkBehaviour
     {
         if (IsOwner)
         {
+            // Es un poco lioso tener este early return aqui con el avance del simulationFrame y luego tener el avance alternativo mas abajo
             int cache_index;
             if (inputState.input.magnitude <= Mathf.Epsilon)
             {
@@ -90,16 +96,21 @@ public class TankMovement : NetworkBehaviour
                 return;
             }
 
+            // Datar los paquetes de entrada y estado
             inputState.simulationFrame = simulationFrame;
             inputState.fixedDeltaTime = Time.fixedDeltaTime;
 
             ProcessInput(inputState);
 
-            SendInputToServerRpc(inputState.input, inputState.simulationFrame, inputState.fixedDeltaTime);
+            SendInputToServerRpc(inputState.input, inputState.simulationFrame, inputState.fixedDeltaTime); // Mandar entrada y estado resultante al server
 
-            if (serverSimulationState != null) Reconciliate();
+            if (serverSimulationState != null) 
+            {
+                Debug.Log($"Should reconciliate to: {serverSimulationState}");
+                //Reconciliate();
+            }
 
-            simulationState = GetSimulationState(inputState);
+            simulationState = GetSimulationState(inputState); // Creo q sera mejor usar los datos del rigidbody
 
             //Debug.Log("La simulación del CLIENTE en el frame " + simulationState.simulationFrame + " es: " + simulationState.position + "-" + simulationState.rotation);
 
@@ -118,6 +129,8 @@ public class TankMovement : NetworkBehaviour
             transform.position = _TankPosition.Value;
             transform.rotation = _TankRotation.Value;   
         }
+
+        // *Para servidor dedicado el simulationFrame no avanzaria y tal, habra que reworkearlo
         if (IsServer)
         {
             ClientInputState<Vector2> serverIputState = null;
@@ -208,11 +221,10 @@ public class TankMovement : NetworkBehaviour
         else
         {
             Debug.Log("CLIENTE " + input.simulationFrame + ": ENTRADA " + input.input + input.fixedDeltaTime + "- SALIDA " + transform.position + transform.rotation);
-
         }
     }
 
-    private SimulationState GetSimulationState(ClientInputState<Vector2> inputState)
+    private SimulationState GetSimulationState(ClientInputState<Vector2> inputState) // Si solo quieres el input para datar el estado mejor pide el timestamp directamente como argumento
     {
         return new SimulationState
         {
@@ -240,6 +252,9 @@ public class TankMovement : NetworkBehaviour
         }   
     }
 
+    // Hay un problema fundamental con como se gestionan las entradas y la simulacion porque el "servidor" solo percibe ciertos cambios de angulo, es decir si pulsas rapido una direccion de forma que el tanque gira.
+    // Estando en local siendo el Host, se crea una diferencia de la rotacion.
+
     private void Reconciliate()
     {
         //Debug.Log("Comienza la reconciliación");
@@ -257,6 +272,7 @@ public class TankMovement : NetworkBehaviour
             lastCorrectedFrame = serverSimulationState.simulationFrame;
             return;
         }
+        // El problema con hacer esto es que estoy 80% seguro que aun asi tendrias que resimular a partir de este punto, porque lo mas probable es que este en un simulationFrame anterior al actual en el cliente
 
         float tolerancePosition = 0.1f;
         float toleranceRotation = 0.1f;
@@ -280,7 +296,7 @@ public class TankMovement : NetworkBehaviour
             transform.rotation = serverSimulationState.rotation;
 
             int rewindFrame = serverSimulationState.simulationFrame;
-            while(rewindFrame < simulationFrame)
+            while(rewindFrame < simulationFrame) // Habria que comprobar que la diferencia no sea mayor que el tamaño de nuestro buffer de entradas, porque entonces entrariamos en desync completo
             {
                 int rewindCacheIndex = rewindFrame % SIZE_CACHE;
                 ClientInputState<Vector2> rewindCachedInput = inputStateCache[rewindCacheIndex];
@@ -292,7 +308,7 @@ public class TankMovement : NetworkBehaviour
                     continue;
                 }
 
-                ProcessInput(rewindCachedInput);
+                ProcessInput(rewindCachedInput); // Tengo la sensacion de que esto no funciona si no haces un avance de simulacion del rigidbody o algo, bueno a lo mejor como estas manipulando el transform si funciona y hereda los cambios al final de la etapa de update, no lo se
 
                 SimulationState rewoundSimulationState = GetSimulationState(rewindCachedInput);
                 rewoundSimulationState.simulationFrame = simulationFrame;

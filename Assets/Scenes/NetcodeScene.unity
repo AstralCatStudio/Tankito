@@ -138,21 +138,6 @@ MonoScript:
   m_ClassName: NetworkObject
   m_Namespace: Unity.Netcode
   m_AssemblyName: Unity.Netcode.Runtime
---- !u!115 &289247559
-MonoScript:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  serializedVersion: 7
-  m_DefaultReferences: {}
-  m_Icon: {fileID: 0}
-  m_Type: 0
-  m_ExecutionOrder: 0
-  m_ClassName: UnityTransport
-  m_Namespace: Unity.Netcode.Transports.UTP
-  m_AssemblyName: Unity.Netcode.Runtime
 --- !u!1 &379649207
 GameObject:
   m_ObjectHideFlags: 0
@@ -332,7 +317,7 @@ GameObject:
   m_Component:
   - component: {fileID: 518029633}
   - component: {fileID: 518029634}
-  - component: {fileID: 518029636}
+  - component: {fileID: 518029635}
   m_Layer: 0
   m_Name: '@NetworkManager'
   m_TagString: Untagged
@@ -369,7 +354,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NetworkConfig:
     ProtocolVersion: 0
-    NetworkTransport: {fileID: 518029636}
+    NetworkTransport: {fileID: 518029635}
     PlayerPrefab: {fileID: 0}
     Prefabs:
       NetworkPrefabsLists:
@@ -392,7 +377,7 @@ MonoBehaviour:
     OldPrefabList: []
   RunInBackground: 1
   LogLevel: 1
---- !u!114 &518029636
+--- !u!114 &518029635
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -401,11 +386,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 518029632}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 289247559}
+  m_Script: {fileID: 11500000, guid: 6960e84d07fb87f47956e7a81d71c4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ProtocolType: 0
-  m_UseWebSockets: 1
+  m_ProtocolType: 1
+  m_UseWebSockets: 0
   m_UseEncryption: 1
   m_MaxPacketQueueSize: 128
   m_MaxPayloadSize: 6144
