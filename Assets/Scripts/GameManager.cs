@@ -69,7 +69,11 @@ namespace Tankito
                     var predictedController = newPlayer.GetComponent<ClientPredictedTankController>();
                     Debug.Log($"{predictedController}");
                     m_inputActions.Player.Move.performed += predictedController.OnMove;
+                    m_inputActions.Player.Move.canceled += predictedController.OnMove;
                     m_inputActions.Player.Look.performed += predictedController.OnAim;
+                    m_inputActions.Player.Look.canceled += predictedController.OnAim;
+
+                    // TODO: Unbind actions along with end of tank lifetime.
                 }
             }
         }

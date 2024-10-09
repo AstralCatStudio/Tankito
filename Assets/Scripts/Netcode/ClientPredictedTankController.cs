@@ -66,7 +66,7 @@ namespace Tankito.Netcode
             while(ClockManager.simulationClock.TicksLeft())
             {
                 int currentTick = ClockManager.simulationClock.CurrentTick;
-                Debug.Log("Tick: currentTick");
+                //Debug.Log("Tick: currentTick");
 
                 if (IsOwner)
                 {
@@ -99,6 +99,7 @@ namespace Tankito.Netcode
                         // Process the input.
                         ProcessInput(clientInput);
                     }
+                    Physics2D.Simulate(ClockManager.SERVER_SIMULATION_DELTA_TIME);
 
                     // Obtain the current SimulationState.
                     StatePayload newAuthState = GetSimulationState(currentTick);
@@ -182,7 +183,7 @@ namespace Tankito.Netcode
 
         private void AimTank(Vector2 aimVector)
         {
-            var targetAngle = Vector2.SignedAngle(transform.right, aimVector);
+            var targetAngle = Vector2.SignedAngle(m_turret.transform.right, aimVector);
             float rotDeg = 0f;
 
             if(Mathf.Abs(targetAngle) >= Time.fixedDeltaTime*m_aimSpeed)
@@ -194,7 +195,7 @@ namespace Tankito.Netcode
                 rotDeg = targetAngle;
             }
 
-            transform.rotation = Quaternion.Euler(0,0,transform.eulerAngles.z+rotDeg);
+            m_turret.transform.rotation = Quaternion.Euler(0,0,m_turret.transform.eulerAngles.z+rotDeg);
         }
 
         private StatePayload GetSimulationState(int timestamp)
