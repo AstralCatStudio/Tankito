@@ -1039,6 +1039,7 @@ GameObject:
   - component: {fileID: 396417098}
   - component: {fileID: 396417097}
   - component: {fileID: 396417096}
+  - component: {fileID: 396417100}
   m_Layer: 5
   m_Name: UI
   m_TagString: Untagged
@@ -1121,8 +1122,8 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1742832510}
   - {fileID: 1061295307}
+  - {fileID: 1742832510}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -1130,6 +1131,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &396417100
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 396417095}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 931aded31235606499b08811781edfe7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &464526806
 GameObject:
   m_ObjectHideFlags: 0
@@ -1278,7 +1291,7 @@ GameObject:
   - component: {fileID: 1061295309}
   - component: {fileID: 1061295308}
   m_Layer: 5
-  m_Name: PanelTitle
+  m_Name: TitlePanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1316,7 +1329,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: edd56ad1fa9cd8a4f9bd388e1415d7d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _fadeDuration: 1
+  _fadeDuration: 3
 --- !u!225 &1061295309
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -1325,7 +1338,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1061295306}
   m_Enabled: 1
-  m_Alpha: 1
+  m_Alpha: 0
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0

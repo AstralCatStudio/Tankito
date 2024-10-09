@@ -7,22 +7,19 @@ public class UIFadeComponent : MonoBehaviour
     private CanvasGroup _canvasGroup;
     public float _fadeDuration = 1.0f;
 
-    private void Start()
+    private void Awake()
     {
-        if (_canvasGroup == null)
-        {
-            _canvasGroup = GetComponent<CanvasGroup>();
-        }
+        _canvasGroup = GetComponent<CanvasGroup>();
     }
 
     public void FadeIn()
     {
-
+        StartCoroutine(FadeInRoutine());
     }
 
     public void FadeOut()
     {
-
+        FadeOutRoutine();
     }
 
     private IEnumerator FadeInRoutine()
@@ -36,10 +33,12 @@ public class UIFadeComponent : MonoBehaviour
             elapsedTime += Time.deltaTime;
 
             _canvasGroup.alpha = Mathf.Lerp(0, 1, elapsedTime / _fadeDuration);
+            //Debug.Log(_canvasGroup.alpha);
+
             yield return null;
         }
 
-        //_canvasGroup.alpha = 1.0f;
+        _canvasGroup.alpha = 1.0f;
     }
     
     private IEnumerator FadeOutRoutine()
@@ -53,9 +52,11 @@ public class UIFadeComponent : MonoBehaviour
             elapsedTime += Time.deltaTime;
 
             _canvasGroup.alpha = Mathf.Lerp(1, 0, elapsedTime / _fadeDuration);
+            //Debug.Log(_canvasGroup.alpha);
+
             yield return null;
         }
 
-        //_canvasGroup.alpha = 0.0f;
+        _canvasGroup.alpha = 0.0f;
     }
 }
