@@ -80,6 +80,8 @@ namespace Tankito.Netcode
                     m_simulationStateCache.Add(currentState, currentTick);
                     
                     SendPayloadsServerRpc(m_latestInputState, currentState);
+
+                    Debug.Log($"Client: Updated simulation [{currentTick}]");
                 }
                 else if (!IsServer)
                 {
@@ -93,7 +95,7 @@ namespace Tankito.Netcode
                     while (m_serverInputQueue.Count > 0)
                     {
                         InputPayload clientInput = m_serverInputQueue.Dequeue();
-                        //Debug.Log("La psoición inicial en el SERVIDOR antes de procesar FRAME" + clientInput.timestamp + " es: " + m_tankRB.position + "-" + m_tankRB.rotation);
+                        Debug.Log("La psoición inicial en el SERVIDOR antes de procesar FRAME" + clientInput.timestamp + " es: " + m_tankRB.position + "-" + m_tankRB.rotation);
                         // Process the input.
                         ProcessInput(clientInput);
                     }

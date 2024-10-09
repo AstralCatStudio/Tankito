@@ -47,7 +47,6 @@ namespace Tankito
 
             m_inputActions = new TankitoInputActions();
             m_playerInput.actions = m_inputActions.asset;
-            Debug.Log($"{m_inputActions.GetHashCode()}");
 
             //_playerName = "Invited";
         }
