@@ -43,7 +43,7 @@ public class GameManager : NetworkBehaviour
     {
         if (IsServer)
         {
-            print("Cliente se conecta");
+            print("Cliente se conecta y spawnea el jugador");
             var newPlayer = Instantiate(_playerPrefab);
             newPlayer.GetComponent<NetworkObject>().SpawnAsPlayerObject(obj);
         }

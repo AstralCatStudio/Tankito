@@ -2,12 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ClientInputState<T>
+/*public class ClientInputState<T>
 {
     public T input;
     public int simulationFrame;
     public float fixedDeltaTime;
-}
+}*/
 
 public class SimulationState<T>
 {
