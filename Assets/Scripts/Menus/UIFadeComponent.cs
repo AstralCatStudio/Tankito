@@ -19,7 +19,12 @@ public class UIFadeComponent : MonoBehaviour
 
     public void FadeOut()
     {
-        FadeOutRoutine();
+        StartCoroutine(FadeOutRoutine());
+    }
+
+    public void FadeInOut()
+    {
+        StartCoroutine(FadeInOutRoutine());
     }
 
     private IEnumerator FadeInRoutine()
@@ -58,5 +63,11 @@ public class UIFadeComponent : MonoBehaviour
         }
 
         _canvasGroup.alpha = 0.0f;
+    }
+
+    private IEnumerator FadeInOutRoutine()
+    {
+        yield return StartCoroutine(FadeInRoutine());
+        yield return StartCoroutine(FadeOutRoutine());
     }
 }

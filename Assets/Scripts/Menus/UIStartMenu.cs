@@ -8,19 +8,32 @@ public class UIStartMenu : MonoBehaviour
 {
     //public TextMeshProUGUI _playerName;
 
+    public float _activeTitleTime = 2.0f;
+
     private void Start()
     {
         /*_playerName = gameObject.transform.Find("Panel/PlayerName").GetComponent<TextMeshProUGUI>();
         _playerName.text = GameManager.Instance.GetPlayerName();*/
 
-        UIFadeComponent _fadeTitle= gameObject.transform.Find("TitlePanel").GetComponent<UIFadeComponent>();
+        TitleAnimation();
+    }
+
+    private void TitleAnimation()
+    {
+        UIFadeComponent _fadeTitle = gameObject.transform.Find("TitlePanel").GetComponent<UIFadeComponent>();
         if (_fadeTitle == null)
         {
             Debug.Log("No encontró el fade");
         }
-        _fadeTitle.FadeIn();
+
+        _fadeTitle.FadeInOut();
+        //StartCoroutine(FadeInOutTitle());
     }
 
+    /*private IEnumerator FadeInOutTitle()
+    {
+        
+    }*/
 
     /*
      * 
