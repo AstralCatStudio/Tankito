@@ -15,7 +15,17 @@ namespace Tankito.Netcode
         public class LoginGUIManager : MonoBehaviour
     {
         const int MAX_CONNECTIONS = 4;
-        public static readonly string CONNECTION_TYPE = (Application.platform == RuntimePlatform.WebGLPlayer) ? "wss" : "dtls";
+        public static readonly string CONNECTION_TYPE =
+
+        #if UNITY_WEBGL
+        "wss";
+        bool useWebSockets = true;
+        #else
+        "dtls";
+        bool useWebSockets = false;
+        #endif
+
+
         string m_joinCode = "Enter room code...";
         public static string m_region = "";
         private List<(string id, string desc)> m_relayRegions;
@@ -32,16 +42,12 @@ namespace Tankito.Netcode
         private enum GUIStages
         {
             Mode,
-            Region
+            Region,
+            Run
         }
 
         void Start()
         {
-            #if UNITY_WEBGL
-            var useWebSockets = true;
-            #else
-            var useWebSockets = false;
-            #endif
 
             ((UnityTransport)NetworkManager.Singleton.NetworkConfig.NetworkTransport).UseWebSockets = useWebSockets;
         }
@@ -51,21 +57,11 @@ namespace Tankito.Netcode
             GUILayout.BeginArea(new Rect(10, 10, 300, 300));
             switch(m_stage)
             {
-                case GUIStages.Mode:
-                    if (!NetworkManager.Singleton.IsClient && !NetworkManager.Singleton.IsServer)
-                    {
-                        StartButtons();
-                    }
-                    else
-                    {
-                        StatusLabels();
-                    }
+                case GUIStages.Mode: StartButtons(); break;
 
-                break;
+                case GUIStages.Region: RegionSelection(); break;
 
-                case GUIStages.Region:
-                    RegionSelection();
-                break;
+                case GUIStages.Run: StatusLabels(); break;
             }
             GUILayout.EndArea();
         }
@@ -96,6 +92,7 @@ namespace Tankito.Netcode
                         case ConnectionMode.Server: StartServer(); break;
                         case ConnectionMode.Host: StartHost(); break;
                     }
+                    m_stage = GUIStages.Run;
                 }
             }
         }
@@ -130,7 +127,7 @@ namespace Tankito.Netcode
 
         async Task CreateRelayAllocation()
         {
-            Allocation allocation = await RelayService.Instance.CreateAllocationAsync(MAX_CONNECTIONS);
+            Allocation allocation = await RelayService.Instance.CreateAllocationAsync(MAX_CONNECTIONS, m_region);
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(new RelayServerData(allocation, CONNECTION_TYPE));
             m_joinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
             Debug.Log("Relay Allocation Created");
