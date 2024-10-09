@@ -95,7 +95,6 @@ namespace Tankito.Netcode
                     while (m_serverInputQueue.Count > 0)
                     {
                         InputPayload clientInput = m_serverInputQueue.Dequeue();
-                        Debug.Log("La psoición inicial en el SERVIDOR antes de procesar FRAME" + clientInput.timestamp + " es: " + m_tankRB.position + "-" + m_tankRB.rotation);
                         // Process the input.
                         ProcessInput(clientInput);
                     }
