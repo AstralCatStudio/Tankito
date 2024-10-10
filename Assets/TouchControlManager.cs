@@ -28,19 +28,20 @@ namespace Tankito.Mobile
         {
             bool res = false;
 
-            m_pointerEvtData.position = absoluteScreenPosition * 1f/m_canvas.scaleFactor;
+            m_pointerEvtData.position = absoluteScreenPosition;
             m_raycastResults.Clear();
 
             // Perform a raycast to find the UI element touched by the finger
             graphicRaycaster.Raycast(m_pointerEvtData, m_raycastResults);
+
             foreach (var hit in m_raycastResults)
             {
                 var hasComponent = hit.gameObject.GetComponent(componentType) != null;
-                Debug.Log($" {hit} is {componentType} ? {hasComponent}");
                 res = (res || hasComponent);
+                //Debug.Log($"Checking for {componentType.Name} collisions against {hit.gameObject}, result: {hasComponent}");
             }
             
-            Debug.Log($"Checking for {componentType.Name} collisions, result: {res}");
+            //Debug.Log($"Hit {m_raycastResults.Count} elements while checking for {componentType}, result: {res}");
 
             return res;
         }
