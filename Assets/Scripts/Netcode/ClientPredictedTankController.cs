@@ -63,6 +63,11 @@ namespace Tankito.Netcode
 
         private void Update()
         {
+            
+        }
+
+        void FixedUpdate()
+        {
             while(ClockManager.simulationClock.TicksLeft())
             {
                 int currentTick = ClockManager.simulationClock.CurrentTick;
@@ -72,8 +77,12 @@ namespace Tankito.Netcode
                 {
                     m_latestInputState.timestamp = currentTick; // MUY IMPORTANTE timestampear el input antes de pushearlo
 
-                    ProcessInput(m_latestInputState);
-                    Physics2D.Simulate(ClockManager.SERVER_SIMULATION_DELTA_TIME);
+                    if (!IsServer)
+                    {
+                        ProcessInput(m_latestInputState);
+                        Physics2D.Simulate(ClockManager.SERVER_SIMULATION_DELTA_TIME);
+                    }
+
                     var currentState = GetSimulationState(currentTick);
                     
                     m_inputStateCache.Add(m_latestInputState, currentTick);
@@ -98,8 +107,8 @@ namespace Tankito.Netcode
                         Debug.Log("La psoición inicial en el SERVIDOR antes de procesar FRAME" + clientInput.timestamp + " es: " + m_tankRB.position + "-" + m_tankRB.rotation);
                         // Process the input.
                         ProcessInput(clientInput);
+                        Physics2D.Simulate(ClockManager.SERVER_SIMULATION_DELTA_TIME);
                     }
-                    Physics2D.Simulate(ClockManager.SERVER_SIMULATION_DELTA_TIME);
 
                     // Obtain the current SimulationState.
                     StatePayload newAuthState = GetSimulationState(currentTick);
