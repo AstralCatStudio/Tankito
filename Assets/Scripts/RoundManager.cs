@@ -5,121 +5,106 @@ using Unity.Netcode;
 
 public class RoundManager : NetworkBehaviour
 {
-    private int _currentRound = 1;
+    private int _currentRound = 0;
     public int _maxRounds = 5;
 
     private List<GameObject> _players = new List<GameObject>();
-    //public GameObject _uiPowerUps;
-
-    private enum RoundState
-    {
-        Battle,             // Tanques pelean
-        Ranking,            // Se muestra la clasificacion
-        PowerUpSelection,   // Seleccion de power ups
-        GameOver            // Fin de la partida (alguien gana)
-    }
-
-    private RoundState _currentState;
+    private List<GameObject> _alivePlayer;
 
     void Start()
     {
         //if (IsServer)
         //{
-        this.StartRound();
+        InitializeRound();
         //}
     }
 
-    void Update()
-    {
-        //if (!IsServer) return;  // Solo maneja las rondas el server
-
-        switch (_currentState)
-        {
-            case RoundState.Battle:
-                // Los tanques pelean hasta que solo queda uno vivo (ganador)
-                CheckWinner();
-                break;
-
-            case RoundState.Ranking:
-                // Se muestra el ranking en pantalla
-                break;
-
-            case RoundState.PowerUpSelection:
-                // Se seleccionan los power ups
-                break;
-
-            case RoundState.GameOver:
-                // Se finaliza la partida: ranking, recompensas, etc.
-                break;
-        }
-    }
-
-    #region RoundStart
-
-    private void StartRound()
-    {
-        Debug.Log("Comienza la ronda " + _currentRound);
-
-        this.ResetPlayers();
-
-        _currentState = RoundState.Battle;
-    }
-
-    private void ResetPlayers()
-    {
-        Debug.Log("Reseteo jugadores");
-        for (int i = 0; i < _players.Count; i++)
-        {
-            // Se resetea la vida del jugador
-            // Se establece su spawn (supongo)
-            Debug.Log("Reseteo jugador " + i);
-        }
-    }
-
-    #endregion
-
-    #region InsertPlayers
-
     public void AddPlayer(GameObject player)
     {
-        Debug.Log("Se anade jugador");
         _players.Add(player);
     }
 
-    public void DeletePlayer(GameObject player) // En caso de querer gestionar desconexiones supongo
+    public void EliminatePlayer(GameObject player)
     {
-        _players.Remove(player);
+        _alivePlayer.Remove(player);
+        CheckForWinner();
     }
 
-    #endregion
-
-    #region StateActions
-
-    private void CheckWinner()
+    private void InitializeRound()
     {
-        int remainingPlayers = 1;
+        _alivePlayer = new List<GameObject>(_players);
+        _currentRound++;
+        Debug.Log("Inicio ronda " + _currentRound);
+    }
 
-        if (remainingPlayers == 1)
+    private void CheckForWinner()
+    {
+        if(_alivePlayer.Count == 1)
         {
-            Debug.Log("Alguien ha ganado");
+            Debug.Log("Alguien ha ganado la ronda");
             EndRound();
+        }
+        else
+        {
+            Debug.Log("La ronda sigue");
         }
     }
 
     private void EndRound()
     {
-        Debug.Log("Fin de ronda");
-        if (_currentRound == _maxRounds)
+        Debug.Log("Se pasa al ranking y despues a otra ronda");
+        /*ShowRanking();
+        PowerUpSelection();
+        ResetRound();*/
+        ShowRankingClientRpc();
+        Invoke(nameof(PowerUpSelection), 5.0f);
+    }
+
+    [ClientRpc]
+    private void ShowRankingClientRpc()
+    {
+        Debug.Log("Se muestra el ranking en todos");
+    }
+
+    /*private void ShowRanking()
+    {
+        Debug.Log("Se muestra el ranking");
+    }*/
+
+    private void PowerUpSelection()
+    {
+        Debug.Log("Se eligen power ups");
+        ShowPowerUpsClientRpc();
+        ResetRound();
+    }
+
+    [ClientRpc]
+    private void ShowPowerUpsClientRpc()
+    {
+        Debug.Log("Se muestran los power ups en todos");
+    }
+
+    private void ResetRound()
+    {
+        if(_currentRound < _maxRounds)
         {
-            _currentState = RoundState.GameOver;
+            InitializeRound();
         }
         else
         {
-            _currentState = RoundState.Ranking;
+            EndGame();
         }
-
     }
 
-    #endregion
+    private void EndGame()
+    {
+        Debug.Log("Fin de la partida");
+        EndGameClientRpc();
+    }
 
+    [ClientRpc]
+    private void EndGameClientRpc()
+    {
+        Debug.Log("Final de partida en todos");
+    }
 }
