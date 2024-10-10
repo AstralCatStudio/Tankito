@@ -4,10 +4,10 @@ using UnityEngine.AI;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
-using UnityEngine.InputSystem.EnhancedTouch;
 using UnityEngine.InputSystem.Layouts;
 using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.InputSystem.OnScreen;
+using UnityEngine.InputSystem.EnhancedTouch;
 using ETouch = UnityEngine.InputSystem.EnhancedTouch;
 
 namespace Tankito.Mobile
@@ -28,9 +28,9 @@ namespace Tankito.Mobile
     public class TouchJoystick : OnScreenControl
     {
         [SerializeField]
-        private Vector2 JoystickSize = new Vector2(300, 300);
+        private Vector2 m_joystickSize = new Vector2(300, 300);
         [SerializeField]
-        private RectTransform JoystickRect;
+        private RectTransform m_joystickRect;
         [SerializeField]
         private RectTransform JoystickHandleRect;
         [InputControl(layout = "Vector2")]
@@ -42,9 +42,10 @@ namespace Tankito.Mobile
             set => m_ControlPath = value;
         }
 
-        private Finger JoystickFinger;
-        private Vector2 DisplacementAmount;
+        private Finger m_joystickFinger;
+        private Vector2 m_displacementAmount;
         private Canvas m_parentCanvas;
+        private TouchControlManager m_touchControlManager;
         [SerializeField] private bool m_hideStick;
         [SerializeField] private StickType m_stickType;
         [SerializeField] private ScreenHotspot m_hotspotPosition;
@@ -56,9 +57,10 @@ namespace Tankito.Mobile
         {
             if (m_parentCanvas == null)
             {
-                Canvas[] c = JoystickRect.GetComponentsInParent<Canvas>();
+                Canvas[] c = m_joystickRect.GetComponentsInParent<Canvas>();
                 m_parentCanvas = c[c.Length - 1];
             }
+            m_touchControlManager = m_parentCanvas.GetComponent<TouchControlManager>();
         }
 
         protected override void OnEnable()
@@ -67,10 +69,10 @@ namespace Tankito.Mobile
 
             if (m_hideStick)
             {
-                JoystickRect.gameObject.SetActive(false);
+                m_joystickRect.gameObject.SetActive(false);
             }
 
-            EnhancedTouchSupport.Enable();
+            //EnhancedTouchSupport.Enable(); Moved to overarching TouchControls (should be in parent canvas)
             ETouch.Touch.onFingerDown += HandleFingerDown;
             ETouch.Touch.onFingerUp += HandleLoseFinger;
             ETouch.Touch.onFingerMove += HandleFingerMove;
@@ -83,66 +85,27 @@ namespace Tankito.Mobile
             ETouch.Touch.onFingerDown -= HandleFingerDown;
             ETouch.Touch.onFingerUp -= HandleLoseFinger;
             ETouch.Touch.onFingerMove -= HandleFingerMove;
-            EnhancedTouchSupport.Disable();
+            //EnhancedTouchSupport.Disable(); Moved to overarching TouchControls (should be in parent canvas)
         }
-
-        private void HandleFingerMove(Finger MovedFinger)
+        
+        private void HandleFingerDown(Finger touchedFinger)
         {
-            if (MovedFinger == JoystickFinger)
-            {
-                Vector2 knobPosition;
-                float maxMovement = JoystickSize.x / 2f ;
-                ETouch.Touch currentTouch = MovedFinger.currentTouch;
-                Vector2 currentTouchScreenPosition = currentTouch.screenPosition * 1f/m_parentCanvas.scaleFactor;
+            if (m_joystickFinger != null) return;
+            
+            if (m_touchControlManager.CheckIfTouched(touchedFinger.screenPosition, typeof(TouchButton))) return;
 
-                if (Vector2.Distance(currentTouchScreenPosition, JoystickRect.anchoredPosition) > maxMovement)
-                {
-                    //Debug.Log("Finger outside yolk");
-                    if (m_stickType == StickType.Follow)
-                    {
-                        Debug.Log("TODO: Implement Follow stick");
-                    }
-                    knobPosition = (currentTouchScreenPosition - JoystickRect.anchoredPosition).normalized * maxMovement;
-                }
-                else
-                {
-                    knobPosition = currentTouchScreenPosition - JoystickRect.anchoredPosition;
-                }
-
-                JoystickHandleRect.anchoredPosition = knobPosition;
-                DisplacementAmount = knobPosition / maxMovement;
-                SendValueToControl(DisplacementAmount);
-            }
-        }
-
-        private void HandleLoseFinger(Finger LostFinger)
-        {
-            if (LostFinger == JoystickFinger)
-            {
-                JoystickFinger = null;
-                JoystickHandleRect.anchoredPosition = Vector2.zero;
-                if (m_hideStick)    JoystickRect.gameObject.SetActive(false);
-                DisplacementAmount = Vector2.zero;
-                SendValueToControl(Vector2.zero);
-            }
-        }
-
-        private void HandleFingerDown(Finger TouchedFinger)
-        {
-            if (JoystickFinger != null) return;
-
-            Vector2 touchScreenPosition = TouchedFinger.screenPosition * 1f/m_parentCanvas.scaleFactor;
+            Vector2 touchScreenPosition = touchedFinger.screenPosition * 1f/m_parentCanvas.scaleFactor;
 
             switch(m_stickType)
             {
                 case StickType.Fixed:
                     
-                    if (Vector2.Distance(touchScreenPosition, JoystickRect.anchoredPosition) > JoystickSize.x/2f)
+                    if (Vector2.Distance(touchScreenPosition, m_joystickRect.anchoredPosition) > m_joystickSize.x/2f)
                     {
-                    Debug.Log($"FAILED touch at {touchScreenPosition} | stick anchor {JoystickRect.anchoredPosition}");
+                    Debug.Log($"FAILED touch at {touchScreenPosition} | stick anchor {m_joystickRect.anchoredPosition}");
                         return;
                     }
-                    Debug.Log($"SUCCESFUL touch at {touchScreenPosition} | stick anchor {JoystickRect.anchoredPosition}");
+                    Debug.Log($"SUCCESFUL touch at {touchScreenPosition} | stick anchor {m_joystickRect.anchoredPosition}");
 
                 break;
 
@@ -167,19 +130,61 @@ namespace Tankito.Mobile
                     }
                     
                     
-                    JoystickRect.anchoredPosition = ClampStartPosition(touchScreenPosition);
-                    DisplacementAmount = Vector2.zero;
+                    m_joystickRect.anchoredPosition = ClampStartPosition(touchScreenPosition);
+                    m_displacementAmount = Vector2.zero;
                     
                 break;
             }
 
     
-            JoystickFinger = TouchedFinger;
-            if (m_hideStick)    JoystickRect.gameObject.SetActive(true);
-            JoystickRect.sizeDelta = JoystickSize;
-            JoystickHandleRect.sizeDelta *= JoystickSize/JoystickRect.sizeDelta;
-            HandleFingerMove(TouchedFinger);
+            m_joystickFinger = touchedFinger;
+            if (m_hideStick)    m_joystickRect.gameObject.SetActive(true);
+            m_joystickRect.sizeDelta = m_joystickSize;
+            JoystickHandleRect.sizeDelta *= m_joystickSize/m_joystickRect.sizeDelta;
+            HandleFingerMove(touchedFinger);
         }
+
+        private void HandleFingerMove(Finger movedFinger)
+        {
+            if (movedFinger == m_joystickFinger)
+            {
+                Vector2 knobPosition;
+                float maxMovement = m_joystickSize.x / 2f ;
+                ETouch.Touch currentTouch = movedFinger.currentTouch;
+                Vector2 currentTouchScreenPosition = currentTouch.screenPosition * 1f/m_parentCanvas.scaleFactor;
+
+                if (Vector2.Distance(currentTouchScreenPosition, m_joystickRect.anchoredPosition) > maxMovement)
+                {
+                    //Debug.Log("Finger outside yolk");
+                    if (m_stickType == StickType.Follow)
+                    {
+                        Debug.Log("TODO: Implement Follow stick");
+                    }
+                    knobPosition = (currentTouchScreenPosition - m_joystickRect.anchoredPosition).normalized * maxMovement;
+                }
+                else
+                {
+                    knobPosition = currentTouchScreenPosition - m_joystickRect.anchoredPosition;
+                }
+
+                JoystickHandleRect.anchoredPosition = knobPosition;
+                m_displacementAmount = knobPosition / maxMovement;
+                SendValueToControl(m_displacementAmount);
+            }
+        }
+
+        private void HandleLoseFinger(Finger lostFinger)
+        {
+            if (lostFinger == m_joystickFinger)
+            {
+                m_joystickFinger = null;
+                JoystickHandleRect.anchoredPosition = Vector2.zero;
+                if (m_hideStick)    m_joystickRect.gameObject.SetActive(false);
+                m_displacementAmount = Vector2.zero;
+                SendValueToControl(Vector2.zero);
+            }
+        }
+
 
         /// <summary>
         /// "scaledStartPosition" must be in Cavnas coordinates
@@ -190,22 +195,22 @@ namespace Tankito.Mobile
         {
             var scaledScreenSize = new Vector2(Screen.width * 1f/m_parentCanvas.scaleFactor, Screen.height * 1f/m_parentCanvas.scaleFactor);
             
-            if (scaledStartPosition.x < JoystickSize.x / 2)
+            if (scaledStartPosition.x < m_joystickSize.x / 2)
             {
-                scaledStartPosition.x = JoystickSize.x / 2;
+                scaledStartPosition.x = m_joystickSize.x / 2;
             }
-            else if (m_hotspotPosition == ScreenHotspot.Right && scaledStartPosition.x > scaledScreenSize.x - JoystickSize.x / 2)
+            else if (m_hotspotPosition == ScreenHotspot.Right && scaledStartPosition.x > scaledScreenSize.x - m_joystickSize.x / 2)
             {
-                scaledStartPosition.x = scaledScreenSize.x - JoystickSize.x / 2;
+                scaledStartPosition.x = scaledScreenSize.x - m_joystickSize.x / 2;
             }
 
-            if (scaledStartPosition.y < JoystickSize.y / 2)
+            if (scaledStartPosition.y < m_joystickSize.y / 2)
             {
-                scaledStartPosition.y = JoystickSize.y / 2;
+                scaledStartPosition.y = m_joystickSize.y / 2;
             }
-            else if (scaledStartPosition.y > scaledScreenSize.y - JoystickSize.y / 2)
+            else if (scaledStartPosition.y > scaledScreenSize.y - m_joystickSize.y / 2)
             {
-                scaledStartPosition.y = scaledScreenSize.y - JoystickSize.y / 2;
+                scaledStartPosition.y = scaledScreenSize.y - m_joystickSize.y / 2;
             }
 
             return scaledStartPosition ;
@@ -223,10 +228,10 @@ namespace Tankito.Mobile
                         textColor = Color.white
                     }
                 };
-                if (JoystickFinger != null)
+                if (m_joystickFinger != null)
                 {
-                    GUI.Label(new Rect(10, 35, 500, 20), $"Finger Start Position: {JoystickFinger.currentTouch.startScreenPosition}", labelStyle);
-                    GUI.Label(new Rect(10, 65, 500, 20), $"Finger Current Position: {JoystickFinger.currentTouch.screenPosition}", labelStyle);
+                    GUI.Label(new Rect(10, 35, 500, 20), $"Finger Start Position: {m_joystickFinger.currentTouch.startScreenPosition}", labelStyle);
+                    GUI.Label(new Rect(10, 65, 500, 20), $"Finger Current Position: {m_joystickFinger.currentTouch.screenPosition}", labelStyle);
                 }
                 else
                 {
