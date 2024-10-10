@@ -144,10 +144,10 @@ public class TankMovement : NetworkBehaviour
                 SendServerSimulationToClientRpc(state.position, state.rotation, state.simulationFrame); //Se envía la simulación al cliente
             }*/
             int nFramesToSimulate = 0;
-            while (serverQueue.Count > 0 && (serverIputState = serverQueue.Dequeue()) != null)
-            {
+            //while (serverQueue.Count > 0 && (serverIputState = serverQueue.Dequeue()) != null)
+            //{
                 //Debug.Log("La psoición inicial en el SERVIDOR antes de procesar FRAME" + serverIputState.simulationFrame + " es: " + transform.position + "-" + transform.rotation);
-            //if((serverIputState = serverQueue.Dequeue()) != null) {
+            if((serverIputState = serverQueue.Dequeue()) != null) {
 
             //}
                 ProcessInput(serverIputState); //El servidor procesa el input
@@ -237,6 +237,8 @@ public class TankMovement : NetworkBehaviour
         
 
         m_tankRB.MovePosition(m_tankRB.position + m_speed * input.fixedDeltaTime * input.input);
+
+        
         /*if (IsServer)
         {
             Debug.Log("SERVIDOR " + input.simulationFrame + ": ENTRADA " + input.input + input.fixedDeltaTime + "- SALIDA " + transform.position + transform.rotation);
