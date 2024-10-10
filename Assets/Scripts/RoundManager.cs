@@ -11,17 +11,34 @@ public class RoundManager : NetworkBehaviour
     private List<GameObject> _players = new List<GameObject>();
     private List<GameObject> _alivePlayer;
 
+    GameObject prueba; // Prueba
+
     void Start()
     {
+        // Prueba
+        prueba = new GameObject();
+        AddPlayer(prueba);
+        AddPlayer(new GameObject());
+        //
+
         //if (IsServer)
         //{
-        InitializeRound();
+            InitializeRound();
         //}
+    }
+
+    void Update()
+    {
+        if (Input.GetKeyUp(KeyCode.Space))
+        {
+            EliminatePlayer(prueba);
+        }
     }
 
     public void AddPlayer(GameObject player)
     {
         _players.Add(player);
+        Debug.Log("nº jugadores: " + _players.Count);
     }
 
     public void EliminatePlayer(GameObject player)
@@ -39,7 +56,7 @@ public class RoundManager : NetworkBehaviour
 
     private void CheckForWinner()
     {
-        if(_alivePlayer.Count == 1)
+        if (_alivePlayer.Count == 1)
         {
             Debug.Log("Alguien ha ganado la ronda");
             EndRound();
@@ -52,12 +69,15 @@ public class RoundManager : NetworkBehaviour
 
     private void EndRound()
     {
-        Debug.Log("Se pasa al ranking y despues a otra ronda");
-        /*ShowRanking();
-        PowerUpSelection();
-        ResetRound();*/
+        Debug.Log("Fin de ronda");
+        ShowRanking(); // Prueba
         ShowRankingClientRpc();
-        Invoke(nameof(PowerUpSelection), 5.0f);
+        Invoke(nameof(CheckRoundsCount), 5.0f);
+    }
+
+    private void ShowRanking() // Prueba
+    {
+        Debug.Log("Se muestra el ranking");
     }
 
     [ClientRpc]
@@ -66,34 +86,29 @@ public class RoundManager : NetworkBehaviour
         Debug.Log("Se muestra el ranking en todos");
     }
 
-    /*private void ShowRanking()
+    private void CheckRoundsCount()
     {
-        Debug.Log("Se muestra el ranking");
-    }*/
+        if (_currentRound < _maxRounds)
+        {
+            PowerUpSelection();
+            Invoke(nameof(InitializeRound),5.0f);
+        }
+        else
+        {
+            EndGame();
+        }
+    }
 
     private void PowerUpSelection()
     {
         Debug.Log("Se eligen power ups");
         ShowPowerUpsClientRpc();
-        ResetRound();
     }
 
     [ClientRpc]
     private void ShowPowerUpsClientRpc()
     {
         Debug.Log("Se muestran los power ups en todos");
-    }
-
-    private void ResetRound()
-    {
-        if(_currentRound < _maxRounds)
-        {
-            InitializeRound();
-        }
-        else
-        {
-            EndGame();
-        }
     }
 
     private void EndGame()
