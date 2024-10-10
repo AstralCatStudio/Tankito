@@ -7,11 +7,19 @@ using System.Globalization;
 using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine.UIElements;
 using UnityEngine.InputSystem.XR;
+using UnityEngine.Windows;
+
+public class ClientInputState<T>
+{
+    public T input;
+    public int simulationFrame;
+    public float fixedDeltaTime;
+}
 
 public class SimulationState
 {
     public Vector3 position;
-    public Quaternion rotation;
+    public float rotation;
     public int simulationFrame;
 }
 
@@ -23,12 +31,14 @@ public class TankMovement : NetworkBehaviour
     [SerializeField] private Transform m_turret;
     private NetworkVariable<Vector2> _TankPosition = new NetworkVariable<Vector2>(new Vector2(), NetworkVariableReadPermission.Everyone, 
         NetworkVariableWritePermission.Server);
-    private NetworkVariable<Quaternion> _TankRotation = new NetworkVariable<Quaternion>(new Quaternion(), NetworkVariableReadPermission.Everyone,
+    private NetworkVariable<float> _TankRotation = new NetworkVariable<float>(new float(), NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Server);
 
     private ClientInputState<Vector2> inputState = new ClientInputState<Vector2>(); //Clase que guarda los input y sus frames
+    private Queue<ClientInputState<Vector2>> clientInputQueue = new Queue<ClientInputState<Vector2>>();
     private SimulationState simulationState; //Clase que guarda las salidas de simulación(en este caso posición y rotación)
 
+    //Caches para almacenar los inputs y estados simulados en el cliente
     private const int SIZE_CACHE = 1024;
     private ClientInputState<Vector2>[] inputStateCache = new ClientInputState<Vector2>[SIZE_CACHE];
     private SimulationState[] simulationStateCache = new SimulationState[SIZE_CACHE];
@@ -36,8 +46,8 @@ public class TankMovement : NetworkBehaviour
     private SimulationState serverSimulationState = new SimulationState(); //Variable que almacena el estado de simulación del servidor
     private int lastCorrectedFrame = 0;
 
-    private Queue<ClientInputState<Vector2>> serverQueue = new Queue<ClientInputState<Vector2>>();
-    private enum SimulationStateTankMovement{Position = 0, Rotation = 1}
+    private Queue<ClientInputState<Vector2>> serverQueue = new Queue<ClientInputState<Vector2>>(); //Cola de inputs recibidos por el servidor
+    private Queue<int> simulationsToSend = new Queue<int>();
 
     private int simulationFrame = 0;
 
@@ -47,7 +57,6 @@ public class TankMovement : NetworkBehaviour
         if (IsOwner)
         {
             GetComponent<PlayerInput>().enabled = true;
-            serverSimulationState.simulationFrame = 0;
         }
         if (m_tankRB == null)
         {
@@ -62,6 +71,7 @@ public class TankMovement : NetworkBehaviour
         {
             Debug.Log("Error tank turret reference not set.");
         }
+        serverSimulationState.simulationFrame = 0;
     }
 
     /*private void Update()
@@ -79,13 +89,18 @@ public class TankMovement : NetworkBehaviour
     {
         if (IsOwner)
         {
-            int cache_index;
+            //if (serverSimulationState != null) Reconciliate();
             if (inputState.input.magnitude <= Mathf.Epsilon)
             {
-                cache_index = simulationFrame % SIZE_CACHE;
 
-                /*inputStateCache[cache_index] = inputState;
-                simulationStateCache[cache_index] = simulationState;*/
+                AddToCache(new ClientInputState<Vector2>(), new SimulationState()
+                {
+                    position = m_tankRB.position,
+                    rotation = m_tankRB.rotation,
+                    simulationFrame = simulationFrame
+                }, simulationFrame % SIZE_CACHE);
+                
+                if (serverSimulationState != null) Reconciliate();
                 simulationFrame++;
                 return;
             }
@@ -93,21 +108,18 @@ public class TankMovement : NetworkBehaviour
             inputState.simulationFrame = simulationFrame;
             inputState.fixedDeltaTime = Time.fixedDeltaTime;
 
-            ProcessInput(inputState);
+            ProcessInput(inputState); //Se procesa la entrada
 
-            SendInputToServerRpc(inputState.input, inputState.simulationFrame, inputState.fixedDeltaTime);
+            SendInputToServerRpc(inputState.input, inputState.simulationFrame, inputState.fixedDeltaTime); //Se envía al servidor para que la simule
 
-            if (serverSimulationState != null) Reconciliate();
+            if (serverSimulationState != null) Reconciliate(); //En caso necesario, reconciliación
 
-            simulationState = GetSimulationState(inputState);
+            simulationState = GetSimulationState(inputState.simulationFrame); //Se obtiene una simulación temporal de posición y rotación
 
             //Debug.Log("La simulación del CLIENTE en el frame " + simulationState.simulationFrame + " es: " + simulationState.position + "-" + simulationState.rotation);
 
-
-            cache_index = simulationFrame % SIZE_CACHE;
-
-            inputStateCache[cache_index] = inputState;
-            simulationStateCache[cache_index] = simulationState;
+            //Se añaden los inputs y simulaciones en la caché
+            AddToCache(inputState, simulationState, simulationFrame % SIZE_CACHE);
             //Debug.Log(simulationFrame + " " + inputStateCache[cache_index].simulationFrame + " " + simulationStateCache[cache_index].simulationFrame+ " " + cache_index);
             //Debug.Log("SOY OWNER " + simulationFrame + ": " + );
             simulationFrame++;
@@ -115,35 +127,55 @@ public class TankMovement : NetworkBehaviour
         }
         else if (!IsServer)
         {
-            transform.position = _TankPosition.Value;
-            transform.rotation = _TankRotation.Value;   
+            /*transform.position = _TankPosition.Value;
+            transform.rotation = _TankRotation.Value;  */ 
         }
         if (IsServer)
         {
-            ClientInputState<Vector2> serverIputState = null;
+            ClientInputState<Vector2> serverIputState = null; //Variable temporal para almacenar el input
+            /*int simulationFrameToSend;
 
-            // Obtain CharacterInputState's from the queue. 
-            while (serverQueue.Count > 0 && (serverIputState = serverQueue.Dequeue()) != null)
+            while (simulationsToSend.Count > 0)
             {
-                Debug.Log("La psoición inicial en el SERVIDOR antes de procesar FRAME" + serverIputState.simulationFrame + " es: " + transform.position + "-" + transform.rotation);
-                // Process the input.
-                ProcessInput(serverIputState);
+                simulationFrameToSend = simulationsToSend.Dequeue();
 
-                // Obtain the current SimulationState.
-                SimulationState state = GetSimulationState(serverIputState);
+                SimulationState state = GetSimulationState(simulationFrameToSend);
 
-                // Send the state back to the client.
-                SendServerSimulationToClientRpc(state.position, state.rotation, state.simulationFrame);
+                SendServerSimulationToClientRpc(state.position, state.rotation, state.simulationFrame); //Se envía la simulación al cliente
+            }*/
+            int nFramesToSimulate = 0;
+            //while (serverQueue.Count > 0 && (serverIputState = serverQueue.Dequeue()) != null)
+            //{
+                //Debug.Log("La psoición inicial en el SERVIDOR antes de procesar FRAME" + serverIputState.simulationFrame + " es: " + transform.position + "-" + transform.rotation);
+            if((serverIputState = serverQueue.Dequeue()) != null) {
+
+            //}
+                ProcessInput(serverIputState); //El servidor procesa el input
+                                               //
+                simulationsToSend.Enqueue(serverIputState.simulationFrame);
+
+                SimulationState state = GetSimulationState(serverIputState.simulationFrame);
+
+                SendServerSimulationToClientRpc(state.position, state.rotation, state.simulationFrame); //Se envía la simulación al cliente*/
             }
 
-            _TankPosition.Value = (Vector2)transform.position;
-            _TankRotation.Value = transform.rotation;
+            /*_TankPosition.Value = (Vector2)transform.position;
+            _TankRotation.Value = transform.rotation;*/
         }
         
 
         
     }
 
+    private void AddToCache(ClientInputState<Vector2> newInputState, SimulationState newSimulationState, int cacheIndex)
+    {
+        cacheIndex = simulationFrame % SIZE_CACHE;
+
+        inputStateCache[cacheIndex] = inputState;
+        simulationStateCache[cacheIndex] = simulationState;
+    }
+
+    //El servidor recibe el input de los jugadores y los almacena en la cola
     [ServerRpc]
     private void SendInputToServerRpc(Vector2 input, int simulationFrame, float fixedDeltaTime)
     {
@@ -170,6 +202,10 @@ public class TankMovement : NetworkBehaviour
         {
             input = new Vector2(newInput.x, newInput.y)
         };
+        /*clientInputQueue.Enqueue(new ClientInputState<Vector2>
+        {
+            input = new Vector2(newInput.x, newInput.y)
+        });*/
         //m_movementVector = new Vector2(newInput.x, newInput.y);
         //Debug.Log($"OnMove input: {inputState.input}");
         //OnMoveServerRpc(newInput);
@@ -201,7 +237,9 @@ public class TankMovement : NetworkBehaviour
         
 
         m_tankRB.MovePosition(m_tankRB.position + m_speed * input.fixedDeltaTime * input.input);
-        if (IsServer)
+
+        
+        /*if (IsServer)
         {
             Debug.Log("SERVIDOR " + input.simulationFrame + ": ENTRADA " + input.input + input.fixedDeltaTime + "- SALIDA " + transform.position + transform.rotation);
         }
@@ -209,25 +247,33 @@ public class TankMovement : NetworkBehaviour
         {
             Debug.Log("CLIENTE " + input.simulationFrame + ": ENTRADA " + input.input + input.fixedDeltaTime + "- SALIDA " + transform.position + transform.rotation);
 
-        }
+        }*/
     }
 
-    private SimulationState GetSimulationState(ClientInputState<Vector2> inputState)
+    private SimulationState GetSimulationState(int newSimulationFrame)
     {
+        if (IsServer)
+        {
+            Debug.Log("SERVIDOR " + newSimulationFrame + "- ESTADO: " + transform.position + transform.rotation);
+        }
+        else
+        {
+            Debug.Log("CLIENTE " + newSimulationFrame +  "- ESTADO :" + transform.position + transform.rotation);
+        }
         return new SimulationState
         {
-            position = transform.position,
-            rotation = transform.rotation,
-            simulationFrame = inputState.simulationFrame
-        };       
+            position = m_tankRB.position,
+            rotation = m_tankRB.rotation,
+            simulationFrame = newSimulationFrame
+        };
     }
 
     [ClientRpc]
-    private void SendServerSimulationToClientRpc(Vector2 simPosition, Quaternion simRotation, int simulationFrame)
+    private void SendServerSimulationToClientRpc(Vector2 simPosition, float simRotation, int simulationFrame)
     {
         if (IsOwner)
         {
-            if (serverSimulationState?.simulationFrame < simulationFrame)
+            if (serverSimulationState.simulationFrame < simulationFrame)
             {
                 serverSimulationState = new SimulationState
                 {
@@ -251,8 +297,8 @@ public class TankMovement : NetworkBehaviour
 
         if (cachedInput == null || cachedSimulation == null)
         {
-            transform.position = serverSimulationState.position;
-            transform.rotation = serverSimulationState.rotation;
+            m_tankRB.position = serverSimulationState.position;
+            m_tankRB.rotation = serverSimulationState.rotation;
 
             lastCorrectedFrame = serverSimulationState.simulationFrame;
             return;
@@ -264,22 +310,19 @@ public class TankMovement : NetworkBehaviour
         float differenceX = Mathf.Abs(cachedSimulation.position.x - serverSimulationState.position.x);
         float differenceY = Mathf.Abs(cachedSimulation.position.y - serverSimulationState.position.y);
         float differenceZ = Mathf.Abs(cachedSimulation.position.z - serverSimulationState.position.z);
-        float differenceRotationX = Mathf.Abs(cachedSimulation.rotation.x - serverSimulationState.rotation.x);
-        float differenceRotationY = Mathf.Abs(cachedSimulation.rotation.y - serverSimulationState.rotation.y);
-        float differenceRotationZ = Mathf.Abs(cachedSimulation.rotation.z - serverSimulationState.rotation.z);
-        float differenceRotationW = Mathf.Abs(cachedSimulation.rotation.w - serverSimulationState.rotation.w);
+        float differenceRotation = Mathf.Abs(cachedSimulation.rotation - serverSimulationState.rotation);
 
-       //Debug.Log("Posicion" + cachedSimulation.simulationFrame + ": "+ cachedSimulation.position + "-" + serverSimulationState.simulationFrame + serverSimulationState.position);
-       //Debug.Log("Rotacion" + cachedSimulation.simulationFrame + ": "+ cachedSimulation.rotation + " - " + serverSimulationState.simulationFrame + serverSimulationState.rotation);
+       Debug.Log("Posicion" + cachedSimulation.simulationFrame + ": "+ cachedSimulation.position + "-" + serverSimulationState.simulationFrame + serverSimulationState.position);
+       Debug.Log("Rotacion" + cachedSimulation.simulationFrame + ": "+ cachedSimulation.rotation + " - " + serverSimulationState.simulationFrame + serverSimulationState.rotation);
 
-        if (differenceRotationX > toleranceRotation || differenceRotationY > toleranceRotation || differenceRotationZ > toleranceRotation ||
-            differenceRotationW > toleranceRotation || differenceX > tolerancePosition || differenceY > tolerancePosition 
+        if (differenceRotation > toleranceRotation || differenceX > tolerancePosition || differenceY > tolerancePosition 
             || differenceZ > tolerancePosition)
         {
-            transform.position = serverSimulationState.position;
-            transform.rotation = serverSimulationState.rotation;
+            m_tankRB.position = serverSimulationState.position;
+            m_tankRB.rotation = serverSimulationState.rotation;
 
             int rewindFrame = serverSimulationState.simulationFrame;
+            Debug.Log("Reconciliación en el frame " + serverSimulationState.simulationFrame);
             while(rewindFrame < simulationFrame)
             {
                 int rewindCacheIndex = rewindFrame % SIZE_CACHE;
@@ -288,14 +331,18 @@ public class TankMovement : NetworkBehaviour
 
                 if (rewindCachedInput == null || rewindCachedSimulation == null)
                 {
+                    Debug.Log("Cache vacía posición " + rewindCacheIndex);
                     rewindFrame++;
                     continue;
                 }
 
-                ProcessInput(rewindCachedInput);
-
-                SimulationState rewoundSimulationState = GetSimulationState(rewindCachedInput);
-                rewoundSimulationState.simulationFrame = simulationFrame;
+                if(rewindCachedInput.input.magnitude > Mathf.Epsilon)
+                {
+                    ProcessInput(rewindCachedInput);
+                }
+                Debug.Log(rewindCachedInput.simulationFrame + " - " + simulationFrame + " - " + rewindCacheIndex);
+                SimulationState rewoundSimulationState = GetSimulationState(rewindCachedInput.simulationFrame);
+                rewoundSimulationState.simulationFrame = rewindFrame;
                 simulationStateCache[rewindCacheIndex] = rewoundSimulationState;
                 rewindFrame++;
             }
