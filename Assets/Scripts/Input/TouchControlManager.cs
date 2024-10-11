@@ -3,7 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.EnhancedTouch;
+using UnityEngine.InputSystem.Layouts;
+using UnityEngine.InputSystem.Users;
 using UnityEngine.UI;
 
 namespace Tankito.Mobile
@@ -13,15 +16,32 @@ namespace Tankito.Mobile
         [SerializeField] Canvas m_canvas;
         private static PointerEventData m_pointerEvtData = new (null);
         private static List<RaycastResult> m_raycastResults = new List<RaycastResult>();
-        public GraphicRaycaster graphicRaycaster;
+        private GraphicRaycaster m_graphicRaycaster;
+
+        
         void OnEnable()
         {
             EnhancedTouchSupport.Enable();
+            InputUser.onChange += OnInputDeviceChange;
         }
 
         void OnDisable()
         {
             EnhancedTouchSupport.Disable();
+            InputUser.onChange -= OnInputDeviceChange;
+        }
+        
+        private void OnInputDeviceChange(InputUser user, InputUserChange change, InputDevice device)
+        {
+            //Debug.Log($"User:{user}, change:{change}, device:{device}");
+            if (device == null) return;
+            if (device.ToString().Contains("Mobile") || device.ToString().Contains("Gamepad") || device.ToString().Contains("Touch") &&
+            (change == InputUserChange.DevicePaired || change == InputUserChange.DeviceRegained))
+            {
+                m_canvas.gameObject.SetActive(true);
+            } else {
+                m_canvas.gameObject.SetActive(false);
+            }
         }
 
         public bool CheckIfTouched(Vector2 absoluteScreenPosition, Type componentType)
@@ -32,7 +52,7 @@ namespace Tankito.Mobile
             m_raycastResults.Clear();
 
             // Perform a raycast to find the UI element touched by the finger
-            graphicRaycaster.Raycast(m_pointerEvtData, m_raycastResults);
+            m_graphicRaycaster.Raycast(m_pointerEvtData, m_raycastResults);
 
             foreach (var hit in m_raycastResults)
             {
@@ -48,26 +68,18 @@ namespace Tankito.Mobile
         
         void Awake()
         {
-            if (graphicRaycaster == null)
-            {
-                graphicRaycaster = GetComponent<GraphicRaycaster>();
-                Debug.LogWarning($"No GraphicRaycaster component attached to {this}, some touch controls might not function properly...");
-            }
             if (m_canvas == null)
             {
-                Canvas[] c = GetComponentsInParent<Canvas>();
-                m_canvas = c[c.Length - 1];
+                m_canvas = GetComponentInChildren<Canvas>();
                 if (m_canvas == null) Debug.LogWarning($" No Canvas component attached to {this}!");
+            }
+            if (m_graphicRaycaster == null)
+            {
+                m_graphicRaycaster = m_canvas.GetComponent<GraphicRaycaster>();
+                if (m_graphicRaycaster == null) Debug.LogWarning($"No GraphicRaycaster component attached to {this}, some touch controls might not function properly...");
             }
         }
 
-        // Update is called once per frame
-        void Update()
-        {
-            
-        }
-
-        
 
     }
 }

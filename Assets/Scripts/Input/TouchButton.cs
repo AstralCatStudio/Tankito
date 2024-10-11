@@ -31,12 +31,11 @@ namespace Tankito.Mobile
         
         void Awake()
         {
-            if (m_parentCanvas == null)
+            if (m_parentCanvas == null || m_touchControlManager == null)
             {
-                Canvas[] c = GetComponentsInParent<Canvas>();
-                m_parentCanvas = c[c.Length - 1];
+                m_touchControlManager = GetComponentInParent<TouchControlManager>();
             }
-            m_touchControlManager = m_parentCanvas.GetComponent<TouchControlManager>();
+            m_parentCanvas = m_touchControlManager.GetComponentInChildren<Canvas>();
         }
 
         protected override void OnEnable()

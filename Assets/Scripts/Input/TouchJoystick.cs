@@ -55,12 +55,11 @@ namespace Tankito.Mobile
 
         void Awake()
         {
-            if (m_parentCanvas == null)
+            if (m_parentCanvas == null || m_touchControlManager == null)
             {
-                Canvas[] c = m_joystickRect.GetComponentsInParent<Canvas>();
-                m_parentCanvas = c[c.Length - 1];
+                m_touchControlManager = m_joystickRect.GetComponentInParent<TouchControlManager>();
             }
-            m_touchControlManager = m_parentCanvas.GetComponent<TouchControlManager>();
+            m_parentCanvas = m_touchControlManager.GetComponentInChildren<Canvas>();
         }
 
         protected override void OnEnable()
