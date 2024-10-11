@@ -651,6 +651,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3230501851769277253, guid: d631823e1a50935488b40f859f3f4afc, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 0bb1aed4cbbfba94b820d7e2a990147a, type: 2}
     - target: {fileID: 5646685621449714276, guid: d631823e1a50935488b40f859f3f4afc, type: 3}
       propertyPath: m_Name
       value: IsopodTank
@@ -801,6 +805,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 82dda9d4-658e-4165-9b24-9ab05c90cd00
     m_ActionName: Player/Dash[/Keyboard/leftShift]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 694008886}
+        m_TargetAssemblyTypeName: TankMovement, Assembly-CSharp
+        m_MethodName: OnParry
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: f37cde2f-34b4-40a5-ae4e-1c7f93228d5f
+    m_ActionName: Player/Parry[/Keyboard/q,/Keyboard/rightShift,/Mouse/rightButton]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player

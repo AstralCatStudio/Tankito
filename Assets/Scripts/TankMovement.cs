@@ -16,6 +16,8 @@ public class TankMovement : MonoBehaviour
     [SerializeField] private float m_dashCooldown = 0.5f;
     private float m_dashSpeedMultiplier = 1f;
     private Vector2 m_DashVector = Vector3.zero;
+    private Animator m_animator;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -32,6 +34,11 @@ public class TankMovement : MonoBehaviour
         if (m_turret == null)
         {
             Debug.Log("Error tank turret reference not set.");
+        }
+
+        if (m_animator == null)
+        {
+            m_animator = GetComponent<Animator>();
         }
     }
 
@@ -71,7 +78,7 @@ public class TankMovement : MonoBehaviour
     {
         var input = context.ReadValue<Vector2>();
         m_movementVector = new Vector2(input.x, input.y);
-        //Debug.Log($"OnMove input: {input}");
+
     }
     public void OnDash(InputAction.CallbackContext context)
     {
@@ -81,6 +88,13 @@ public class TankMovement : MonoBehaviour
             m_dashTimer = m_dashDuration;
         }
         
+    }
+    public void OnParry(InputAction.CallbackContext ctx)
+    {
+        if(ctx.performed && m_dashTimer<= -m_dashCooldown)
+        {
+            m_animator.SetTrigger("Parry");
+        }
     }
 }
 
