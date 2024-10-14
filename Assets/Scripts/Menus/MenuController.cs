@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Animations;
 using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.Events;
@@ -23,6 +24,8 @@ public class MenuController : Singleton<MenuController>
     public GameObject[] menus;
     public GameObject[] bgMenus;
     public Vector2[] bgPositions; //Posiciones del "grid"
+
+    public Animator animator;
     
     public int currentMenuIndex;
     public int xUnit = 56, yUnit = 30;  
@@ -44,6 +47,17 @@ public class MenuController : Singleton<MenuController>
 
     public void ChangeToMenu(int newMenuIndex)
     {
+        //TENGO QUE AÑADIRLE ANIMATORS A TODOS LOS BOTONES Y AÑADIRLE UN SCRIPT DE COMPORTAMIENTO A LOS ANIMATORS PARA QUE AL DARLE A UN BOTÓN
+        //QUE LLEVA AL SIGUIENTE MENÚ, NO DESAPAREZCA AL INSTANTE Y REALICE LA ANIMACIÓN DE EXIT, HASTA QUE LA TERMINA Y YA SE APAGA.
+
+        //TAMBIÉN TENGO QUE CONTEMPLAR LA POSIBILIDAD DE QUE, EN VEZ DE QUE SE ACTIVEN Y DESACTIVEN LOS MENÚS, SIMPLEMENTE TENGO UN CONTROLADOR
+        //PARA TODOS LOS MENUS Y ACTIVAN LA ANIMACION DE ENTER Y DE EXIT Y YA. DE HECHO CREO Q VA A SER MÁS CONVENIENTE ASÍ.
+        if((int)currentMenuIndex == 1)
+        {
+            animator = menus[(int)currentMenuIndex].GetComponent<Animator>();
+            animator.SetBool("Exit", true);
+        }
+        
         menus[(int)currentMenuIndex].gameObject.SetActive(false);
         MoveBG(newMenuIndex);
         currentMenuIndex = newMenuIndex;
