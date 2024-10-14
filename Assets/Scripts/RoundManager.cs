@@ -23,7 +23,7 @@ public class RoundManager : NetworkBehaviour
 
         //if (IsServer)
         //{
-            InitializeRound();
+        InitializeRound();
         //}
     }
 
@@ -35,6 +35,7 @@ public class RoundManager : NetworkBehaviour
         }
     }
 
+    #region PlayerManagement
     public void AddPlayer(GameObject player)
     {
         _players.Add(player);
@@ -46,6 +47,7 @@ public class RoundManager : NetworkBehaviour
         _alivePlayer.Remove(player);
         CheckForWinner();
     }
+    #endregion
 
     private void InitializeRound()
     {
@@ -70,14 +72,37 @@ public class RoundManager : NetworkBehaviour
     private void EndRound()
     {
         Debug.Log("Fin de ronda");
-        ShowRanking(); // Prueba
-        ShowRankingClientRpc();
-        Invoke(nameof(CheckRoundsCount), 5.0f);
+        EndRoundClientRpc();
+        BetweenRounds();
     }
 
-    private void ShowRanking() // Prueba
+    [ClientRpc]
+    private void EndRoundClientRpc()
+    {
+        Debug.Log("Fin de ronda en todos");
+    }
+
+    private void BetweenRounds()
+    {
+        if (_currentRound < _maxRounds)
+        {
+            ShowRanking();
+            //ShowRankingClientRpc();
+            Invoke(nameof(PowerUpSelection), 3.0f);
+            Invoke(nameof(InitializeRound), 8.0f);
+        }
+        else
+        {
+            ShowFinalRanking();
+            //ShowFinalRankingClientRpc();
+            Invoke(nameof(EndGame), 5.0f);
+        }
+    }
+
+    private void ShowRanking()
     {
         Debug.Log("Se muestra el ranking");
+        ShowRankingClientRpc();
     }
 
     [ClientRpc]
@@ -86,17 +111,16 @@ public class RoundManager : NetworkBehaviour
         Debug.Log("Se muestra el ranking en todos");
     }
 
-    private void CheckRoundsCount()
+    private void ShowFinalRanking()
     {
-        if (_currentRound < _maxRounds)
-        {
-            PowerUpSelection();
-            Invoke(nameof(InitializeRound),5.0f);
-        }
-        else
-        {
-            EndGame();
-        }
+        Debug.Log("Se muestra el ranking final");
+        ShowFinalRankingClientRpc();
+    }
+
+    [ClientRpc]
+    private void ShowFinalRankingClientRpc()
+    {
+        Debug.Log("Se muestra el ranking final en todos");
     }
 
     private void PowerUpSelection()
