@@ -20,7 +20,8 @@ namespace Tankito {
     }
     public abstract class ABullet : MonoBehaviour
     {
-        public BulletProperties bulletProperties;
+        [SerializeField]
+        protected BulletProperties bulletProperties;
         protected List<Modifier> modifiersList = new List<Modifier>();
         protected ulong m_ownerID;
         protected int bouncesLeft=0;
@@ -41,6 +42,11 @@ namespace Tankito {
         void Update()
         {
             OnFly.Invoke();
+        }
+
+        public void SetProperties(BulletProperties newProperties)
+        {
+            bulletProperties = newProperties;
         }
     }
 }
