@@ -390,7 +390,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_ProtocolType: 1
-  m_UseWebSockets: 0
+  m_UseWebSockets: 1
   m_UseEncryption: 1
   m_MaxPacketQueueSize: 128
   m_MaxPayloadSize: 6144
@@ -624,7 +624,7 @@ GameObject:
   - component: {fileID: 893376371}
   - component: {fileID: 893376373}
   m_Layer: 0
-  m_Name: NetPool
+  m_Name: NetworkObjectPool
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -644,7 +644,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PooledPrefabsList:
   - Prefab: {fileID: 4570257745151390860, guid: 85797559142c3c94b8f11faacad78b7f, type: 3}
-    PrewarmCount: 10
+    PrewarmCount: 5
 --- !u!4 &893376372
 Transform:
   m_ObjectHideFlags: 0
@@ -679,7 +679,7 @@ MonoBehaviour:
   SceneMigrationSynchronization: 1
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
-  AutoObjectParentSync: 0
+  AutoObjectParentSync: 1
 --- !u!1 &942387432
 GameObject:
   m_ObjectHideFlags: 0

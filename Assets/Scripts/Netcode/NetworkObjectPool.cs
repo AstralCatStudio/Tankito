@@ -41,8 +41,10 @@ namespace Tankito.Netcode
         public override void OnNetworkSpawn()
         {
             // Registers all objects in PooledPrefabsList to the cache.
+            Debug.Log($"Registering {PooledPrefabsList}({PooledPrefabsList.Count}) to Internal prefab list..."); 
             foreach (var configObject in PooledPrefabsList)
             {
+                Debug.Log($"Registering {configObject.Prefab} to Internal prefab list...");
                 RegisterPrefabInternal(configObject.Prefab, configObject.PrewarmCount);
             }
         }
@@ -102,6 +104,7 @@ namespace Tankito.Netcode
         public void ReturnNetworkObject(NetworkObject networkObject, GameObject prefab)
         {
             m_PooledObjects[prefab].Release(networkObject);
+            m_PooledObjects[prefab].Get().transform.parent = transform;
         }
 
         /// <summary>
@@ -111,7 +114,7 @@ namespace Tankito.Netcode
         {
             NetworkObject CreateFunc()
             {
-                return Instantiate(prefab).GetComponent<NetworkObject>();
+                return Instantiate(prefab, transform).GetComponent<NetworkObject>();
             }
 
             void ActionOnGet(NetworkObject networkObject)
@@ -144,6 +147,7 @@ namespace Tankito.Netcode
             {
                 m_PooledObjects[prefab].Release(networkObject);
             }
+            Debug.Log("ReleasedPrePooled objects...");
 
             // Register Netcode Spawn handlers
             NetworkManager.Singleton.PrefabHandler.AddHandler(prefab, new PooledPrefabInstanceHandler(prefab, this));
@@ -170,11 +174,13 @@ namespace Tankito.Netcode
 
         NetworkObject INetworkPrefabInstanceHandler.Instantiate(ulong ownerClientId, Vector3 position, Quaternion rotation)
         {
+            Debug.Log($"PooledPrefabInstanceHandler.Instantiate({ownerClientId}, {position}, {rotation})");
             return m_Pool.GetNetworkObject(m_Prefab, position, rotation);
         }
 
         void INetworkPrefabInstanceHandler.Destroy(NetworkObject networkObject)
         {
+            Debug.Log($"PooledPrefabInstanceHandler.Destroy({networkObject})");
             m_Pool.ReturnNetworkObject(networkObject, m_Prefab);
         }
     }
