@@ -120,7 +120,6 @@ namespace Tankito.Netcode
             {
                 Debug.Log($"ActionOnGet called on {networkObject}");
                 networkObject.gameObject.SetActive(true);
-                networkObject.TrySetParent(transform);
             }
 
             void ActionOnRelease(NetworkObject networkObject)

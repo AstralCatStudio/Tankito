@@ -23,7 +23,9 @@ namespace Tankito
 
             if (m_properties.lifetimeTotal <= m_lifetime)
             {
-                if (IsServer) GetComponent<NetworkObject>().Despawn();
+                // Return to the pool from whence it came.
+                var networkObject = gameObject.GetComponent<NetworkObject>();
+                networkObject.Despawn();
             }
 
         }
