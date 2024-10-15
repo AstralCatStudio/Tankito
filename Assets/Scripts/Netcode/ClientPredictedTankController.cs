@@ -19,16 +19,16 @@ namespace Tankito.Netcode
         [SerializeField]
         private float m_aimSpeed = 720f;
 
-        //private NetworkVariable<Vector2> _TankPosition = new NetworkVariable<Vector2>(new Vector2(), NetworkVariableReadPermission.Everyone, 
-        //    NetworkVariableWritePermission.Server);
-        //private NetworkVariable<Quaternion> _TankRotation = new NetworkVariable<Quaternion>(new Quaternion(), NetworkVariableReadPermission.Everyone,
-        //    NetworkVariableWritePermission.Server);
+        private Vector2 m_previousFrameAim;
 
 #endregion
 
 #region Client Netcode Variables
 
-        private InputPayload m_latestInputState; // Almacena el ultimo input percibido (eg. ultimo estado de un mando con polling rate de 1000Hz)
+        // A lo mejor hay que cambiar esto porque es posible que de problemas cuando se hagan inputs mas rapidos que el tickRate
+        // (creo (?) que la unidad minima de interaccion pasa a ser: LAST_INPUT durante TICK_RATE, emulando mantener ese input durante el tick completo)
+        // - Bernat
+        private InputPayload m_currentInput; // Almacena el ultimo, no es exactamente el "current", input percibido (eg. ultimo estado de un mando con polling rate de 1000Hz)
         private StatePayload m_lastAuthState; //Variable que almacena el estado de simulación del servidor
         private const int CACHE_SIZE = 1024;
         private CircularBuffer<InputPayload> m_inputStateCache = new CircularBuffer<InputPayload>(CACHE_SIZE);
@@ -39,7 +39,7 @@ namespace Tankito.Netcode
 #region Server Netcode Variables
 
         private Queue<InputPayload> m_serverInputQueue = new Queue<InputPayload>();
-        private StatePayload m_reportedClientState; // Latest reported client state
+        private StatePayload m_lastClientPredictedState; // Latest reported client state
 
 #endregion
 
@@ -75,22 +75,27 @@ namespace Tankito.Netcode
 
                 if (IsOwner)
                 {
-                    m_latestInputState.timestamp = currentTick; // MUY IMPORTANTE timestampear el input antes de pushearlo
+                    m_currentInput.timestamp = currentTick; // MUY IMPORTANTE timestampear el input antes de pushearlo
 
+<<<<<<< Updated upstream
                     if (!IsServer)
                     {
                         ProcessInput(m_latestInputState);
                         Physics2D.Simulate(ClockManager.SERVER_SIMULATION_DELTA_TIME);
                     }
 
+=======
+                    ProcessInput(m_currentInput);
+                    Physics2D.Simulate(ClockManager.SERVER_SIMULATION_DELTA_TIME);
+>>>>>>> Stashed changes
                     var currentState = GetSimulationState(currentTick);
                     
-                    m_inputStateCache.Add(m_latestInputState, currentTick);
+                    m_inputStateCache.Add(m_currentInput, currentTick);
                     m_simulationStateCache.Add(currentState, currentTick);
                     
-                    SendPayloadsServerRpc(m_latestInputState, currentState);
+                    SendPayloadsServerRpc(m_currentInput, currentState);
 
-                    Debug.Log($"Client: Updated simulation [{currentTick}]");
+                    Debug.Log($"Client: [{currentTick}] Updated simulation and sent input {m_currentInput}");
                 }
                 else if (!IsServer)
                 {
@@ -104,6 +109,7 @@ namespace Tankito.Netcode
                     while (m_serverInputQueue.Count > 0)
                     {
                         InputPayload clientInput = m_serverInputQueue.Dequeue();
+                        Debug.Log("SERVER: Processing - " + clientInput);
                         // Process the input.
                         ProcessInput(clientInput);
                         Physics2D.Simulate(ClockManager.SERVER_SIMULATION_DELTA_TIME);
@@ -122,19 +128,37 @@ namespace Tankito.Netcode
 #region Input Methods
         public void OnMove(InputAction.CallbackContext ctx)
         {
-            m_latestInputState.moveVector = ctx.ReadValue<Vector2>();
+            m_currentInput.moveVector = ctx.ReadValue<Vector2>();
         }
         
         public void OnAim(InputAction.CallbackContext ctx)
         {
-            m_latestInputState.aimVector = ctx.ReadValue<Vector2>();
+            var input = ctx.ReadValue<Vector2>();
+            Vector2 lookVector;
+
+            if (ctx.control.path != "/Mouse/position")
+            {
+                lookVector = new Vector2(input.x, input.y);
+            }
+            else
+            {
+                // Mouse control fallback/input processing
+                lookVector = input - (Vector2)Camera.main.WorldToScreenPoint(transform.position);
+            }
+
+            if (lookVector.magnitude > 1)
+            {
+                lookVector.Normalize();
+            }
+
+            m_currentInput.aimVector = lookVector;
         }
 
         public void OnDash(InputAction.CallbackContext ctx)
         {
             if (ctx.ReadValue<bool>())
             {
-                m_latestInputState.action =  TankAction.Dash;
+                m_currentInput.action =  TankAction.Dash;
             } else {
                 Debug.Log("DASH false positive??? function called but action value false");
             }
@@ -144,7 +168,7 @@ namespace Tankito.Netcode
         {
             if (ctx.ReadValue<bool>())
             {
-                m_latestInputState.action =  TankAction.Parry;
+                m_currentInput.action =  TankAction.Parry;
             } else {
                 Debug.Log("PARRY false positive??? function called but action value false");
             }
@@ -223,7 +247,7 @@ namespace Tankito.Netcode
         private void SendPayloadsServerRpc(InputPayload input, StatePayload state)
         {
             m_serverInputQueue.Enqueue(input);
-            m_reportedClientState = state;
+            m_lastClientPredictedState = state;
 
             /*ProcessInput(serverInputState);
 
