@@ -42,6 +42,8 @@ namespace Tankito.Netcode
         private StatePayload m_lastClientPredictedState; // Latest reported client state
 
 #endregion
+        [SerializeField] private float SimulationFrame { get => m_currentTick; }
+        private int m_currentTick = 0;
 
         // Start is called before the first frame update
         void Start()
@@ -68,51 +70,53 @@ namespace Tankito.Netcode
 
         void FixedUpdate()
         {
-            while(ClockManager.simulationClock.TicksLeft())
+            // TODO: Implement Server-Client clock
+            //while(ClockManager.simulationClock.TicksLeft())
+            //int currentTick = ClockManager.simulationClock.CurrentTick;
+            //Debug.Log("Tick: currentTick");
+
+            if (IsOwner)
             {
-                int currentTick = ClockManager.simulationClock.CurrentTick;
-                //Debug.Log("Tick: currentTick");
+                m_currentInput.timestamp = m_currentTick; // MUY IMPORTANTE timestampear el input antes de pushearlo
 
-                if (IsOwner)
-                {
-                    m_currentInput.timestamp = currentTick; // MUY IMPORTANTE timestampear el input antes de pushearlo
+                ProcessInput(m_currentInput);
+                Physics2D.Simulate(ClockManager.SERVER_SIMULATION_DELTA_TIME);
+                var currentState = GetSimulationState(m_currentTick);
+                
+                m_inputStateCache.Add(m_currentInput, m_currentTick);
+                m_simulationStateCache.Add(currentState, m_currentTick);
+                
+                SendPayloadsServerRpc(m_currentInput, currentState);
 
-                    ProcessInput(m_currentInput);
-                    Physics2D.Simulate(ClockManager.SERVER_SIMULATION_DELTA_TIME);
-                    var currentState = GetSimulationState(currentTick);
-                    
-                    m_inputStateCache.Add(m_currentInput, currentTick);
-                    m_simulationStateCache.Add(currentState, currentTick);
-                    
-                    SendPayloadsServerRpc(m_currentInput, currentState);
-
-                    Debug.Log($"Client: [{currentTick}] Updated simulation and sent input {m_currentInput}");
-                }
-                else if (!IsServer)
-                {
-                    // RECEIVE STATE DATA FROM SERVER ABOUT OTHER CLIENTS' TANKS  
-                }
-                if (IsServer)
-                {
-                    // ESTO ESTA MAL AQUI TIENE QUE FALTAR ALGO, NO PUEDE SER QUE SIN INPUTS EN COLA EL SERVER NO HAGA NADA Y AUMENTEN LOS TICKS Y YA, NO?
-                    // me voy a dormir
-                    // Obtain CharacterInputState's from the queue. 
-                    while (m_serverInputQueue.Count > 0)
-                    {
-                        InputPayload clientInput = m_serverInputQueue.Dequeue();
-                        Debug.Log("SERVER: Processing - " + clientInput);
-                        // Process the input.
-                        ProcessInput(clientInput);
-                        Physics2D.Simulate(ClockManager.SERVER_SIMULATION_DELTA_TIME);
-                    }
-
-                    // Obtain the current SimulationState.
-                    StatePayload newAuthState = GetSimulationState(currentTick);
-
-                    // Send the state back to the client.
-                    SendAuthStateClientRpc(newAuthState);
-                }
+                Debug.Log($"Client: [{m_currentTick}] Updated simulation and sent input {m_currentInput}");
             }
+            else if (!IsServer)
+            {
+                // RECEIVE STATE DATA FROM SERVER ABOUT OTHER CLIENTS' TANKS  
+            }
+            if (IsServer)
+            {
+                // ESTO ESTA MAL AQUI TIENE QUE FALTAR ALGO, NO PUEDE SER QUE SIN INPUTS EN COLA EL SERVER NO HAGA NADA Y AUMENTEN LOS TICKS Y YA, NO?
+                // me voy a dormir
+                // Obtain CharacterInputState's from the queue. 
+                while (m_serverInputQueue.Count > 0)
+                {
+                    InputPayload clientInput = m_serverInputQueue.Dequeue();
+                    Debug.Log("SERVER: Processing - " + clientInput);
+                    // Process the input.
+                    ProcessInput(clientInput);
+                    Physics2D.Simulate(ClockManager.SERVER_SIMULATION_DELTA_TIME);
+                }
+
+                // Obtain the current SimulationState.
+                StatePayload newAuthState = GetSimulationState(m_currentTick);
+
+                // Send the state back to the client.
+                SendAuthStateClientRpc(newAuthState);
+            }
+
+            // Advance tick counter
+            m_currentTick++;
         }
 
 

@@ -13,7 +13,7 @@ namespace Tankito
         private PlayerInput m_playerInput;
         private TankitoInputActions m_inputActions;
 
-        [SerializeField]
+        //[SerializeField]
         private GameObject m_playerPrefab;
 
         private string m_playerName = "Invited";
