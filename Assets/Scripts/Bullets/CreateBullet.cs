@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Tankito
 {
-    public class CreateBullet : MonoBehaviour
+    public class CreateBullet : NetworkBehaviour
     {
         public GameObject bulletPrefab;
         [SerializeField]
@@ -24,16 +24,15 @@ namespace Tankito
         void Update()
         {
             timer += Time.deltaTime;
-            if(timer> interval)
+            if(timer > interval)
             {
                 m_bulletProperties.direction = transform.up;
                 m_bulletProperties.startingPosition = transform.position;
                 timer = 0;
-                GameObject newBullet;
 
                 if (NetworkManager.Singleton.IsServer)
                 {
-                    newBullet = Instantiate(bulletPrefab, transform.position, transform.rotation);
+                    var newBullet = NetworkObjectPool.Singleton.GetNetworkObject(bulletPrefab, transform.position, transform.rotation).gameObject;
                     newBullet.GetComponent<ABullet>().SetProperties(m_bulletProperties);
                     newBullet.GetComponent<NetworkObject>().Spawn();
                 }

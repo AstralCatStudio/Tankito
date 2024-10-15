@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
@@ -41,10 +40,8 @@ namespace Tankito.Netcode
         public override void OnNetworkSpawn()
         {
             // Registers all objects in PooledPrefabsList to the cache.
-            Debug.Log($"Registering {PooledPrefabsList} to Internal prefab list..."); 
             foreach (var configObject in PooledPrefabsList)
             {
-                Debug.Log($"Registering {configObject.Prefab} to Internal prefab list...");
                 RegisterPrefabInternal(configObject.Prefab, configObject.PrewarmCount);
             }
         }
@@ -104,7 +101,6 @@ namespace Tankito.Netcode
         public void ReturnNetworkObject(NetworkObject networkObject, GameObject prefab)
         {
             m_PooledObjects[prefab].Release(networkObject);
-            m_PooledObjects[prefab].Get().transform.parent = transform;
         }
 
         /// <summary>
@@ -114,21 +110,28 @@ namespace Tankito.Netcode
         {
             NetworkObject CreateFunc()
             {
-                return Instantiate(prefab, transform).GetComponent<NetworkObject>();
+                // We parent the spawned prefab to our transform, to make sure that it isn't loaded onto another scene (because of additive scene loading);
+                var no = Instantiate(prefab, transform).GetComponent<NetworkObject>();
+                Debug.Log($"CreateFunc called on {prefab}, instantiated {no}");
+                return no;
             }
 
             void ActionOnGet(NetworkObject networkObject)
             {
+                Debug.Log($"ActionOnGet called on {networkObject}");
                 networkObject.gameObject.SetActive(true);
+                networkObject.TrySetParent(transform);
             }
 
             void ActionOnRelease(NetworkObject networkObject)
             {
+                Debug.Log($"ActionOnRelease called on {networkObject}");
                 networkObject.gameObject.SetActive(false);
             }
 
             void ActionOnDestroy(NetworkObject networkObject)
             {
+                Debug.Log($"ActionOnDestroy called on {networkObject}");
                 Destroy(networkObject.gameObject);
             }
 
@@ -141,13 +144,13 @@ namespace Tankito.Netcode
             var prewarmNetworkObjects = new List<NetworkObject>();
             for (var i = 0; i < prewarmCount; i++)
             {
-                prewarmNetworkObjects.Add(m_PooledObjects[prefab].Get());
+                var gotInstance = m_PooledObjects[prefab].Get();
+                prewarmNetworkObjects.Add(gotInstance);
             }
             foreach (var networkObject in prewarmNetworkObjects)
             {
                 m_PooledObjects[prefab].Release(networkObject);
             }
-            Debug.Log("ReleasedPrePooled objects...");
 
             // Register Netcode Spawn handlers
             NetworkManager.Singleton.PrefabHandler.AddHandler(prefab, new PooledPrefabInstanceHandler(prefab, this));
@@ -174,16 +177,14 @@ namespace Tankito.Netcode
 
         NetworkObject INetworkPrefabInstanceHandler.Instantiate(ulong ownerClientId, Vector3 position, Quaternion rotation)
         {
-            Debug.Log($"PooledPrefabInstanceHandler.Instantiate({ownerClientId}, {position}, {rotation})");
             return m_Pool.GetNetworkObject(m_Prefab, position, rotation);
         }
 
         void INetworkPrefabInstanceHandler.Destroy(NetworkObject networkObject)
         {
-            Debug.Log($"PooledPrefabInstanceHandler.Destroy({networkObject})");
+            Debug.Log($"Destroying {networkObject}");
             m_Pool.ReturnNetworkObject(networkObject, m_Prefab);
         }
     }
 
 }
-

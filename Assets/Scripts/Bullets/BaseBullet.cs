@@ -23,7 +23,7 @@ namespace Tankito
 
             if (m_properties.lifetimeTotal <= m_lifetime)
             {
-                if (IsServer) GetComponent<NetworkObject>().Despawn(false);
+                if (IsServer) GetComponent<NetworkObject>().Despawn();
             }
 
         }
