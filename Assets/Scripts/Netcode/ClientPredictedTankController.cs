@@ -77,17 +77,8 @@ namespace Tankito.Netcode
                 {
                     m_currentInput.timestamp = currentTick; // MUY IMPORTANTE timestampear el input antes de pushearlo
 
-<<<<<<< Updated upstream
-                    if (!IsServer)
-                    {
-                        ProcessInput(m_latestInputState);
-                        Physics2D.Simulate(ClockManager.SERVER_SIMULATION_DELTA_TIME);
-                    }
-
-=======
                     ProcessInput(m_currentInput);
                     Physics2D.Simulate(ClockManager.SERVER_SIMULATION_DELTA_TIME);
->>>>>>> Stashed changes
                     var currentState = GetSimulationState(currentTick);
                     
                     m_inputStateCache.Add(m_currentInput, currentTick);
