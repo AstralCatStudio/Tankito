@@ -55,6 +55,8 @@ MonoBehaviour:
   m_dashDuration: 0.2
   m_dashSpeed: 20
   m_dashCooldown: 0.5
+  m_TurretAnimator: {fileID: 1391566130179582510}
+  m_HullAnimator: {fileID: 5944565546290914134}
 --- !u!50 &4210398503527520091
 Rigidbody2D:
   serializedVersion: 4
@@ -90,7 +92,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5646685621449714276}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 0f8af6b5fd1aeba43b374f358a716783, type: 2}
   m_CullingMode: 0
@@ -144,6 +146,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8283959714309780158}
   - component: {fileID: 6362772125565679967}
+  - component: {fileID: 5944565546290914134}
   m_Layer: 0
   m_Name: Hull
   m_TagString: Untagged
@@ -218,6 +221,27 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &5944565546290914134
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7588284986979092177}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: d7f6fd0d753c5a049952af4cd1f77ef8, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &7810856493933494526
 GameObject:
   m_ObjectHideFlags: 0
@@ -229,6 +253,7 @@ GameObject:
   - component: {fileID: 3524655561009654791}
   - component: {fileID: 3230501851769277253}
   - component: {fileID: 1748863072597051241}
+  - component: {fileID: 1391566130179582510}
   m_Layer: 0
   m_Name: Turret
   m_TagString: Untagged
@@ -317,3 +342,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_aimSpeed: 900
+  parrying: 0
+--- !u!95 &1391566130179582510
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7810856493933494526}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: b551736d57379c34bab0861b51ef1085, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 1
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
