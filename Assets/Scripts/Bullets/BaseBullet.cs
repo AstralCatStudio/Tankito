@@ -8,24 +8,22 @@ namespace Tankito
     public class BaseBullet : ABullet
     {
         [SerializeField]
-        private Rigidbody2D rb;
-        private float TTL = 5;
-        private float lifetime = 0;
+        private Rigidbody2D m_rb;
         private void Start()
         {
-            rb.velocity = bulletProperties.velocity* bulletProperties.direction;
-            transform.position = bulletProperties.startingPosition;
+            m_rb.velocity = m_properties.velocity* m_properties.direction;
+            transform.position = m_properties.startingPosition;
         }
         private void Update()
         {
             //transform.rotation = Quaternion.LookRotation(rb.velocity.normalized);
             //transform.rotation.SetLookRotation(rb.velocity.normalized);
-            rb.velocity += bulletProperties.acceleration* bulletProperties.direction;
-            lifetime += Time.deltaTime;
+            m_rb.velocity += (m_properties.acceleration != 0f) ? m_properties.acceleration * m_properties.direction : Vector2.zero;
+            m_lifetime += Time.deltaTime;
 
-            if (lifetime >= TTL)
+            if (m_properties.lifetimeTotal <= m_lifetime)
             {
-                GetComponent<NetworkObject>().Despawn();
+                if (IsServer) GetComponent<NetworkObject>().Despawn(false);
             }
 
         }

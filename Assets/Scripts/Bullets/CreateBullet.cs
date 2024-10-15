@@ -34,8 +34,8 @@ namespace Tankito
                 if (NetworkManager.Singleton.IsServer)
                 {
                     newBullet = Instantiate(bulletPrefab, transform.position, transform.rotation);
-                    newBullet.GetComponent<NetworkObject>().Spawn();
                     newBullet.GetComponent<ABullet>().SetProperties(m_bulletProperties);
+                    newBullet.GetComponent<NetworkObject>().Spawn();
                 }
                 
             }

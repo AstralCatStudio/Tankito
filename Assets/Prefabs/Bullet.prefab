@@ -120,7 +120,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efc6f84f749f3b34fad95e19d9899220, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletProperties:
+  m_properties:
     ScaleMultiplier: {x: 0, y: 0}
     startingPosition: {x: 0, y: 0}
     velocity: 0
@@ -128,8 +128,8 @@ MonoBehaviour:
     direction: {x: 0, y: 0}
     rotationSpeed: 0
     bouncesTotal: 0
-    lifetimetotal: 0
-  rb: {fileID: 1230613554501251170}
+    lifetimeTotal: 2
+  m_rb: {fileID: 1230613554501251170}
 --- !u!50 &1230613554501251170
 Rigidbody2D:
   serializedVersion: 4

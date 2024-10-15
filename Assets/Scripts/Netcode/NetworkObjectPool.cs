@@ -41,7 +41,7 @@ namespace Tankito.Netcode
         public override void OnNetworkSpawn()
         {
             // Registers all objects in PooledPrefabsList to the cache.
-            Debug.Log($"Registering {PooledPrefabsList}({PooledPrefabsList.Count}) to Internal prefab list..."); 
+            Debug.Log($"Registering {PooledPrefabsList} to Internal prefab list..."); 
             foreach (var configObject in PooledPrefabsList)
             {
                 Debug.Log($"Registering {configObject.Prefab} to Internal prefab list...");

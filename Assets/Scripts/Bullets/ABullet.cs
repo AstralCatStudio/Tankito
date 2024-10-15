@@ -16,20 +16,20 @@ namespace Tankito {
         public Vector2 direction;
         public float rotationSpeed;
         public int bouncesTotal;
-        public float lifetimetotal;
+        public float lifetimeTotal;
     }
-    public abstract class ABullet : MonoBehaviour
+    public abstract class ABullet : NetworkBehaviour
     {
         [SerializeField]
-        protected BulletProperties bulletProperties;
-        protected List<Modifier> modifiersList = new List<Modifier>();
+        protected BulletProperties m_properties;
+        protected List<Modifier> m_modifiersList = new List<Modifier>();
         protected ulong m_ownerID;
-        protected int bouncesLeft=0;
-        protected float lifetimeLeft;
+        protected int m_bouncesLeft=0;
+        protected float m_lifetime;
         public Action OnSpawn = () => { }, OnFly = () => { }, OnHit = () => { }, OnBounce = () => { }, OnDetonate = () => { };
         private void Awake()
         {
-            foreach (var modifier in modifiersList)
+            foreach (var modifier in m_modifiersList)
             {
                 modifier.ConnectModifier(this);
             }
@@ -46,7 +46,7 @@ namespace Tankito {
 
         public void SetProperties(BulletProperties newProperties)
         {
-            bulletProperties = newProperties;
+            m_properties = newProperties;
         }
     }
 }

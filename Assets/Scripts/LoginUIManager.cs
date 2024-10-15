@@ -61,6 +61,8 @@ namespace Tankito.Netcode
             joinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
             TextEditor te = new TextEditor(); te.text = joinCode; te.SelectAll(); te.Copy();
             NetworkManager.Singleton.StartHost();
+
+            TankitoSceneManager.Singleton.LoadGameSceneAsync();
         }
 
         async void StartClient()
@@ -74,6 +76,8 @@ namespace Tankito.Netcode
             var joinAllocation = await RelayService.Instance.JoinAllocationAsync(joinCode: joinCode);
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(new RelayServerData(joinAllocation, "wss"));
             NetworkManager.Singleton.StartClient();
+            
+            TankitoSceneManager.Singleton.LoadGameSceneAsync();
         }
     }
 }
