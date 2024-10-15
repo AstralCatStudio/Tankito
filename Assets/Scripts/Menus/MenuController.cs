@@ -36,7 +36,7 @@ public class MenuController : Singleton<MenuController>
     void Start()
     {
         BgReposition();
-        animator = menus[0].GetComponent<Animator>();
+        //animator = menus[0].GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -47,18 +47,10 @@ public class MenuController : Singleton<MenuController>
 
     public void ChangeToMenu(int newMenuIndex)
     {
-        ////TENGO QUE AÑADIRLE ANIMATORS A TODOS LOS BOTONES Y AÑADIRLE UN SCRIPT DE COMPORTAMIENTO A LOS ANIMATORS PARA QUE AL DARLE A UN BOTÓN
-        ////QUE LLEVA AL SIGUIENTE MENÚ, NO DESAPAREZCA AL INSTANTE Y REALICE LA ANIMACIÓN DE EXIT, HASTA QUE LA TERMINA Y YA SE APAGA.
+        animator.SetInteger("Menu", newMenuIndex);
+        //animator = menus[newMenuIndex].GetComponent<Animator>();
+        //animator.SetInteger("Menu", newMenuIndex);
 
-        ////TAMBIÉN TENGO QUE CONTEMPLAR LA POSIBILIDAD DE QUE, EN VEZ DE QUE SE ACTIVEN Y DESACTIVEN LOS MENÚS, SIMPLEMENTE TENGO UN CONTROLADOR
-        ////PARA TODOS LOS MENUS Y ACTIVAN LA ANIMACION DE ENTER Y DE EXIT Y YA. DE HECHO CREO Q VA A SER MÁS CONVENIENTE ASÍ.
-        //if((int)currentMenuIndex == 1)
-        //{
-        //    animator = menus[(int)currentMenuIndex].GetComponent<Animator>();
-        //    animator.SetBool("Exit", true);
-        //}
-
-        animator.SetInteger("Menu", (int)newMenuIndex);
         //menus[(int)currentMenuIndex].gameObject.SetActive(false);
         MoveBG(newMenuIndex);
         currentMenuIndex = newMenuIndex;
@@ -70,9 +62,9 @@ public class MenuController : Singleton<MenuController>
         Transform bg;
         Transform mg;
         Transform fg;
-        Vector2 newTranslation = bgPositions[(int)currentMenuIndex] - bgPositions[(int)newMenuIndex];
+        Vector2 newTranslation = bgPositions[currentMenuIndex] - bgPositions[newMenuIndex];
 
-        menuChanged?.Invoke(newTranslation, bgMenus[(int)currentMenuIndex], bgMenus[(int)newMenuIndex]);
+        menuChanged?.Invoke(newTranslation, bgMenus[currentMenuIndex], bgMenus[newMenuIndex]);
 
         for (int i = 0; i < bgMenus.Length; i++)
         {
