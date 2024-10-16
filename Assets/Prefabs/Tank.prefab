@@ -74,7 +74,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.7924528, g: 0.7924528, b: 0.7924528, a: 1}
+  m_Color: {r: 0.7075472, g: 0.7075472, b: 0.7075472, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -94,7 +94,6 @@ GameObject:
   m_Component:
   - component: {fileID: 848276271257576674}
   - component: {fileID: 8138416413757857325}
-  - component: {fileID: 8511334478510462388}
   m_Layer: 0
   m_Name: Hull
   m_TagString: Untagged
@@ -159,7 +158,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.6415094, g: 0.6015664, b: 0.6015664, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -169,27 +168,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!95 &8511334478510462388
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 516088852390469953}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: d7f6fd0d753c5a049952af4cd1f77ef8, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &5904161972637957731
 GameObject:
   m_ObjectHideFlags: 0
@@ -201,7 +179,7 @@ GameObject:
   - component: {fileID: 6924379706836283280}
   - component: {fileID: 8019476000441952616}
   - component: {fileID: 8520293575514935909}
-  - component: {fileID: -2842732508969095161}
+  - component: {fileID: 5921551077853929906}
   m_Layer: 0
   m_Name: Tank
   m_TagString: Untagged
@@ -273,7 +251,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &-2842732508969095161
+--- !u!114 &5921551077853929906
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -286,12 +264,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_tankRB: {fileID: 8520293575514935909}
-  m_speed: 7.5
-  m_rotationSpeed: 270
-  m_turret: {fileID: 468154111747707519}
-  m_aimSpeed: 800
-  m_TurretAnimator: {fileID: 1803076442695571091}
-  m_HullAnimator: {fileID: 8511334478510462388}
+  m_speed: 5
+  m_rotationSpeed: 560
+  m_turretRB: {fileID: 8342253699622009969}
+  m_aimSpeed: 900
+  m_reconciliationTolerance:
+    pos: 0.1
+    rot: 0.1
+    vel: 0.1
 --- !u!1 &6459951814770460290
 GameObject:
   m_ObjectHideFlags: 0
@@ -302,7 +282,8 @@ GameObject:
   m_Component:
   - component: {fileID: 468154111747707519}
   - component: {fileID: 4741988127893606201}
-  - component: {fileID: 1803076442695571091}
+  - component: {fileID: 8902000592244549883}
+  - component: {fileID: 8342253699622009969}
   m_Layer: 0
   m_Name: Turret
   m_TagString: Untagged
@@ -378,24 +359,43 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!95 &1803076442695571091
-Animator:
-  serializedVersion: 5
+--- !u!114 &8902000592244549883
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6459951814770460290}
   m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: b551736d57379c34bab0861b51ef1085, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0926dc78b4e91b745bf93adabf7b4246, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_aimSpeed: 900
+--- !u!50 &8342253699622009969
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6459951814770460290}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 0.0001
+  m_LinearDrag: 0
+  m_AngularDrag: 0
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
