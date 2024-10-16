@@ -16,36 +16,69 @@ public class RoundManager : NetworkBehaviour
     void Start()
     {
         // Prueba
-        prueba = new GameObject();
-        AddPlayer(prueba);
-        AddPlayer(new GameObject());
+        //prueba = new GameObject();
+        //AddPlayer(prueba);
+        //AddPlayer(new GameObject());
         //
 
-        //if (IsServer)
-        //{
-        InitializeRound();
-        //}
+        if (IsServer)
+        {
+            //InitializeRound();
+        }
     }
 
     void Update()
     {
-        if (Input.GetKeyUp(KeyCode.Space))
+        if (IsServer)
         {
-            EliminatePlayer(prueba);
+            if (Input.GetKeyUp(KeyCode.Space))
+            {
+                _alivePlayer[1].GetComponent<TankData>().TakeDamage(2);
+            }
+
+            if (Input.GetKeyUp(KeyCode.Alpha1))
+            {
+                InitializeRound();
+            }
+
         }
+        //if (Input.GetKeyUp(KeyCode.Space))
+        //{
+        //    EliminatePlayer(prueba);
+        //}
     }
 
     #region PlayerManagement
     public void AddPlayer(GameObject player)
     {
         _players.Add(player);
-        Debug.Log("nº jugadores: " + _players.Count);
+        Debug.Log("Jugador añadido. Nº jugadores: " + _players.Count);
     }
 
     public void EliminatePlayer(GameObject player)
     {
-        _alivePlayer.Remove(player);
-        CheckForWinner();
+        if (!IsServer) return;
+
+        if (_alivePlayer.Contains(player))
+        {
+            _alivePlayer.Remove(player);
+            Debug.Log($"El jugador {player.name} ha sido eliminado");
+            CheckForWinner();
+        }
+
+
+    }
+
+    private void OnEnable()
+    {
+        Debug.Log("Se suscribe al evento de morir tanque");
+        TankData.OnTankDestroyed += EliminatePlayer;
+    }
+
+    private void OnDisable()
+    {
+        Debug.Log("Se desuscribe al evento de morir tanque");
+        TankData.OnTankDestroyed -= EliminatePlayer;
     }
     #endregion
 
@@ -71,7 +104,7 @@ public class RoundManager : NetworkBehaviour
 
     private void EndRound()
     {
-        Debug.Log("Fin de ronda");
+        Debug.Log("NETLESS: Fin de ronda");
         EndRoundClientRpc();
         BetweenRounds();
     }
@@ -79,7 +112,7 @@ public class RoundManager : NetworkBehaviour
     [ClientRpc]
     private void EndRoundClientRpc()
     {
-        Debug.Log("Fin de ronda en todos");
+        Debug.Log("NETCODE: Fin de ronda en todos");
     }
 
     private void BetweenRounds()
@@ -101,49 +134,49 @@ public class RoundManager : NetworkBehaviour
 
     private void ShowRanking()
     {
-        Debug.Log("Se muestra el ranking");
+        Debug.Log("NETLESS: Se muestra el ranking");
         ShowRankingClientRpc();
     }
 
     [ClientRpc]
     private void ShowRankingClientRpc()
     {
-        Debug.Log("Se muestra el ranking en todos");
+        Debug.Log("NETCODE: Se muestra el ranking en todos");
     }
 
     private void ShowFinalRanking()
     {
-        Debug.Log("Se muestra el ranking final");
+        Debug.Log("NETLESS: Se muestra el ranking final");
         ShowFinalRankingClientRpc();
     }
 
     [ClientRpc]
     private void ShowFinalRankingClientRpc()
     {
-        Debug.Log("Se muestra el ranking final en todos");
+        Debug.Log("NETCODE: Se muestra el ranking final en todos");
     }
 
     private void PowerUpSelection()
     {
-        Debug.Log("Se eligen power ups");
+        Debug.Log("NETLESS: Se eligen power ups");
         ShowPowerUpsClientRpc();
     }
 
     [ClientRpc]
     private void ShowPowerUpsClientRpc()
     {
-        Debug.Log("Se muestran los power ups en todos");
+        Debug.Log("NETCODE: Se muestran los power ups en todos");
     }
 
     private void EndGame()
     {
-        Debug.Log("Fin de la partida");
+        Debug.Log("NETLESS: Fin de la partida");
         EndGameClientRpc();
     }
 
     [ClientRpc]
     private void EndGameClientRpc()
     {
-        Debug.Log("Final de partida en todos");
+        Debug.Log("NETCODE: Final de partida en todos");
     }
 }
