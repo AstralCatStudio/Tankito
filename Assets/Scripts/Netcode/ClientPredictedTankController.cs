@@ -20,10 +20,10 @@ namespace Tankito.Netcode
         private float m_aimSpeed = 720f;
 
         private Vector2 m_previousFrameAim;
+        [SerializeField] private Animator m_TurretAnimator, m_HullAnimator;
+        #endregion
 
-#endregion
-
-#region Client Netcode Variables
+        #region Client Netcode Variables
 
         // A lo mejor hay que cambiar esto porque es posible que de problemas cuando se hagan inputs mas rapidos que el tickRate
         // (creo (?) que la unidad minima de interaccion pasa a ser: LAST_INPUT durante TICK_RATE, emulando mantener ese input durante el tick completo)
@@ -33,6 +33,7 @@ namespace Tankito.Netcode
         private const int CACHE_SIZE = 1024;
         private CircularBuffer<InputPayload> m_inputStateCache = new CircularBuffer<InputPayload>(CACHE_SIZE);
         private CircularBuffer<StatePayload> m_simulationStateCache = new CircularBuffer<StatePayload>(CACHE_SIZE);
+
 
 #endregion
 
@@ -160,6 +161,9 @@ namespace Tankito.Netcode
             if (ctx.ReadValue<bool>())
             {
                 m_currentInput.action =  TankAction.Parry;
+                m_TurretAnimator.SetTrigger("Parry");
+                m_TurretAnimator.GetComponent<TankAim>().parrying = true;
+                m_HullAnimator.SetTrigger("Parry");
             } else {
                 Debug.Log("PARRY false positive??? function called but action value false");
             }

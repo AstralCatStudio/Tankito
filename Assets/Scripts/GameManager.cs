@@ -45,12 +45,34 @@ namespace Tankito
 
             AutoPhysics2DUpdate(false);
 
-            m_inputActions = new TankitoInputActions();
-            m_playerInput.actions = m_inputActions.asset;
+            
 
             //_playerName = "Invited";
         }
 
+        public void FindPlayerInput()
+        {
+           m_playerInput= GameObject.FindObjectOfType<PlayerInput>();
+            m_inputActions = new TankitoInputActions();
+            m_playerInput.actions = m_inputActions.asset;
+
+
+        }
+
+       public void BindInputActions()
+        {
+            // VA A FALLAR PARA CLIENTES (en principio funciona en hosts)
+            
+                var predictedController = NetworkManager.LocalClient.PlayerObject.GetComponent<ClientPredictedTankController>();
+                Debug.Log($"{predictedController}");
+                m_inputActions.Player.Move.performed += predictedController.OnMove;
+                m_inputActions.Player.Move.canceled += predictedController.OnMove;
+                m_inputActions.Player.Look.performed += predictedController.OnAim;
+                m_inputActions.Player.Look.canceled += predictedController.OnAim;
+
+                // TODO: Unbind actions along with end of tank lifetime.
+            
+        }
         private void OnServerStarted()
         {
             print("Servidor inicalizado.");        
@@ -58,6 +80,10 @@ namespace Tankito
 
         private void OnClientConnected(ulong clientId)
         {
+            if (m_playerInput == null)
+            {
+                //FindPlayerInput();
+            }
             NetworkObject newPlayer = null;
             if (IsServer)
             {
@@ -68,18 +94,7 @@ namespace Tankito
                 
             }
 
-            // VA A FALLAR PARA CLIENTES (en principio funciona en hosts)
-            if (newPlayer != null && newPlayer.IsOwner)
-            {
-                var predictedController = newPlayer.GetComponent<ClientPredictedTankController>();
-                Debug.Log($"{predictedController}");
-                m_inputActions.Player.Move.performed += predictedController.OnMove;
-                m_inputActions.Player.Move.canceled += predictedController.OnMove;
-                m_inputActions.Player.Look.performed += predictedController.OnAim;
-                m_inputActions.Player.Look.canceled += predictedController.OnAim;
-
-                // TODO: Unbind actions along with end of tank lifetime.
-            }
+            
         }
 
         public void SetPlayerName(string name)

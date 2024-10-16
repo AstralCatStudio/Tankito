@@ -72,9 +72,12 @@ namespace Tankito
             m_loadedScenes.Add("Loading");
 
             Debug.Log("Loading Game...");
-            yield return NetworkManager.Singleton.SceneManager.LoadScene("PooledBullets", LoadSceneMode.Additive);
-            m_loadedScenes.Add("PooledBullets");
+            yield return NetworkManager.Singleton.SceneManager.LoadScene("InputTesting", LoadSceneMode.Additive);
+            m_loadedScenes.Add("InputTesting");
             Debug.Log("Game Loaded!");
+
+            GameManager.Instance.FindPlayerInput();
+            GameManager.Instance.BindInputActions();
 
             SceneManager.UnloadSceneAsync("Loading");
             m_loadedScenes.Remove("Loading");
