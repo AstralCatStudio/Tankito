@@ -8,13 +8,17 @@ public class RoundManager : NetworkBehaviour
     private int _currentRound = 0;
     public int _maxRounds = 5;
 
+    public RoundUI _roundUI;
+
     private List<GameObject> _players = new List<GameObject>();
-    private List<GameObject> _alivePlayer;
+    private List<GameObject> _alivePlayers;
 
     GameObject prueba; // Prueba
 
     void Start()
     {
+        _roundUI = FindObjectOfType<RoundUI>();
+
         // Prueba
         //prueba = new GameObject();
         //AddPlayer(prueba);
@@ -33,7 +37,7 @@ public class RoundManager : NetworkBehaviour
         {
             if (Input.GetKeyUp(KeyCode.Space))
             {
-                _alivePlayer[1].GetComponent<TankData>().TakeDamage(2);
+                _alivePlayers[1].GetComponent<TankData>().TakeDamage(2);
             }
 
             if (Input.GetKeyUp(KeyCode.Alpha1))
@@ -59,14 +63,12 @@ public class RoundManager : NetworkBehaviour
     {
         if (!IsServer) return;
 
-        if (_alivePlayer.Contains(player))
+        if (_alivePlayers.Contains(player))
         {
-            _alivePlayer.Remove(player);
+            _alivePlayers.Remove(player);
             Debug.Log($"El jugador {player.name} ha sido eliminado");
             CheckForWinner();
         }
-
-
     }
 
     private void OnEnable()
@@ -84,14 +86,29 @@ public class RoundManager : NetworkBehaviour
 
     private void InitializeRound()
     {
-        _alivePlayer = new List<GameObject>(_players);
+        _roundUI.SetActivePowerUps(false);
+        DisablePowerUpsClientRpc();
+        _alivePlayers = new List<GameObject>(_players);
         _currentRound++;
+        if( _currentRound > 1 )
+        {
+            for(int i = 0; i < _alivePlayers.Count; i++)
+            {
+                _alivePlayers[i].GetComponent<TankData>().Reset();
+            }
+        }
         Debug.Log("Inicio ronda " + _currentRound);
+    }
+
+    [ClientRpc]
+    private void DisablePowerUpsClientRpc()
+    {
+        _roundUI.SetActivePowerUps(false);
     }
 
     private void CheckForWinner()
     {
-        if (_alivePlayer.Count == 1)
+        if (_alivePlayers.Count == 1)
         {
             Debug.Log("Alguien ha ganado la ronda");
             EndRound();
@@ -135,6 +152,7 @@ public class RoundManager : NetworkBehaviour
     private void ShowRanking()
     {
         Debug.Log("NETLESS: Se muestra el ranking");
+        _roundUI.SetActiveRanking(true);
         ShowRankingClientRpc();
     }
 
@@ -142,11 +160,13 @@ public class RoundManager : NetworkBehaviour
     private void ShowRankingClientRpc()
     {
         Debug.Log("NETCODE: Se muestra el ranking en todos");
+        _roundUI.SetActiveRanking(true);
     }
 
     private void ShowFinalRanking()
     {
         Debug.Log("NETLESS: Se muestra el ranking final");
+        _roundUI.SetActiveRankingFinal(true);
         ShowFinalRankingClientRpc();
     }
 
@@ -154,11 +174,14 @@ public class RoundManager : NetworkBehaviour
     private void ShowFinalRankingClientRpc()
     {
         Debug.Log("NETCODE: Se muestra el ranking final en todos");
+        _roundUI.SetActiveRankingFinal(true);
     }
 
     private void PowerUpSelection()
     {
         Debug.Log("NETLESS: Se eligen power ups");
+        _roundUI.SetActiveRanking(false);
+        _roundUI.SetActivePowerUps(true);
         ShowPowerUpsClientRpc();
     }
 
@@ -166,6 +189,8 @@ public class RoundManager : NetworkBehaviour
     private void ShowPowerUpsClientRpc()
     {
         Debug.Log("NETCODE: Se muestran los power ups en todos");
+        _roundUI.SetActiveRanking(false);
+        _roundUI.SetActivePowerUps(true);
     }
 
     private void EndGame()
