@@ -10,6 +10,7 @@ public class TankAim : MonoBehaviour
     private float m_aimSpeed = 720f;
     private Vector2 m_lookVector = Vector2.zero;
     private Vector2 m_lastInputVector = Vector2.zero;
+    public bool parrying = false;
 
     void OnEnable()
     {
@@ -38,12 +39,14 @@ public class TankAim : MonoBehaviour
 
         if (Mathf.Abs(rotDeg) > Mathf.Epsilon)
         {
+            if (parrying) return;
             transform.rotation = Quaternion.Euler(0,0,transform.eulerAngles.z+rotDeg);
         }
     }
 
     public void OnLook(InputAction.CallbackContext ctx)
     {
+        
         var input = ctx.ReadValue<Vector2>();
 
         if (ctx.control.path != "/Mouse/position")
@@ -61,6 +64,6 @@ public class TankAim : MonoBehaviour
             m_lookVector.Normalize();
         }
 
-        Debug.Log($"OnLook m_lookVector: {m_lookVector}");
+        //Debug.Log($"OnLook m_lookVector: {m_lookVector}");
     }
 }
