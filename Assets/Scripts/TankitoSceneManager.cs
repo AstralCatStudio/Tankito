@@ -76,11 +76,14 @@ namespace Tankito
             m_loadedScenes.Add("InputTesting");
             Debug.Log("Game Loaded!");
 
-            GameManager.Instance.FindPlayerInput();
-            GameManager.Instance.BindInputActions();
 
             SceneManager.UnloadSceneAsync("Loading");
             m_loadedScenes.Remove("Loading");
+
+            GameManager.Instance.gameSceneLoaded = true;
+            if (NetworkManager.Singleton.IsHost) GameManager.Instance.CreatePlayer();
+            GameManager.Instance.FindPlayerInput();
+            GameManager.Instance.BindInputActions();
         }
 
     }

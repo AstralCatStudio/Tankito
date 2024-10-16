@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Tankito.Netcode;
 using Unity.Netcode;
@@ -17,6 +18,7 @@ namespace Tankito
         private GameObject m_playerPrefab;
 
         private string m_playerName = "Invited";
+        internal bool gameSceneLoaded = false;
 
         public static GameManager Instance { get; private set; }
 
@@ -85,16 +87,13 @@ namespace Tankito
                 //FindPlayerInput();
             }
             NetworkObject newPlayer = null;
-            if (IsServer)
+            if (IsServer && gameSceneLoaded)
             {
                 print("Cliente se conecta");
                 newPlayer = Instantiate(m_playerPrefab).GetComponent<NetworkObject>();
 
                 newPlayer.SpawnAsPlayerObject(clientId);
-                
             }
-
-            
         }
 
         public void SetPlayerName(string name)
@@ -117,6 +116,18 @@ namespace Tankito
             else
             {
                 Physics2D.simulationMode = SimulationMode2D.FixedUpdate;
+            }
+        }
+
+        internal void CreatePlayer()
+        {
+            if (IsHost && gameSceneLoaded)
+            {
+                // IMPORTANTE: Siempre instanciar objetos con la sobrecarga de parentesco para asegurar la escena en la que residen
+                // (evitando su destruccion no intencionada al cargarse sobre escenas aditivas que se descargan posteriormente eg. LA PANTALLA DE CARGA)
+                var newPlayer = Instantiate(m_playerPrefab).GetComponent<NetworkObject>();
+
+                newPlayer.SpawnAsPlayerObject(NetworkManager.LocalClientId);
             }
         }
     }

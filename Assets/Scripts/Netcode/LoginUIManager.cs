@@ -139,6 +139,8 @@ namespace Tankito.Netcode
             Debug.Log("Debug point B");
             TextEditor te = new TextEditor(); te.text = m_joinCode; te.SelectAll(); te.Copy();
             NetworkManager.Singleton.StartHost();
+            
+            TankitoSceneManager.Singleton.LoadGameSceneAsync();
         }
 
         async void StartClient()
@@ -148,6 +150,8 @@ namespace Tankito.Netcode
             var joinAllocation = await RelayService.Instance.JoinAllocationAsync(joinCode: m_joinCode);
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(new RelayServerData(joinAllocation, CONNECTION_TYPE));
             NetworkManager.Singleton.StartClient();
+
+            TankitoSceneManager.Singleton.LoadGameSceneAsync();
         }
 
         async void StartServer()
@@ -155,6 +159,8 @@ namespace Tankito.Netcode
             await CreateRelayAllocation();
             TextEditor te = new TextEditor(); te.text = m_joinCode; te.SelectAll(); te.Copy();
             NetworkManager.Singleton.StartServer();
+
+            TankitoSceneManager.Singleton.LoadGameSceneAsync();
         }
     }
 }
