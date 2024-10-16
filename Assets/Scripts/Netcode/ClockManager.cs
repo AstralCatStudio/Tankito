@@ -18,10 +18,15 @@ namespace Tankito
 
         public static ClockManager Instance;
         public static Clock simulationClock; // Para la simulacion con lockstep
-        
+
         // Pensandolo mejor probablemente tiene sentido aglutinar la maxima cantidad de informacion por RPC posible para ahorrar overhead y simplificar el codigo... Lo dejo como posible opcion en un futuro...
         //public static Clock inputSendClock; // Para no saturar la red mandando RPCs de input al polling rate de nuestra I/O
 
+
+        // PROVISIONAL: Hasta que hagamos funcionar nuestro propio clock con los metodos Update()
+        float m_time;
+        private static int m_tickCounter;
+        public static int TickCounter { get => m_tickCounter; }
 
         // Start is called before the first frame update
         void Start()
@@ -36,16 +41,22 @@ namespace Tankito
             simulationClock = new Clock(SERVER_SIMULATION_TICKRATE);
             
             //inputSendClock = new Clock(INPUT_SENDING_TICKRATE, Clock.TickTriggerMode.Auto);
+            m_time = 0;
+            m_tickCounter = 0;
         }
+
 
         // Update is called once per frame
         void Update()
         {
-            simulationClock.Update(Time.deltaTime);
+            //simulationClock.Update(Time.deltaTime);
+            m_time += Time.deltaTime;
+            if (m_time >= Time.fixedDeltaTime)
+            {
+                m_time -= Time.fixedDeltaTime;
+                m_tickCounter++;
+            }
         }
-        //     inputSendClock.Update(Time.deltaTime);
-        // }
-// 
         // public void StartClocks()
         // {
         //     simulationClock.Start();

@@ -264,10 +264,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_tankRB: {fileID: 8520293575514935909}
-  m_speed: 25
-  m_rotationSpeed: 1
-  m_turret: {fileID: 468154111747707519}
-  m_aimSpeed: 720
+  m_speed: 5
+  m_rotationSpeed: 560
+  m_turretRB: {fileID: 8342253699622009969}
+  m_aimSpeed: 900
+  m_reconciliationTolerance:
+    pos: 0.1
+    rot: 0.1
+    vel: 0.1
 --- !u!1 &6459951814770460290
 GameObject:
   m_ObjectHideFlags: 0
@@ -279,6 +283,7 @@ GameObject:
   - component: {fileID: 468154111747707519}
   - component: {fileID: 4741988127893606201}
   - component: {fileID: 8902000592244549883}
+  - component: {fileID: 8342253699622009969}
   m_Layer: 0
   m_Name: Turret
   m_TagString: Untagged
@@ -367,3 +372,30 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_aimSpeed: 900
+--- !u!50 &8342253699622009969
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6459951814770460290}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 0.0001
+  m_LinearDrag: 0
+  m_AngularDrag: 0
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
