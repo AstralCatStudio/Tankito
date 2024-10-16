@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Tankito.Netcode;
+using Tankito.Utils;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -125,7 +126,7 @@ namespace Tankito
             {
                 // IMPORTANTE: Siempre instanciar objetos con la sobrecarga de parentesco para asegurar la escena en la que residen
                 // (evitando su destruccion no intencionada al cargarse sobre escenas aditivas que se descargan posteriormente eg. LA PANTALLA DE CARGA)
-                var newPlayer = Instantiate(m_playerPrefab).GetComponent<NetworkObject>();
+                var newPlayer = Instantiate(m_playerPrefab, GameInstanceParent.Instance.transform).GetComponent<NetworkObject>();
 
                 newPlayer.SpawnAsPlayerObject(NetworkManager.LocalClientId);
             }
