@@ -53,13 +53,24 @@ namespace Tankito.Mobile
 
         public bool debugGUI;
 
+        public override string ToString()
+        {
+            return $"{base.ToString()}[{m_hotspotPosition})]";
+        }
+
         void Awake()
         {
+            if (m_joystickRect == null)
+            {
+                Debug.LogWarning($"JosytickRect for {this} was not set!");
+                m_joystickRect = GameObject.Find( (m_hotspotPosition == ScreenHotspot.Left) ? "LeftJoystick" : "RightJoystick").GetComponent<RectTransform>();
+            }
             if (m_parentCanvas == null || m_touchControlManager == null)
             {
-                m_touchControlManager = m_joystickRect.GetComponentInParent<TouchControlManager>();
+                m_touchControlManager = m_joystickRect.GetComponentInParent<TouchControlManager>(true);
             }
-            m_parentCanvas = m_touchControlManager.GetComponentInChildren<Canvas>();
+            m_parentCanvas = m_touchControlManager.GetComponentInChildren<Canvas>(true);
+            Debug.Log($"{this} m_parentCanvas:{m_parentCanvas} | m_touchControlManager:{m_touchControlManager}");
         }
 
         protected override void OnEnable()
@@ -92,7 +103,11 @@ namespace Tankito.Mobile
             if (m_joystickFinger != null) return;
             
             if (m_touchControlManager.CheckIfTouched(touchedFinger.screenPosition, typeof(TouchButton))) return;
-
+            if (m_parentCanvas == null)
+            {
+                Debug.LogWarning($"{this}: m_parentCanvas is null");
+                return;
+            }
             Vector2 touchScreenPosition = touchedFinger.screenPosition * 1f/m_parentCanvas.scaleFactor;
 
             switch(m_stickType)

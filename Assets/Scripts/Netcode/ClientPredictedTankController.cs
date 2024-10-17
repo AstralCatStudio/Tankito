@@ -169,14 +169,15 @@ namespace Tankito.Netcode
             // es redundante y ademas entra en conflicto con
             // el threshold de activacion configurado por el input system,
             // en otras palabras no activa la accion para controles analogicos como el trigger de un mando)
-            if (true)
+
+            if (ctx.performed)
             {
                 m_parrying = true;
                 m_currentInput.action =  TankAction.Parry;
                 m_TurretAnimator.SetTrigger("Parry");
                 m_HullAnimator.SetTrigger("Parry");
             } else {
-                Debug.Log("PARRY false positive??? function called but action value false");
+                Debug.Log($"Parry {ctx.phase}");
             }
         }
         public void OnFire(InputAction.CallbackContext ctx)
@@ -186,14 +187,14 @@ namespace Tankito.Netcode
             // es redundante y ademas entra en conflicto con
             // el threshold de activacion configurado por el input system,
             // en otras palabras no activa la accion para controles analogicos como el trigger de un mando)
-            if (true)
+            if (ctx.performed)
             {
                 m_currentInput.action = TankAction.Fire;
                 m_cannon.Shoot();
             }
             else
             {
-                Debug.Log("FIRE false positive??? function called but action value false");
+                Debug.Log($"Fire {ctx.phase}");
             }
         }
         #endregion

@@ -140,7 +140,10 @@ namespace Tankito.Netcode
             Allocation allocation = await RelayService.Instance.CreateAllocationAsync(MAX_CONNECTIONS, m_region);
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(new RelayServerData(allocation, CONNECTION_TYPE));
             m_joinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
-            Debug.Log("Relay Allocation Created");
+            Debug.Log("Relay Allocation Created - " + "Region: " + m_region
+                        + "Transport: " + NetworkManager.Singleton.NetworkConfig.NetworkTransport.GetType().Name
+                        + "Mode: " + m_connectionMode
+                        + "Room: " + m_joinCode);
         }
 
         async void StartHost()

@@ -667,8 +667,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_joystickSize: {x: 300, y: 300}
-  m_joystickRect: {fileID: 0}
-  JoystickHandleRect: {fileID: 0}
+  m_joystickRect: {fileID: 1971315966}
+  JoystickHandleRect: {fileID: 1971315965}
   m_ControlPath: <Gamepad>/rightStick
   m_hideStick: 1
   m_stickType: 1
@@ -688,8 +688,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_joystickSize: {x: 300, y: 300}
-  m_joystickRect: {fileID: 0}
-  JoystickHandleRect: {fileID: 0}
+  m_joystickRect: {fileID: 1971315967}
+  JoystickHandleRect: {fileID: 1971315968}
   m_ControlPath: <Gamepad>/leftStick
   m_hideStick: 1
   m_stickType: 1
@@ -1677,6 +1677,26 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 807fda42e5545bd4ab7e172020d58460, type: 3}
+--- !u!224 &1971315965 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 3638065213107672569, guid: 807fda42e5545bd4ab7e172020d58460, type: 3}
+  m_PrefabInstance: {fileID: 1971315964}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &1971315966 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 8910322329457766558, guid: 807fda42e5545bd4ab7e172020d58460, type: 3}
+  m_PrefabInstance: {fileID: 1971315964}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &1971315967 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 4287446142285137657, guid: 807fda42e5545bd4ab7e172020d58460, type: 3}
+  m_PrefabInstance: {fileID: 1971315964}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &1971315968 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 7054326460286988013, guid: 807fda42e5545bd4ab7e172020d58460, type: 3}
+  m_PrefabInstance: {fileID: 1971315964}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
