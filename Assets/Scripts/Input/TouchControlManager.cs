@@ -33,9 +33,9 @@ namespace Tankito.Mobile
         
         private void OnInputDeviceChange(InputUser user, InputUserChange change, InputDevice device)
         {
-            //Debug.Log($"User:{user}, change:{change}, device:{device}");
+            Debug.Log($"User:{user}, change:{change}, device:{device}");
             if (device == null) return;
-            if (device.ToString().Contains("Mobile") || device.ToString().Contains("Gamepad") || device.ToString().Contains("Touch") &&
+            if (device.ToString().Contains("Mobile") || device.ToString().Contains("OnScreen") || device.ToString().Contains("Touch") &&
             (change == InputUserChange.DevicePaired || change == InputUserChange.DeviceRegained))
             {
                 m_canvas.gameObject.SetActive(true);

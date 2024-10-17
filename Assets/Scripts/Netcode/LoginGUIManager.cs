@@ -8,7 +8,7 @@ using Unity.Services.Relay;
 using UnityEngine;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Unity.Networking.Transport;
+using System.Collections;
 
 namespace Tankito.Netcode
 {
@@ -19,10 +19,10 @@ namespace Tankito.Netcode
 
         #if UNITY_WEBGL
         "wss";
-        bool useWebSockets = true;
+        const bool USE_WEB_SOCKETS = true;
         #else
         "dtls";
-        bool useWebSockets = false;
+        const bool USE_WEB_SOCKETS = false;
         #endif
 
 
@@ -48,8 +48,8 @@ namespace Tankito.Netcode
 
         void Start()
         {
-
-            ((UnityTransport)NetworkManager.Singleton.NetworkConfig.NetworkTransport).UseWebSockets = useWebSockets;
+            ((UnityTransport)NetworkManager.Singleton.NetworkConfig.NetworkTransport).UseWebSockets = USE_WEB_SOCKETS;
+            Debug.Log("UseWebSockets: " + USE_WEB_SOCKETS);
         }
 
         void OnGUI()
@@ -69,13 +69,23 @@ namespace Tankito.Netcode
         async void StartButtons()
         {
             if (GUILayout.Button("Host"))
+            {
                 if (m_region != "") StartHost();
-                else { m_connectionMode = ConnectionMode.Host; await FetchRegions(); return; }
+                else {
+                    m_connectionMode = ConnectionMode.Host; await FetchRegions(); return;
+                }
+            }
             if (GUILayout.Button("Server"))
+            {
                 if (m_region != "") StartServer();
-                else { m_connectionMode = ConnectionMode.Server; await FetchRegions(); return; }
+                else {
+                    m_connectionMode = ConnectionMode.Server; await FetchRegions(); return;
+                }
+            }
             if (GUILayout.Button("Client"))
-                { m_connectionMode = ConnectionMode.Client; StartClient(); }
+            {
+                m_connectionMode = ConnectionMode.Client; StartClient();
+            }
 
             m_joinCode = GUILayout.TextField(m_joinCode);
         }

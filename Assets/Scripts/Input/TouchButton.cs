@@ -1,15 +1,8 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem.Layouts;
 using UnityEngine.InputSystem.OnScreen;
 using UnityEngine.InputSystem.EnhancedTouch;
 using ETouch = UnityEngine.InputSystem.EnhancedTouch;
-using UnityEngine.EventSystems;
-using Unity.VisualScripting;
-using UnityEngine.UI;
-using UnityEngine.InputSystem.Controls;
 
 namespace Tankito.Mobile
 {
