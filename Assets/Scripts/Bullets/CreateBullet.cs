@@ -10,7 +10,7 @@ namespace Tankito
     {
         public GameObject bulletPrefab;
         [SerializeField]
-        BulletProperties m_bulletProperties;
+        public BulletProperties m_bulletProperties;
         [SerializeField]
         float interval = 1;
         float timer = 0;
@@ -20,24 +20,26 @@ namespace Tankito
         {
             
         }
-
+        public void Shoot()
+        {
+            if (NetworkManager.Singleton.IsServer)
+            {
+                if (timer > interval)
+                {
+                    timer = 0;
+                    m_bulletProperties.direction = transform.right;
+                    m_bulletProperties.startingPosition = transform.position;
+                    var newBullet = NetworkObjectPool.Singleton.GetNetworkObject(bulletPrefab, transform.position, transform.rotation).gameObject;
+                    newBullet.GetComponent<ABullet>().SetProperties(m_bulletProperties);
+                    //newBullet.GetComponent<ABullet>().m_ownerID = gameObject.GetComponent<NetworkObject>().OwnerClientId;
+                    newBullet.GetComponent<NetworkObject>().Spawn();
+                    newBullet.GetComponent<BaseBullet>()?.Start();
+                }
+            }
+        }
         void Update()
         {
             timer += Time.deltaTime;
-            if(timer > interval)
-            {
-                m_bulletProperties.direction = transform.up;
-                m_bulletProperties.startingPosition = transform.position;
-                timer = 0;
-
-                if (NetworkManager.Singleton.IsServer)
-                {
-                    var newBullet = NetworkObjectPool.Singleton.GetNetworkObject(bulletPrefab, transform.position, transform.rotation).gameObject;
-                    newBullet.GetComponent<ABullet>().SetProperties(m_bulletProperties);
-                    newBullet.GetComponent<NetworkObject>().Spawn();
-                }
-                
-            }
         }
     }
 }

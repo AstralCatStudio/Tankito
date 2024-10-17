@@ -18,7 +18,8 @@ namespace Tankito.Netcode
         [Tooltip("How fast the turret can turn to aim in the specified direction.")]
         [SerializeField]
         private float m_aimSpeed = 720f;
-
+        [SerializeField] private CreateBullet m_cannon;
+        public bool m_parrying = false;
         private Vector2 m_previousFrameAim;
         [SerializeField] private Animator m_TurretAnimator, m_HullAnimator;
         #endregion
@@ -153,7 +154,7 @@ namespace Tankito.Netcode
 
         public void OnDash(InputAction.CallbackContext ctx)
         {
-            if (ctx.ReadValue<bool>())
+            if (ctx.ReadValue<float>()==1)
             {
                 m_currentInput.action =  TankAction.Dash;
             } else {
@@ -163,17 +164,29 @@ namespace Tankito.Netcode
 
         public void OnParry(InputAction.CallbackContext ctx)
         {
-            if (ctx.ReadValue<bool>())
+            if (ctx.ReadValue<float>() == 1)
             {
+                m_parrying = true;
                 m_currentInput.action =  TankAction.Parry;
                 m_TurretAnimator.SetTrigger("Parry");
-                m_TurretAnimator.GetComponent<TankAim>().parrying = true;
                 m_HullAnimator.SetTrigger("Parry");
             } else {
                 Debug.Log("PARRY false positive??? function called but action value false");
             }
         }
-#endregion
+        public void OnFire(InputAction.CallbackContext ctx)
+        {
+            if (ctx.ReadValue<float>() == 1)
+            {
+                m_currentInput.action = TankAction.Fire;
+                m_cannon.Shoot();
+            }
+            else
+            {
+                Debug.Log("FIRE false positive??? function called but action value false");
+            }
+        }
+        #endregion
 
         private void ProcessInput(InputPayload input)
         {
@@ -227,7 +240,10 @@ namespace Tankito.Netcode
                 rotDeg = targetAngle;
             }
 
-            m_turretRB.SetRotation(m_turretRB.rotation+rotDeg);
+            // MoveRotation doesn't work because the turretRB is not simulated
+            // (we only use it for the uniform interface with rotation angle around Z).
+            
+            m_turretRB.MoveRotation(m_turretRB.rotation+rotDeg);
         }
 
         private StatePayload GetSimulationState(int timestamp)

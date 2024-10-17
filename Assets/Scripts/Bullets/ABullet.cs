@@ -24,7 +24,7 @@ namespace Tankito {
         [SerializeField]
         protected BulletProperties m_properties;
         protected List<Modifier> m_modifierList = new List<Modifier>();
-        protected ulong m_ownerID;
+        public ulong m_ownerID;
         protected int m_bouncesLeft = 0;
         protected float m_lifetime;
         public Action OnSpawn = () => { }, OnFly = () => { }, OnHit = () => { }, OnBounce = () => { }, OnDetonate = () => { };
@@ -36,6 +36,7 @@ namespace Tankito {
 
         private void Awake()
         {
+            
             foreach (var modifier in m_modifierList)
             {
                 modifier.ConnectModifier(this);
@@ -70,5 +71,7 @@ namespace Tankito {
             OnBounce = () => {};
             OnDetonate = () => {};
         }
+
+        
     }
 }
