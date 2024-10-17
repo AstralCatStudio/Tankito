@@ -20,6 +20,12 @@ namespace Tankito
 
         private string m_playerName = "Invited";
         internal bool gameSceneLoaded = false;
+        
+        /// <summary>
+        /// PROVISIONAL numero de jugadores para iniciar partida (reloj de simulacion etc.)
+        /// </summary>
+        public int matchStartPlayers = 1;
+        private int m_nPlayers = 0;
 
         public static GameManager Instance { get; private set; }
 
@@ -45,21 +51,18 @@ namespace Tankito
 
             m_networkManager.OnServerStarted += OnServerStarted;
             m_networkManager.OnClientConnectedCallback += OnClientConnected;
+            m_networkManager.OnClientDisconnectCallback += OnClientDisconnect;
 
             AutoPhysics2DUpdate(false);
-
-            
 
             //_playerName = "Invited";
         }
 
         public void FindPlayerInput()
         {
-           m_playerInput= GameObject.FindObjectOfType<PlayerInput>();
+            m_playerInput= GameObject.FindObjectOfType<PlayerInput>();
             m_inputActions = new TankitoInputActions();
             m_playerInput.actions = m_inputActions.asset;
-
-
         }
 
        public void BindInputActions()
@@ -86,10 +89,12 @@ namespace Tankito
 
         private void OnClientConnected(ulong clientId)
         {
+
             if (m_playerInput == null)
             {
                 //FindPlayerInput();
             }
+
             NetworkObject newPlayer = null;
             if (IsServer && gameSceneLoaded)
             {
@@ -98,6 +103,11 @@ namespace Tankito
 
                 newPlayer.SpawnAsPlayerObject(clientId);
             }
+        }
+
+        private void OnClientDisconnect(ulong obj)
+        {
+            throw new NotImplementedException();
         }
 
         public void SetPlayerName(string name)

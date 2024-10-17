@@ -82,7 +82,7 @@ namespace Tankito.Netcode
                 m_currentInput.timestamp = ClockManager.TickCounter; // MUY IMPORTANTE timestampear el input antes de pushearlo
 
                 ProcessInput(m_currentInput);
-                Physics2D.Simulate(ClockManager.SERVER_SIMULATION_DELTA_TIME);
+                Physics2D.Simulate(ClockManager.SimDeltaTime);
                 var currentState = GetSimulationState(ClockManager.TickCounter);
                 
                 m_inputStateCache.Add(m_currentInput, ClockManager.TickCounter);
@@ -110,7 +110,7 @@ namespace Tankito.Netcode
                 {
                     InputPayload clientInput = m_serverInputQueue.Dequeue();
                     ProcessInput(clientInput);
-                    Physics2D.Simulate(ClockManager.SERVER_SIMULATION_DELTA_TIME);
+                    Physics2D.Simulate(ClockManager.SimDeltaTime);
                 }
 
                 // Obtain the current SimulationState.
@@ -141,7 +141,7 @@ namespace Tankito.Netcode
             else
             {
                 // Mouse control fallback/input processing
-                lookVector = input - (Vector2)Camera.main.WorldToScreenPoint(transform.position);
+                lookVector = input - (Vector2)Camera.main.WorldToScreenPoint(m_tankRB.position);
             }
 
             if (lookVector.magnitude > 1)
@@ -210,9 +210,9 @@ namespace Tankito.Netcode
             var targetAngle = Vector2.SignedAngle(m_tankRB.transform.right, movementVector);
             float rotDeg = 0f;
 
-            if (Mathf.Abs(targetAngle) >= ClockManager.SERVER_SIMULATION_DELTA_TIME * m_rotationSpeed)
+            if (Mathf.Abs(targetAngle) >= ClockManager.SimDeltaTime * m_rotationSpeed)
             {
-                rotDeg = Mathf.Sign(targetAngle) * ClockManager.SERVER_SIMULATION_DELTA_TIME * m_rotationSpeed;
+                rotDeg = Mathf.Sign(targetAngle) * ClockManager.SimDeltaTime * m_rotationSpeed;
             }
             else
             {
@@ -223,7 +223,7 @@ namespace Tankito.Netcode
             m_tankRB.MoveRotation(m_tankRB.rotation + rotDeg);
             m_turretRB.MoveRotation(-rotDeg);
             
-            m_tankRB.MovePosition(m_tankRB.position + m_speed * movementVector * ClockManager.SERVER_SIMULATION_DELTA_TIME);
+            m_tankRB.MovePosition(m_tankRB.position + m_speed * movementVector * ClockManager.SimDeltaTime);
         }
 
         private void AimTank(Vector2 aimVector)
@@ -231,9 +231,9 @@ namespace Tankito.Netcode
             var targetAngle = Vector2.SignedAngle(m_turretRB.transform.right, aimVector);
             float rotDeg = 0f;
 
-            if(Mathf.Abs(targetAngle) >= Time.fixedDeltaTime*m_aimSpeed)
+            if(Mathf.Abs(targetAngle) >= ClockManager.SimDeltaTime * m_aimSpeed)
             {
-                rotDeg = Mathf.Sign(targetAngle)*Time.fixedDeltaTime*m_aimSpeed;
+                rotDeg = Mathf.Sign(targetAngle) * ClockManager.SimDeltaTime * m_aimSpeed;
             }
             else
             {
