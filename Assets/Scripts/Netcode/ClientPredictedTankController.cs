@@ -164,7 +164,12 @@ namespace Tankito.Netcode
 
         public void OnParry(InputAction.CallbackContext ctx)
         {
-            if (ctx.ReadValue<float>() == 1)
+            // CAMBIAR POR CHECKS DE DISPARO?
+            // (comprobar si el valor de ctx.ReadValue == 1
+            // es redundante y ademas entra en conflicto con
+            // el threshold de activacion configurado por el input system,
+            // en otras palabras no activa la accion para controles analogicos como el trigger de un mando)
+            if (true)
             {
                 m_parrying = true;
                 m_currentInput.action =  TankAction.Parry;
@@ -176,7 +181,12 @@ namespace Tankito.Netcode
         }
         public void OnFire(InputAction.CallbackContext ctx)
         {
-            if (ctx.ReadValue<float>() == 1)
+            // CAMBIAR POR CHECKS DE DISPARO?
+            // (comprobar si el valor de ctx.ReadValue == 1
+            // es redundante y ademas entra en conflicto con
+            // el threshold de activacion configurado por el input system,
+            // en otras palabras no activa la accion para controles analogicos como el trigger de un mando)
+            if (true)
             {
                 m_currentInput.action = TankAction.Fire;
                 m_cannon.Shoot();
