@@ -98,7 +98,7 @@ public class TankMovement : MonoBehaviour
         if(ctx.performed && m_dashTimer<= -m_dashCooldown)
         {
             m_TurretAnimator.SetTrigger("Parry");
-            m_TurretAnimator.GetComponent<TankAim>().parrying = true;
+            m_TurretAnimator.GetComponent<TankAim>().m_parrying = true;
             m_HullAnimator.SetTrigger("Parry");
         }
     }

@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6545025246547745674}
   - component: {fileID: 3221416329339783790}
   - component: {fileID: 1230613554501251170}
-  - component: {fileID: 6351505200245674444}
+  - component: {fileID: -6159674049367059405}
   m_Layer: 0
   m_Name: Bullet
   m_TagString: Untagged
@@ -145,7 +145,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 0
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -157,8 +157,8 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!70 &6351505200245674444
-CapsuleCollider2D:
+--- !u!58 &-6159674049367059405
+CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -166,7 +166,7 @@ CapsuleCollider2D:
   m_GameObject: {fileID: 4570257745151390860}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 504a65727c6898741afc19a8d3e76330, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -190,5 +190,5 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
-  m_Size: {x: 1, y: 2}
-  m_Direction: 0
+  serializedVersion: 2
+  m_Radius: 0.8

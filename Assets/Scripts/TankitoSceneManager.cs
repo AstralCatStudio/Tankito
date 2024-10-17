@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
-using UnityEditor.SearchService;
+//using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -72,8 +72,8 @@ namespace Tankito
             m_loadedScenes.Add("Loading");
 
             Debug.Log("Loading Game...");
-            yield return NetworkManager.Singleton.SceneManager.LoadScene("InputTesting", LoadSceneMode.Additive);
-            m_loadedScenes.Add("InputTesting");
+            yield return NetworkManager.Singleton.SceneManager.LoadScene("BulletTesting", LoadSceneMode.Additive);
+            m_loadedScenes.Add("BulletTesting");
             Debug.Log("Game Loaded!");
 
             GameManager.Instance.gameSceneLoaded = true;

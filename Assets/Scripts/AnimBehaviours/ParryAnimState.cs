@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Tankito.Netcode;
 using UnityEngine;
 
 public class ParryAnimState : StateMachineBehaviour
@@ -19,9 +20,9 @@ public class ParryAnimState : StateMachineBehaviour
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        if (animator.gameObject.GetComponent<TankAim>() != null)
+        if (animator.gameObject.transform.parent.gameObject.GetComponent<ClientPredictedTankController>() != null)
         {
-            animator.gameObject.GetComponent<TankAim>().parrying = false;
+            animator.gameObject.transform.parent.gameObject.GetComponent<ClientPredictedTankController>().m_parrying = false;
         }
     }
 
