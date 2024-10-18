@@ -28,6 +28,7 @@ namespace Tankito
         private int m_tickCounter;
         public static int TickCounter { get => Instance.m_tickCounter; }
         private float m_simulationDeltaTime;
+        [SerializeField]
         private bool m_active;
 
         public bool Active { get => m_active; }
