@@ -403,6 +403,12 @@ MonoBehaviour:
   m_parrying: 0
   m_TurretAnimator: {fileID: 6117245905817614025}
   m_HullAnimator: {fileID: 5873195794702409541}
+  accelerationMultiplier: 2
+  dashDuration: 1
+  fullDashDuration: 0.2
+  currentDashTick: 0
+  dashReloadDuration: 1
+  inputWhileDash: {x: 0, y: 0}
   m_reconciliationTolerance:
     pos: 0.1
     rot: 0.1

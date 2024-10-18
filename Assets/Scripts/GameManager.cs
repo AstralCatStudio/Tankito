@@ -75,6 +75,8 @@ namespace Tankito
                 m_inputActions.Player.Move.canceled += predictedController.OnMove;
                 m_inputActions.Player.Look.performed += predictedController.OnAim;
                 m_inputActions.Player.Look.canceled += predictedController.OnAim;
+                m_inputActions.Player.Dash.performed += predictedController.OnDash;
+                //m_inputActions.Player.Dash.canceled += predictedController.OnDash;
                 m_inputActions.Player.Parry.performed += predictedController.OnParry;
                 m_inputActions.Player.Parry.canceled += predictedController.OnParry;
                 m_inputActions.Player.Fire.performed += predictedController.OnFire;

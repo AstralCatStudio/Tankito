@@ -4,13 +4,16 @@ using UnityEngine.InputSystem;
 using Unity.Netcode;
 using Tankito.Utils;
 using System;
+using UnityEngine.InputSystem.LowLevel;
+using System.Collections;
 
 namespace Tankito.Netcode
 {
+    public enum PlayerState { Moving, Dashing }
     public class ClientPredictedTankController : NetworkBehaviour
     {
-#region Variables
-
+        #region Variables
+        bool oAS = false;
         [SerializeField] private Rigidbody2D m_tankRB;
         [SerializeField] private float m_speed = 25.0f;
         [SerializeField] private float m_rotationSpeed = 1.0f;
@@ -22,6 +25,16 @@ namespace Tankito.Netcode
         public bool m_parrying = false;
         private Vector2 m_previousFrameAim;
         [SerializeField] private Animator m_TurretAnimator, m_HullAnimator;
+
+        //Variables Dash
+        [SerializeField] private float accelerationMultiplier = 6;
+        [SerializeField] private float dashDuration = 0.5f;
+        [SerializeField] private float fullDashDuration = 0.2f;
+        [SerializeField] private float currentDashTick = 0;
+        [SerializeField] private float dashReloadDuration = 1;
+        [SerializeField] Vector2 inputWhileDash;
+
+        [SerializeField] private PlayerState playerState = PlayerState.Moving;
         #endregion
 
         #region Client Netcode Variables
@@ -36,11 +49,13 @@ namespace Tankito.Netcode
         private CircularBuffer<InputPayload> m_inputStateCache = new CircularBuffer<InputPayload>(CACHE_SIZE);
         private CircularBuffer<StatePayload> m_simulationStateCache = new CircularBuffer<StatePayload>(CACHE_SIZE);        [SerializeField]
         private Tolerances m_reconciliationTolerance;
+        private Vector2 postDashInput;
+        private bool canDash = true;
 
 
-#endregion
+        #endregion
 
-#region Server Netcode Variables
+        #region Server Netcode Variables
 
         private Queue<InputPayload> m_serverInputQueue = new Queue<InputPayload>();
         private StatePayload m_lastClientPredictedState; // Latest reported client state
@@ -63,6 +78,10 @@ namespace Tankito.Netcode
             {
                 Debug.Log("Error tank turret reference not set.");
             }
+            if(IsOwner && IsServer)
+            {
+                oAS = true;
+            }
         }
 
         private void Update()
@@ -79,10 +98,20 @@ namespace Tankito.Netcode
 
             if (IsOwner)
             {
-                m_currentInput.timestamp = ClockManager.TickCounter; // MUY IMPORTANTE timestampear el input antes de pushearlo
+                if (postDashInput != Vector2.zero)
+                {
+                    m_currentInput.moveVector = postDashInput;
+                    m_currentInput.action = TankAction.None;
+                    postDashInput = Vector2.zero;
+                }
 
-                ProcessInput(m_currentInput);
-                Physics2D.Simulate(ClockManager.SimDeltaTime);
+                m_currentInput.timestamp = ClockManager.TickCounter; // MUY IMPORTANTE timestampear el input antes de pushearlo
+                if (!oAS)
+                {
+                    ProcessInput(m_currentInput);
+                    Physics2D.Simulate(ClockManager.SimDeltaTime);
+                }
+                
                 var currentState = GetSimulationState(ClockManager.TickCounter);
                 
                 m_inputStateCache.Add(m_currentInput, ClockManager.TickCounter);
@@ -124,11 +153,29 @@ namespace Tankito.Netcode
 
 
         #region Input Methods
+
+
         public void OnMove(InputAction.CallbackContext ctx)
         {
-            m_currentInput.moveVector = ctx.ReadValue<Vector2>();
+            if (playerState != PlayerState.Dashing)
+            {
+                m_currentInput.moveVector = ctx.ReadValue<Vector2>();
+                m_currentInput.action = TankAction.None;
+            }
+            else
+            {
+                inputWhileDash = ctx.ReadValue<Vector2>();
+            }
         }
-        
+
+        public void OnDash(InputAction.CallbackContext ctx)
+        {
+            if (canDash)
+            {
+                m_currentInput.action = TankAction.Dash;
+            }
+        }
+
         public void OnAim(InputAction.CallbackContext ctx)
         {
             var input = ctx.ReadValue<Vector2>();
@@ -152,15 +199,6 @@ namespace Tankito.Netcode
             m_currentInput.aimVector = lookVector;
         }
 
-        public void OnDash(InputAction.CallbackContext ctx)
-        {
-            if (ctx.ReadValue<float>()==1)
-            {
-                m_currentInput.action =  TankAction.Dash;
-            } else {
-                Debug.Log("DASH false positive??? function called but action value false");
-            }
-        }
 
         public void OnParry(InputAction.CallbackContext ctx)
         {
@@ -201,7 +239,13 @@ namespace Tankito.Netcode
 
         private void ProcessInput(InputPayload input)
         {
-            MoveTank(input.moveVector);
+            switch (input.action)
+            {
+                case TankAction.None:
+                    MoveTank(input.moveVector); break;
+                case TankAction.Dash:
+                    DashTank(input.moveVector); break;
+            }
             AimTank(input.aimVector);
             /*
             if (IsServer)
@@ -235,6 +279,48 @@ namespace Tankito.Netcode
             m_turretRB.MoveRotation(-rotDeg);
             
             m_tankRB.MovePosition(m_tankRB.position + m_speed * movementVector * ClockManager.SimDeltaTime);
+        }
+
+        private void DashTank(Vector2 movementVector)
+        {
+            float dashTicks = dashDuration / Time.fixedDeltaTime;
+            float fullDashTicks = fullDashDuration / Time.fixedDeltaTime;
+            float currentAcceleration;
+
+            if (currentDashTick < fullDashTicks)
+            {
+                currentAcceleration = accelerationMultiplier;
+                if (currentDashTick == 0)
+                {
+                    playerState = PlayerState.Dashing;
+                    canDash = false;
+                }
+            }
+            else
+            {
+                currentAcceleration = Mathf.Lerp(accelerationMultiplier, 1, (currentDashTick - fullDashTicks) / (dashTicks - fullDashTicks)); ;
+            }
+            if (movementVector != Vector2.zero)
+            {
+                m_tankRB.MovePosition(m_tankRB.position + movementVector * Time.fixedDeltaTime * m_speed * currentAcceleration);
+            }
+            else
+            {
+                m_tankRB.MovePosition(m_tankRB.position + (Vector2)transform.right * Time.fixedDeltaTime * m_speed * currentAcceleration);
+            }
+
+            if (currentDashTick >= dashTicks)
+            {
+                currentDashTick = 0;
+
+                postDashInput = inputWhileDash;
+                inputWhileDash = Vector2.zero;
+
+                playerState = PlayerState.Moving;
+                StartCoroutine("DashReloading");
+                return;
+            }
+            currentDashTick++;
         }
 
         private void AimTank(Vector2 aimVector)
@@ -308,9 +394,15 @@ namespace Tankito.Netcode
             return (diff.pos <= tolerance.pos) && (diff.rot <= tolerance.rot) && (diff.vel <= tolerance.vel);
         }
 
-#endregion
+        IEnumerator DashReloading()
+        {
+            yield return new WaitForSeconds(dashReloadDuration);
+            canDash = true;
+        }
 
-#region Client Reconciliation
+        #endregion
+
+        #region Client Reconciliation
 
         private void SetState(StatePayload stateToSet)
         {
