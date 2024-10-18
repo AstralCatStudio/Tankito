@@ -25,6 +25,8 @@ public class MenuController : Singleton<MenuController>
     public GameObject[] bgMenus;
     public Vector2[] bgPositions; //Posiciones del "grid"
     public Animator animator;
+    public ParticleSystem bubbleParticles;
+    
     
     public int currentMenuIndex;
     public float xUnit = 56, yUnit = 30;  
@@ -36,7 +38,6 @@ public class MenuController : Singleton<MenuController>
     void Start()
     {
         BgReposition();
-        //animator = menus[0].GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -48,13 +49,8 @@ public class MenuController : Singleton<MenuController>
     public void ChangeToMenu(int newMenuIndex)
     {
         animator.SetInteger("Menu", newMenuIndex);
-        //animator = menus[newMenuIndex].GetComponent<Animator>();
-        //animator.SetInteger("Menu", newMenuIndex);
-
-        //menus[(int)currentMenuIndex].gameObject.SetActive(false);
         MoveBG(newMenuIndex);
         currentMenuIndex = newMenuIndex;
-        //menus[(int)currentMenuIndex].gameObject.SetActive(true);
     }
 
     private void MoveBG(int newMenuIndex)
@@ -63,6 +59,12 @@ public class MenuController : Singleton<MenuController>
         Transform mg;
         Transform fg;
         Vector2 newTranslation = bgPositions[currentMenuIndex] - bgPositions[newMenuIndex];
+        Vector2 bubbleDirection = -newTranslation.normalized;
+        bubbleDirection = Quaternion.LookRotation(bubbleDirection).eulerAngles;
+        Debug.Log(bubbleDirection.ToString());
+        bubbleParticles.transform.Rotate(new Vector3(0f, 0f, bubbleDirection.x));
+
+        bubbleParticles.Play();
 
         menuChanged?.Invoke(newTranslation, bgMenus[currentMenuIndex], bgMenus[newMenuIndex]);
 
