@@ -27,7 +27,7 @@ public class MenuController : Singleton<MenuController>
     public Animator animator;
     
     public int currentMenuIndex;
-    public int xUnit = 56, yUnit = 30;  
+    public float xUnit = 56, yUnit = 30;  
     public float bgParallaxFactor = 1.2f, mgParallaxFactor = 1f, fgParallaxFactor = 0.7f;
 
     public UnityEvent<Vector2,GameObject,GameObject> menuChanged;
