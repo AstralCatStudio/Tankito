@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
+using UnityEngine.UI;
+using TMPro;
 
 public class RoundManager : NetworkBehaviour
 {
@@ -10,14 +12,23 @@ public class RoundManager : NetworkBehaviour
 
     public RoundUI _roundUI;
 
+    public float _countdownTime = 5f;
+    public TMP_Text _countdownText;
+    private float _currentTime;
+    private bool _isCountingDown = false;
+
     private List<GameObject> _players = new List<GameObject>();
     private List<GameObject> _alivePlayers;
 
-    GameObject prueba; // Prueba
+    public GameObject _playerInput;
+
+    //GameObject prueba; // Prueba
 
     void Start()
     {
         _roundUI = FindObjectOfType<RoundUI>();
+
+        _countdownText = GameObject.Find("Countdown").GetComponentInChildren<TMP_Text>();
 
         // Prueba
         //prueba = new GameObject();
@@ -46,6 +57,26 @@ public class RoundManager : NetworkBehaviour
             }
 
         }
+
+        if (_isCountingDown)
+        {
+            _currentTime -= Time.deltaTime;
+
+            if (_countdownText != null)
+            {
+                string newText = Mathf.Ceil(_currentTime).ToString();
+                _countdownText.text = newText;
+                SetCountdownTextClientRpc(newText);
+            }
+
+            if (_currentTime <= 0f)
+            {
+                _currentTime = 0f;
+                EndCountdown();
+            }
+
+        }
+
         //if (Input.GetKeyUp(KeyCode.Space))
         //{
         //    EliminatePlayer(prueba);
@@ -88,17 +119,85 @@ public class RoundManager : NetworkBehaviour
     {
         _roundUI.SetActivePowerUps(false);
         DisablePowerUpsClientRpc();
+
         _alivePlayers = new List<GameObject>(_players);
         _currentRound++;
-        if( _currentRound > 1 )
+        if (_currentRound > 1)
         {
-            for(int i = 0; i < _alivePlayers.Count; i++)
+            for (int i = 0; i < _alivePlayers.Count; i++)
             {
                 _alivePlayers[i].GetComponent<TankData>().Reset();
             }
         }
         Debug.Log("Inicio ronda " + _currentRound);
+
+        StartCountdown();
     }
+
+    #region Countdown
+
+    private void StartCountdown()
+    {
+        _currentTime = _countdownTime;
+        _isCountingDown = true;
+
+        Debug.Log("Cuenta atras iniciada");
+
+        DisablePlayerInput();
+    }
+
+    private void EndCountdown()
+    {
+        _isCountingDown = false;
+
+        Debug.Log("Fin de cuenta atras");
+        _countdownText.text = "BATTLE!";
+        SetCountdownTextClientRpc("BATTLE!");
+        EnablePlayerInput();
+    }
+
+    [ClientRpc]
+    private void SetCountdownTextClientRpc(string text)
+    {
+        if (_countdownText != null)
+        {
+            _countdownText.text = text;
+        }
+    }
+
+    #endregion
+
+    private void DisablePlayerInput()
+    {
+        _playerInput.SetActive(false);
+        DisablePlayerInputClientRpc();
+    }
+
+    [ClientRpc]
+    private void DisablePlayerInputClientRpc()
+    {
+        if (_playerInput != null)
+        {
+            _playerInput.SetActive(false);
+        }
+    }
+
+    private void EnablePlayerInput()
+    {
+        _playerInput.SetActive(true);
+        EnablePlayerInputClientRpc();
+    }
+
+    [ClientRpc]
+    private void EnablePlayerInputClientRpc()
+    {
+        if (_playerInput != null)
+        {
+            _playerInput.SetActive(true);
+        }
+    }
+
+    #region FlujoPartida
 
     [ClientRpc]
     private void DisablePowerUpsClientRpc()
@@ -123,6 +222,7 @@ public class RoundManager : NetworkBehaviour
     {
         Debug.Log("NETLESS: Fin de ronda");
         EndRoundClientRpc();
+        DisablePlayerInput();
         BetweenRounds();
     }
 
@@ -204,4 +304,5 @@ public class RoundManager : NetworkBehaviour
     {
         Debug.Log("NETCODE: Final de partida en todos");
     }
+    #endregion
 }
