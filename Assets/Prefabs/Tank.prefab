@@ -238,9 +238,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_tankRB: {fileID: 8520293575514935909}
-  m_speed: 20
+  m_speed: 10
   m_rotationSpeed: 720
   m_turret: {fileID: 468154111747707519}
+  inputState:
+    input: {x: 0, y: 0}
+    simulationFrame: 0
+    inputType: 0
+  accelerationMultiplier: 2
+  dashDuration: 0.5
+  fullDashDuration: 0.2
+  currentDashTick: 0
+  canDash: 1
+  dashReloadDuration: 0.5
+  inputWhileDash: {x: 0, y: 0}
+  postDashInput:
+    input: {x: 0, y: 0}
+    simulationFrame: 0
+    inputType: 0
+  playerState: 0
 --- !u!50 &8520293575514935909
 Rigidbody2D:
   serializedVersion: 4
@@ -357,6 +373,22 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: ba1d9813-e053-4d32-848a-0af61003571e
     m_ActionName: UI/TrackedDeviceOrientation
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2613896930739194085}
+        m_TargetAssemblyTypeName: TankMovement, Assembly-CSharp
+        m_MethodName: OnDash
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 2e4eb9a2-4399-4f4c-9ba9-0dc682e2ee0d
+    m_ActionName: Player/Dash[/Keyboard/space]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
