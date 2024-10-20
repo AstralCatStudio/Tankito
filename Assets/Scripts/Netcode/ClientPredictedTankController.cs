@@ -42,15 +42,16 @@ namespace Tankito.Netcode
         // A lo mejor hay que cambiar esto porque es posible que de problemas cuando se hagan inputs mas rapidos que el tickRate
         // (creo (?) que la unidad minima de interaccion pasa a ser: LAST_INPUT durante TICK_RATE, emulando mantener ese input durante el tick completo)
         // - Bernat
-        private InputPayload m_currentInput; // Almacena el ultimo, no es exactamente el "current", input percibido (eg. ultimo estado de un mando con polling rate de 1000Hz)
+        [SerializeField] private InputPayload m_currentInput; // Almacena el ultimo, no es exactamente el "current", input percibido (eg. ultimo estado de un mando con polling rate de 1000Hz)
         private StatePayload m_lastAuthState; //Variable que almacena el estado de simulación autoritativo (enviado por servidor)
         private StatePayload m_reconciledState; // Ultimo estado al que se ha reconciliado
         private const int CACHE_SIZE = 1024;
         private CircularBuffer<InputPayload> m_inputStateCache = new CircularBuffer<InputPayload>(CACHE_SIZE);
         private CircularBuffer<StatePayload> m_simulationStateCache = new CircularBuffer<StatePayload>(CACHE_SIZE);        [SerializeField]
         private Tolerances m_reconciliationTolerance;
-        private Vector2 postDashInput;
-        private bool canDash = true;
+        [SerializeField] private Vector2 postDashInput;
+        private bool postDash = false;
+        [SerializeField] private bool canDash = true;
 
 
         #endregion
@@ -98,11 +99,12 @@ namespace Tankito.Netcode
 
             if (IsOwner)
             {
-                if (postDashInput != Vector2.zero)
+                if (postDash)
                 {
                     m_currentInput.moveVector = postDashInput;
                     m_currentInput.action = TankAction.None;
                     postDashInput = Vector2.zero;
+                    postDash = false;
                 }
 
                 m_currentInput.timestamp = ClockManager.TickCounter; // MUY IMPORTANTE timestampear el input antes de pushearlo
@@ -164,6 +166,7 @@ namespace Tankito.Netcode
             }
             else
             {
+                Debug.Log("SE RECOGE EL INPUT WHILE DASH");
                 inputWhileDash = ctx.ReadValue<Vector2>();
             }
         }
@@ -313,6 +316,7 @@ namespace Tankito.Netcode
             {
                 currentDashTick = 0;
 
+                postDash = true;
                 postDashInput = inputWhileDash;
                 inputWhileDash = Vector2.zero;
 
