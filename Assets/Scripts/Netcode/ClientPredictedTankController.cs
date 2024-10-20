@@ -191,7 +191,7 @@ namespace Tankito.Netcode
             else
             {
                 // Mouse control fallback/input processing
-                lookVector = input - (Vector2)Camera.main.WorldToScreenPoint(m_tankRB.position);
+                lookVector = input - (Vector2)Camera.main.WorldToScreenPoint(m_turretRB.position);
             }
 
             if (lookVector.magnitude > 1)
@@ -221,6 +221,7 @@ namespace Tankito.Netcode
                 Debug.Log($"Parry {ctx.phase}");
             }
         }
+        
         public void OnFire(InputAction.CallbackContext ctx)
         {
             // CAMBIAR POR CHECKS DE DISPARO?

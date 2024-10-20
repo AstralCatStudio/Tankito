@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Tankito.Netcode;
+using Unity.Netcode;
 
 namespace Tankito
 {
@@ -28,6 +29,7 @@ namespace Tankito
         private int m_tickCounter;
         public static int TickCounter { get => Instance.m_tickCounter; }
         private float m_simulationDeltaTime;
+        [SerializeField]
         private bool m_active;
 
         public bool Active { get => m_active; }
@@ -61,21 +63,39 @@ namespace Tankito
             }
         }
 
-        public void StartClock()
+        private void StartClock()
         {
             m_time = 0;
             m_active = true;
         }
 
-        public void StopClock()
+        private void StopClock()
         {
             m_active = false;
         }
 
-        public void ResetClock()
+        private void ResetClock()
         {
             m_tickCounter = 0;
             m_time = 0;
+        }
+
+        [ClientRpc]
+        static public void StartClockClientRpc()
+        {
+            Instance.StartClock();
+        }
+
+        [ClientRpc]
+        static public void StopClockClientRpc()
+        {
+            Instance.StopClock();
+        }
+
+        [ClientRpc]
+        static public void ResetClockClientRpc()
+        {
+            Instance.ResetClock();
         }
     }
 

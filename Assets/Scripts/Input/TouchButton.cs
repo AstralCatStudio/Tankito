@@ -51,7 +51,7 @@ namespace Tankito.Mobile
         {
             if (m_boundFinger != null) return;
 
-            if (m_touchControlManager.CheckIfTouched(touchedFinger.screenPosition, this.GetType()))
+            if (m_touchControlManager.CheckTouch<TouchButton>(touchedFinger.screenPosition) == GetComponent(this.GetType()))
             {
                 m_boundFinger = touchedFinger;
                 SendValueToControl(1.0f);

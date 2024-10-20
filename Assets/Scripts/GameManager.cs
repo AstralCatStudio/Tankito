@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using Tankito.Netcode;
 using Tankito.Utils;
 using Unity.Netcode;
@@ -21,11 +22,6 @@ namespace Tankito
         private string m_playerName = "Invited";
         internal bool gameSceneLoaded = false;
         
-        /// <summary>
-        /// PROVISIONAL numero de jugadores para iniciar partida (reloj de simulacion etc.)
-        /// </summary>
-        public int matchStartPlayers = 1;
-        private int m_nPlayers = 0;
 
         public static GameManager Instance { get; private set; }
 
@@ -144,6 +140,15 @@ namespace Tankito
                 var newPlayer = Instantiate(m_playerPrefab, GameInstanceParent.Instance.transform).GetComponent<NetworkObject>();
 
                 newPlayer.SpawnAsPlayerObject(NetworkManager.LocalClientId);
+            }
+        }
+
+        [ContextMenu("StartSimulationClocks")]
+        internal void StartSimulationClocks()
+        {
+            if (IsServer)
+            {
+                ClockManager.StartClockClientRpc();
             }
         }
     }

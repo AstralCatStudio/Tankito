@@ -70,6 +70,26 @@ namespace Tankito.Mobile
             Debug.Log($"User:{user} | change:{change} | device:{device} | m_boundGamepad:{m_boundGamepad}");
         }
 
+        public Component CheckTouch<T>(Vector2 absoluteScreenPosition)
+        {
+            m_pointerEvtData.position = absoluteScreenPosition;
+            m_raycastResults.Clear();
+
+            // Perform a raycast to find the UI element touched by the finger
+            m_graphicRaycaster.Raycast(m_pointerEvtData, m_raycastResults);
+
+            foreach (var hit in m_raycastResults)
+            {
+                var hitComponent = hit.gameObject.GetComponent(typeof(T));
+                var hasComponent = hit.gameObject.GetComponent(typeof(T)) != null;
+                if (hasComponent) return hitComponent;
+                //Debug.Log($"Checking for {componentType.Name} collisions against {hit.gameObject}, result: {hasComponent}");
+            }
+
+            Debug.Log($"No {typeof(T)} found in query {absoluteScreenPosition}");
+            return default;
+        }
+
         public bool CheckIfTouched(Vector2 absoluteScreenPosition, Type componentType)
         {
             bool res = false;
