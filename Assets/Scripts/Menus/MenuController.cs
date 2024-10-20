@@ -1,8 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Animations;
-using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -58,11 +56,18 @@ public class MenuController : Singleton<MenuController>
         Transform bg;
         Transform mg;
         Transform fg;
+        //newTranslation determina la direccion en la que se mueven los fondos
         Vector2 newTranslation = bgPositions[currentMenuIndex] - bgPositions[newMenuIndex];
-        Vector2 bubbleDirection = -newTranslation.normalized;
+        Vector2 bubbleDirection = newTranslation.normalized;
+
+        // Calcula el ángulo en el plano 2D
+        float angle = Mathf.Atan2(-bubbleDirection.x, bubbleDirection.y) * Mathf.Rad2Deg;
+        // Aplica la rotación al sistema de partículas
+        bubbleParticles.transform.rotation = Quaternion.Euler(0f, 0f, angle);
+
         bubbleDirection = Quaternion.LookRotation(bubbleDirection).eulerAngles;
-        Debug.Log(bubbleDirection.ToString());
-        bubbleParticles.transform.Rotate(new Vector3(0f, 0f, bubbleDirection.x));
+        //Debug.Log(bubbleDirection.ToString());
+        //bubbleParticles.transform.Rotate(new Vector3(0f, 0f, bubbleDirection.x));
 
         bubbleParticles.Play();
 
