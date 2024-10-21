@@ -12,7 +12,6 @@ using UnityEngine.UI;
 
 namespace Tankito.Mobile
 {
-    enum GamepadType { None, Virtual, Physical }
     public class TouchControlManager : MonoBehaviour
     {
         [SerializeField]
@@ -20,8 +19,8 @@ namespace Tankito.Mobile
         private static PointerEventData m_pointerEvtData = new (null);
         private static List<RaycastResult> m_raycastResults = new List<RaycastResult>();
         private GraphicRaycaster m_graphicRaycaster;
-        [SerializeField]
-        private GamepadType m_boundGamepad = GamepadType.None;
+
+        private bool m_touchGamepadFlag;
 
         
         void OnEnable()
@@ -43,31 +42,25 @@ namespace Tankito.Mobile
 
         private void ActivateOnTouch(Finger f)
         {
-            //if (m_canvas.enabled) 
-            m_canvas.gameObject.SetActive(true);
-            m_boundGamepad = GamepadType.Virtual;
+            m_touchGamepadFlag = true;
         }
         
         private void OnInputDeviceChange(InputUser user, InputUserChange change, InputDevice device)
         {
             if (device == null) return;
 
-            if (device.ToString().Contains("Gamepad") || device.ToString().Contains("Touch") && change == InputUserChange.DeviceUnpaired && m_canvas.enabled && m_boundGamepad == GamepadType.Virtual)
+            if ((device.ToString().Contains("Gamepad") || device.ToString().Contains("Touch")) && change == InputUserChange.DeviceUnpaired && m_canvas.enabled && m_touchGamepadFlag)
             {
                 m_canvas.gameObject.SetActive(false);
+                m_touchGamepadFlag = false;
             }
             
-            if (device.ToString().Contains("Gamepad") && change == InputUserChange.DevicePaired && !m_canvas.enabled)
+            if ((device.ToString().Contains("Gamepad") || device.ToString().Contains("Touch")) && change == InputUserChange.DevicePaired && m_touchGamepadFlag)
             {
-                m_boundGamepad = GamepadType.Physical;
+                m_canvas.gameObject.SetActive(true);
             }
 
-            if (user.pairedDevices.Where( dev => dev.ToString().Contains("Gamepad")).ToArray().Length == 0)
-            {
-                m_boundGamepad = GamepadType.None;
-            }
-
-            Debug.Log($"User:{user} | change:{change} | device:{device} | m_boundGamepad:{m_boundGamepad}");
+            Debug.Log($"User:{user} | change:{change} | device:{device} | m_touchGamepadFlag:{m_touchGamepadFlag}");
         }
 
         public Component CheckTouch<T>(Vector2 absoluteScreenPosition)
