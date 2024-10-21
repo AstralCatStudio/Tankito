@@ -7,9 +7,9 @@ using UnityEngine.SceneManagement;
 
 namespace Tankito
 {
-    public class TankitoSceneManager : MonoBehaviour
+    public class SceneLoader : MonoBehaviour
     {
-        public static TankitoSceneManager Singleton;
+        public static SceneLoader Singleton;
         // TODO: Implement Dictionary or the likes, that provides simple enum interface for scripting but allows to change scene names easily in the Unity Editor (perhaps copy Untiy "internal" way of doing such things idk)
         /*public enum SceneNames
         {
@@ -20,7 +20,6 @@ namespace Tankito
 
             
         }*/
-        private List<string> m_loadedScenes;
 
 
         void Awake()
@@ -29,9 +28,6 @@ namespace Tankito
             else Destroy(this);
 
             DontDestroyOnLoad(gameObject);
-
-            m_loadedScenes = new List<string>();
-            m_loadedScenes.Add("Launch");
         }
 
         void Start()
@@ -52,23 +48,19 @@ namespace Tankito
         IEnumerator LoadLobby()
         {
             SceneManager.LoadScene("Loading", LoadSceneMode.Additive);
-            m_loadedScenes.Add("Loading");
 
             Debug.Log("Loading Lobby...");
             yield return SceneManager.LoadSceneAsync("Lobby", LoadSceneMode.Additive);
-            m_loadedScenes.Add("Lobby");
             Debug.Log("Lobby Loaded!");
 
             SceneManager.UnloadSceneAsync("Loading");
-            m_loadedScenes.Remove("Loading");
         }
 
         IEnumerator LoadGameScene()
         {
-            if (!m_loadedScenes.Contains("Lobby")) throw new InvalidOperationException("You shouldn't be loading the game scene without having loaded the Lobby!");
+            if (!SceneManager.GetSceneByName("Lobby").IsValid()) throw new InvalidOperationException("You shouldn't be loading the game scene without having loaded the Lobby!");
 
             SceneManager.LoadScene("Loading");
-            m_loadedScenes.Add("Loading");
 
             Debug.Log("Loading Game...");
 
@@ -76,21 +68,9 @@ namespace Tankito
             {
                 yield return NetworkManager.Singleton.SceneManager.LoadScene("BulletTesting", LoadSceneMode.Additive);
             }
-            else
-            {
-                // yield return hasta que se haya sincronizado la escena en el cliente
-            }
-            
-            m_loadedScenes.Add("BulletTesting");
             Debug.Log("Game Loaded!");
 
-            GameManager.Instance.gameSceneLoaded = true;
-            if (NetworkManager.Singleton.IsHost) GameManager.Instance.CreatePlayer();
-            GameManager.Instance.FindPlayerInput();
-            GameManager.Instance.BindInputActions();
-
             SceneManager.UnloadSceneAsync("Loading");
-            m_loadedScenes.Remove("Loading");
         }
 
     }
