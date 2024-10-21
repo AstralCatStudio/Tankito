@@ -87,7 +87,7 @@ namespace Tankito.Netcode
 
         public override void OnNetworkSpawn()
         {
-            if (NetworkManager.LocalClient.PlayerObject.GetComponent<ClientPredictedTankController>() == this)
+            if (NetworkManager.LocalClient.PlayerObject != null && NetworkManager.LocalClient.PlayerObject.GetComponent<ClientPredictedTankController>() == this)
                 GameManager.Instance.BindInputActions(this);
         }
 
