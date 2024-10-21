@@ -63,11 +63,9 @@ public class MenuController : Singleton<MenuController>
         // Calcula el ángulo en el plano 2D
         float angle = Mathf.Atan2(-bubbleDirection.x, bubbleDirection.y) * Mathf.Rad2Deg;
         // Aplica la rotación al sistema de partículas
-        bubbleParticles.transform.rotation = Quaternion.Euler(0f, 0f, angle);
-
-        bubbleDirection = Quaternion.LookRotation(bubbleDirection).eulerAngles;
-        //Debug.Log(bubbleDirection.ToString());
-        //bubbleParticles.transform.Rotate(new Vector3(0f, 0f, bubbleDirection.x));
+        var shape = bubbleParticles.shape;
+        shape.position = new Vector3(-newTranslation.x * xUnit/2, -newTranslation.y * yUnit/2, shape.position.z);
+        shape.rotation = Quaternion.Euler(0f, 0f, angle).eulerAngles;
 
         bubbleParticles.Play();
 
