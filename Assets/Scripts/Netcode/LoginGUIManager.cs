@@ -54,7 +54,7 @@ namespace Tankito.Netcode
 
         void OnGUI()
         {
-            GUILayout.BeginArea(new Rect(10, 10, 300, 300));
+            GUILayout.BeginArea(new Rect(20, 20, 500, 500));
             switch(m_stage)
             {
                 case GUIStages.Mode: StartButtons(); break;
