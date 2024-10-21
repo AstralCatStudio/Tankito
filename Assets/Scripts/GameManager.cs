@@ -124,10 +124,6 @@ namespace Tankito
             }
 
             CreatePlayer();
-            while(NetworkManager.LocalClient.PlayerObject == null)
-            {
-
-            }
             FindPlayerInput();
             // BindInputActions(); Bound by the player controller itself on network spawn.
         }
