@@ -67,29 +67,6 @@ namespace Tankito
             }
         }
 
-        public void FindPlayerInput()
-        {
-            m_playerInput = GameObject.FindObjectOfType<PlayerInput>();
-            m_inputActions = new TankitoInputActions();
-            m_playerInput.actions = m_inputActions.asset;
-        }
-
-       public void BindInputActions(ClientPredictedTankController predictedController)
-        {
-                Debug.Log($"{predictedController}");
-                m_inputActions.Player.Move.performed += predictedController.OnMove;
-                m_inputActions.Player.Move.canceled += predictedController.OnMove;
-                m_inputActions.Player.Look.performed += predictedController.OnAim;
-                m_inputActions.Player.Look.canceled += predictedController.OnAim;
-                m_inputActions.Player.Dash.performed += predictedController.OnDash;
-                //m_inputActions.Player.Dash.canceled += predictedController.OnDash;
-                m_inputActions.Player.Parry.performed += predictedController.OnParry;
-                m_inputActions.Player.Parry.canceled += predictedController.OnParry;
-                m_inputActions.Player.Fire.performed += predictedController.OnFire;
-                m_inputActions.Player.Fire.canceled += predictedController.OnFire;
-
-        }
-
         private void OnServerStarted()
         {
             print("Servidor inicalizado.");        
@@ -118,11 +95,6 @@ namespace Tankito
                 { NetworkManager.SceneManager.OnSynchronizeComplete -= (ulong syncedClientId) => OnClientConnected(clientId); }
             }
 
-            if (m_playerInput == null)
-            {
-                //FindPlayerInput();
-            }
-
             CreatePlayer();
             FindPlayerInput();
             // BindInputActions(); Bound by the player controller itself on network spawn.
@@ -149,6 +121,32 @@ namespace Tankito
 
             m_loadingSceneFlag = true;
         }
+
+        public void FindPlayerInput()
+        {
+            if (m_playerInput == null) m_playerInput = GameObject.FindObjectOfType<PlayerInput>();
+            if (m_inputActions == null) m_inputActions = new TankitoInputActions();
+            m_playerInput.actions = m_inputActions.asset;
+        }
+
+        public void BindInputActions(ClientPredictedTankController predictedController)
+        {
+            FindPlayerInput();
+
+            Debug.Log($"{predictedController}");
+            m_inputActions.Player.Move.performed += predictedController.OnMove;
+            m_inputActions.Player.Move.canceled += predictedController.OnMove;
+            m_inputActions.Player.Look.performed += predictedController.OnAim;
+            m_inputActions.Player.Look.canceled += predictedController.OnAim;
+            m_inputActions.Player.Dash.performed += predictedController.OnDash;
+            //m_inputActions.Player.Dash.canceled += predictedController.OnDash;
+            m_inputActions.Player.Parry.performed += predictedController.OnParry;
+            m_inputActions.Player.Parry.canceled += predictedController.OnParry;
+            m_inputActions.Player.Fire.performed += predictedController.OnFire;
+            m_inputActions.Player.Fire.canceled += predictedController.OnFire;
+
+        }
+
 
         public void SetPlayerName(string name)
         {
