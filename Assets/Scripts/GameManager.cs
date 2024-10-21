@@ -1,5 +1,8 @@
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using Tankito.Netcode;
+using Tankito.Utils;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -13,10 +16,12 @@ namespace Tankito
         private PlayerInput m_playerInput;
         private TankitoInputActions m_inputActions;
 
-        [SerializeField]
+        //[SerializeField]
         private GameObject m_playerPrefab;
 
         private string m_playerName = "Invited";
+        internal bool gameSceneLoaded = false;
+        
 
         public static GameManager Instance { get; private set; }
 
@@ -42,15 +47,40 @@ namespace Tankito
 
             m_networkManager.OnServerStarted += OnServerStarted;
             m_networkManager.OnClientConnectedCallback += OnClientConnected;
+            m_networkManager.OnClientDisconnectCallback += OnClientDisconnect;
 
             AutoPhysics2DUpdate(false);
-
-            m_inputActions = new TankitoInputActions();
-            m_playerInput.actions = m_inputActions.asset;
 
             //_playerName = "Invited";
         }
 
+        public void FindPlayerInput()
+        {
+            m_playerInput= GameObject.FindObjectOfType<PlayerInput>();
+            m_inputActions = new TankitoInputActions();
+            m_playerInput.actions = m_inputActions.asset;
+        }
+
+       public void BindInputActions()
+        {
+            // VA A FALLAR PARA CLIENTES (en principio funciona en hosts)
+            
+                var predictedController = NetworkManager.LocalClient.PlayerObject.GetComponent<ClientPredictedTankController>();
+                Debug.Log($"{predictedController}");
+                m_inputActions.Player.Move.performed += predictedController.OnMove;
+                m_inputActions.Player.Move.canceled += predictedController.OnMove;
+                m_inputActions.Player.Look.performed += predictedController.OnAim;
+                m_inputActions.Player.Look.canceled += predictedController.OnAim;
+                m_inputActions.Player.Dash.performed += predictedController.OnDash;
+                //m_inputActions.Player.Dash.canceled += predictedController.OnDash;
+                m_inputActions.Player.Parry.performed += predictedController.OnParry;
+                m_inputActions.Player.Parry.canceled += predictedController.OnParry;
+                m_inputActions.Player.Fire.performed += predictedController.OnFire;
+                m_inputActions.Player.Fire.canceled += predictedController.OnFire;
+            // TODO: Unbind actions along with end of tank lifetime.
+
+        }
+        
         private void OnServerStarted()
         {
             print("Servidor inicalizado.");        
@@ -58,28 +88,25 @@ namespace Tankito
 
         private void OnClientConnected(ulong clientId)
         {
+
+            if (m_playerInput == null)
+            {
+                //FindPlayerInput();
+            }
+
             NetworkObject newPlayer = null;
-            if (IsServer)
+            if (IsServer && gameSceneLoaded) // && clientId != NetworkManager.LocalClientId)
             {
                 print("Cliente se conecta");
                 newPlayer = Instantiate(m_playerPrefab).GetComponent<NetworkObject>();
 
                 newPlayer.SpawnAsPlayerObject(clientId);
-                
             }
+        }
 
-            // VA A FALLAR PARA CLIENTES (en principio funciona en hosts)
-            if (newPlayer != null && newPlayer.IsOwner)
-            {
-                var predictedController = newPlayer.GetComponent<ClientPredictedTankController>();
-                Debug.Log($"{predictedController}");
-                m_inputActions.Player.Move.performed += predictedController.OnMove;
-                m_inputActions.Player.Move.canceled += predictedController.OnMove;
-                m_inputActions.Player.Look.performed += predictedController.OnAim;
-                m_inputActions.Player.Look.canceled += predictedController.OnAim;
-
-                // TODO: Unbind actions along with end of tank lifetime.
-            }
+        private void OnClientDisconnect(ulong obj)
+        {
+            throw new NotImplementedException();
         }
 
         public void SetPlayerName(string name)
@@ -102,6 +129,31 @@ namespace Tankito
             else
             {
                 Physics2D.simulationMode = SimulationMode2D.FixedUpdate;
+            }
+        }
+
+        internal void CreatePlayer()
+        {
+            if (IsHost && gameSceneLoaded)
+            {
+                // IMPORTANTE: Siempre instanciar objetos con la sobrecarga de parentesco para asegurar la escena en la que residen
+                // (evitando su destruccion no intencionada al cargarse sobre escenas aditivas que se descargan posteriormente eg. LA PANTALLA DE CARGA)
+                var newPlayer = Instantiate(m_playerPrefab, GameInstanceParent.Instance.transform).GetComponent<NetworkObject>();
+
+                newPlayer.SpawnAsPlayerObject(NetworkManager.LocalClientId);
+            }
+            else
+            {
+                
+            }
+        }
+
+        [ContextMenu("StartSimulationClocks")]
+        internal void StartSimulationClocks()
+        {
+            if (IsServer)
+            {
+                ClockManager.StartClockClientRpc();
             }
         }
     }

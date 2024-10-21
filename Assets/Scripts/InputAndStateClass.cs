@@ -19,4 +19,5 @@ public class SimulationState<T>
         simulationList = new List<T>(list);
         this.simulationFrame = simulationFrame;
     }*/
+
 }

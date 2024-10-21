@@ -8,7 +8,7 @@ using Unity.Services.Relay;
 using UnityEngine;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Unity.Networking.Transport;
+using System.Collections;
 
 namespace Tankito.Netcode
 {
@@ -19,10 +19,10 @@ namespace Tankito.Netcode
 
         #if UNITY_WEBGL
         "wss";
-        bool useWebSockets = true;
+        const bool USE_WEB_SOCKETS = true;
         #else
         "dtls";
-        bool useWebSockets = false;
+        const bool USE_WEB_SOCKETS = false;
         #endif
 
 
@@ -48,13 +48,13 @@ namespace Tankito.Netcode
 
         void Start()
         {
-
-            ((UnityTransport)NetworkManager.Singleton.NetworkConfig.NetworkTransport).UseWebSockets = useWebSockets;
+            ((UnityTransport)NetworkManager.Singleton.NetworkConfig.NetworkTransport).UseWebSockets = USE_WEB_SOCKETS;
+            Debug.Log("UseWebSockets: " + USE_WEB_SOCKETS);
         }
 
         void OnGUI()
         {
-            GUILayout.BeginArea(new Rect(10, 10, 300, 300));
+            GUILayout.BeginArea(new Rect(20, 20, 500, 500));
             switch(m_stage)
             {
                 case GUIStages.Mode: StartButtons(); break;
@@ -69,13 +69,23 @@ namespace Tankito.Netcode
         async void StartButtons()
         {
             if (GUILayout.Button("Host"))
+            {
                 if (m_region != "") StartHost();
-                else { m_connectionMode = ConnectionMode.Host; await FetchRegions(); return; }
+                else {
+                    m_connectionMode = ConnectionMode.Host; await FetchRegions(); return;
+                }
+            }
             if (GUILayout.Button("Server"))
+            {
                 if (m_region != "") StartServer();
-                else { m_connectionMode = ConnectionMode.Server; await FetchRegions(); return; }
+                else {
+                    m_connectionMode = ConnectionMode.Server; await FetchRegions(); return;
+                }
+            }
             if (GUILayout.Button("Client"))
-                { m_connectionMode = ConnectionMode.Client; StartClient(); }
+            {
+                m_connectionMode = ConnectionMode.Client; StartClient();
+            }
 
             m_joinCode = GUILayout.TextField(m_joinCode);
         }
@@ -130,7 +140,10 @@ namespace Tankito.Netcode
             Allocation allocation = await RelayService.Instance.CreateAllocationAsync(MAX_CONNECTIONS, m_region);
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(new RelayServerData(allocation, CONNECTION_TYPE));
             m_joinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
-            Debug.Log("Relay Allocation Created");
+            Debug.Log("Relay Allocation Created - " + "Region: " + m_region
+                        + "Transport: " + NetworkManager.Singleton.NetworkConfig.NetworkTransport.GetType().Name
+                        + "Mode: " + m_connectionMode
+                        + "Room: " + m_joinCode);
         }
 
         async void StartHost()
@@ -139,6 +152,8 @@ namespace Tankito.Netcode
             Debug.Log("Debug point B");
             TextEditor te = new TextEditor(); te.text = m_joinCode; te.SelectAll(); te.Copy();
             NetworkManager.Singleton.StartHost();
+            
+            TankitoSceneManager.Singleton.LoadGameSceneAsync();
         }
 
         async void StartClient()
@@ -148,6 +163,8 @@ namespace Tankito.Netcode
             var joinAllocation = await RelayService.Instance.JoinAllocationAsync(joinCode: m_joinCode);
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(new RelayServerData(joinAllocation, CONNECTION_TYPE));
             NetworkManager.Singleton.StartClient();
+
+            TankitoSceneManager.Singleton.LoadGameSceneAsync();
         }
 
         async void StartServer()
@@ -155,6 +172,8 @@ namespace Tankito.Netcode
             await CreateRelayAllocation();
             TextEditor te = new TextEditor(); te.text = m_joinCode; te.SelectAll(); te.Copy();
             NetworkManager.Singleton.StartServer();
+
+            TankitoSceneManager.Singleton.LoadGameSceneAsync();
         }
     }
 }
