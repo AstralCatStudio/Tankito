@@ -80,6 +80,7 @@ namespace Tankito
             // TODO: Unbind actions along with end of tank lifetime.
 
         }
+        
         private void OnServerStarted()
         {
             print("Servidor inicalizado.");        
@@ -94,7 +95,7 @@ namespace Tankito
             }
 
             NetworkObject newPlayer = null;
-            if (IsServer && gameSceneLoaded)
+            if (IsServer && gameSceneLoaded) // && clientId != NetworkManager.LocalClientId)
             {
                 print("Cliente se conecta");
                 newPlayer = Instantiate(m_playerPrefab).GetComponent<NetworkObject>();
@@ -140,6 +141,10 @@ namespace Tankito
                 var newPlayer = Instantiate(m_playerPrefab, GameInstanceParent.Instance.transform).GetComponent<NetworkObject>();
 
                 newPlayer.SpawnAsPlayerObject(NetworkManager.LocalClientId);
+            }
+            else
+            {
+                
             }
         }
 

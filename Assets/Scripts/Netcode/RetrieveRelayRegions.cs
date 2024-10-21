@@ -43,7 +43,9 @@ namespace Tankito.Netcode
                 var regionsResponse = JsonConvert.DeserializeObject<RelayRegionsResponse>(responseBody);
 
                 // Return the regions as a list of tuples (id, description)
-                return regionsResponse.data.regions.Select(r => (r.id, r.description)).ToList();
+                var result = regionsResponse.data.regions.Select(r => (r.id, r.description)).ToList();
+                result.Sort();
+                return result;
             }
             catch (Exception e)
             {
