@@ -243,12 +243,13 @@ namespace Tankito.Netcode
 
         private void ProcessInput(InputPayload input)
         {
-            switch (input.action)
+            if(input.action != TankAction.Dash)
             {
-                case TankAction.None:
-                    MoveTank(input.moveVector); break;
-                case TankAction.Dash:
-                    DashTank(input.moveVector); break;
+                MoveTank(input.moveVector);
+            }
+            else
+            {
+                DashTank(input.moveVector);
             }
             AimTank(input.aimVector);
             /*
@@ -297,6 +298,7 @@ namespace Tankito.Netcode
                 if (currentDashTick == 0)
                 {
                     playerState = PlayerState.Dashing;
+                    inputWhileDash = movementVector;
                     canDash = false;
                 }
             }
