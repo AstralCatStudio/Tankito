@@ -4,11 +4,14 @@ using UnityEngine;
 using Unity.Netcode;
 using UnityEngine.UI;
 using TMPro;
+using System.Linq;
 
 public class RoundManager : NetworkBehaviour
 {
     private int _currentRound = 0;
     public int _maxRounds = 5;
+
+    private string _ranking;
 
     public RoundUI _roundUI;
 
@@ -97,7 +100,9 @@ public class RoundManager : NetworkBehaviour
         if (_alivePlayers.Contains(player))
         {
             _alivePlayers.Remove(player);
-            Debug.Log($"El jugador {player.name} ha sido eliminado");
+            player.GetComponent<TankData>().IncreasePoints(_players.Count - _alivePlayers.Count);
+            Debug.Log($"El jugador {player.name} de puntuacion {player.GetComponent<TankData>().points} ha sido eliminado");
+            UpdateRemainingPlayersText();
             CheckForWinner();
         }
     }
@@ -129,9 +134,22 @@ public class RoundManager : NetworkBehaviour
                 _alivePlayers[i].GetComponent<TankData>().Reset();
             }
         }
+        
         Debug.Log("Inicio ronda " + _currentRound);
-
+        UpdateRemainingPlayersText();
         StartCountdown();
+    }
+
+    private void UpdateRemainingPlayersText()
+    {
+        _roundUI.SetPlayersAlive(_alivePlayers.Count);
+        UpdateRemainingPlayersTextClientRpc(_alivePlayers.Count);
+    }
+
+    [ClientRpc]
+    private void UpdateRemainingPlayersTextClientRpc(int players)
+    {
+        _roundUI.SetPlayersAlive(players);
     }
 
     #region Countdown
@@ -210,6 +228,7 @@ public class RoundManager : NetworkBehaviour
         if (_alivePlayers.Count == 1)
         {
             Debug.Log("Alguien ha ganado la ronda");
+            _alivePlayers[0].GetComponent<TankData>().IncreasePoints(_players.Count);
             EndRound();
         }
         else
@@ -243,7 +262,7 @@ public class RoundManager : NetworkBehaviour
         }
         else
         {
-            ShowFinalRanking();
+            ShowRanking(); //ShowFinalRanking();
             //ShowFinalRankingClientRpc();
             Invoke(nameof(EndGame), 5.0f);
         }
@@ -252,15 +271,18 @@ public class RoundManager : NetworkBehaviour
     private void ShowRanking()
     {
         Debug.Log("NETLESS: Se muestra el ranking");
+        GenerateRanking();
         _roundUI.SetActiveRanking(true);
-        ShowRankingClientRpc();
+        _roundUI.SetRankingText(_ranking);
+        ShowRankingClientRpc(_ranking);
     }
 
     [ClientRpc]
-    private void ShowRankingClientRpc()
+    private void ShowRankingClientRpc(string ranking)
     {
         Debug.Log("NETCODE: Se muestra el ranking en todos");
         _roundUI.SetActiveRanking(true);
+        _roundUI.SetRankingText(ranking);
     }
 
     private void ShowFinalRanking()
@@ -305,4 +327,23 @@ public class RoundManager : NetworkBehaviour
         Debug.Log("NETCODE: Final de partida en todos");
     }
     #endregion
+
+    private void GenerateRanking()
+    {
+        if(_currentRound == _maxRounds)
+        {
+            _ranking = "Ranking Final: ";
+        }
+        else
+        {
+            _ranking = "Ranking: ";
+        }
+        
+        List<GameObject> sortedPlayers = _players.OrderByDescending(player => player.GetComponent<TankData>().points).ToList<GameObject>();
+
+        for (int i = 0; i < sortedPlayers.Count; i++)
+        {
+            _ranking += $"\n{i + 1}. {sortedPlayers[i].name}  {sortedPlayers[i].GetComponent<TankData>().points} puntos";
+        }
+    }
 }

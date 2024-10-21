@@ -11,11 +11,14 @@ public class TankData : NetworkBehaviour
     public NetworkVariable<int> health = new NetworkVariable<int>(2);
     public NetworkVariable<bool> isAlive = new NetworkVariable<bool>(true);
 
+    public int points;
+
     public override void OnNetworkSpawn()
     {
         if (IsServer)
         {
             RegisterToRoundManager();
+            points = 0;
         }
     }
 
@@ -50,10 +53,14 @@ public class TankData : NetworkBehaviour
             }
         }
     }
-
     public void Reset()
     {
         health.Value = 2;
         isAlive.Value = true;
+    }
+
+    public void IncreasePoints(int newPoints)
+    {
+        points += newPoints;
     }
 }
