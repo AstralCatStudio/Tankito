@@ -35,7 +35,7 @@ namespace Tankito
         }
 
         [ServerRpc]
-        void ShootServerRpc(ulong ownerID)
+        void ShootServerRpc(ulong shooterID)
         {
             if (timer > interval)
             {
@@ -43,21 +43,20 @@ namespace Tankito
                 m_bulletProperties.direction = transform.right;
                 m_bulletProperties.startingPosition = transform.position;
                 var newBullet = NetworkObjectPool.Singleton.GetNetworkObject(bulletPrefab, transform.position, transform.rotation).gameObject;
+                newBullet.transform.rotation= Quaternion.LookRotation(new Vector3(0, 0, 1), transform.right);
+                newBullet.GetComponent<ABullet>().SetProperties(m_bulletProperties);
+                newBullet.GetComponent<ABullet>().m_shooterID = shooterID;
                 newBullet.GetComponent<NetworkObject>().Spawn();
-                SetBulletPropertiesClientRpc(newBullet);
+                newBullet.GetComponent<BaseBullet>()?.Init();
             }
         }
 
         [ClientRpc]
-        private void SetBulletPropertiesClientRpc(NetworkObjectReference target)
+        private void SynchronizeBulletPropertiesClientRpc(BulletProperties properties)
         {
-            if (target.TryGet(out NetworkObject networkObject))
-            {
-                networkObject.GetComponent<ABullet>().SetProperties(m_bulletProperties);
-                networkObject.GetComponent<ABullet>().m_shooterID = OwnerClientId;
-                networkObject.GetComponent<BaseBullet>()?.Init();
-            }
+            m_bulletProperties = properties;
         }
+
         void Update()
         {
             if (IsServer)
