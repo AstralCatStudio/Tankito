@@ -95,7 +95,14 @@ namespace Tankito
                 { NetworkManager.SceneManager.OnSynchronizeComplete -= (ulong syncedClientId) => OnClientConnected(clientId); }
             }
 
-            CreatePlayer();
+            if (IsServer)
+            {
+                // IMPORTANTE: Siempre instanciar objetos con la sobrecarga de parentesco para asegurar la escena en la que residen
+                // (evitando su destruccion no intencionada al cargarse sobre escenas aditivas que se descargan posteriormente eg. LA PANTALLA DE CARGA)
+                var newPlayer = Instantiate(m_playerPrefab, GameInstanceParent.Instance.transform).GetComponent<NetworkObject>();
+
+                newPlayer.SpawnAsPlayerObject(clientId);
+            }
             FindPlayerInput();
             // BindInputActions(); Bound by the player controller itself on network spawn.
         }
@@ -168,22 +175,6 @@ namespace Tankito
             else
             {
                 Physics2D.simulationMode = SimulationMode2D.FixedUpdate;
-            }
-        }
-
-        internal void CreatePlayer()
-        {
-            if (IsServer)
-            {
-                // IMPORTANTE: Siempre instanciar objetos con la sobrecarga de parentesco para asegurar la escena en la que residen
-                // (evitando su destruccion no intencionada al cargarse sobre escenas aditivas que se descargan posteriormente eg. LA PANTALLA DE CARGA)
-                var newPlayer = Instantiate(m_playerPrefab, GameInstanceParent.Instance.transform).GetComponent<NetworkObject>();
-
-                newPlayer.SpawnAsPlayerObject(NetworkManager.LocalClientId);
-            }
-            else
-            {
-                
             }
         }
 
