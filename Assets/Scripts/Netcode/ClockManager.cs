@@ -63,27 +63,21 @@ namespace Tankito
             }
         }
 
-        private void StartClock()
+        internal void StartClock()
         {
             m_time = 0;
             m_active = true;
         }
 
-        private void StopClock()
+        internal void StopClock()
         {
             m_active = false;
         }
 
-        private void ResetClock()
+        internal void ResetClock()
         {
             m_tickCounter = 0;
             m_time = 0;
-        }
-
-        [ClientRpc]
-        static public void StartClockClientRpc()
-        {
-            Instance.StartClock();
         }
 
         [ClientRpc]

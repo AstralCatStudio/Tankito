@@ -136,7 +136,7 @@ namespace Tankito
 
             if (m_inputActions == null)
                 m_inputActions = new TankitoInputActions();
-                
+
             m_playerInput.actions = m_inputActions.asset;
         }
 
@@ -187,8 +187,18 @@ namespace Tankito
         {
             if (IsServer)
             {
-                ClockManager.StartClockClientRpc();
+                StartClocksClientRpc();
             }
+            else
+            {
+                Debug.LogWarning("Simulation clocks must be started from server");
+            }
+        }
+
+        [ClientRpc]
+        internal void StartClocksClientRpc()
+        {
+            GetComponent<ClockManager>().StartClock();
         }
     }
 }
