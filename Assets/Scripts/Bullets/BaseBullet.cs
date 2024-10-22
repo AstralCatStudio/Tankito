@@ -17,7 +17,6 @@ namespace Tankito
             m_bouncesLeft = m_properties.bouncesTotal;
             m_explosion = NetworkManager.Singleton.NetworkConfig.Prefabs.Prefabs[2].Prefab;
             m_rb.velocity = m_properties.velocity* m_properties.direction;
-            //transform.position = m_properties.startingPosition;
         }
 
         private void Update()
@@ -40,23 +39,17 @@ namespace Tankito
         public void Detonate()
         {
             OnDetonate.Invoke();
-            if (IsServer)
-            {
-                  var explosion = Instantiate(m_explosion,transform.position, transform.rotation);
-                var explosionNetworkObject = explosion.GetComponent<NetworkObject>();
-                explosionNetworkObject.Spawn();
-            }
 
+            var explosion = Instantiate(m_explosion,transform.position, transform.rotation);
+            var explosionNetworkObject = explosion.GetComponent<NetworkObject>();
+            explosionNetworkObject.Spawn();
+            
             // Return to the pool from whence it came.
             var networkObject = gameObject.GetComponent<NetworkObject>();
-            if (IsServer)
-            {
-                networkObject.Despawn();
-            }
-            else
-            {
+            networkObject.Despawn();
+            
                 // Posiblemente esconderlo/hacer lo que haga falta antes de tiempo como "prediccion" client-side ??
-            }
+            
         }
         
         private void OnCollisionEnter2D(Collision2D collision)
