@@ -60,7 +60,7 @@ namespace Tankito.Mobile
                 m_canvas.gameObject.SetActive(true);
             }
 
-            Debug.Log($"User:{user} | change:{change} | device:{device} | m_touchGamepadFlag:{m_touchGamepadFlag}");
+            //Debug.Log($"User:{user} | change:{change} | device:{device} | m_touchGamepadFlag:{m_touchGamepadFlag}");
         }
 
         public Component CheckTouch<T>(Vector2 absoluteScreenPosition)
@@ -79,7 +79,7 @@ namespace Tankito.Mobile
                 //Debug.Log($"Checking for {componentType.Name} collisions against {hit.gameObject}, result: {hasComponent}");
             }
 
-            Debug.Log($"No {typeof(T)} found in query {absoluteScreenPosition}");
+            //Debug.Log($"No {typeof(T)} found in query {absoluteScreenPosition}");
             return default;
         }
 

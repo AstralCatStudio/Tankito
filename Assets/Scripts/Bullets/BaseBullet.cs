@@ -10,13 +10,16 @@ namespace Tankito
         [SerializeField]
         private Rigidbody2D m_rb;
         private GameObject m_explosion;
-        public void Start()
+        
+        public override void Init()
         {
+            base.Init();
             m_bouncesLeft = m_properties.bouncesTotal;
             m_explosion = NetworkManager.Singleton.NetworkConfig.Prefabs.Prefabs[2].Prefab;
             m_rb.velocity = m_properties.velocity* m_properties.direction;
             transform.position = m_properties.startingPosition;
         }
+
         private void Update()
         {
             //transform.rotation = Quaternion.LookRotation(rb.velocity.normalized);
@@ -24,21 +27,31 @@ namespace Tankito
             m_rb.velocity += (m_properties.acceleration != 0f) ? m_properties.acceleration * m_properties.direction : Vector2.zero;
             m_lifetime += Time.deltaTime;
 
-            if (m_properties.lifetimeTotal <= m_lifetime)
+            if (m_lifetime >= m_properties.lifetimeTotal)
             {
+                Debug.Log($"lifetime: {m_lifetime}/{m_properties.lifetimeTotal}");
                 Detonate();
             }
         }
+
         public void Detonate()
         {
             OnDetonate.Invoke();
-            if (NetworkManager.Singleton.IsServer)
+            // if (NetworkManager.Singleton.IsServer)
             {
                 Instantiate(m_explosion,transform.position, transform.rotation);
             }
-                // Return to the pool from whence it came.
-                var networkObject = gameObject.GetComponent<NetworkObject>();
-            networkObject.Despawn();
+
+            // Return to the pool from whence it came.
+            var networkObject = gameObject.GetComponent<NetworkObject>();
+            if (IsServer)
+            {
+                networkObject.Despawn();
+            }
+            else
+            {
+                // Posiblemente esconderlo/hacer lo que haga falta antes de tiempo como "prediccion" client-side ??
+            }
         }
         private void OnCollisionEnter2D(Collision2D collision)
         {

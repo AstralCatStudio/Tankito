@@ -10,7 +10,7 @@ namespace Tankito {
     [System.Serializable]
     public struct BulletProperties
     {
-        public Vector2 ScaleMultiplier;
+        public Vector2 scaleMultiplier;
         public Vector2 startingPosition;
         public float velocity;
         public float acceleration;
@@ -18,6 +18,11 @@ namespace Tankito {
         public float rotationSpeed;
         public int bouncesTotal;
         public float lifetimeTotal;
+
+        public override string ToString()
+        {
+            return $"| scaleMultiplier-{scaleMultiplier} | startingPosition-{startingPosition} | velocity-{velocity} | acceleration-{acceleration} | direction-{direction} | rotationSpeed-{rotationSpeed} | bouncesTotal-{bouncesTotal} | lifetimeTotal-{lifetimeTotal} |";
+        }
     }
     public abstract class ABullet : NetworkBehaviour
     {
@@ -26,9 +31,14 @@ namespace Tankito {
         protected List<Modifier> m_modifierList = new List<Modifier>();
         public ulong m_ownerID;
         protected int m_bouncesLeft = 0;
-        protected float m_lifetime;
+        protected float m_lifetime = 100;
         public Action OnSpawn = () => { }, OnFly = () => { }, OnHit = () => { }, OnBounce = () => { }, OnDetonate = () => { };
 
+
+        public override void OnNetworkSpawn()
+        {
+            Debug.Log($"{this} properties: {m_properties}");
+        }
         public override void OnNetworkDespawn()
         {
             ResetBulletData();
@@ -43,7 +53,7 @@ namespace Tankito {
             }
         }
 
-        void Start()
+        public virtual void Init()
         {
             OnSpawn.Invoke();
         }
