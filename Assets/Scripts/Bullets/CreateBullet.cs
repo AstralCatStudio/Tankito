@@ -16,10 +16,12 @@ namespace Tankito
         float interval = 1;
         float timer = 0;
         List<GameObject> bulletsShot = new List<GameObject>();
+
         private void Start()
         {
             
         }
+
         public void Shoot()
         {
             // Probablemente sea razonable añadir un intervalo de buffer de inputs, de modo que si disparas justo antes de que se acabe el cooldown, dispare en cuanto se pueda. - Bernat
@@ -28,6 +30,7 @@ namespace Tankito
                 ShootServerRpc();
             }
         }
+
         [ServerRpc]
         void ShootServerRpc()
         {
@@ -37,19 +40,19 @@ namespace Tankito
                 m_bulletProperties.direction = transform.right;
                 m_bulletProperties.startingPosition = transform.position;
                 var newBullet = NetworkObjectPool.Singleton.GetNetworkObject(bulletPrefab, transform.position, transform.rotation).gameObject;
-                newBullet.GetComponent<ABullet>().SetProperties(m_bulletProperties);
-                newBullet.GetComponent<ABullet>().m_ownerID = gameObject.GetComponent<NetworkObject>().OwnerClientId;
                 newBullet.GetComponent<NetworkObject>().Spawn();
                 SetBulletPropertiesClientRpc(newBullet);
-                newBullet.GetComponent<BaseBullet>()?.Init();
             }
         }
+
         [ClientRpc]
         private void SetBulletPropertiesClientRpc(NetworkObjectReference target)
         {
             if (target.TryGet(out NetworkObject networkObject))
             {
-                networkObject.GetComponent<BaseBullet>().SetProperties(m_bulletProperties);
+                networkObject.GetComponent<ABullet>().SetProperties(m_bulletProperties);
+                networkObject.GetComponent<ABullet>().m_shooterID = OwnerClientId;
+                networkObject.GetComponent<BaseBullet>()?.Init();
             }
         }
         void Update()

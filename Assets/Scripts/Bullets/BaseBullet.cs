@@ -9,6 +9,7 @@ namespace Tankito
     {
         [SerializeField]
         private Rigidbody2D m_rb;
+        [SerializeField]
         private GameObject m_explosion;
         
         public override void Init()
@@ -16,7 +17,7 @@ namespace Tankito
             base.Init();
             m_bouncesLeft = m_properties.bouncesTotal;
             m_explosion = NetworkManager.Singleton.NetworkConfig.Prefabs.Prefabs[2].Prefab;
-            m_rb.velocity = m_properties.velocity* m_properties.direction;
+            m_rb.velocity = m_properties.velocity * m_properties.direction;
             transform.position = m_properties.startingPosition;
         }
 
@@ -73,7 +74,7 @@ namespace Tankito
                     break;
 
                 case "Player":
-                    if(collision.gameObject.GetComponent<NetworkObject>().OwnerClientId == m_ownerID)
+                    if(collision.gameObject.GetComponent<NetworkObject>().OwnerClientId == m_shooterID)
                     {
 
                     }

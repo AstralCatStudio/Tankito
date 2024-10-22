@@ -43,6 +43,7 @@ namespace Tankito.Mobile
         private void ActivateOnTouch(Finger f)
         {
             m_touchGamepadFlag = true;
+            //Debug.Log("touchGamepadFlag set TRUE");
         }
         
         private void OnInputDeviceChange(InputUser user, InputUserChange change, InputDevice device)
@@ -53,6 +54,7 @@ namespace Tankito.Mobile
             {
                 m_canvas.gameObject.SetActive(false);
                 m_touchGamepadFlag = false;
+                //Debug.Log("touchGamepadFlag set FLASE");
             }
             
             if ((device.ToString().Contains("Gamepad") || device.ToString().Contains("Touch")) && change == InputUserChange.DevicePaired && m_touchGamepadFlag)

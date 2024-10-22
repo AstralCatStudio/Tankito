@@ -13,7 +13,6 @@ namespace Tankito.Netcode
     public class ClientPredictedTankController : NetworkBehaviour
     {
         #region Variables
-        bool oAS = false;
         [SerializeField] private Rigidbody2D m_tankRB;
         [SerializeField] private float m_speed = 25.0f;
         [SerializeField] private float m_rotationSpeed = 1.0f;
@@ -81,10 +80,7 @@ namespace Tankito.Netcode
             {
                 Debug.Log("Error tank turret reference not set.");
             }
-            if(IsOwner && IsServer)
-            {
-                oAS = true;
-            }
+
         }
 
         public override void OnNetworkSpawn()
@@ -93,6 +89,7 @@ namespace Tankito.Netcode
                 GameManager.Instance.BindInputActions(this);
         }
 
+#region Simulation
         void FixedUpdate()
         {
             // TODO: Implement Server-Client clock
@@ -111,11 +108,8 @@ namespace Tankito.Netcode
                 }
 
                 m_currentInput.timestamp = ClockManager.TickCounter; // MUY IMPORTANTE timestampear el input antes de pushearlo
-                if (!oAS)
-                {
-                    ProcessInput(m_currentInput);
-                    Physics2D.Simulate(ClockManager.SimDeltaTime);
-                }
+
+                ProcessInput(m_currentInput);
                 
                 var currentState = GetSimulationState(ClockManager.TickCounter);
                 
@@ -136,17 +130,20 @@ namespace Tankito.Netcode
             else if (!IsServer)
             {
                 // RECEIVE STATE DATA FROM SERVER ABOUT OTHER CLIENTS' TANKS
-                Reconciliate();
-
+                SetState(m_lastAuthState);
+                // TODO: Deadreackoning + Interpolation
             }
+
             if (IsServer)
             {
                 // Obtain CharacterInputState's from the queue. 
-                while (m_serverInputQueue.Count > 0)
+                //while (m_serverInputQueue.Count > 0)
+                if (m_serverInputQueue.Count > 0)
                 {
                     InputPayload clientInput = m_serverInputQueue.Dequeue();
                     ProcessInput(clientInput);
-                    Physics2D.Simulate(ClockManager.SimDeltaTime);
+                    //Debug.Log($"Emptying server input queue: {clientInput}");
+                    //Physics2D.Simulate(ClockManager.SimDeltaTime);
                 }
 
                 // Obtain the current SimulationState.
@@ -157,6 +154,7 @@ namespace Tankito.Netcode
             }
 
         }
+#endregion
 
 
         #region Input Methods
@@ -385,18 +383,18 @@ namespace Tankito.Netcode
 
             SendServerSimulationToClientRpc(serverSimulation.position, serverSimulation.rotation, serverSimulation.simulationFrame);*/
         }
+
         [ClientRpc]
         private void SendAuthStateClientRpc(StatePayload authState)
         {
-            if (IsOwner)
+            //if (IsOwner) // Si solo quieres que se aplique para los owners entonces se deberia de hacer un RPC targeteado para no saturar la red con transferencias innecesarias.
+            // Ademas no le veo el sentido a este IsOwner -Bernat
             {
-                if (m_lastAuthState.timestamp < authState.timestamp)
+                if (m_lastAuthState.timestamp <= authState.timestamp)
                 {
                     m_lastAuthState = authState;
                 }
                 //Debug.Log("La simulación del SERVIDOR en el frame " + serverSimulationState.simulationFrame + " es: " + serverSimulationState.position + "-" + serverSimulationState.rotation);
-
-                SetState(authState);
             }   
         }
 
@@ -426,11 +424,17 @@ namespace Tankito.Netcode
             m_tankRB.MoveRotation(stateToSet.hullRot);
             m_tankRB.velocity = stateToSet.velocity;
 
+            m_turretRB.MoveRotation(stateToSet.turretRot);
+            
+            Debug.Log($"{this} - set state to: {m_lastAuthState}");
+
             // DO SOMETHING ABOUT TANK ACTIONS...
         }
 
         private void Reconciliate()
         {
+            GameManager.Instance.AutoPhysics2DUpdate(false);
+
             // Snap to newly received auth state
             m_tankRB.MovePosition(m_lastAuthState.position);
             m_tankRB.SetRotation(m_lastAuthState.hullRot);
@@ -448,6 +452,8 @@ namespace Tankito.Netcode
                 m_simulationStateCache.Add(GetSimulationState(rewindTick),rewindTick);
                 rewindTick++;
             }
+            
+            GameManager.Instance.AutoPhysics2DUpdate(true);
         }
 
 #endregion

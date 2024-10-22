@@ -51,7 +51,7 @@ namespace Tankito
             m_networkManager.OnClientConnectedCallback += OnClientConnected;
             m_networkManager.OnClientDisconnectCallback += OnClientDisconnect;
 
-            AutoPhysics2DUpdate(false);
+            AutoPhysics2DUpdate(true);
 
         }
 
@@ -199,7 +199,7 @@ namespace Tankito
         public void StartClocksClientRpc()
         {
             Debug.Log("Starting client clocks...");
-            ClockManager.Instance.StartClock();
+            //ClockManager.Instance.StartClock();
         }
     }
 }
