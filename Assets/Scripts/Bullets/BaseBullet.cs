@@ -53,6 +53,7 @@ namespace Tankito
                 // Posiblemente esconderlo/hacer lo que haga falta antes de tiempo como "prediccion" client-side ??
             }
         }
+        
         private void OnCollisionEnter2D(Collision2D collision)
         {
             switch (collision.gameObject.tag)
