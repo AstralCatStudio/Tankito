@@ -196,9 +196,10 @@ namespace Tankito
         }
 
         [ClientRpc]
-        internal void StartClocksClientRpc()
+        public void StartClocksClientRpc()
         {
-            GetComponent<ClockManager>().StartClock();
+            Debug.Log("Starting client clocks...");
+            ClockManager.Instance.StartClock();
         }
     }
 }
