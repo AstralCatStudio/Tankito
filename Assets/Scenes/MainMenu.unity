@@ -2076,8 +2076,8 @@ MonoBehaviour:
   currentMenuIndex: 0
   xUnit: 23.44
   yUnit: 12.8
-  bgParallaxFactor: 1.2
-  mgParallaxFactor: 1.1
+  bgParallaxFactor: 2
+  mgParallaxFactor: 1.4
   fgParallaxFactor: 1
   menuChanged:
     m_PersistentCalls:
@@ -2106,7 +2106,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f76b4887bd51d646b5a790d78dba61f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lerpDuration: 30
+  parallaxMoveSpeed: 5
+  lerpDuration: 1
+  isTransitioning: 0
 --- !u!1 &389618678
 GameObject:
   m_ObjectHideFlags: 0
