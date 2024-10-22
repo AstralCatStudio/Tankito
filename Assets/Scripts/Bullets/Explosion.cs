@@ -1,8 +1,11 @@
 using UnityEngine;
-
+using System.Collections;
+using System.Collections.Generic;
+using Unity.Netcode;
+using Tankito.Netcode;
 namespace Tankito
 {
-    public class Explosion : MonoBehaviour
+    public class Explosion : NetworkBehaviour
     {
         public float size = 1;
         public float timer = 0;
@@ -11,10 +14,16 @@ namespace Tankito
         private void Update()
         {
             timer += Time.deltaTime;
-            if (timer >= timeUntilDead)
+            if (IsServer)
             {
-                Destroy(gameObject);
+                if (timer >= timeUntilDead)
+                {
+                    GetComponent<NetworkObject>().Despawn();
+                    //Destroy(gameObject);
+                }
             }
+            
+            
             if (timer <= timeUntilBig)
             {
                 transform.localScale = Mathf.Lerp(0, 1, timer / timeUntilBig) * Vector3.one * size;

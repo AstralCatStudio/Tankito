@@ -363,7 +363,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5904161972637957731}
-  m_BodyType: 0
+  m_BodyType: 1
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
@@ -557,7 +557,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bulletPrefab: {fileID: 4570257745151390860, guid: 85797559142c3c94b8f11faacad78b7f, type: 3}
   m_bulletProperties:
-    ScaleMultiplier: {x: 1, y: 1}
+    scaleMultiplier: {x: 0, y: 0}
     startingPosition: {x: 0, y: 0}
     velocity: 5
     acceleration: 0

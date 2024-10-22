@@ -4,12 +4,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
 using Tankito.Netcode;
+using UnityEngine.UIElements;
 
 namespace Tankito {
 
     [System.Serializable]
-    public struct BulletProperties
-    {
+    public struct BulletProperties : INetworkSerializable{ 
+    
         public Vector2 scaleMultiplier;
         public Vector2 startingPosition;
         public float velocity;
@@ -19,6 +20,17 @@ namespace Tankito {
         public int bouncesTotal;
         public float lifetimeTotal;
 
+        public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+        {
+            serializer.SerializeValue(ref scaleMultiplier);
+            serializer.SerializeValue(ref startingPosition);
+            serializer.SerializeValue(ref velocity);
+            serializer.SerializeValue(ref acceleration);
+            serializer.SerializeValue(ref direction);
+            serializer.SerializeValue(ref rotationSpeed);
+            serializer.SerializeValue(ref bouncesTotal);
+            serializer.SerializeValue(ref lifetimeTotal);
+        }
         public override string ToString()
         {
             return $"| scaleMultiplier-{scaleMultiplier} | startingPosition-{startingPosition} | velocity-{velocity} | acceleration-{acceleration} | direction-{direction} | rotationSpeed-{rotationSpeed} | bouncesTotal-{bouncesTotal} | lifetimeTotal-{lifetimeTotal} |";
