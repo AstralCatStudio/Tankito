@@ -23,9 +23,8 @@ public class MenuController : Singleton<MenuController>
     public GameObject[] menus;
     public GameObject[] bgMenus;
     public Vector2[] bgPositions; //Posiciones del "grid"
-    public Animator animator;
     public ParticleSystem bubbleParticles;
-    
+    public float duration = 1f;
     
     public int currentMenuIndex;
     public float xUnit = 56, yUnit = 30;  
@@ -47,8 +46,9 @@ public class MenuController : Singleton<MenuController>
     
     public void ChangeToMenu(int newMenuIndex)
     {
-        animator.SetInteger("Menu", newMenuIndex);
+        menus[currentMenuIndex].GetComponent<MenuAnimations>().DisablingAnimation();   
         MoveBG(newMenuIndex);
+        menus[newMenuIndex].gameObject.SetActive(true);
         currentMenuIndex = newMenuIndex;
     }
 
