@@ -36,13 +36,13 @@ public class SmoothTransition : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(isTransitioning)
-        {
-            MoveSmoothly();
-        } else
-        {
-            MoveBgParallax();
-        }
+        //if(isTransitioning)
+        //{
+        //    MoveSmoothly();
+        //} else
+        //{
+        //    MoveBgParallax();
+        //}
     }
 
     private void MoveBgParallax()

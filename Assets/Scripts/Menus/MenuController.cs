@@ -47,7 +47,7 @@ public class MenuController : Singleton<MenuController>
     public void ChangeToMenu(int newMenuIndex)
     {
         menus[currentMenuIndex].GetComponent<MenuAnimations>().DisablingAnimation();   
-        MoveBG(newMenuIndex);
+        //MoveBG(newMenuIndex);
         menus[newMenuIndex].gameObject.SetActive(true);
         currentMenuIndex = newMenuIndex;
     }
