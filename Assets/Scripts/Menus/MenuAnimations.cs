@@ -1,19 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.Multiplayer.Tools.NetStatsMonitor;
 using UnityEngine;
+using UnityEngine.InputSystem.LowLevel;
+using UnityEngine.UI;
 using static UnityEditor.Rendering.FilterWindow;
 
 public class MenuAnimations : MonoBehaviour
 {
-    [SerializeField] private List<RectTransform> uiElements;
-    [SerializeField] private List<Vector2> originalRTransforms;
-    [SerializeField] private List<Vector2> newPositions;
+    private List<RectTransform> uiElements;
+    private List<Vector2> originalRTransforms;
+    private List<Vector2> newPositions;
     [SerializeField] private float enterDuration = 1f;
     [SerializeField] private float exitDuration = 1f;
     [SerializeField] private float enableTime = 1f;
     [SerializeField] private float disableTime = 1f;
     [SerializeField] private float delay = 0.1f;
+
+    private Coroutine disableCoroutine, enablingInteractable;
 
     private void Awake()
     {
@@ -22,6 +27,10 @@ public class MenuAnimations : MonoBehaviour
         {
             uiElements.Add(gameObject.transform.GetChild(i).GetComponent<RectTransform>());
             originalRTransforms.Add(uiElements[i].anchoredPosition);
+            if (uiElements[i].transform.GetComponent<Button>() == true)
+            {
+                uiElements[i].transform.GetComponent<Button>().interactable = false;
+            }
         }
 
         if(uiElements != null)
@@ -58,6 +67,11 @@ public class MenuAnimations : MonoBehaviour
     {
         Invoke("EnableDelayed", enableTime);
     }
+    private void EnableDelayed()
+    {
+        EnablingAnimation();
+    }
+
     public void EnablingAnimation()
     {
         float additiveDelay = delay;
@@ -66,6 +80,12 @@ public class MenuAnimations : MonoBehaviour
             LeanTween.move(uiElements[i], originalRTransforms[i], enterDuration).setEase(LeanTweenType.easeOutBack).setDelay(additiveDelay);
             additiveDelay += delay;
         }
+
+        if (enablingInteractable != null)
+        {
+            StopCoroutine(enablingInteractable);
+        }
+        enablingInteractable = StartCoroutine(EnableInteractables(enterDuration));
     }
 
     public void DisablingAnimation()
@@ -73,20 +93,48 @@ public class MenuAnimations : MonoBehaviour
         float additiveDelay = delay;
         for (int i = 0; i < uiElements.Count; i++)
         {
+            if (uiElements[i].transform.GetComponent<Button>() == true)
+            {
+                uiElements[i].transform.GetComponent<Button>().interactable = false;
+            }
+
             LeanTween.move(uiElements[i], newPositions[i], exitDuration).setEase(LeanTweenType.easeInBack).setDelay(additiveDelay);
             additiveDelay += delay;
         }
 
-        Invoke("DisableDelayed", disableTime);
+        if (disableCoroutine != null)
+        {
+            StopCoroutine(disableCoroutine);
+        }
+        disableCoroutine = StartCoroutine(DisablingCoroutine(disableTime));
     }
 
-    private void EnableDelayed()
+    IEnumerator DisablingCoroutine(float disableTime)
     {
-        EnablingAnimation();
-    }
-
-    private void DisableDelayed()
-    {
+        float t = 0;
+        while(t < disableTime)
+        {
+            yield return null;
+            t += Time.deltaTime;
+        }
+        Debug.Log("desactivao");
         gameObject.SetActive(false);
+    }
+
+    IEnumerator EnableInteractables(float enterTransition)
+    {
+        float t = 0;
+        while (t < enterTransition)
+        {
+            yield return null;
+            t += Time.deltaTime;
+        }
+        for (int i = 0; i < uiElements.Count; i++)
+        {
+            if(uiElements[i].transform.GetComponent<Button>() == true)
+            {
+                uiElements[i].transform.GetComponent<Button>().interactable = true;
+            }
+        }
     }
 }
