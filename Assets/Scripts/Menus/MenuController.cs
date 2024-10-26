@@ -7,7 +7,6 @@ using UnityEngine.Events;
 
 public class MenuController : Singleton<MenuController>
 {
-    [Serializable]
     public enum menuName
     {
         InitialScreenLogIn = 0,

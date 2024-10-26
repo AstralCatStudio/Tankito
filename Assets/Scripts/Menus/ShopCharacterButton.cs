@@ -9,7 +9,7 @@ public class ShopCharacterButton : MonoBehaviour
     public void OpenShopItem()
     {
         var menu = MenuController.Instance;
-        var parent = menu.menus[5].transform;
+        var parent = menu.menus[(int)MenuController.menuName.Shop].transform;
         var dropdownInstance = Instantiate(dropdown, parent);
         var characterPanel = dropdownInstance.transform.GetChild(1).GetComponent<RectTransform>();    //Tiene que coger el hijo que sea el CharacterPanel
         LeanTween.scale(characterPanel, Vector2.zero, 0f);

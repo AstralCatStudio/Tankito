@@ -13,6 +13,7 @@ public class MenuTitleInit : MonoBehaviour
     void Start()
     {
         RectTransform ltRect = gameObject.GetComponent<RectTransform>();
+
         //0
         LeanTween.alpha(ltRect, 0f, 0f);
         //FadeIn

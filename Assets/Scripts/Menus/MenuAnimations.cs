@@ -5,13 +5,12 @@ using Unity.Multiplayer.Tools.NetStatsMonitor;
 using UnityEngine;
 using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.UI;
-using static UnityEditor.Rendering.FilterWindow;
 
 public class MenuAnimations : MonoBehaviour
 {
     private List<RectTransform> uiElements;
-    private List<Vector2> originalRTransforms;
-    private List<Vector2> newPositions;
+    private List<Vector2> originalRTransforms = new();
+    private List<Vector2> newPositions = new();
     [SerializeField] private float enterDuration = 1f;
     [SerializeField] private float exitDuration = 1f;
     [SerializeField] private float enableTime = 1f;
@@ -39,8 +38,11 @@ public class MenuAnimations : MonoBehaviour
             {
                 Vector2 newPosition = CalculateNewPosition(element);
                 newPositions.Add(newPosition);
-                LeanTween.move(element, newPosition, 0f);
+                //LeanTween.move(element, newPosition, 0f);
+                //element.DOAnchorPos(newPosition, 0f);
+                element.anchoredPosition = newPosition;
             }
+            Debug.Break();
         }
     }
 
@@ -81,6 +83,7 @@ public class MenuAnimations : MonoBehaviour
             additiveDelay += delay;
         }
 
+        Debug.Log("pre enabling routine");
         if (enablingInteractable != null)
         {
             StopCoroutine(enablingInteractable);
@@ -102,8 +105,11 @@ public class MenuAnimations : MonoBehaviour
             additiveDelay += delay;
         }
 
+        Debug.Log("A.1");
+
         if (disableCoroutine != null)
         {
+            Debug.Log("A.2");
             StopCoroutine(disableCoroutine);
         }
         disableCoroutine = StartCoroutine(DisablingCoroutine(disableTime));
