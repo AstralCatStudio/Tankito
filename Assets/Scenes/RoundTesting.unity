@@ -2023,9 +2023,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 978e576d737a6e649bc9c49e0f89ce10, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  JoystickSize: {x: 400, y: 400}
-  Joystick: {fileID: 1944608672}
+  m_joystickSize: {x: 300, y: 300}
+  m_joystickRect: {fileID: 0}
+  JoystickHandleRect: {fileID: 0}
   m_ControlPath: <Gamepad>/rightStick
+  m_hideStick: 0
+  m_stickType: 0
   m_hotspotPosition: 1
   m_hotspotDeadzone: 100
   debugGUI: 0
@@ -2041,9 +2044,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 978e576d737a6e649bc9c49e0f89ce10, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  JoystickSize: {x: 400, y: 400}
-  Joystick: {fileID: 1855167111}
+  m_joystickSize: {x: 300, y: 300}
+  m_joystickRect: {fileID: 0}
+  JoystickHandleRect: {fileID: 0}
   m_ControlPath: <Gamepad>/leftStick
+  m_hideStick: 0
+  m_stickType: 0
   m_hotspotPosition: 0
   m_hotspotDeadzone: 100
   debugGUI: 0
@@ -2236,6 +2242,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6abb2d47833511449e24b3fcee7d040, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_tickCounter: 0
+  m_active: 0
 --- !u!114 &2071937625
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2249,7 +2257,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_playerInput: {fileID: 2023768346}
-  m_playerPrefab: {fileID: 5904161972637957731, guid: 109ffc88b3b341244883afcfef29124c, type: 3}
 --- !u!4 &2071937627
 Transform:
   m_ObjectHideFlags: 0

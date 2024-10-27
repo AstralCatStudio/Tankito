@@ -25,33 +25,27 @@ public class RoundManager : NetworkBehaviour
 
     public GameObject _playerInput;
 
-    //GameObject prueba; // Prueba
-
     void Start()
     {
+        DisablePlayerInput();
+
         _roundUI = FindObjectOfType<RoundUI>();
 
         _countdownText = GameObject.Find("Countdown").GetComponentInChildren<TMP_Text>();
 
-        // Prueba
-        //prueba = new GameObject();
-        //AddPlayer(prueba);
-        //AddPlayer(new GameObject());
-        //
-
-        if (IsServer)
-        {
-            //InitializeRound();
-        }
+        //if (IsServer)
+        //{
+        //    InitializeRound();
+        //}
     }
 
     void Update()
     {
         if (IsServer)
         {
-            if (Input.GetKeyUp(KeyCode.Space))
+            if (Input.GetKeyUp(KeyCode.Alpha2) && _alivePlayers.Count > 1)
             {
-                _alivePlayers[1].GetComponent<TankData>().TakeDamage(2);
+               _alivePlayers[1].GetComponent<TankData>().TakeDamage(2);
             }
 
             if (Input.GetKeyUp(KeyCode.Alpha1))
@@ -80,10 +74,6 @@ public class RoundManager : NetworkBehaviour
 
         }
 
-        //if (Input.GetKeyUp(KeyCode.Space))
-        //{
-        //    EliminatePlayer(prueba);
-        //}
     }
 
     #region PlayerManagement
