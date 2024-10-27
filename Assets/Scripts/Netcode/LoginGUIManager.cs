@@ -154,6 +154,7 @@ namespace Tankito.Netcode
             NetworkManager.Singleton.StartHost();
             
             SceneLoader.Singleton.LoadGameScene();
+            GameManager.Instance.joinCode = m_joinCode;
         }
 
         async void StartClient()
