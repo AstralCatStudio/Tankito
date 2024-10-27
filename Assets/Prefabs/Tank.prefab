@@ -310,6 +310,7 @@ GameObject:
   - component: {fileID: 8019476000441952616}
   - component: {fileID: 8520293575514935909}
   - component: {fileID: 5921551077853929906}
+  - component: {fileID: 8824432701014434289}
   - component: {fileID: 6899550793489937682}
   m_Layer: 0
   m_Name: Tank
@@ -416,6 +417,23 @@ MonoBehaviour:
     vel: 0.1
   postDashInput: {x: 0, y: 0}
   canDash: 1
+--- !u!114 &8824432701014434289
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5904161972637957731}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bdb1e6acf157e54419aec1f3788466b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health:
+    m_InternalValue: 2
+  isAlive:
+    m_InternalValue: 1
+  points: 0
 --- !u!60 &6899550793489937682
 PolygonCollider2D:
   m_ObjectHideFlags: 0
