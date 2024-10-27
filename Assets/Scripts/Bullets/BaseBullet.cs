@@ -74,7 +74,7 @@ namespace Tankito
                 case "Player":
                     if(collision.gameObject.GetComponent<NetworkObject>().OwnerClientId == m_shooterID)
                     {
-
+                        Detonate();
                     }
                     else
                     {
