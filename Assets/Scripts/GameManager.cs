@@ -200,6 +200,7 @@ namespace Tankito
         {
             Debug.Log("Starting client clocks...");
             ClockManager.Instance.StartClock();
+            AutoPhysics2DUpdate(false);
         }
     }
 }
