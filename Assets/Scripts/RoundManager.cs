@@ -14,7 +14,6 @@ public class RoundManager : NetworkBehaviour
     private string _ranking;
 
     public RoundUI _roundUI;
-    public GameObject _buttons;
 
     public float _countdownTime = 5f;
     public TMP_Text _countdownText;
@@ -30,31 +29,27 @@ public class RoundManager : NetworkBehaviour
 
     void Start()
     {
-        DisablePlayerInput();
-
-        //_buttons.SetActive(false);
+        //if (!_startedGame)
+        //{
+        //    DisablePlayerInput();
+        //}
 
         _startedGame = false;
 
         _roundUI = FindObjectOfType<RoundUI>();
 
         _countdownText = GameObject.Find("Countdown").GetComponentInChildren<TMP_Text>();
-
-        if (IsServer)
-        {
-            _buttons.SetActive(true);
-        }
     }
 
     void Update()
     {
         if (IsServer)
         {
-            if (Input.GetKeyUp(KeyCode.Alpha1) && !_startedGame)
+            if (Input.GetKeyUp(KeyCode.Alpha1) && !_startedGame && _players.Count > 1)
             {
                 InitializeRound();
             }
-            
+
             if (Input.GetKeyUp(KeyCode.Alpha2) && _alivePlayers.Count > 1)
             {
                 DebugDamagePlayer();
@@ -122,7 +117,7 @@ public class RoundManager : NetworkBehaviour
     }
     #endregion
 
-    /*private*/public void InitializeRound()
+    private void InitializeRound()
     {
         _roundUI.SetActivePowerUps(false);
         DisablePowerUpsClientRpc();
@@ -136,7 +131,7 @@ public class RoundManager : NetworkBehaviour
                 _alivePlayers[i].GetComponent<TankData>().Reset();
             }
         }
-        
+
         Debug.Log("Inicio ronda " + _currentRound);
         UpdateRemainingPlayersText();
         StartCountdown();
@@ -180,6 +175,7 @@ public class RoundManager : NetworkBehaviour
     [ClientRpc]
     private void SetCountdownTextClientRpc(string text)
     {
+        _startedGame = true;
         if (_countdownText != null)
         {
             _countdownText.text = text;
@@ -333,7 +329,7 @@ public class RoundManager : NetworkBehaviour
 
     private void GenerateRanking()
     {
-        if(_currentRound == _maxRounds)
+        if (_currentRound == _maxRounds)
         {
             _ranking = "Ranking Final: ";
         }
@@ -341,7 +337,7 @@ public class RoundManager : NetworkBehaviour
         {
             _ranking = "Ranking: ";
         }
-        
+
         List<GameObject> sortedPlayers = _players.OrderByDescending(player => player.GetComponent<TankData>().points).ToList<GameObject>();
 
         for (int i = 0; i < sortedPlayers.Count; i++)
