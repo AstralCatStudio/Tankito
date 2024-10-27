@@ -199,7 +199,7 @@ namespace Tankito
         public void StartClocksClientRpc()
         {
             Debug.Log("Starting client clocks...");
-            //ClockManager.Instance.StartClock();
+            ClockManager.Instance.StartClock();
         }
     }
 }

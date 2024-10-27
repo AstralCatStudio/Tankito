@@ -13,6 +13,7 @@ namespace Tankito.Netcode
     public class ClientPredictedTankController : NetworkBehaviour
     {
         #region Variables
+        bool oAS = false;
         [SerializeField] private Rigidbody2D m_tankRB;
         [SerializeField] private float m_speed = 25.0f;
         [SerializeField] private float m_rotationSpeed = 1.0f;
@@ -80,7 +81,10 @@ namespace Tankito.Netcode
             {
                 Debug.Log("Error tank turret reference not set.");
             }
-
+            if(IsOwner && IsServer)
+            {
+                oAS = true;
+            }
         }
 
         public override void OnNetworkSpawn()
@@ -109,7 +113,10 @@ namespace Tankito.Netcode
 
                 m_currentInput.timestamp = ClockManager.TickCounter; // MUY IMPORTANTE timestampear el input antes de pushearlo
 
-                ProcessInput(m_currentInput);
+                if (!oAS)
+                {
+                    ProcessInput(m_currentInput);
+                }
                 
                 var currentState = GetSimulationState(ClockManager.TickCounter);
                 
@@ -141,6 +148,7 @@ namespace Tankito.Netcode
                 if (m_serverInputQueue.Count > 0)
                 {
                     InputPayload clientInput = m_serverInputQueue.Dequeue();
+
                     ProcessInput(clientInput);
                     //Debug.Log($"Emptying server input queue: {clientInput}");
                     //Physics2D.Simulate(ClockManager.SimDeltaTime);
