@@ -25,6 +25,8 @@ namespace Tankito
         // SceneManagementEvents
         public bool m_loadingSceneFlag { get; private set; } = true;
 
+        public string joinCode;
+
         public static GameManager Instance { get; private set; }
 
         void Awake()
