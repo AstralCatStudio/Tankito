@@ -60,6 +60,7 @@ namespace Tankito
             {
                 m_time -= Time.fixedDeltaTime;
                 m_tickCounter++;
+                Physics2D.Simulate(SimDeltaTime);
             }
         }
 
