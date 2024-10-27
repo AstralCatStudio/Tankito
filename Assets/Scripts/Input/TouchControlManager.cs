@@ -43,6 +43,7 @@ namespace Tankito.Mobile
         private void ActivateOnTouch(Finger f)
         {
             m_touchGamepadFlag = true;
+            m_canvas.gameObject.SetActive(true);
             //Debug.Log("touchGamepadFlag set TRUE");
         }
         
@@ -120,8 +121,6 @@ namespace Tankito.Mobile
                 if (m_graphicRaycaster == null) Debug.LogWarning($"No GraphicRaycaster component attached to {this}, some touch controls might not function properly...");
             }
         }
-
-
     }
 }
 
