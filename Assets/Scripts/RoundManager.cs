@@ -14,6 +14,7 @@ public class RoundManager : NetworkBehaviour
     private string _ranking;
 
     public RoundUI _roundUI;
+    public GameObject _buttons;
 
     public float _countdownTime = 5f;
     public TMP_Text _countdownText;
@@ -23,34 +24,40 @@ public class RoundManager : NetworkBehaviour
     private List<GameObject> _players = new List<GameObject>();
     private List<GameObject> _alivePlayers;
 
+    private bool _startedGame;
+
     public GameObject _playerInput;
 
     void Start()
     {
         DisablePlayerInput();
 
+        //_buttons.SetActive(false);
+
+        _startedGame = false;
+
         _roundUI = FindObjectOfType<RoundUI>();
 
         _countdownText = GameObject.Find("Countdown").GetComponentInChildren<TMP_Text>();
 
-        //if (IsServer)
-        //{
-        //    InitializeRound();
-        //}
+        if (IsServer)
+        {
+            _buttons.SetActive(true);
+        }
     }
 
     void Update()
     {
         if (IsServer)
         {
-            if (Input.GetKeyUp(KeyCode.Alpha2) && _alivePlayers.Count > 1)
-            {
-               _alivePlayers[1].GetComponent<TankData>().TakeDamage(2);
-            }
-
-            if (Input.GetKeyUp(KeyCode.Alpha1))
+            if (Input.GetKeyUp(KeyCode.Alpha1) && !_startedGame)
             {
                 InitializeRound();
+            }
+            
+            if (Input.GetKeyUp(KeyCode.Alpha2) && _alivePlayers.Count > 1)
+            {
+                DebugDamagePlayer();
             }
 
         }
@@ -108,9 +115,14 @@ public class RoundManager : NetworkBehaviour
         Debug.Log("Se desuscribe al evento de morir tanque");
         TankData.OnTankDestroyed -= EliminatePlayer;
     }
+
+    public void DebugDamagePlayer()
+    {
+        _alivePlayers[1].GetComponent<TankData>().TakeDamage(2);
+    }
     #endregion
 
-    private void InitializeRound()
+    /*private*/public void InitializeRound()
     {
         _roundUI.SetActivePowerUps(false);
         DisablePowerUpsClientRpc();
@@ -161,6 +173,7 @@ public class RoundManager : NetworkBehaviour
         Debug.Log("Fin de cuenta atras");
         _countdownText.text = "BATTLE!";
         SetCountdownTextClientRpc("BATTLE!");
+        _startedGame = true;
         EnablePlayerInput();
     }
 

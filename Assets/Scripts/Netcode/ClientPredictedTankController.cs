@@ -457,6 +457,8 @@ namespace Tankito.Netcode
                 
                 ProcessInput(rewindInput);
 
+                Physics2D.Simulate(ClockManager.SimDeltaTime);
+
                 m_simulationStateCache.Add(GetSimulationState(rewindTick),rewindTick);
                 rewindTick++;
             }
