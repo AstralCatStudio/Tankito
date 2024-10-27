@@ -153,7 +153,7 @@ namespace Tankito.Netcode
             TextEditor te = new TextEditor(); te.text = m_joinCode; te.SelectAll(); te.Copy();
             NetworkManager.Singleton.StartHost();
             
-            SceneLoader.Singleton.LoadGameSceneAsync();
+            SceneLoader.Singleton.LoadGameScene();
         }
 
         async void StartClient()
@@ -164,7 +164,7 @@ namespace Tankito.Netcode
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(new RelayServerData(joinAllocation, CONNECTION_TYPE));
             NetworkManager.Singleton.StartClient();
 
-            SceneLoader.Singleton.LoadGameSceneAsync();
+            SceneLoader.Singleton.LoadGameScene();
         }
 
         async void StartServer()
@@ -173,7 +173,7 @@ namespace Tankito.Netcode
             TextEditor te = new TextEditor(); te.text = m_joinCode; te.SelectAll(); te.Copy();
             NetworkManager.Singleton.StartServer();
 
-            SceneLoader.Singleton.LoadGameSceneAsync();
+            SceneLoader.Singleton.LoadGameScene();
         }
     }
 }

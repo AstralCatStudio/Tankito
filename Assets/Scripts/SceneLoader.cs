@@ -10,16 +10,6 @@ namespace Tankito
     public class SceneLoader : MonoBehaviour
     {
         public static SceneLoader Singleton;
-        // TODO: Implement Dictionary or the likes, that provides simple enum interface for scripting but allows to change scene names easily in the Unity Editor (perhaps copy Untiy "internal" way of doing such things idk)
-        /*public enum SceneNames
-        {
-            Launch,
-            Loading,
-            Lobby,
-            Game
-
-            
-        }*/
 
 
         void Awake()
@@ -32,20 +22,25 @@ namespace Tankito
 
         void Start()
         {
-            LoadLobbyAsync();
+            LoadMainMenu();
         }
 
-        public void LoadLobbyAsync()
+        public void LoadLobby()
         {
-            StartCoroutine("LoadLobby");
+            StartCoroutine("LoadLobbyAsync");
         }
 
-        public void LoadGameSceneAsync()
+        public void LoadMainMenu()
         {
-            StartCoroutine("LoadGameScene");
+            StartCoroutine("LoadMainMenuAsync");
         }
 
-        IEnumerator LoadLobby()
+        public void LoadGameScene()
+        {
+            StartCoroutine("LoadGameSceneAsync");
+        }
+
+        IEnumerator LoadLobbyAsync()
         {
             SceneManager.LoadScene("Loading", LoadSceneMode.Additive);
 
@@ -56,7 +51,18 @@ namespace Tankito
             SceneManager.UnloadSceneAsync("Loading");
         }
 
-        IEnumerator LoadGameScene()
+        IEnumerator LoadMainMenuAsync()
+        {
+            SceneManager.LoadScene("Loading", LoadSceneMode.Additive);
+
+            Debug.Log("Loading Main Menu...");
+            yield return SceneManager.LoadSceneAsync("MainMenu", LoadSceneMode.Additive);
+            Debug.Log("Main Menu Loaded!");
+
+            SceneManager.UnloadSceneAsync("Loading");
+        }
+
+        IEnumerator LoadGameSceneAsync()
         {
             if (!SceneManager.GetSceneByName("Lobby").IsValid()) throw new InvalidOperationException("You shouldn't be loading the game scene without having loaded the Lobby!");
 
@@ -73,6 +79,10 @@ namespace Tankito
             SceneManager.UnloadSceneAsync("Loading");
         }
 
+        internal void LoaderMethodCallback(int functionIdx)
+        {
+            throw new NotImplementedException();
+        }
     }
 
 }
