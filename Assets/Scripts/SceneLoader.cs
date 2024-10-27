@@ -79,10 +79,6 @@ namespace Tankito
             SceneManager.UnloadSceneAsync("Loading");
         }
 
-        internal void LoaderMethodCallback(int functionIdx)
-        {
-            throw new NotImplementedException();
-        }
     }
 
 }
