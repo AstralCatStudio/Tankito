@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 public class MenuAnimations : MonoBehaviour
 {
-    private List<RectTransform> uiElements;
+    private List<RectTransform> uiElements = new();
     private List<Vector2> originalRTransforms = new();
     private List<Vector2> newPositions = new();
     [SerializeField] private float enterDuration = 1f;
