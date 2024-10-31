@@ -72,13 +72,14 @@ namespace Tankito
                     break;
 
                 case "Player":
-                    if(collision.gameObject.GetComponent<NetworkObject>().OwnerClientId == m_shooterID)
+                    if(collision.gameObject.GetComponent<NetworkObject>().OwnerClientId == m_shooterID && m_lifetime > 0.03f)
                     {
                         Detonate();
                     }
                     else
                     {
-                        Detonate();
+                        //Debug.Log("Ignoing firing self collision");
+                        //Detonate();
                     }
                     break;
 
