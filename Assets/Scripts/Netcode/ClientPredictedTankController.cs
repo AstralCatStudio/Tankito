@@ -93,7 +93,7 @@ namespace Tankito.Netcode
                 GameManager.Instance.BindInputActions(this);
         }
 
-#region Simulation
+        #region Simulation
         void FixedUpdate()
         {
             // TODO: Implement Server-Client clock
@@ -162,11 +162,10 @@ namespace Tankito.Netcode
             }
 
         }
-#endregion
+        #endregion
 
 
         #region Input Methods
-
 
         public void OnMove(InputAction.CallbackContext ctx)
         {
