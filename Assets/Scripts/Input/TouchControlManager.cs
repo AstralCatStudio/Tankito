@@ -10,6 +10,8 @@ using UnityEngine.InputSystem.Layouts;
 using UnityEngine.InputSystem.Users;
 using UnityEngine.UI;
 
+using ETouch = UnityEngine.InputSystem.EnhancedTouch;
+
 namespace Tankito.Mobile
 {
     public class TouchControlManager : MonoBehaviour
@@ -20,15 +22,14 @@ namespace Tankito.Mobile
         private static List<RaycastResult> m_raycastResults = new List<RaycastResult>();
         private GraphicRaycaster m_graphicRaycaster;
 
-        private bool m_touchGamepadFlag;
+        private bool m_delayedGUIRemoval = false;
 
         
         void OnEnable()
         {
             EnhancedTouchSupport.Enable();
             
-            UnityEngine.InputSystem.EnhancedTouch.Touch.onFingerDown += ActivateOnTouch;
-            UnityEngine.InputSystem.EnhancedTouch.Touch.onFingerMove += ActivateOnTouch;
+            UnityEngine.InputSystem.EnhancedTouch.Touch.onFingerDown += (Finger f) => ActivateTouchGUI();
             InputUser.onChange += OnInputDeviceChange;
         }
 
@@ -36,34 +37,57 @@ namespace Tankito.Mobile
         {
             EnhancedTouchSupport.Disable();
             InputUser.onChange -= OnInputDeviceChange;
-            UnityEngine.InputSystem.EnhancedTouch.Touch.onFingerDown -= ActivateOnTouch;
-            UnityEngine.InputSystem.EnhancedTouch.Touch.onFingerMove -= ActivateOnTouch;
+            UnityEngine.InputSystem.EnhancedTouch.Touch.onFingerDown -= (Finger f) => ActivateTouchGUI();
         }
 
-        private void ActivateOnTouch(Finger f)
+        private void ActivateTouchGUI()
         {
-            m_touchGamepadFlag = true;
-            m_canvas.gameObject.SetActive(true);
-            //Debug.Log("touchGamepadFlag set TRUE");
+            Debug.Log("ActivateTouchGUI() called.");
+            if (ETouch.Touch.activeTouches.Count > 0)
+            {
+                m_canvas.gameObject.SetActive(true);
+            }
+        }
+
+        private void DeactivateTouchGUI()
+        {
+            Debug.Log($"DeactivateTouchGUI({m_delayedGUIRemoval}) called.");
+            if (ETouch.Touch.activeTouches.Count == 0)
+            {
+                m_canvas.gameObject.SetActive(false);
+            }
+            else if (!m_delayedGUIRemoval)
+            {
+                ETouch.Touch.onFingerUp += (Finger f) => DeactivateTouchGUI();
+            }
+            else if (ETouch.Touch.activeTouches.Count == 1) // && delayedGUIRemoval) // Se comprueba con un toque en lugar de 0 porque onFingerUp se llama justo antes de liberar el ultimo toque activo.
+            {
+                ETouch.Touch.onFingerUp -= (Finger f) => DeactivateTouchGUI();
+                Debug.Log($"Deactivated TouchGUI with delayed GUI Removal! (dealyedRemoval check: {m_delayedGUIRemoval})");
+                m_canvas.gameObject.SetActive(false);
+            }
         }
         
         private void OnInputDeviceChange(InputUser user, InputUserChange change, InputDevice device)
         {
             if (device == null) return;
-
-            if ((device.ToString().Contains("Gamepad") || device.ToString().Contains("Touch")) && change == InputUserChange.DeviceUnpaired && m_canvas.enabled && m_touchGamepadFlag)
+            
+            if (device is Gamepad)
             {
-                m_canvas.gameObject.SetActive(false);
-                m_touchGamepadFlag = false;
-                //Debug.Log("touchGamepadFlag set FLASE");
+                switch(change)
+                {
+                    case InputUserChange.DevicePaired:
+                        ActivateTouchGUI();
+                    break;
+
+                    case InputUserChange.DeviceUnpaired:
+                        DeactivateTouchGUI();
+                    break;
+                }
             }
             
-            if ((device.ToString().Contains("Gamepad") || device.ToString().Contains("Touch")) && change == InputUserChange.DevicePaired && m_touchGamepadFlag)
-            {
-                m_canvas.gameObject.SetActive(true);
-            }
 
-            //Debug.Log($"User:{user} | change:{change} | device:{device} | m_touchGamepadFlag:{m_touchGamepadFlag}");
+            //Debug.Log($"User:{user} | change:{change} | device:{device}");
         }
 
         public Component CheckTouch<T>(Vector2 absoluteScreenPosition)
