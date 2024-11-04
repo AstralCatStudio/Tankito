@@ -9,6 +9,8 @@ using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.InputSystem.OnScreen;
 using UnityEngine.InputSystem.EnhancedTouch;
 using ETouch = UnityEngine.InputSystem.EnhancedTouch;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace Tankito.Mobile
 {
@@ -33,6 +35,7 @@ namespace Tankito.Mobile
         private RectTransform m_joystickRect;
         [SerializeField]
         private RectTransform JoystickHandleRect;
+
         [InputControl(layout = "Vector2")]
         [SerializeField]
         private string m_ControlPath;
@@ -50,6 +53,12 @@ namespace Tankito.Mobile
         [SerializeField] private StickType m_stickType;
         [SerializeField] private ScreenHotspot m_hotspotPosition;
         [SerializeField] private float m_hotspotDeadzone = 100f;
+
+        [SerializeField] private EmulatedButtonControl m_pressControl;
+        [SerializeField] private float m_pressControlValue = 1f;
+
+        [SerializeField] private EmulatedButtonControl m_releaseControl;
+        [SerializeField] private float m_releaseControlValue = 1f;
 
         public bool debugGUI;
 
@@ -84,7 +93,7 @@ namespace Tankito.Mobile
 
             //EnhancedTouchSupport.Enable(); Moved to overarching TouchControls (should be in parent canvas)
             ETouch.Touch.onFingerDown += HandleFingerDown;
-            ETouch.Touch.onFingerUp += HandleLoseFinger;
+            ETouch.Touch.onFingerUp += HandleFingerUp;
             ETouch.Touch.onFingerMove += HandleFingerMove;
         }
 
@@ -93,7 +102,7 @@ namespace Tankito.Mobile
             base.OnDisable();
 
             ETouch.Touch.onFingerDown -= HandleFingerDown;
-            ETouch.Touch.onFingerUp -= HandleLoseFinger;
+            ETouch.Touch.onFingerUp -= HandleFingerUp;
             ETouch.Touch.onFingerMove -= HandleFingerMove;
             //EnhancedTouchSupport.Disable(); Moved to overarching TouchControls (should be in parent canvas)
         }
@@ -156,6 +165,11 @@ namespace Tankito.Mobile
             m_joystickRect.sizeDelta = m_joystickSize;
             JoystickHandleRect.sizeDelta *= m_joystickSize/m_joystickRect.sizeDelta;
             HandleFingerMove(touchedFinger);
+
+            if (m_pressControl != null)
+            {
+                m_pressControl.EmulateInput(m_pressControlValue, 0.01f);
+            }
         }
 
         private void HandleFingerMove(Finger movedFinger)
@@ -187,15 +201,20 @@ namespace Tankito.Mobile
             }
         }
 
-        private void HandleLoseFinger(Finger lostFinger)
+        private void HandleFingerUp(Finger lostFinger)
         {
-            if (lostFinger == m_joystickFinger)
+            if (lostFinger != m_joystickFinger)
+                return;
+                
+            m_joystickFinger = null;
+            JoystickHandleRect.anchoredPosition = Vector2.zero;
+            if (m_hideStick)    m_joystickRect.gameObject.SetActive(false);
+            m_displacementAmount = Vector2.zero;
+            SendValueToControl(Vector2.zero);
+        
+            if (m_releaseControl != null)
             {
-                m_joystickFinger = null;
-                JoystickHandleRect.anchoredPosition = Vector2.zero;
-                if (m_hideStick)    m_joystickRect.gameObject.SetActive(false);
-                m_displacementAmount = Vector2.zero;
-                SendValueToControl(Vector2.zero);
+                m_releaseControl.EmulateInput(m_releaseControlValue, 0.01f);
             }
         }
 
@@ -260,17 +279,43 @@ namespace Tankito.Mobile
 
         #if UNITY_EDITOR
         [CustomEditor(typeof(TouchJoystick))]
-        class MyClassEditor : Editor
+        class TouchJoystickEditor : Editor
         {
             public override void OnInspectorGUI()
             {
                 TouchJoystick self = (TouchJoystick)target;
+
                 serializedObject.Update();
-                if (self.m_stickType == StickType.Floating)
-                    DrawDefaultInspector();
-                else {
-                    DrawPropertiesExcluding(serializedObject,"m_hotspotPosition","m_hotspotDeadzone");
+
+                List<string> excludedProperties = new List<string>();
+
+                if (self.m_stickType != StickType.Floating)
+                {
+                    excludedProperties.Add("m_hotspotPosition");
+                    excludedProperties.Add("m_hotspotDeadzone");
                 }
+
+                if(ReferenceEquals(self.m_pressControl, null))
+                {
+                    excludedProperties.Add("m_pressControlRef");
+                    excludedProperties.Add("m_pressControlValue");
+                }
+
+                if(ReferenceEquals(self.m_releaseControl, null))
+                {
+                    excludedProperties.Add("m_releaseControlRef");
+                    excludedProperties.Add("m_releaseControlValue");
+                }
+
+                if (excludedProperties.Count == 0)
+                {
+                    DrawDefaultInspector();
+                }
+                else
+                {
+                    DrawPropertiesExcluding(serializedObject,excludedProperties.ToArray());
+                }
+                
                 serializedObject.ApplyModifiedProperties();
             }
         }
