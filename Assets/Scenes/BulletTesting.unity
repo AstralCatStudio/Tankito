@@ -1629,6 +1629,7 @@ GameObject:
   - component: {fileID: 953111505}
   - component: {fileID: 953111503}
   - component: {fileID: 953111502}
+  - component: {fileID: 953111507}
   - component: {fileID: 953111506}
   m_Layer: 0
   m_Name: PlayerInput
@@ -1657,6 +1658,10 @@ MonoBehaviour:
   m_stickType: 1
   m_hotspotPosition: 1
   m_hotspotDeadzone: 100
+  m_pressControl: {fileID: 0}
+  m_pressControlValue: 1
+  m_releaseControl: {fileID: 953111507}
+  m_releaseControlValue: 1
   debugGUI: 0
 --- !u!114 &953111503
 MonoBehaviour:
@@ -1678,6 +1683,10 @@ MonoBehaviour:
   m_stickType: 1
   m_hotspotPosition: 0
   m_hotspotDeadzone: 100
+  m_pressControl: {fileID: 0}
+  m_pressControlValue: 0
+  m_releaseControl: {fileID: 0}
+  m_releaseControlValue: 1
   debugGUI: 0
 --- !u!4 &953111505
 Transform:
@@ -1784,6 +1793,19 @@ MonoBehaviour:
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &953111507
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 953111501}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c24522d83cb51eb4dba902c582d716d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ControlPath: <Gamepad>/rightTrigger
 --- !u!1 &1012552780
 GameObject:
   m_ObjectHideFlags: 0
