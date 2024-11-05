@@ -19,7 +19,8 @@ namespace Tankito
             Shop = 5,
             PlayMenu = 6,
             Lobby = 7,
-            CharacterSelection = 8
+            CharacterSelection = 8,
+            Singleplayer = 9
         }
         public GameObject[] menus;
         public GameObject[] bgMenus;
