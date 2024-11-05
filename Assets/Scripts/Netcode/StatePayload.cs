@@ -11,10 +11,6 @@ namespace Tankito.Netcode
         public float hullRot;
         public Vector2 velocity;
         public float turretRot;
-       //public static readonly StatePayload INVALID_STATE = new StatePayload { timestamp = -1, position = Vector2.zero, rotation = 0, velocity = Vector2.zero };
-
-        // USAR DELTAS ?? si porfi quiero usar deltas pero hay que investigar como
-        // INCLUIR VARIABLES DE SIMULACION RELEVANTES (probablemente solo velocidad lineal y angular)
 
         public TankAction performedAction; // Probablemente relevante incluirlo en el estado,
         // tambien hay que pensar si queremos y como incluir sincronizacion de animaciones,

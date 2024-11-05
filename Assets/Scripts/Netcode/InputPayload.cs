@@ -9,7 +9,6 @@ namespace Tankito.Netcode
         Dash = 1,
         Parry = 2,
         Fire = 3,
-        //DashParry = 3
     }
 
     public struct InputPayload : INetworkSerializable

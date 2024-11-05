@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Tankito.Netcode;
 using Unity.Netcode;
+using Tankito.Netcode.Simulation;
 
 namespace Tankito
 {
@@ -49,6 +50,9 @@ namespace Tankito
             m_tickCounter = 0;
             m_active = false;
             SimDeltaTime = Time.fixedDeltaTime;
+
+            OnTick += ServerSimulationManager.Instance.Simulate;
+            OnTick += ClientSimulationManager.Instance.Simulate;
         }
 
 
@@ -63,7 +67,6 @@ namespace Tankito
             {
                 m_time -= Time.fixedDeltaTime;
                 m_tickCounter++;
-                Physics2D.Simulate(SimDeltaTime);
                 OnTick?.Invoke();
             }
         }
