@@ -29,10 +29,10 @@ public class RoundManager : NetworkBehaviour
 
     void Start()
     {
-        //if (!_startedGame)
-        //{
-        //    DisablePlayerInput();
-        //}
+        if (!_startedGame)
+        {
+            DisablePlayerInput();
+        }
 
         _startedGame = false;
 
@@ -187,7 +187,7 @@ public class RoundManager : NetworkBehaviour
     private void DisablePlayerInput()
     {
         _playerInput.SetActive(false);
-        DisablePlayerInputClientRpc();
+        //DisablePlayerInputClientRpc();
     }
 
     [ClientRpc]
