@@ -1,13 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 namespace Tankito
 {
     public class ShopCharacterButton : MonoBehaviour
     {
+        //Character Data
+        public CharacterData characterData;
+        //Text
+        [SerializeField] private TextMeshProUGUI textPrice;
+        //Animation Data
         [SerializeField] private GameObject dropdown;
         [SerializeField] private float duration = 0.3f;
+
+        private void Start()
+        {
+            textPrice.text = characterData.price.ToString();
+        }
         public void OpenShopItem()
         {
             var menu = MenuController.Instance;
