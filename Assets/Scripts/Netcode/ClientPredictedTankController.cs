@@ -87,6 +87,16 @@ namespace Tankito.Netcode
             }
         }
 
+        private void OnEnable()
+        {
+            ClockManager.OnTick += ClockTick;
+        }
+
+        private void OnDisable()
+        {
+            ClockManager.OnTick -= ClockTick;
+        }
+
         public override void OnNetworkSpawn()
         {
             if (NetworkManager.LocalClient.PlayerObject != null && NetworkManager.LocalClient.PlayerObject.GetComponent<ClientPredictedTankController>() == this)
@@ -94,7 +104,7 @@ namespace Tankito.Netcode
         }
 
         #region Simulation
-        void FixedUpdate()
+        private void ClockTick()
         {
             // TODO: Implement Server-Client clock
             //while(ClockManager.simulationClock.TicksLeft())
@@ -119,6 +129,8 @@ namespace Tankito.Netcode
                 }
                 
                 var currentState = GetSimulationState(ClockManager.TickCounter);
+
+                WindowPayloadBuffer.Instance.AddPayloadToWindow(m_currentInput, currentState);
                 
                 m_inputStateCache.Add(m_currentInput, ClockManager.TickCounter);
                 m_simulationStateCache.Add(currentState, ClockManager.TickCounter);

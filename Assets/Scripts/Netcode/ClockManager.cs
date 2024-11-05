@@ -35,6 +35,9 @@ namespace Tankito
         public bool Active { get => m_active; }
         public static float SimDeltaTime { get => Instance.m_simulationDeltaTime; set => Instance.m_simulationDeltaTime = value; }
 
+        public delegate void UpdateSimulation();
+        public static event UpdateSimulation OnTick;
+
         protected override void Awake()
         {
             base.Awake();
@@ -61,6 +64,7 @@ namespace Tankito
                 m_time -= Time.fixedDeltaTime;
                 m_tickCounter++;
                 Physics2D.Simulate(SimDeltaTime);
+                OnTick?.Invoke();
             }
         }
 
