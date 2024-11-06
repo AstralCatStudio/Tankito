@@ -393,7 +393,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 500
+  m_Mass: 10
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 0
@@ -488,8 +488,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_tankRB: {fileID: 8520293575514935909}
-  m_speed: 25
-  m_rotationSpeed: 1
+  m_speed: 2.2
+  m_rotationSpeed: 270
   m_turretRB: {fileID: 8342253699622009969}
   m_aimSpeed: 720
   accelerationMultiplier: 6
