@@ -11,7 +11,7 @@ using Tankito.Netcode.Simulation;
 namespace Tankito.Netcode
 {
     public enum PlayerState { Moving, Dashing }
-    public class ClientPredictedTankController : ASimulationObject
+    public class ClientPredictedTankController : NetworkBehaviour// : ASimulationObject
     {
         #region Variables
         bool oAS = false;
@@ -88,31 +88,6 @@ namespace Tankito.Netcode
             }
         }
 
-        private void OnEnable()
-        {
-            if (!IsServer)
-            {
-                OnComputeKinematics += SimulateClientTank;
-            }
-            else
-            {
-                OnComputeKinematics += SimulateServerTank;
-            }
-
-        }
-
-        private void OnDisable()
-        {
-            if (!IsServer)
-            {
-                OnComputeKinematics -= SimulateClientTank;
-            }
-            else
-            {
-                OnComputeKinematics -= SimulateServerTank;
-            }
-        }
-
         public override void OnNetworkSpawn()
         {
             base.OnNetworkSpawn();
@@ -159,7 +134,7 @@ namespace Tankito.Netcode
                     !CheckTolerance(m_lastAuthState.Diff(currentState), m_reconciliationTolerance))     // auth state fuera de limites
                 {
                     //Reconciliate(); //En caso necesario, reconciliación
-                    ClientSimulationManager.Instance.GeneralRollback();
+                    //ClientSimulationManager.Instance.GeneralRollback();
                 }
                 m_reconciledState = m_lastAuthState;
 
@@ -473,11 +448,6 @@ namespace Tankito.Netcode
             // DO SOMETHING ABOUT TANK ACTIONS...
         }
 
-        public override void InitReconcilation(ISimulationState simulationState)
-        {
-            //Igualar variables a las globales
-        }
-
         /*private void Reconciliate()
         {
             GameManager.Instance.AutoPhysics2DUpdate(false);
@@ -504,15 +474,6 @@ namespace Tankito.Netcode
 
             GameManager.Instance.AutoPhysics2DUpdate(true);
         }*/
-
-        public override void Reconciliate(int rewindTick)
-        {
-            InputPayload rewindInput = m_inputStateCache.Get(rewindTick);
-
-            ProcessInput(rewindInput);
-
-            m_simulationStateCache.Add(GetSimulationState(rewindTick), rewindTick);
-        }
 
         #endregion
 

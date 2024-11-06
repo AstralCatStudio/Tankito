@@ -21,12 +21,12 @@ namespace Tankito.Netcode.Simulation
         {
             if(IsServer)
             {
-                ServerSimulationManager.Instance.AddSimulationObject(this);
+                ServerSimulationManager.Instance.AddToSim(this);
             }
             //else  // Este else no lo queremos porque necesitamos que un host sea capaz de recoger el input del jugador,
                     // de lo cual se encarga ClientSimulationManager
             //{
-                ClientSimulationManager.Instance.AddSimulationObject(this);
+                ClientSimulationManager.Instance.AddToSim(this);
             //}
         }
 
@@ -34,9 +34,9 @@ namespace Tankito.Netcode.Simulation
         {
             if(IsServer)
             {
-                ServerSimulationManager.Instance.RemoveSimulationObject(this);
+                ServerSimulationManager.Instance.RemoveFromSim(this);
             }
-            ClientSimulationManager.Instance.RemoveSimulationObject(this);
+            ClientSimulationManager.Instance.RemoveFromSim(this);
         }
 
         /// <summary>
@@ -55,7 +55,8 @@ namespace Tankito.Netcode.Simulation
         // public abstract void InitReconcilation(ISimulationState simulationState);
         // public abstract void Reconciliate(int rewindTick);
 
-        public abstract void SetSimState<StateType>(StateType state) where StateType : ISimulationState;
-        public abstract void GetSimState<StateType>(StateType state) where StateType : ISimulationState;
+        public abstract ISimulationState GetSimState();
+        public abstract void SetSimState(in ISimulationState state);
+
     }
 }

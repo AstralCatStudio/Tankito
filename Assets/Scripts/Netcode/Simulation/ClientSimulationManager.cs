@@ -8,14 +8,14 @@ namespace Tankito.Netcode.Simulation
 {
     public class ClientSimulationManager : NetSimulationManager<ClientSimulationManager>
     {
-        GlobalSimulationState m_authState;
+        GlobalSimulationSnapshot m_authSnapshot;
         void Start()
         {
             if (!NetworkManager.Singleton.IsClient)
             {
                 Debug.LogWarning("ClientSimulationManager is network node that is NOT a CLIENT (is server). this should not happen!");
             }
-            m_authState.Initialize();
+            m_authSnapshot.Initialize();
         }
 
         public override void Simulate()
@@ -24,6 +24,7 @@ namespace Tankito.Netcode.Simulation
             
             Debug.Log("TODO: Implement Input Sampling and Sending on client.");
             //SampleInput(); // Ensamblar ventana de inputs y mandarla al servidor.
+            // Tambien dead reckoning!
             if (!NetworkManager.Singleton.IsServer)
             {
                 // We don't want HOSTs to execute Simulate twice per tick.
@@ -32,22 +33,19 @@ namespace Tankito.Netcode.Simulation
             }
         }
 
-        public void GeneralRollback()
+        public void Rollback()
         {
-            foreach(ASimulationObject obj in simulationObjects.Where(obj => obj.IsKinematic))
+            foreach(var obj in simulationObjects)
             {
-                obj.InitReconcilation(m_authState.simulationObjects[obj]);
+                obj.SetSimState(m_authSnapshot[obj]);
             }
-            int rewindCounter = m_authState.simulationTick;
-            while(rewindCounter < ClockManager.TickCounter)
+            
+            int rollbackCounter = m_authSnapshot.timestamp;
+            while(rollbackCounter < ClockManager.TickCounter)
             {
-                foreach (ASimulationObject obj in simulationObjects.Where(obj => obj.IsKinematic))
-                {
-                    obj.Reconciliate(rewindCounter);
-                }
-                Physics2D.Simulate(ClockManager.SimDeltaTime); //Esto va haber que cambiarlo por si se ha producido cambios en la velocidad 
-                                                               //de la simulacion
-                rewindCounter++;
+                // TODO: Input Replay
+                Physics2D.Simulate(ClockManager.SimDeltaTime);
+                rollbackCounter++;
             }
         }
     }

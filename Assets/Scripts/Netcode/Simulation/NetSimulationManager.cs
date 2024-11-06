@@ -10,12 +10,12 @@ namespace Tankito.Netcode.Simulation
     {
         protected List<ASimulationObject> simulationObjects;
 
-        public virtual void AddSimulationObject(ASimulationObject obj)
+        public virtual void AddToSim(ASimulationObject obj)
         {
             simulationObjects.Add(obj);
         }
  
-        public virtual void RemoveSimulationObject(ASimulationObject obj)
+        public virtual void RemoveFromSim(ASimulationObject obj)
         {
             simulationObjects.Remove(obj);
         }
@@ -35,13 +35,19 @@ namespace Tankito.Netcode.Simulation
         /// </summary>
         public virtual void Simulate()
         {
-            foreach (ASimulationObject obj in simulationObjects.Where(obj => obj.IsKinematic))
+            foreach (var obj in simulationObjects.Where(obj => obj.IsKinematic))
             {
                 obj.ComputeKinematics(ClockManager.SimDeltaTime);
             }
 
             Physics2D.Simulate(ClockManager.SimDeltaTime);
-        } 
+        }
+
+        [ContextMenu("TestGetSet")]
+        public void TestGetSet()
+        {
+            simulationObjects[1].SetSimState(simulationObjects[0].GetSimState());
+        }
 
     }
 }
