@@ -9,9 +9,14 @@ namespace Tankito.Netcode.Simulation
         public int simulationTick;
         public Dictionary<SimulationObject, ISimulationState> simulationObjects; // Se hace de  ISimulationState para poder mantenerlo generico entre cosas distintas, como balas que tan solo tienen un par de variables y los tanques, que tienen mas info
 
-        public GlobalSimulationState()
+        /*public GlobalSimulationState()
         {
             simulationObjects = new Dictionary<SimulationObject, ISimulationState>();
+        }*/
+
+        public void Initialize()
+        {
+            simulationObjects = new Dictionary<SimulationObject, ISimulationState> ();
         }
     }
 }

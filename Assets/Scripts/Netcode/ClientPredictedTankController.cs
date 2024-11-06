@@ -6,11 +6,12 @@ using Tankito.Utils;
 using System;
 using UnityEngine.InputSystem.LowLevel;
 using System.Collections;
+using Tankito.Netcode.Simulation;
 
 namespace Tankito.Netcode
 {
     public enum PlayerState { Moving, Dashing }
-    public class ClientPredictedTankController : NetworkBehaviour
+    public class ClientPredictedTankController : SimulationObject
     {
         #region Variables
         bool oAS = false;
@@ -81,7 +82,7 @@ namespace Tankito.Netcode
             {
                 Debug.Log("Error tank turret reference not set.");
             }
-            if(IsOwner && IsServer)
+            if (IsOwner && IsServer)
             {
                 oAS = true;
             }
@@ -89,28 +90,44 @@ namespace Tankito.Netcode
 
         private void OnEnable()
         {
-            ClockManager.OnTick += ClockTick;
+            if (!IsServer)
+            {
+                OnComputeKinematics += SimulateClientTank;
+            }
+            else
+            {
+                OnComputeKinematics += SimulateServerTank;
+            }
+
         }
 
         private void OnDisable()
         {
-            ClockManager.OnTick -= ClockTick;
+            if (!IsServer)
+            {
+                OnComputeKinematics -= SimulateClientTank;
+            }
+            else
+            {
+                OnComputeKinematics -= SimulateServerTank;
+            }
         }
 
         public override void OnNetworkSpawn()
         {
+            base.OnNetworkSpawn();
             if (NetworkManager.LocalClient.PlayerObject != null && NetworkManager.LocalClient.PlayerObject.GetComponent<ClientPredictedTankController>() == this)
                 GameManager.Instance.BindInputActions(this);
         }
 
         #region Simulation
-        private void ClockTick()
+
+        private void SimulateClientTank()
         {
             // TODO: Implement Server-Client clock
             //while(ClockManager.simulationClock.TicksLeft())
             //int currentTick = ClockManager.simulationClock.CurrentTick;
             //Debug.Log("Tick: currentTick");
-
             if (IsOwner)
             {
                 if (postDash)
@@ -127,21 +144,22 @@ namespace Tankito.Netcode
                 {
                     ProcessInput(m_currentInput);
                 }
-                
+
                 var currentState = GetSimulationState(ClockManager.TickCounter);
 
-                WindowPayloadBuffer.Instance.AddPayloadToWindow(m_currentInput, currentState);
-                
+                WindowPayloadBuffer.Instance.AddPayloadToWindow(m_currentInput);
+
                 m_inputStateCache.Add(m_currentInput, ClockManager.TickCounter);
                 m_simulationStateCache.Add(currentState, ClockManager.TickCounter);
-                
+
                 SendPayloadsServerRpc(m_currentInput, currentState);
 
                 if (!m_lastAuthState.Equals(default(StatePayload)) &&       // auth state recibido
                     m_lastAuthState.timestamp > m_reconciledState.timestamp &&      // estado reconciliado "caducado"
                     !CheckTolerance(m_lastAuthState.Diff(currentState), m_reconciliationTolerance))     // auth state fuera de limites
                 {
-                    Reconciliate(); //En caso necesario, reconciliación
+                    //Reconciliate(); //En caso necesario, reconciliación
+                    ClientSimulationManager.Instance.GeneralRollback();
                 }
                 m_reconciledState = m_lastAuthState;
 
@@ -152,7 +170,10 @@ namespace Tankito.Netcode
                 SetState(m_lastAuthState);
                 // TODO: Deadreackoning + Interpolation
             }
+        }
 
+        private void SimulateServerTank()
+        {
             if (IsServer)
             {
                 // Obtain CharacterInputState's from the queue. 
@@ -172,8 +193,8 @@ namespace Tankito.Netcode
                 // Send the state back to the client.
                 SendAuthStateClientRpc(newAuthState);
             }
-
         }
+
         #endregion
 
 
@@ -240,14 +261,16 @@ namespace Tankito.Netcode
             if (ctx.performed)
             {
                 m_parrying = true;
-                m_currentInput.action =  TankAction.Parry;
+                m_currentInput.action = TankAction.Parry;
                 m_TurretAnimator.SetTrigger("Parry");
                 m_HullAnimator.SetTrigger("Parry");
-            } else {
+            }
+            else
+            {
                 Debug.Log($"Parry {ctx.phase}");
             }
         }
-        
+
         public void OnFire(InputAction.CallbackContext ctx)
         {
             // CAMBIAR POR CHECKS DE DISPARO?
@@ -269,7 +292,7 @@ namespace Tankito.Netcode
 
         private void ProcessInput(InputPayload input)
         {
-            if(input.action != TankAction.Dash)
+            if (input.action != TankAction.Dash)
             {
                 MoveTank(input.moveVector);
             }
@@ -308,7 +331,7 @@ namespace Tankito.Netcode
 
             m_tankRB.MoveRotation(m_tankRB.rotation + rotDeg);
             m_turretRB.MoveRotation(-rotDeg);
-            
+
             m_tankRB.MovePosition(m_tankRB.position + m_speed * movementVector * ClockManager.SimDeltaTime);
         }
 
@@ -361,7 +384,7 @@ namespace Tankito.Netcode
             var targetAngle = Vector2.SignedAngle(m_turretRB.transform.right, aimVector);
             float rotDeg = 0f;
 
-            if(Mathf.Abs(targetAngle) >= ClockManager.SimDeltaTime * m_aimSpeed)
+            if (Mathf.Abs(targetAngle) >= ClockManager.SimDeltaTime * m_aimSpeed)
             {
                 rotDeg = Mathf.Sign(targetAngle) * ClockManager.SimDeltaTime * m_aimSpeed;
             }
@@ -372,8 +395,8 @@ namespace Tankito.Netcode
 
             // MoveRotation doesn't work because the turretRB is not simulated
             // (we only use it for the uniform interface with rotation angle around Z).
-            
-            m_turretRB.MoveRotation(m_turretRB.rotation+rotDeg);
+
+            m_turretRB.MoveRotation(m_turretRB.rotation + rotDeg);
         }
 
         private StatePayload GetSimulationState(int timestamp)
@@ -388,7 +411,7 @@ namespace Tankito.Netcode
             };
         }
 
-#region RPC Calls
+        #region RPC Calls
 
         [ServerRpc]
         private void SendPayloadsServerRpc(InputPayload input, StatePayload state)
@@ -414,12 +437,12 @@ namespace Tankito.Netcode
                     m_lastAuthState = authState;
                 }
                 //Debug.Log("La simulación del SERVIDOR en el frame " + serverSimulationState.simulationFrame + " es: " + serverSimulationState.position + "-" + serverSimulationState.rotation);
-            }   
+            }
         }
 
-#endregion
+        #endregion
 
-#region Client Utils
+        #region Client Utils
 
         private static bool CheckTolerance(Tolerances diff, Tolerances tolerance)
         {
@@ -444,13 +467,18 @@ namespace Tankito.Netcode
             m_tankRB.velocity = stateToSet.velocity;
 
             m_turretRB.MoveRotation(stateToSet.turretRot);
-            
+
             Debug.Log($"{this} - set state to: {m_lastAuthState}");
 
             // DO SOMETHING ABOUT TANK ACTIONS...
         }
 
-        private void Reconciliate()
+        public override void InitReconcilation(ISimulationState simulationState)
+        {
+            //Igualar variables a las globales
+        }
+
+        /*private void Reconciliate()
         {
             GameManager.Instance.AutoPhysics2DUpdate(false);
 
@@ -461,67 +489,76 @@ namespace Tankito.Netcode
 
             // Resimulate from there until we get back to the "present tick"
             int rewindTick = m_lastAuthState.timestamp;
-            while(rewindTick < ClockManager.TickCounter)
+            while (rewindTick < ClockManager.TickCounter)
             {
                 // Get cached input payloads
                 InputPayload rewindInput = m_inputStateCache.Get(rewindTick);
-                
+
                 ProcessInput(rewindInput);
 
                 Physics2D.Simulate(ClockManager.SimDeltaTime);
 
-                m_simulationStateCache.Add(GetSimulationState(rewindTick),rewindTick);
+                m_simulationStateCache.Add(GetSimulationState(rewindTick), rewindTick);
                 rewindTick++;
             }
-            
+
             GameManager.Instance.AutoPhysics2DUpdate(true);
+        }*/
+
+        public override void Reconciliate(int rewindTick)
+        {
+            InputPayload rewindInput = m_inputStateCache.Get(rewindTick);
+
+            ProcessInput(rewindInput);
+
+            m_simulationStateCache.Add(GetSimulationState(rewindTick), rewindTick);
         }
 
-#endregion
-    }
+        #endregion
 
-    [Serializable]
-    internal struct Tolerances
-    {
-        public float pos;
-        public float rot;
-        public float vel;
-
-        public Tolerances(float pos, float rot, float vel)
+        [Serializable]
+        internal struct Tolerances
         {
-            this.pos = pos;
-            this.rot = rot;
-            this.vel = vel;
-        }
+            public float pos;
+            public float rot;
+            public float vel;
 
-        public override bool Equals(object obj)
-        {
-            return obj is Tolerances other &&
-                   pos == other.pos &&
-                   rot == other.rot &&
-                   vel == other.vel;
-        }
+            public Tolerances(float pos, float rot, float vel)
+            {
+                this.pos = pos;
+                this.rot = rot;
+                this.vel = vel;
+            }
 
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(pos, rot, vel);
-        }
+            public override bool Equals(object obj)
+            {
+                return obj is Tolerances other &&
+                       pos == other.pos &&
+                       rot == other.rot &&
+                       vel == other.vel;
+            }
 
-        public void Deconstruct(out float pos, out float rot, out float vel)
-        {
-            pos = this.pos;
-            rot = this.rot;
-            vel = this.vel;
-        }
+            public override int GetHashCode()
+            {
+                return HashCode.Combine(pos, rot, vel);
+            }
 
-        public static implicit operator (float pos, float rot, float vel)(Tolerances value)
-        {
-            return (value.pos, value.rot, value.vel);
-        }
+            public void Deconstruct(out float pos, out float rot, out float vel)
+            {
+                pos = this.pos;
+                rot = this.rot;
+                vel = this.vel;
+            }
 
-        public static implicit operator Tolerances((float pos, float rot, float vel) value)
-        {
-            return new Tolerances(value.pos, value.rot, value.vel);
+            public static implicit operator (float pos, float rot, float vel)(Tolerances value)
+            {
+                return (value.pos, value.rot, value.vel);
+            }
+
+            public static implicit operator Tolerances((float pos, float rot, float vel) value)
+            {
+                return new Tolerances(value.pos, value.rot, value.vel);
+            }
         }
     }
 }

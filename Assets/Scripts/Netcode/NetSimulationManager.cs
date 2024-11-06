@@ -20,6 +20,16 @@ namespace Tankito.Netcode.Simulation
             simulationObjects.Remove(obj);
         }
 
+        private void OnEnable()
+        {
+            ClockManager.OnTick += Simulate;
+        }
+
+        private void OnDisable()
+        {
+            ClockManager.OnTick -= Simulate;
+        }
+
         /// <summary>
         /// Advance the simulation forward by 1 simulation tick (simulation tick is determined by <see cref="ClockManager.SimDeltaTime" />).
         /// </summary>
