@@ -8,9 +8,9 @@ namespace Tankito.Netcode.Simulation
     {
         void Start()
         {
-            if (NetworkManager.Singleton.IsClient && !NetworkManager.Singleton.IsServer)
+            if (!NetworkManager.Singleton.IsServer)
             {
-                Debug.LogWarning("Proceeding to destroy ServerSimulationManager (because it's on CLIENT)");
+                Debug.LogWarning("Proceeding to destroy ServerSimulationManager (because it's NOT a SERVER)");
                 Destroy(this);
             }
         }

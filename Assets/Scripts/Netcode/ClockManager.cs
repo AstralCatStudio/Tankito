@@ -51,8 +51,15 @@ namespace Tankito
             m_active = false;
             SimDeltaTime = Time.fixedDeltaTime;
 
-            OnTick += ServerSimulationManager.Instance.Simulate;
-            OnTick += ClientSimulationManager.Instance.Simulate;
+            if (NetworkManager.Singleton.IsServer)
+            {
+                OnTick += ServerSimulationManager.Instance.Simulate;
+            }
+            
+            if (NetworkManager.Singleton.IsClient)
+            {
+                OnTick += ClientSimulationManager.Instance.Simulate;
+            }
         }
 
 

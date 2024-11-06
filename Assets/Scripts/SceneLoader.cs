@@ -22,7 +22,8 @@ namespace Tankito
 
         void Start()
         {
-            LoadMainMenu();
+            //LoadMainMenu();
+            LoadLobby();
         }
 
         public void LoadLobby()

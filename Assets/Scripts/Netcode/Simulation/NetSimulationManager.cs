@@ -10,6 +10,12 @@ namespace Tankito.Netcode.Simulation
     {
         protected List<ASimulationObject> simulationObjects;
 
+        protected override void Awake()
+        {
+            base.Awake();
+            simulationObjects = new List<ASimulationObject>();
+        }
+
         public virtual void AddToSim(ASimulationObject obj)
         {
             simulationObjects.Add(obj);
@@ -41,12 +47,6 @@ namespace Tankito.Netcode.Simulation
             }
 
             Physics2D.Simulate(ClockManager.SimDeltaTime);
-        }
-
-        [ContextMenu("TestGetSet")]
-        public void TestGetSet()
-        {
-            simulationObjects[1].SetSimState(simulationObjects[0].GetSimState());
         }
 
     }

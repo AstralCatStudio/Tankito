@@ -14,6 +14,7 @@ namespace Tankito.Netcode.Simulation
             if (!NetworkManager.Singleton.IsClient)
             {
                 Debug.LogWarning("ClientSimulationManager is network node that is NOT a CLIENT (is server). this should not happen!");
+                Destroy(this);
             }
             m_authSnapshot.Initialize();
         }
@@ -47,6 +48,13 @@ namespace Tankito.Netcode.Simulation
                 Physics2D.Simulate(ClockManager.SimDeltaTime);
                 rollbackCounter++;
             }
+        }
+
+        
+        [ContextMenu("TestGetSet")]
+        public void TestGetSet()
+        {
+            simulationObjects[1].SetSimState(simulationObjects[0].GetSimState());
         }
     }
 }
