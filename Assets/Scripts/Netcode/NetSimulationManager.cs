@@ -8,14 +8,14 @@ namespace Tankito.Netcode.Simulation
     // en las clases que heredan de NetSimulationManager....
     public abstract class NetSimulationManager<T> : Singleton<T> where T : Component
     {
-        protected List<SimulationObject> simulationObjects;
+        protected List<ASimulationObject> simulationObjects;
 
-        public virtual void AddSimulationObject(SimulationObject obj)
+        public virtual void AddSimulationObject(ASimulationObject obj)
         {
             simulationObjects.Add(obj);
         }
  
-        public virtual void RemoveSimulationObject(SimulationObject obj)
+        public virtual void RemoveSimulationObject(ASimulationObject obj)
         {
             simulationObjects.Remove(obj);
         }
@@ -35,9 +35,9 @@ namespace Tankito.Netcode.Simulation
         /// </summary>
         public virtual void Simulate()
         {
-            foreach (SimulationObject obj in simulationObjects.Where(obj => obj.IsKinematic))
+            foreach (ASimulationObject obj in simulationObjects.Where(obj => obj.IsKinematic))
             {
-                obj.ComputeKinematics();
+                obj.ComputeKinematics(ClockManager.SimDeltaTime);
             }
 
             Physics2D.Simulate(ClockManager.SimDeltaTime);

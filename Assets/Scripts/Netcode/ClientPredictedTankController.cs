@@ -11,7 +11,7 @@ using Tankito.Netcode.Simulation;
 namespace Tankito.Netcode
 {
     public enum PlayerState { Moving, Dashing }
-    public class ClientPredictedTankController : SimulationObject
+    public class ClientPredictedTankController : ASimulationObject
     {
         #region Variables
         bool oAS = false;

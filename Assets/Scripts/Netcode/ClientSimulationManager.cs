@@ -34,14 +34,14 @@ namespace Tankito.Netcode.Simulation
 
         public void GeneralRollback()
         {
-            foreach(SimulationObject obj in simulationObjects.Where(obj => obj.IsKinematic))
+            foreach(ASimulationObject obj in simulationObjects.Where(obj => obj.IsKinematic))
             {
                 obj.InitReconcilation(m_authState.simulationObjects[obj]);
             }
             int rewindCounter = m_authState.simulationTick;
             while(rewindCounter < ClockManager.TickCounter)
             {
-                foreach (SimulationObject obj in simulationObjects.Where(obj => obj.IsKinematic))
+                foreach (ASimulationObject obj in simulationObjects.Where(obj => obj.IsKinematic))
                 {
                     obj.Reconciliate(rewindCounter);
                 }
