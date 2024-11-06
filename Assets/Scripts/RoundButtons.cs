@@ -4,13 +4,18 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
+using UnityEditor.PackageManager;
 
 public class RoundButtons : NetworkBehaviour
 {
     [SerializeField] private Button _startButton;
     [SerializeField] private Button _readyButton;
+    [SerializeField] private TMP_Text _readyPlayersText;
+    [SerializeField] private GameObject _notReadyMessage;
+    [SerializeField] private TMP_Text _readyLocalText;
 
-    RoundManager _roundManager;
+    private RoundManager _roundManager;
 
     private NetworkList<bool> _readyCount;
 
@@ -20,11 +25,15 @@ public class RoundButtons : NetworkBehaviour
     {
         _canStart = false;
         _readyCount = new NetworkList<bool>();
+
+        _readyPlayersText.gameObject.SetActive(true);
+        UpdateReadyPlayersText();
     }
 
     private void Update()
     {
-        PrintReadyCount();
+        Debug.Log($"Clientes listos en la lista: {CalcReadyCount()} {_readyCount.Count}");
+
     }
 
     private void Start()
@@ -48,6 +57,8 @@ public class RoundButtons : NetworkBehaviour
         {
             _readyButton.gameObject.SetActive(true);
             _readyButton.onClick.AddListener(OnReadyClicked);
+
+            _readyLocalText.gameObject.SetActive(true);
         }
     }
     public override void OnNetworkSpawn()
@@ -60,7 +71,7 @@ public class RoundButtons : NetworkBehaviour
         }
         _readyCount.OnListChanged += OnReadyCountChanged;
     }
-    
+
     public override void OnDestroy()
     {
         if (IsServer)
@@ -96,7 +107,7 @@ public class RoundButtons : NetworkBehaviour
     private void SetPlayerReadyServerRpc(ulong clientId)
     {
         // Cambia el estado de "Listo" del cliente en la lista
-        _readyCount[(int)clientId-1] = !_readyCount[(int)clientId-1];
+        _readyCount[(int)clientId - 1] = !_readyCount[(int)clientId - 1];
     }
 
     private void OnReadyCountChanged(NetworkListEvent<bool> readyCountChanged)
@@ -115,10 +126,18 @@ public class RoundButtons : NetworkBehaviour
             }
 
             _canStart = allReady;
+
+            if (_canStart)
+            {
+                _notReadyMessage.SetActive(false);
+            }
         }
+
+        UpdateReadyPlayersText();
+        UpdateLocalReadyText();
     }
 
-    private void PrintReadyCount()
+    private int CalcReadyCount()
     {
         int readyCount = 0;
         foreach (var ready in _readyCount)
@@ -128,7 +147,30 @@ public class RoundButtons : NetworkBehaviour
                 readyCount++;
             }
         }
-        Debug.Log($"Listos: {readyCount}");
+        return readyCount;
+    }
+
+    private void UpdateReadyPlayersText()
+    {
+        _readyPlayersText.text = $"Ready players: {CalcReadyCount()} / {_readyCount.Count}";
+    }
+
+    private void UpdateLocalReadyText()
+    {
+        if(!IsServer)
+        {
+            if (_readyCount[(int)NetworkManager.LocalClientId - 1])
+            {
+                _readyLocalText.text = "Ready!";
+                Debug.Log("Ready");
+            }
+            else
+            {
+                _readyLocalText.text = "Not Ready";
+                Debug.Log("Not Ready");
+            }
+        }
+        
     }
 
     #endregion
@@ -138,17 +180,25 @@ public class RoundButtons : NetworkBehaviour
     private void OnStartClicked()
     {
         Debug.Log("Pulsaste Start");
-        if(IsServer)
+        if (IsServer)
         {
-            if(_canStart)
+            if (_canStart)
             {
                 _roundManager.InitializeRound();
+                DestroyButtonsClientRpc();
             }
             else
             {
                 Debug.Log("No hay suficientes listos");
+                _notReadyMessage.SetActive(true);
             }
         }
+    }
+
+    [ClientRpc]
+    private void DestroyButtonsClientRpc()
+    {
+        Destroy(gameObject);
     }
 
     #endregion
