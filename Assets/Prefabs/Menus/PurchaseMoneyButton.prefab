@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 83313656943332145}
   - component: {fileID: 8606143916859076630}
   m_Layer: 5
-  m_Name: MoneyButton
+  m_Name: PurchaseMoneyButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -292,7 +292,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 307.2, y: 315.3612}
+  m_SizeDelta: {x: 246, y: 252}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1166384053224454898
 CanvasRenderer:

@@ -43,7 +43,7 @@ namespace Tankito {
         protected List<Modifier> m_modifierList = new List<Modifier>();
         public ulong m_shooterID;
         protected int m_bouncesLeft = 0;
-        protected float m_lifetime = 100;
+        protected float m_lifetime = 0; // Life Time counter
         public Action OnSpawn = () => { }, OnFly = () => { }, OnHit = () => { }, OnBounce = () => { }, OnDetonate = () => { };
 
 

@@ -38,7 +38,6 @@ public class MenuAnimations : MonoBehaviour
             {
                 Vector2 newPosition = CalculateNewPosition(element);
                 newPositions.Add(newPosition);
-                //LeanTween.move(element, newPosition, 0f);
                 element.anchoredPosition = newPosition;
             }
         }
