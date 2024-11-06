@@ -55,7 +55,7 @@ namespace Tankito.Netcode.Simulation
         // public abstract void InitReconcilation(ISimulationState simulationState);
         // public abstract void Reconciliate(int rewindTick);
 
-        public abstract void SetSimState<StateType>(StateType state) where StateType : ASimulationState;
-        public abstract void GetSimState<StateType>(StateType state) where StateType : ASimulationState;
+        public abstract void SetSimState<StateType>(StateType state) where StateType : ISimulationState;
+        public abstract void GetSimState<StateType>(StateType state) where StateType : ISimulationState;
     }
 }
