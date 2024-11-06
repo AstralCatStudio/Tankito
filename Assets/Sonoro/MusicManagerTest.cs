@@ -47,7 +47,7 @@ public class MusicManagerTest : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.W))
         {
             Debug.Log("Cambiando a la canción MENU");
             MusicManager.Instance.SetSong("MENU");
@@ -58,6 +58,13 @@ public class MusicManagerTest : MonoBehaviour
             Debug.Log("Cambiando a la canción PLAYA");
             MusicManager.Instance.SetSong("PLAYA");
             currentPhase = 0;
+        }
+
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            Debug.Log("Emitiendo sonido");
+            MusicManager.Instance.PlaySound("snd_parry");
         }
 
         //*/

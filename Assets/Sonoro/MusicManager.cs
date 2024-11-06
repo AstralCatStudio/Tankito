@@ -5,24 +5,32 @@ public class MusicManager : MonoBehaviour
 {
     public static MusicManager Instance { get; private set; }
 
-    public AudioClip[] playaClips;
-    public AudioClip[] sushiClips;
-    public AudioClip[] barcoClips;
-    public AudioClip[] submarinoClips;
-    public AudioClip[] menuClips;
-    public AudioClip[] pveClips;
+    [SerializeField] private AudioClip[] playaClips;
+    [SerializeField] private AudioClip[] sushiClips;
+    [SerializeField] private AudioClip[] barcoClips;
+    [SerializeField] private AudioClip[] submarinoClips;
+    [SerializeField] private AudioClip[] menuClips;
+    [SerializeField] private AudioClip[] pveClips;
 
-    private Dictionary<string, AudioClip[]> songs = new Dictionary<string, AudioClip[]>();
+    private readonly Dictionary<string, AudioClip[]> songs = new();
     private AudioSource audioSourceA;
     private AudioSource audioSourceB;
     private bool isPlayingA = true;
 
-    public AudioClip[] currentClips;
+    public AudioClip[] currentClips { get; private set; }
     private int currentPhase = 0;
-    private float fadeDuration = 1.0f;
+    private const float FadeDuration = 0.4f;
     private float fadeTimer = 0f;
     private bool isTransitioning = false;
     private bool isSongTransitioning = false;
+
+    private string queuedSongID;
+    private int queuedPhase = -1;
+    private float queuedStartTime = 0f;
+
+    private readonly List<AudioSource> soundPool = new();
+    private readonly Dictionary<AudioSource, float> activeSounds = new();
+    private const int PoolSize = 10;
 
     private void Awake()
     {
@@ -34,10 +42,8 @@ public class MusicManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
 
-        audioSourceA = gameObject.AddComponent<AudioSource>();
-        audioSourceB = gameObject.AddComponent<AudioSource>();
-        audioSourceA.loop = true;
-        audioSourceB.loop = true;
+        audioSourceA = CreateAudioSource(true);
+        audioSourceB = CreateAudioSource(true);
 
         songs["PLAYA"] = playaClips;
         songs["SUSHI"] = sushiClips;
@@ -45,14 +51,69 @@ public class MusicManager : MonoBehaviour
         songs["SUBMARINO"] = submarinoClips;
         songs["MENU"] = menuClips;
         songs["PVE"] = pveClips;
+
+        InitializeSoundPool();
     }
+
+
+
+
+    private AudioSource CreateAudioSource(bool loop)
+    {
+        var source = gameObject.AddComponent<AudioSource>();
+        source.loop = loop;
+        return source;
+    }
+
+
+
+
+    private void InitializeSoundPool()
+    {
+        for (int i = 0; i < PoolSize; i++)
+        {
+            var source = CreateAudioSource(false);
+            source.playOnAwake = false;
+            source.enabled = false;
+            soundPool.Add(source);
+        }
+    }
+
+
+
+
+    private AudioSource GetAvailableAudioSource()
+    {
+        foreach (var source in soundPool)
+        {
+            if (!source.isPlaying)
+            {
+                source.enabled = true;
+                return source;
+            }
+        }
+
+        var newSource = CreateAudioSource(false);
+        newSource.playOnAwake = false;
+        soundPool.Add(newSource);
+        return newSource;
+    }
+
+
+
+
 
     private void Update()
     {
+        float currentTime = Time.time;
+
+        // Eliminar y desactivar fuentes activas que hayan terminado
+        activeSounds.RemoveAll(entry => currentTime >= entry.Value, source => source.StopAndDisable());
+
         if (isTransitioning || isSongTransitioning)
         {
             fadeTimer += Time.deltaTime;
-            float fadeProgress = Mathf.Clamp01(fadeTimer / fadeDuration);
+            float fadeProgress = Mathf.Clamp01(fadeTimer / FadeDuration);
 
             AudioSource activeSource = isPlayingA ? audioSourceA : audioSourceB;
             AudioSource newSource = isPlayingA ? audioSourceB : audioSourceA;
@@ -63,51 +124,104 @@ public class MusicManager : MonoBehaviour
             if (fadeProgress >= 1f)
             {
                 activeSource.Stop();
-                isTransitioning = false;
-                isSongTransitioning = false;
-                fadeTimer = 0f;
-                isPlayingA = !isPlayingA;
+                EndTransition();
             }
         }
     }
 
+
+
+
+
+    private void EndTransition()
+    {
+        isTransitioning = false;
+        isSongTransitioning = false;
+        fadeTimer = 0f;
+        isPlayingA = !isPlayingA;
+
+        if (!string.IsNullOrEmpty(queuedSongID))
+        {
+            SetSong(queuedSongID);
+            queuedSongID = null;
+        }
+        else if (queuedPhase >= 0)
+        {
+            StartTransition(queuedPhase, queuedStartTime);
+            queuedPhase = -1;
+        }
+    }
+
+
+
+
+    public void SetPhase(int phase)
+    {
+        if (isTransitioning || isSongTransitioning || currentClips == null || phase == currentPhase) return;
+
+        if (phase >= 0 && phase < currentClips.Length)
+        {
+            float currentTime = (isPlayingA ? audioSourceA : audioSourceB).time;
+            StartTransition(phase, currentTime);
+        }
+    }
+
+
+
+
+
     public void SetSong(string songID)
     {
-        if (!songs.ContainsKey(songID))
+        if (isSongTransitioning || isTransitioning)
         {
-            Debug.LogError($"ERROR: La canción con ID: '{songID}' no existe.");
+            queuedSongID = songID;
             return;
         }
 
-        currentClips = songs[songID];
-        currentPhase = 0;
+        if (!songs.TryGetValue(songID, out var clips))
+        {
+            Debug.LogError($"La canción '{songID}' no existe");
+            return;
+        }
 
-        // Precargar cada clip de la canción seleccionada
-        foreach (AudioClip clip in currentClips)
+        currentClips = clips;
+        currentPhase = 0;
+        PreloadClips(currentClips);
+        StartSongTransition(0);
+    }
+
+
+
+
+
+    private void PreloadClips(AudioClip[] clips)
+    {
+        foreach (var clip in clips)
         {
             if (clip.loadState != AudioDataLoadState.Loaded)
             {
                 clip.LoadAudioData();
             }
         }
-
-        StartSongTransition(0);
-        //Debug.Log($"Transición hacia la canción '{songID}' en fase {currentPhase}.");
     }
+
+
+
+
 
     private void StartSongTransition(float startTime)
     {
         AudioSource newSource = isPlayingA ? audioSourceB : audioSourceA;
 
-        newSource.clip = currentClips[0];
-
-        if (newSource.clip.loadState != AudioDataLoadState.Loaded)
+        if (currentClips == null || currentClips.Length == 0)
         {
-            //Debug.LogWarning($"Clip '{newSource.clip.name}' aún no se ha cargado completamente. Reiniciando el tiempo a 0.");
-            startTime = 0f;
+            Debug.LogError("No hay clips disponibles para la transición.");
+            return;
         }
 
-        newSource.time = Mathf.Clamp(startTime, 0, newSource.clip.length);
+        newSource.clip = currentClips[0];
+        startTime = Mathf.Clamp(startTime, 0, newSource.clip.length);
+        newSource.time = startTime;
         newSource.volume = 0f;
         newSource.Play();
 
@@ -115,29 +229,22 @@ public class MusicManager : MonoBehaviour
         fadeTimer = 0f;
     }
 
-    public void SetPhase(int phase)
-    {
-        if (currentClips == null || phase < 0 || phase >= currentClips.Length || phase == currentPhase) return;
 
-        float currentTime = (isPlayingA ? audioSourceA : audioSourceB).time;
-        StartTransition(phase, currentTime);
-    }
+
+
 
     private void StartTransition(int newPhase, float startTime)
     {
-        AudioSource activeSource = isPlayingA ? audioSourceA : audioSourceB;
         AudioSource newSource = isPlayingA ? audioSourceB : audioSourceA;
 
-        newSource.clip = currentClips[newPhase];
-
-        // Verificar si el clip está completamente cargado
-        if (newSource.clip.loadState != AudioDataLoadState.Loaded)
+        if (currentClips == null || newPhase < 0 || newPhase >= currentClips.Length)
         {
-            //Debug.LogWarning($"Clip '{newSource.clip.name}' aún no se ha cargado completamente. Reiniciando el tiempo a 0.");
-            startTime = 0f;
+            Debug.LogError("No hay clips disponibles para la transición o el índice está fuera de rango.");
+            return;
         }
 
-        startTime = Mathf.Clamp(startTime, 0, newSource.clip.length);
+        newSource.clip = currentClips[newPhase];
+        startTime = Mathf.Min(startTime, newSource.clip.length - 0.1f);
         newSource.time = startTime;
         newSource.volume = 0f;
         newSource.Play();
@@ -145,5 +252,59 @@ public class MusicManager : MonoBehaviour
         isTransitioning = true;
         fadeTimer = 0f;
         currentPhase = newPhase;
+    }
+
+
+
+
+
+    public void PlaySound(string soundName)
+    {
+        AudioClip clip = Resources.Load<AudioClip>($"Sonidos/{soundName}");
+
+        if (clip == null)
+        {
+            Debug.LogError($"El sonido '{soundName}' no se encontró en la carpeta Resources/Sonidos.");
+            return;
+        }
+
+        AudioSource audioSource = GetAvailableAudioSource();
+        audioSource.clip = clip;
+        audioSource.Play();
+        activeSounds[audioSource] = Time.time + clip.length;
+    }
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+public static class AudioSourceExtensions
+{
+    public static void StopAndDisable(this AudioSource source)
+    {
+        source.Stop();
+        source.enabled = false;
+    }
+}
+
+
+
+
+
+public static class DictionaryExtensions
+{
+    public static void RemoveAll<TKey, TValue>(this Dictionary<TKey, TValue> dict, System.Predicate<KeyValuePair<TKey, TValue>> match, System.Action<TKey> action)
+    {
+        foreach (var item in new List<KeyValuePair<TKey, TValue>>(dict))
+        {
+            if (match(item))
+            {
+                action(item.Key);
+                dict.Remove(item.Key);
+            }
+        }
     }
 }
