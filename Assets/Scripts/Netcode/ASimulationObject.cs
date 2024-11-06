@@ -4,14 +4,14 @@ using UnityEngine;
 
 namespace Tankito.Netcode.Simulation
 {
-    public abstract class SimulationObject : NetworkBehaviour
+    public abstract class ASimulationObject : NetworkBehaviour
     {
         public bool IsKinematic {get => m_isKinematic; set => m_isKinematic = value; }
         [SerializeField]
         private bool m_isKinematic;
 
         // Define a delegate for the kinematics computation
-        public delegate void KinematicFunction();
+        public delegate void KinematicFunction(float deltaTime);
 
         // Define an event based on the delegate
         public event KinematicFunction OnComputeKinematics;
@@ -44,9 +44,9 @@ namespace Tankito.Netcode.Simulation
         /// to then be set at the next physics tick.
         /// </summary>
         /// 
-        internal void ComputeKinematics()
+        internal void ComputeKinematics(float deltaTime)
         {
-            OnComputeKinematics?.Invoke();
+            OnComputeKinematics?.Invoke(deltaTime);
         }
 
         // Bernat: Creo que estos metodos de iniciar reconciliacion y de reconciliar son tarea del simulation manager,
@@ -55,5 +55,7 @@ namespace Tankito.Netcode.Simulation
         // public abstract void InitReconcilation(ISimulationState simulationState);
         // public abstract void Reconciliate(int rewindTick);
 
+        public abstract void SetSimState<StateType>(StateType state) where StateType : ASimulationState;
+        public abstract void GetSimState<StateType>(StateType state) where StateType : ASimulationState;
     }
 }

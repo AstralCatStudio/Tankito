@@ -7,7 +7,7 @@ namespace Tankito.Netcode.Simulation
     public struct GlobalSimulationState
     {
         public int simulationTick;
-        public Dictionary<SimulationObject, ISimulationState> simulationObjects; // Se hace de  ISimulationState para poder mantenerlo generico entre cosas distintas, como balas que tan solo tienen un par de variables y los tanques, que tienen mas info
+        public Dictionary<ASimulationObject, ASimulationState> simulationObjects; // Se hace de  ISimulationState para poder mantenerlo generico entre cosas distintas, como balas que tan solo tienen un par de variables y los tanques, que tienen mas info
 
         /*public GlobalSimulationState()
         {
@@ -16,7 +16,7 @@ namespace Tankito.Netcode.Simulation
 
         public void Initialize()
         {
-            simulationObjects = new Dictionary<SimulationObject, ISimulationState> ();
+            simulationObjects = new Dictionary<ASimulationObject, ASimulationState> ();
         }
     }
 }
