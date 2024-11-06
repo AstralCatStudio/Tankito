@@ -16,30 +16,44 @@ namespace Tankito.Netcode.Simulation
         // Define an event based on the delegate
         public event KinematicFunction OnComputeKinematics;
         
-        /// <summary>
-        /// Calls funtions that push the physics variables of the simulation object to the physics engine kinemmatically,
-        /// to then be set at the next physics tick.
-        /// </summary>
-        /// 
 
-        public virtual void OnNetorkSpawn()
+        public override void OnNetworkSpawn() // Should work and be called for pooled objects too!
         {
             if(IsServer)
             {
                 ServerSimulationManager.Instance.AddSimulationObject(this);
             }
-            else
-            {
+            //else  // Este else no lo queremos porque necesitamos que un host sea capaz de recoger el input del jugador,
+                    // de lo cual se encarga ClientSimulationManager
+            //{
                 ClientSimulationManager.Instance.AddSimulationObject(this);
-            }
+            //}
         }
 
+        public override void OnNetworkDespawn() // Should work and be called for pooled objects too!
+        {
+            if(IsServer)
+            {
+                ServerSimulationManager.Instance.RemoveSimulationObject(this);
+            }
+            ClientSimulationManager.Instance.RemoveSimulationObject(this);
+        }
+
+        /// <summary>
+        /// Calls funtions that push the physics variables of the simulation object to the physics engine kinemmatically,
+        /// to then be set at the next physics tick.
+        /// </summary>
+        /// 
         internal void ComputeKinematics()
         {
             OnComputeKinematics?.Invoke();
         }
 
-        public abstract void InitReconcilation(ISimulationState simulationState);
-        public abstract void Reconciliate(int rewindTick);
+        // Bernat: Creo que estos metodos de iniciar reconciliacion y de reconciliar son tarea del simulation manager,
+        //         lo unico que ofrece el SimulationObject es como una etiqueta que designa que el simulation manager tendra en cuenta al
+        //         objeto a la hora de simular en red.
+        // public abstract void InitReconcilation(ISimulationState simulationState);
+        // public abstract void Reconciliate(int rewindTick);
+
     }
 }
