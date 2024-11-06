@@ -1,17 +1,28 @@
-using System.Collections;
-using System.Collections.Generic;
-using Tankito.Netcode;
+using System;
 using Tankito.Utils;
+using Unity.Netcode;
 using UnityEngine;
 
-public class WindowPayloadBuffer : Singleton<WindowPayloadBuffer>
+namespace Tankito.Netcode
 {
-    private const int WINDOW_SIZE = 15;
-
-    private CircularBuffer<InputPayload> inputBuffer = new CircularBuffer<InputPayload>(WINDOW_SIZE);
-
-    public void AddPayloadToWindow(InputPayload newInput)
+    // Uso exclusivo CLIENTE
+    public class InputWindowBuffer : Singleton<InputWindowBuffer>
     {
-        inputBuffer.Add(newInput, newInput.timestamp);
+        private const int WINDOW_SIZE = 15;
+
+        private CircularBuffer<InputPayload> inputBuffer = new CircularBuffer<InputPayload>(WINDOW_SIZE);
+
+        public void AddPayloadToWindow(InputPayload newInput)
+        {
+            inputBuffer.Add(newInput, newInput.timestamp);
+            SendInputWindowServerRPC();
+        }
+        
+        [ServerRpc(Delivery = RpcDelivery.Unreliable)]
+        private void SendInputWindowServerRPC()
+        {
+            // We should bit-pack the shit out of this, but it's ok for now.
+            //throw new NotImplementedException();
+        }
     }
 }

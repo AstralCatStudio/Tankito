@@ -44,6 +44,7 @@ namespace Tankito.Netcode.Simulation
             foreach (var obj in simulationObjects.Where(obj => obj.IsKinematic))
             {
                 obj.ComputeKinematics(ClockManager.SimDeltaTime);
+                Debug.Log($"ComputedKinematics for: {obj}");
             }
 
             Physics2D.Simulate(ClockManager.SimDeltaTime);

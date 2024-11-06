@@ -1,4 +1,4 @@
- using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Unity.Netcode;
@@ -10,7 +10,7 @@ using Tankito.Netcode.Simulation;
 
 namespace Tankito.Netcode
 {
-    public enum PlayerState { Moving, Dashing }
+    //public enum PlayerState { Moving, Dashing }
     public class ClientPredictedTankController : NetworkBehaviour// : ASimulationObject
     {
         #region Variables
@@ -88,12 +88,11 @@ namespace Tankito.Netcode
             }
         }
 
-        public override void OnNetworkSpawn()
-        {
-            base.OnNetworkSpawn();
-            if (NetworkManager.LocalClient.PlayerObject != null && NetworkManager.LocalClient.PlayerObject.GetComponent<ClientPredictedTankController>() == this)
-                GameManager.Instance.BindInputActions(this);
-        }
+        //public override void OnNetworkSpawn()
+        //{
+        //    if (NetworkManager.LocalClient.PlayerObject != null && NetworkManager.LocalClient.PlayerObject.GetComponent<ClientPredictedTankController>() == this)
+        //        GameManager.Instance.BindInputActions(this);
+        //}
 
         #region Simulation
 
@@ -122,7 +121,7 @@ namespace Tankito.Netcode
 
                 var currentState = GetSimulationState(ClockManager.TickCounter);
 
-                WindowPayloadBuffer.Instance.AddPayloadToWindow(m_currentInput);
+                InputWindowBuffer.Instance.AddPayloadToWindow(m_currentInput);
 
                 m_inputStateCache.Add(m_currentInput, ClockManager.TickCounter);
                 m_simulationStateCache.Add(currentState, ClockManager.TickCounter);
@@ -248,15 +247,10 @@ namespace Tankito.Netcode
 
         public void OnFire(InputAction.CallbackContext ctx)
         {
-            // CAMBIAR POR CHECKS DE DISPARO?
-            // (comprobar si el valor de ctx.ReadValue == 1
-            // es redundante y ademas entra en conflicto con
-            // el threshold de activacion configurado por el input system,
-            // en otras palabras no activa la accion para controles analogicos como el trigger de un mando)
             if (ctx.performed)
             {
                 m_currentInput.action = TankAction.Fire;
-                m_cannon.Shoot();
+                m_cannon.Shoot(); // Esto va a haber que cambiarlo a que se realice el evento de disparo a golpe de simulacion, no cuando se haga el input!
             }
             else
             {
@@ -267,7 +261,7 @@ namespace Tankito.Netcode
 
         private void ProcessInput(InputPayload input)
         {
-            if (input.action != TankAction.Dash)
+            if (input.action != TankAction.Dash) // No puedes hacer esto asi, si vas a tener una variable de can dash la tienes que usar aqui, NO cuando estas RECOGIENDO inputs
             {
                 MoveTank(input.moveVector);
             }

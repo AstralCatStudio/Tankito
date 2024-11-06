@@ -62,6 +62,11 @@ namespace Tankito
             }
         }
 
+        void Start()
+        {
+            GameManager.Instance.AutoPhysics2DUpdate(false);
+        }
+
 
         // Update is called once per frame
         void Update()

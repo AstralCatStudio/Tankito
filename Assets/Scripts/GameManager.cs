@@ -52,9 +52,6 @@ namespace Tankito
             m_networkManager.OnServerStarted += OnServerStarted;
             m_networkManager.OnClientConnectedCallback += OnClientConnected;
             m_networkManager.OnClientDisconnectCallback += OnClientDisconnect;
-
-            AutoPhysics2DUpdate(true);
-
         }
 
         public override void OnNetworkSpawn()
@@ -106,7 +103,7 @@ namespace Tankito
                 newPlayer.SpawnAsPlayerObject(clientId);
             }
             FindPlayerInput();
-            // BindInputActions(); Bound by the player controller itself on network spawn.
+            // BindInputActions(); Bound by the player input script itself on network spawn.
         }
 
         private void OnClientDisconnect(ulong obj)
@@ -142,7 +139,7 @@ namespace Tankito
             m_playerInput.actions = m_inputActions.asset;
         }
 
-        public void BindInputActions(ClientPredictedTankController predictedController)
+        public void BindInputActions(TankPlayerInput predictedController)
         {
             FindPlayerInput();
 
@@ -157,7 +154,6 @@ namespace Tankito
             m_inputActions.Player.Parry.canceled += predictedController.OnParry;
             m_inputActions.Player.Fire.performed += predictedController.OnFire;
             m_inputActions.Player.Fire.canceled += predictedController.OnFire;
-
         }
 
 

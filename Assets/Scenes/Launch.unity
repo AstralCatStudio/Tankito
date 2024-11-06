@@ -276,7 +276,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2079099566}
   - component: {fileID: 2079099565}
-  - component: {fileID: 2079099564}
   - component: {fileID: 2079099563}
   m_Layer: 0
   m_Name: '@GameManager'
@@ -305,20 +304,6 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
---- !u!114 &2079099564
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2079099562}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d6abb2d47833511449e24b3fcee7d040, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_tickCounter: 0
-  m_active: 0
 --- !u!114 &2079099565
 MonoBehaviour:
   m_ObjectHideFlags: 0

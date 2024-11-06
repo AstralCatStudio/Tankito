@@ -20,10 +20,12 @@ public class ParryAnimState : StateMachineBehaviour
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        if (animator.gameObject.transform.parent.gameObject.GetComponent<ClientPredictedTankController>() != null)
-        {
-            animator.gameObject.transform.parent.gameObject.GetComponent<ClientPredictedTankController>().m_parrying = false;
-        }
+        // Para que ibamos a querer hacer esto????
+        
+        //if (animator.gameObject.transform.parent.gameObject.GetComponent<ClientPredictedTankController>() != null)
+        //{
+        //    animator.gameObject.transform.parent.gameObject.GetComponent<ClientPredictedTankController>().m_parrying = false;
+        //}
     }
 
     // OnStateMove is called right after Animator.OnAnimatorMove()

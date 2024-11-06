@@ -1,4 +1,3 @@
-
 using System;
 
 namespace Tankito.Utils

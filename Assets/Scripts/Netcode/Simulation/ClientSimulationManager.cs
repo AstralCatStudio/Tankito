@@ -21,11 +21,13 @@ namespace Tankito.Netcode.Simulation
 
         public override void Simulate()
         {
-            Debug.Log("CLIENT SimulationManager Simulate() called!");
+            //Debug.Log("CLIENT SimulationManager Simulate() called!");
             
-            Debug.Log("TODO: Implement Input Sampling and Sending on client.");
-            //SampleInput(); // Ensamblar ventana de inputs y mandarla al servidor.
+            //Debug.Log("TODO: Implement Input Sampling and Sending on client.");
+
+            // SampleInput(); // Ensamblar ventana de inputs y mandarla al servidor.
             // Tambien dead reckoning!
+
             if (!NetworkManager.Singleton.IsServer)
             {
                 // We don't want HOSTs to execute Simulate twice per tick.
@@ -39,13 +41,16 @@ namespace Tankito.Netcode.Simulation
             foreach(var obj in simulationObjects)
             {
                 obj.SetSimState(m_authSnapshot[obj]);
+                // Habra que hacer algo para restaurar objetos que puedieran haber deespawneado y todo eso supongo
             }
             
             int rollbackCounter = m_authSnapshot.timestamp;
             while(rollbackCounter < ClockManager.TickCounter)
             {
+
                 // TODO: Input Replay
-                Physics2D.Simulate(ClockManager.SimDeltaTime);
+                base.Simulate();
+                // TODO: Cache Simulation State
                 rollbackCounter++;
             }
         }
@@ -54,7 +59,8 @@ namespace Tankito.Netcode.Simulation
         [ContextMenu("TestGetSet")]
         public void TestGetSet()
         {
-            simulationObjects[1].SetSimState(simulationObjects[0].GetSimState());
+            ISimulationState stateToCopy = simulationObjects[0].GetSimState(); // Explicit casting is not necessary
+            simulationObjects[1].SetSimState(stateToCopy);
         }
     }
 }
