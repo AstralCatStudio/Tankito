@@ -1,56 +1,155 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class RoundButtons : MonoBehaviour
+public class RoundButtons : NetworkBehaviour
 {
     [SerializeField] private Button _startButton;
     [SerializeField] private Button _readyButton;
 
-    //private NetworkVariable<int> _readyCount = new NetworkVariable<int>(0);
+    RoundManager _roundManager;
+
+    private NetworkList<bool> _readyCount;
+
+    private bool _canStart;
+
+    private void Awake()
+    {
+        _canStart = false;
+        _readyCount = new NetworkList<bool>();
+    }
+
+    private void Update()
+    {
+        PrintReadyCount();
+    }
 
     private void Start()
     {
-        if(NetworkManager.Singleton.IsServer)
+        if (IsServer)
         {
             _startButton.gameObject.SetActive(true);
-            _startButton.onClick.AddListener(OnStartPressed);
+            _startButton.onClick.AddListener(OnStartClicked);
+
+            _roundManager = FindObjectOfType<RoundManager>();
+            if (_roundManager == null)
+            {
+                Debug.Log("No se encontro RM");
+            }
+            else
+            {
+                Debug.Log("RM encontrado SUUUU");
+            }
         }
-        else if(NetworkManager.Singleton.IsClient && !NetworkManager.Singleton.IsServer)
+        else if (IsClient && !IsServer)
         {
             _readyButton.gameObject.SetActive(true);
-            _readyButton.onClick.AddListener(OnReadyPressed);
+            _readyButton.onClick.AddListener(OnReadyClicked);
         }
     }
-
-    private void OnDestroy()
+    public override void OnNetworkSpawn()
     {
-        if (NetworkManager.Singleton.IsServer)
+        if (IsServer)
         {
-            _startButton.onClick.RemoveListener(OnStartPressed);
+            Debug.Log("Entro en network spawn");
+            NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
+            NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnected;
         }
-        else if (NetworkManager.Singleton.IsClient && !NetworkManager.Singleton.IsServer)
-        {
-            _readyButton.onClick.RemoveListener(OnReadyPressed);
-        }
-    }
-
-
-
-    private void OnStartPressed()
-    {
-        Debug.Log("Pulsaste Start");
+        _readyCount.OnListChanged += OnReadyCountChanged;
     }
     
-    private void OnReadyPressed()
+    public override void OnDestroy()
+    {
+        if (IsServer)
+        {
+            NetworkManager.Singleton.OnClientConnectedCallback -= OnClientConnected;
+            NetworkManager.Singleton.OnClientDisconnectCallback -= OnClientDisconnected;
+        }
+
+        _readyCount.OnListChanged -= OnReadyCountChanged;
+    }
+
+    #region ClientConnection
+    private void OnClientConnected(ulong clientId)
+    {
+        _readyCount.Add(false);
+    }
+
+    private void OnClientDisconnected(ulong clientId)
+    {
+        _readyCount.RemoveAt((int)clientId);
+    }
+
+    #endregion
+
+    #region Ready
+    private void OnReadyClicked()
     {
         Debug.Log("Pulsaste Ready");
-        RoundManager rm = GameObject.Find("RoundManager").GetComponent<RoundManager>();
-        if(rm != null)
+        SetPlayerReadyServerRpc(NetworkManager.LocalClientId);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void SetPlayerReadyServerRpc(ulong clientId)
+    {
+        // Cambia el estado de "Listo" del cliente en la lista
+        _readyCount[(int)clientId-1] = !_readyCount[(int)clientId-1];
+    }
+
+    private void OnReadyCountChanged(NetworkListEvent<bool> readyCountChanged)
+    {
+        if (IsServer)
         {
-            Debug.Log("RM encontrado");
+            bool allReady = true;
+
+            foreach (var ready in _readyCount)
+            {
+                if (!ready)
+                {
+                    allReady = false;
+                    break;
+                }
+            }
+
+            _canStart = allReady;
         }
     }
+
+    private void PrintReadyCount()
+    {
+        int readyCount = 0;
+        foreach (var ready in _readyCount)
+        {
+            if (ready)
+            {
+                readyCount++;
+            }
+        }
+        Debug.Log($"Listos: {readyCount}");
+    }
+
+    #endregion
+
+    #region Start
+
+    private void OnStartClicked()
+    {
+        Debug.Log("Pulsaste Start");
+        if(IsServer)
+        {
+            if(_canStart)
+            {
+                _roundManager.InitializeRound();
+            }
+            else
+            {
+                Debug.Log("No hay suficientes listos");
+            }
+        }
+    }
+
+    #endregion
 }

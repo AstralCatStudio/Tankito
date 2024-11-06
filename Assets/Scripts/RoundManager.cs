@@ -117,7 +117,7 @@ public class RoundManager : NetworkBehaviour
     }
     #endregion
 
-    private void InitializeRound()
+    public void InitializeRound()
     {
         _roundUI.SetActivePowerUps(false);
         DisablePowerUpsClientRpc();
