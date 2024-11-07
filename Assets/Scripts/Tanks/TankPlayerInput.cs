@@ -40,18 +40,6 @@ namespace Tankito
             m_inputReplayTick = NO_REPLAY;
         }
 
-        public override void OnNetworkSpawn()
-        {
-            if (NetworkManager.LocalClient.PlayerObject != null && NetworkManager.LocalClient.PlayerObject.GetComponent<TankPlayerInput>() == this)
-            {
-                GameManager.Instance.BindInputActions(this);
-            }
-            else
-            {
-                Destroy(this);
-            }
-        }
-
         /// <summary>
         /// Returns <see cref="m_currentInput" />. Unless it is in replay mode (<see cref="m_inputReplayTick"/> == <see cref="NO_REPLAY"/>), this is to enable automatic input replay on rollback.
         /// </summary>

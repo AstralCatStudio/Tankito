@@ -24,7 +24,7 @@ namespace Tankito
         //Variables Dash
         [SerializeField] private float accelerationMultiplier = 3;
         [SerializeField] private float dashDuration = 0.25f;
-        [SerializeField] private float fullDashDuration = 0.2f;
+        [SerializeField] private float fullDashDuration = 0.1f;
         [SerializeField] private float currentDashTick = 0;
         public bool postDash;
         public Vector2 postDashInput;

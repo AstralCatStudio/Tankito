@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace Tankito.Utils
 {
@@ -80,6 +81,12 @@ namespace Tankito.Utils
             }
 
             return buffer[idx];
+        }
+
+        public T this[int i]
+        {
+            get => Get(i);
+            set => Add(value, i);
         }
 
         /// <summary>

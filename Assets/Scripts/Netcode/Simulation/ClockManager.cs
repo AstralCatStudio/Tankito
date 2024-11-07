@@ -25,7 +25,7 @@ namespace Tankito
 
 
         // PROVISIONAL: Hasta que hagamos funcionar nuestro propio clock con los metodos Update()
-        float m_time;
+        float m_tickTimer;
         [SerializeField]
         private int m_tickCounter;
         public static int TickCounter { get => Instance.m_tickCounter; }
@@ -46,7 +46,7 @@ namespace Tankito
             //simulationClock = new Clock(SERVER_SIMULATION_TICKRATE);
             
             //inputSendClock = new Clock(INPUT_SENDING_TICKRATE, Clock.TickTriggerMode.Auto);
-            m_time = 0;
+            m_tickTimer = 0;
             m_tickCounter = 0;
             m_active = false;
             SimDeltaTime = Time.fixedDeltaTime;
@@ -74,10 +74,10 @@ namespace Tankito
             //simulationClock.Update(Time.deltaTime);
             if (!m_active) return;
 
-            m_time += Time.deltaTime;
-            if (m_time >= Time.fixedDeltaTime)
+            m_tickTimer += Time.deltaTime;
+            if (m_tickTimer >= Time.fixedDeltaTime)
             {
-                m_time -= Time.fixedDeltaTime;
+                m_tickTimer -= Time.fixedDeltaTime;
                 m_tickCounter++;
                 OnTick?.Invoke();
             }
@@ -85,7 +85,7 @@ namespace Tankito
 
         internal void StartClock()
         {
-            m_time = 0;
+            m_tickTimer = 0;
             m_active = true;
         }
 
@@ -94,10 +94,15 @@ namespace Tankito
             m_active = false;
         }
 
+        internal void ResumeClock()
+        {
+            m_active = true;
+        }
+
         internal void ResetClock()
         {
             m_tickCounter = 0;
-            m_time = 0;
+            m_tickTimer = 0;
         }
 
         [ClientRpc]

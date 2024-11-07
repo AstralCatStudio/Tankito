@@ -7,6 +7,9 @@ namespace Tankito.Netcode.Simulation
     {
         [SerializeField] private Rigidbody2D m_tankRB;
         [SerializeField] private Rigidbody2D m_turretRB;
+        [SerializeField] private ITankInput m_inputComponent;
+        public void StartInputReplay(int timestamp) { m_inputComponent.StartInputReplay(timestamp); }
+        public int StopInputReplay() { return m_inputComponent.StopInputReplay(); }
 
         void Start()
         {
@@ -23,6 +26,29 @@ namespace Tankito.Netcode.Simulation
             {
                 Debug.Log("Error tank turret reference not set.");
             }
+        }
+
+        public override void OnNetworkSpawn()
+        {
+            base.OnNetworkSpawn();
+
+            if (m_inputComponent == null) m_inputComponent = GetComponent<ITankInput>();
+
+            if (m_inputComponent is TankPlayerInput playerInput)
+            {
+                if (NetworkManager.LocalClient.PlayerObject != null && NetworkManager.LocalClient.PlayerObject == NetworkObject)
+                {
+                    GameManager.Instance.BindInputActions(playerInput);
+                }
+                else
+                {
+                    Destroy(playerInput);
+                }
+            }
+            //else if (m_inputComponent is ) Dead Reckoning input emulator
+            //{
+            //    
+            //}
         }
 
         public override ISimulationState GetSimState()

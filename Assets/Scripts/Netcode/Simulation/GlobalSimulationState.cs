@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 
 namespace Tankito.Netcode.Simulation
 {
@@ -34,6 +35,11 @@ namespace Tankito.Netcode.Simulation
         {
             get => objectSnapshots[obj];
             set => objectSnapshots[obj] = value;
+        }
+
+        public void Initialize()
+        {
+            objectSnapshots = new Dictionary<ASimulationObject, ISimulationState>();
         }
     }
 }
