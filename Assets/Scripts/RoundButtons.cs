@@ -17,14 +17,38 @@ public class RoundButtons : NetworkBehaviour
 
     private RoundManager _roundManager;
 
-    private NetworkList<bool> _readyCount;
+    [Serializable]
+    private struct PlayerReadyStatus: INetworkSerializable, IEquatable<PlayerReadyStatus>
+    {
+        public ulong ClientId;
+        public bool IsReady;
+
+        public PlayerReadyStatus(ulong clientId, bool isReady)
+        {
+            ClientId = clientId;
+            IsReady = isReady;
+        }
+
+        public bool Equals(PlayerReadyStatus other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+        {
+            serializer.SerializeValue(ref ClientId);
+            serializer.SerializeValue(ref IsReady);
+        }
+    }
+
+    private NetworkList<PlayerReadyStatus> _readyStatusList;
 
     private bool _canStart;
 
     private void Awake()
     {
         _canStart = false;
-        _readyCount = new NetworkList<bool>();
+        _readyStatusList = new NetworkList<PlayerReadyStatus>();
 
         _readyPlayersText.gameObject.SetActive(true);
         UpdateReadyPlayersText();
@@ -32,7 +56,7 @@ public class RoundButtons : NetworkBehaviour
 
     private void Update()
     {
-        Debug.Log($"Clientes listos en la lista: {CalcReadyCount()} {_readyCount.Count}");
+        Debug.Log($"Clientes listos en la lista: {CalcReadyCount()} {_readyStatusList.Count}");
 
     }
 
@@ -69,7 +93,7 @@ public class RoundButtons : NetworkBehaviour
             NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
             NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnected;
         }
-        _readyCount.OnListChanged += OnReadyCountChanged;
+        _readyStatusList.OnListChanged += OnReadyCountChanged;
     }
 
     public override void OnDestroy()
@@ -80,18 +104,25 @@ public class RoundButtons : NetworkBehaviour
             NetworkManager.Singleton.OnClientDisconnectCallback -= OnClientDisconnected;
         }
 
-        _readyCount.OnListChanged -= OnReadyCountChanged;
+        _readyStatusList.OnListChanged -= OnReadyCountChanged;
     }
 
     #region ClientConnection
     private void OnClientConnected(ulong clientId)
     {
-        _readyCount.Add(false);
+        _readyStatusList.Add(new PlayerReadyStatus { ClientId = clientId, IsReady = false});
     }
 
     private void OnClientDisconnected(ulong clientId)
     {
-        _readyCount.RemoveAt((int)clientId);
+        for(int i = 0;  i < _readyStatusList.Count; i++)
+        {
+            if (_readyStatusList[i].ClientId == clientId)
+            {
+                _readyStatusList.RemoveAt(i);
+                break;
+            }
+        }
     }
 
     #endregion
@@ -100,25 +131,34 @@ public class RoundButtons : NetworkBehaviour
     private void OnReadyClicked()
     {
         Debug.Log("Pulsaste Ready");
-        SetPlayerReadyServerRpc(NetworkManager.LocalClientId);
+        SetPlayerReadyServerRpc(NetworkManager.Singleton.LocalClientId);
     }
 
     [ServerRpc(RequireOwnership = false)]
     private void SetPlayerReadyServerRpc(ulong clientId)
     {
         // Cambia el estado de "Listo" del cliente en la lista
-        _readyCount[(int)clientId - 1] = !_readyCount[(int)clientId - 1];
+        for(int i = 0; i < _readyStatusList.Count; i++)
+        {
+            if (_readyStatusList[i].ClientId == clientId)
+            {
+                var status = _readyStatusList[i];
+                status.IsReady = !status.IsReady;
+                _readyStatusList[i] = status;
+                break;
+            }
+        }
     }
 
-    private void OnReadyCountChanged(NetworkListEvent<bool> readyCountChanged)
+    private void OnReadyCountChanged(NetworkListEvent<PlayerReadyStatus> readyCountChanged)
     {
         if (IsServer)
         {
             bool allReady = true;
 
-            foreach (var ready in _readyCount)
+            foreach (var status in _readyStatusList)
             {
-                if (!ready)
+                if (!status.IsReady)
                 {
                     allReady = false;
                     break;
@@ -140,9 +180,9 @@ public class RoundButtons : NetworkBehaviour
     private int CalcReadyCount()
     {
         int readyCount = 0;
-        foreach (var ready in _readyCount)
+        foreach (var status in _readyStatusList)
         {
-            if (ready)
+            if (status.IsReady)
             {
                 readyCount++;
             }
@@ -152,25 +192,24 @@ public class RoundButtons : NetworkBehaviour
 
     private void UpdateReadyPlayersText()
     {
-        _readyPlayersText.text = $"Ready players: {CalcReadyCount()} / {_readyCount.Count}";
+        _readyPlayersText.text = $"Ready players: {CalcReadyCount()} / {_readyStatusList.Count}";
     }
 
     private void UpdateLocalReadyText()
     {
         if(!IsServer)
         {
-            if (_readyCount[(int)NetworkManager.LocalClientId - 1])
+            ulong clientId = NetworkManager.Singleton.LocalClientId;
+            foreach (var status in _readyStatusList)
             {
-                _readyLocalText.text = "Ready!";
-                Debug.Log("Ready");
-            }
-            else
-            {
-                _readyLocalText.text = "Not Ready";
-                Debug.Log("Not Ready");
+                if(status.ClientId == clientId)
+                {
+                    _readyLocalText.text = status.IsReady ? "Ready!" : "Not Ready";
+                    Debug.Log(status.IsReady ? "Ready!" : "Not Ready");
+                    break;
+                }
             }
         }
-        
     }
 
     #endregion
