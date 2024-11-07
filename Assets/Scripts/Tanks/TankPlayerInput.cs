@@ -17,8 +17,8 @@ namespace Tankito
 
     public class TankPlayerInput : NetworkBehaviour, ITankInput
     {
-        private const int CACHE_SIZE = 1024;
-        private CircularBuffer<InputPayload> m_inputCache = new CircularBuffer<InputPayload>(CACHE_SIZE);
+        private const int INPUT_CACHE_SIZE = 256;
+        private CircularBuffer<InputPayload> m_inputCache = new CircularBuffer<InputPayload>(INPUT_CACHE_SIZE);
         private int m_inputReplayTick = NO_REPLAY;
         private const int NO_REPLAY = -1;
 

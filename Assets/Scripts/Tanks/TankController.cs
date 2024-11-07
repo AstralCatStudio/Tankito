@@ -14,16 +14,16 @@ namespace Tankito
     public class TankController : MonoBehaviour
     {
         [SerializeField] private Rigidbody2D m_tankRB;
-        [SerializeField] private float m_speed = 25.0f;
-        [SerializeField] private float m_rotationSpeed = 1.0f;
+        [SerializeField] private float m_speed = 2.2f;
+        [SerializeField] private float m_rotationSpeed = 270.0f;
         [SerializeField] private Rigidbody2D m_turretRB;
         [Tooltip("How fast the turret can turn to aim in the specified direction.")]
         [SerializeField]
         private float m_aimSpeed = 720f;
 
         //Variables Dash
-        [SerializeField] private float accelerationMultiplier = 6;
-        [SerializeField] private float dashDuration = 0.5f;
+        [SerializeField] private float accelerationMultiplier = 3;
+        [SerializeField] private float dashDuration = 0.25f;
         [SerializeField] private float fullDashDuration = 0.2f;
         [SerializeField] private float currentDashTick = 0;
         public bool postDash;
