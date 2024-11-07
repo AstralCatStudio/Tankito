@@ -16,7 +16,7 @@ namespace Tankito
         {
             UpdateMoney();
             ClientData clientData = ClientData.Instance;
-            clientData.onMoneyChanged.AddListener(UpdateMoney);  //Suscribe la llamada de UpdateMoney dentro de dropdownCharacter al evento de OnMoneyChanged de client Data
+            clientData.onMoneyChanged += UpdateMoney;  //Suscribe la llamada de UpdateMoney dentro de dropdownCharacter al evento de OnMoneyChanged de client Data
         }
 
         public void OpenMoneyDropdown()

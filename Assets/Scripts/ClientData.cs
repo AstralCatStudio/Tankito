@@ -13,8 +13,9 @@ public class ClientData : Singleton<ClientData>
     }
     public int money;  //Moneda del juego (escamas)
     public int skin;   //skin que tenga el jugador puesta. Actualmente es un int pero habrá que hacer que sea una clase o algun tipo para referenciar a la skin
+    public string username;
     public accountType accountT;   //Tipo de la cuenta al iniciar sesión
-    public UnityEvent onMoneyChanged;
+    public event Action onMoneyChanged, onUsernameChanged;
 
     // Start is called before the first frame update
     void Start()
@@ -22,12 +23,18 @@ public class ClientData : Singleton<ClientData>
         money = 0;
         accountT = 0;
         skin = 0;
+        username = "guest";
     }
 
     public void ChangeMoney(int moneyAdded)
     {
         money += moneyAdded;
         money = Mathf.Clamp(money, 0, 999999999);
+        onMoneyChanged?.Invoke();
+    }
+    public void ChangeUsername(string newUsername)
+    {
+        username = newUsername;
         onMoneyChanged?.Invoke();
     }
 }
