@@ -40,7 +40,6 @@ namespace Tankito.Netcode
         GameObject inputFieldPrefab;
 
         private TMP_InputField joinCodeInputField;
-        //private bool buttonsCreated;
 
         private enum ConnectionMode
         {
@@ -60,7 +59,6 @@ namespace Tankito.Netcode
         {
             ((UnityTransport)NetworkManager.Singleton.NetworkConfig.NetworkTransport).UseWebSockets = USE_WEB_SOCKETS;
             Debug.Log("UseWebSockets: " + USE_WEB_SOCKETS);
-            //buttonsCreated = false;
             StartButtons();
         }
 
@@ -98,28 +96,18 @@ namespace Tankito.Netcode
 
             GameObject inputField = GameObject.Instantiate(inputFieldPrefab, transform.GetChild(0));
             joinCodeInputField = inputField.GetComponent<TMP_InputField>();
-
-            //buttonsCreated = true;
         }
 
         void RegionSelection()
         {
             transform.GetChild(1).gameObject.SetActive(true);
-            /*
-             foreach(var reg in m_relayRegions)
-             {
-                if(GUILayout.Button(reg.desc))
-                {
-                    m_region = reg.id;
-                    switch (m_connectionMode)
-                    {
-                        case ConnectionMode.Server: StartServer(); break;
-                        case ConnectionMode.Host: StartHost(); break;
-                    }
-                    m_stage = GUIStages.Run;
-                }
+
+            foreach(var reg in m_relayRegions)
+            {
+                Debug.Log($"{reg.desc}: {reg.id}");
+                GameObject buttonRegion = GameObject.Instantiate(buttonPrefab, transform.GetChild(1).GetChild(0).GetChild(0));
+                ConfigRegionButton(buttonRegion, reg.desc, reg.id);
             }
-            */
         }
 
         void StatusLabels()
@@ -226,9 +214,22 @@ namespace Tankito.Netcode
             StartClient();
         }
 
-        void RegionButton()
+        private void ConfigRegionButton(GameObject button, string text, string regId)
         {
+            button.GetComponent<Button>().onClick.AddListener(() => RegionButton(regId));
+            button.GetComponentInChildren<TextMeshProUGUI>().text = text;
+        }
 
+        private void RegionButton(string regId)
+        {
+            Debug.Log(regId);
+
+            m_region = regId;
+            switch (m_connectionMode)
+            {
+                case ConnectionMode.Server: StartServer(); break;
+                case ConnectionMode.Host: StartHost(); break;
+            }
         }
 
         #endregion
