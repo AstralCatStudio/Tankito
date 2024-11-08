@@ -187,7 +187,7 @@ public class RoundManager : NetworkBehaviour
     private void DisablePlayerInput()
     {
         _playerInput.SetActive(false);
-        //DisablePlayerInputClientRpc();
+        DisablePlayerInputClientRpc();
     }
 
     [ClientRpc]
