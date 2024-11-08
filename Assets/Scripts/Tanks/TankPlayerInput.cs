@@ -15,7 +15,7 @@ namespace Tankito
 
     }
 
-    public class TankPlayerInput : NetworkBehaviour, ITankInput
+    public class TankPlayerInput : MonoBehaviour, ITankInput
     {
         private const int INPUT_CACHE_SIZE = 256;
         private CircularBuffer<InputPayload> m_inputCache = new CircularBuffer<InputPayload>(INPUT_CACHE_SIZE);
@@ -51,7 +51,7 @@ namespace Tankito
             {
                 // Live Input Mode
                 m_inputCache.Add(m_currentInput, ClockManager.TickCounter);
-                InputWindowBuffer.Instance.AddPayloadToWindow(m_currentInput);
+                InputWindowBuffer.Instance.AddInputToWindow(m_currentInput);
                 return m_currentInput;
             }
             else

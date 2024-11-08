@@ -121,7 +121,7 @@ namespace Tankito.Netcode
 
                 var currentState = GetSimulationState(ClockManager.TickCounter);
 
-                InputWindowBuffer.Instance.AddPayloadToWindow(m_currentInput);
+                InputWindowBuffer.Instance.AddInputToWindow(m_currentInput);
 
                 m_inputStateCache.Add(m_currentInput, ClockManager.TickCounter);
                 m_simulationStateCache.Add(currentState, ClockManager.TickCounter);

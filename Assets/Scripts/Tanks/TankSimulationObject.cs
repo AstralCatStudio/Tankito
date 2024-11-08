@@ -31,24 +31,33 @@ namespace Tankito.Netcode.Simulation
         public override void OnNetworkSpawn()
         {
             base.OnNetworkSpawn();
-
-            if (m_inputComponent == null) m_inputComponent = GetComponent<ITankInput>();
-
-            if (m_inputComponent is TankPlayerInput playerInput)
+            
+            if (IsLocalPlayer)
             {
-                if (NetworkManager.LocalClient.PlayerObject != null && NetworkManager.LocalClient.PlayerObject == NetworkObject)
-                {
-                    GameManager.Instance.BindInputActions(playerInput);
-                }
-                else
-                {
-                    Destroy(playerInput);
-                }
+                m_inputComponent = gameObject.AddComponent<TankPlayerInput>();
+                GameManager.Instance.BindInputActions((TankPlayerInput)m_inputComponent);
             }
-            //else if (m_inputComponent is ) Dead Reckoning input emulator
-            //{
-            //    
-            //}
+            else if (IsServer)
+            {
+                m_inputComponent = gameObject.AddComponent<RemoteTankInput>();
+                // WARNING: OwnerClientId PUEDE QUE NO FUNCIONE (Se supone que los objetos son Server-Owned??)
+                ServerSimulationManager.Instance.remoteInputTanks[OwnerClientId] = (RemoteTankInput)m_inputComponent;
+            }
+            else if (IsClient)
+            {
+                throw new NotImplementedException("TODO: Dead Reckoning");
+                // m_inputComponent = gameObject.AddComponent<EmulatedTankInput>();
+            }
+        }
+
+        public override void OnNetworkDespawn()
+        {
+            base.OnNetworkDespawn();
+
+            if (IsServer)
+            {
+                ServerSimulationManager.Instance.remoteInputTanks.Remove(NetworkObjectId);
+            }
         }
 
         public override ISimulationState GetSimState()

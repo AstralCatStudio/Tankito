@@ -29,12 +29,6 @@ namespace Tankito.Netcode.Simulation
                 Debug.LogWarning("ClientSimulationManager is network node that is NOT a CLIENT (is server). this should not happen!");
                 Destroy(this);
             }
-            Debug.Log($"m_snapshotBuffer.Get(0): {m_snapshotBuffer.Get(0)}");
-
-            //foreach(var snapshot in m_snapshotBuffer)
-            //{
-            //    snapshot.Initialize();
-            //}
         }
 
         public override void Simulate()

@@ -6,6 +6,10 @@ namespace Tankito.Netcode.Simulation
 {
     public class ServerSimulationManager : NetSimulationManager<ServerSimulationManager>
     {
+        /// <summary>
+        /// Relates NetworkClientId(ulong) to a specific <see cref="RemoteTankInput"/>.  
+        /// </summary>
+        public Dictionary<ulong, RemoteTankInput> remoteInputTanks;
         void Start()
         {
             if (!NetworkManager.Singleton.IsServer)

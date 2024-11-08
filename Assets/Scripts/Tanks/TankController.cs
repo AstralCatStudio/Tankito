@@ -59,10 +59,15 @@ namespace Tankito
                 if (m_tankInput == null) Debug.Log("ITankInput Reference not set!");
             }
 
-            GetComponent<TankSimulationObject>().IsKinematic = true;
-
             // Subscribe to SimulationObject Kinematics
-            GetComponent<ASimulationObject>().OnComputeKinematics += ProcessInput;
+            var tankSimObj = GetComponent<TankSimulationObject>();
+            tankSimObj.OnComputeKinematics += ProcessInput;
+            tankSimObj.IsKinematic = true;
+        }
+
+        public void BindInputSource(ITankInput inputSource)
+        {
+            m_tankInput = inputSource;
         }
 
         public void ProcessInput(float deltaTime)

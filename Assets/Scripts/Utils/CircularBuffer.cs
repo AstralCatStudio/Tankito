@@ -11,6 +11,7 @@ namespace Tankito.Utils
         /// Computes the modulus operation of <paramref name="x"/> into <paramref name="m"/>.
         /// </summary>
         /// <param name="x"></param>
+
         /// <param name="m">  presumed to always be a positive integer </param>
         public static int Mod(int x, int m)
         {
