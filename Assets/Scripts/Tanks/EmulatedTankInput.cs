@@ -27,39 +27,48 @@ namespace Tankito
             decayFactor = 1f-ClockManager.SimDeltaTime/m_attenuationSeconds;
         }
 
-        public void ReceiveInputWindow(InputPayload[] inputWindow)
+    private void ReceiveInputWindow(InputPayload[] inputWindow)
+    {
+        int i = Array.FindIndex(inputWindow, m => m.timestamp == m_lastReceivedInput.timestamp);
+        if (i == -1) i = 0;
+        else i++;
+        for (; i < inputWindow.Length; i++)
         {
-            int i = Array.FindIndex(inputWindow, m => m.timestamp == m_lastReceivedInput.timestamp);
-            if (i == -1) i = 0;
-            else i++;
-            for (; i < inputWindow.Length; i++)
-            {
-                m_inputBuffer.Add(inputWindow[i], inputWindow[i].timestamp);
-            }
-            m_lastReceivedInput = inputWindow[i-1];
+            m_inputBuffer.Add(inputWindow[i], inputWindow[i].timestamp);
         }
+        if(m_lastReceivedInput.timestamp < inputWindow[i-1].timestamp)
+        {
+            m_lastReceivedInput = inputWindow[i - 1];
+        }
+    }
 
-        public InputPayload GetInput()
+    public InputPayload GetInput()
+    {
+        if (m_inputReplayTick == NO_REPLAY)
         {
-            if (m_inputReplayTick == NO_REPLAY)
+            m_currentInput = m_inputBuffer.Get(ClockManager.TickCounter);
+            if(m_currentInput.timestamp >= m_lastReceivedInput.timestamp)
             {
-                m_currentInput = m_inputBuffer.Get(ClockManager.TickCounter);
-                if(m_currentInput.timestamp >= m_lastReceivedInput.timestamp)
-                {
-                    InputPayload attenuatedInput = m_currentInput;
-                    attenuatedInput.moveVector *= decayFactor;
-                    m_inputBuffer.Add(attenuatedInput, attenuatedInput.timestamp+1);
-                }
-                return m_currentInput;
+                AttenuateInput();
             }
-            else
-            {
-                // Input Replay Mode
-                var replayedInput = m_inputBuffer.Get(m_inputReplayTick);
-                m_inputReplayTick++;
-                return replayedInput;
-            }
+            return m_currentInput;
         }
+        else
+        {
+            // Input Replay Mode
+            var replayedInput = m_inputBuffer.Get(m_inputReplayTick);
+            m_inputReplayTick++;
+            return replayedInput;
+        }
+    }
+
+    private void AttenuateInput()
+    {
+        InputPayload attenuatedInput = m_currentInput;
+        attenuatedInput.moveVector *= decayFactor;
+        attenuatedInput.action = TankAction.None;
+        m_inputBuffer.Add(attenuatedInput, attenuatedInput.timestamp + 1);
+    }
 
         public void StartInputReplay(int timestamp)
         {
