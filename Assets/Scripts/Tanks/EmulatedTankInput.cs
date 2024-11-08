@@ -34,7 +34,10 @@ public class EmulatedTankInput : MonoBehaviour, ITankInput
         {
             m_inputBuffer.Add(inputWindow[i], inputWindow[i].timestamp);
         }
-        m_lastReceivedInput = inputWindow[i-1];
+        if(m_lastReceivedInput.timestamp < inputWindow[i-1].timestamp)
+        {
+            m_lastReceivedInput = inputWindow[i - 1];
+        }
     }
 
     public InputPayload GetInput()
@@ -44,9 +47,7 @@ public class EmulatedTankInput : MonoBehaviour, ITankInput
             m_currentInput = m_inputBuffer.Get(ClockManager.TickCounter);
             if(m_currentInput.timestamp >= m_lastReceivedInput.timestamp)
             {
-                InputPayload attenuatedInput = m_currentInput;
-                attenuatedInput.moveVector *= decayFactor;
-                m_inputBuffer.Add(attenuatedInput, attenuatedInput.timestamp+1);
+                AttenuateInput();
             }
             return m_currentInput;
         }
@@ -57,6 +58,14 @@ public class EmulatedTankInput : MonoBehaviour, ITankInput
             m_inputReplayTick++;
             return replayedInput;
         }
+    }
+
+    private void AttenuateInput()
+    {
+        InputPayload attenuatedInput = m_currentInput;
+        attenuatedInput.moveVector *= decayFactor;
+        attenuatedInput.action = TankAction.None;
+        m_inputBuffer.Add(attenuatedInput, attenuatedInput.timestamp + 1);
     }
 
     public void StartInputReplay(int timestamp)
