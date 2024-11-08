@@ -179,26 +179,5 @@ namespace Tankito
                 Physics2D.simulationMode = SimulationMode2D.FixedUpdate;
             }
         }
-
-        [ContextMenu("StartSimulationClocks")]
-        internal void StartSimulationClocks()
-        {
-            if (IsServer)
-            {
-                StartClocksClientRpc();
-            }
-            else
-            {
-                Debug.LogWarning("Simulation clocks must be started from server");
-            }
-        }
-
-        [ClientRpc]
-        public void StartClocksClientRpc()
-        {
-            Debug.Log("Starting client clocks...");
-            ClockManager.Instance.StartClock();
-            AutoPhysics2DUpdate(false);
-        }
     }
 }

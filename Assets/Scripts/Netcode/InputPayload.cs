@@ -1,3 +1,4 @@
+using System;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -11,6 +12,7 @@ namespace Tankito.Netcode
         Fire = 3,
     }
 
+    [System.Serializable]
     public struct InputPayload : INetworkSerializable
     {
         public int timestamp; // net clock count
@@ -18,6 +20,7 @@ namespace Tankito.Netcode
         public Vector2 aimVector;
         public TankAction action;
         //public static readonly InputPayload INVALID_INPUT = new InputPayload { timestamp = -1, moveVector = Vector2.zero, aimVector = Vector2.zero, action = TankAction.None };
+
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
         {
             serializer.SerializeValue(ref timestamp);
@@ -26,7 +29,24 @@ namespace Tankito.Netcode
             serializer.SerializeValue(ref action);
         }
         public override string ToString() => $"(timestamp:{timestamp}, movementInput:{moveVector}, aimInput:{aimVector}, actionInput:{action})";
-        
 
+        // Probablemente habria q repensar como hacer esto:
+        
+        //void Serialize(FastBufferWriter writer)
+        //{
+        //    if (!writer.TryBeginWrite(GetSerializationSize()))
+        //    {
+        //        throw new OverflowException("Not enough space in the buffer");
+        //    }
+        //    writer.WriteValue(timestamp);
+        //    writer.WriteValue(moveVector);
+        //    writer.WriteValue(aimVector);
+        //    writer.WriteValue(action);
+        //}
+//
+        //public static int GetSerializationSize()
+        //{
+        //    return sizeof(int)+FastBufferWriter.GetWriteSize(default(Vector2))*2+sizeof(TankAction);
+        //}
     }
 }

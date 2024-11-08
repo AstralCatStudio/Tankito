@@ -12,10 +12,12 @@ namespace Tankito.Netcode
 
         private CircularBuffer<InputPayload> inputBuffer = new CircularBuffer<InputPayload>(WINDOW_SIZE);
 
+        public CircularBuffer<InputPayload> InputBuffer { get => inputBuffer; }
+
         public void AddInputToWindow(InputPayload newInput)
         {
             inputBuffer.Add(newInput, newInput.timestamp);
-            //CustomNamedMessageHandler.
+            CustomNamedMessageHandler.Instance.SendInputWindowToServer(inputBuffer);
         }
     }
 }

@@ -25,11 +25,14 @@ public class RemoteTankInput : MonoBehaviour, ITankInput
         {
             queue.Add(newInput.timestamp, newInput);
         }
+        queue.CheckThrottling();
     }
 
     public InputPayload GetInput()
     {
-        return queue.Pop();
+        var input = queue.Pop();
+        queue.CheckThrottling();
+        return input;
     }
 
     public void StartInputReplay(int timestamp) { }

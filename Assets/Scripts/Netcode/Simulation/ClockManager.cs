@@ -4,6 +4,7 @@ using UnityEngine;
 using Tankito.Netcode;
 using Unity.Netcode;
 using Tankito.Netcode.Simulation;
+using System;
 
 namespace Tankito
 {
@@ -62,11 +63,6 @@ namespace Tankito
             }
         }
 
-        void Start()
-        {
-            GameManager.Instance.AutoPhysics2DUpdate(false);
-        }
-
 
         // Update is called once per frame
         void Update()
@@ -105,16 +101,9 @@ namespace Tankito
             m_tickTimer = 0;
         }
 
-        [ClientRpc]
-        static public void StopClockClientRpc()
+        internal void ThrottleClock(int throttleTicks)
         {
-            Instance.StopClock();
-        }
-
-        [ClientRpc]
-        static public void ResetClockClientRpc()
-        {
-            Instance.ResetClock();
+            throw new NotImplementedException();
         }
     }
 

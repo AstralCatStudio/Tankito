@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Tankito.Netcode.Messaging;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -9,7 +10,9 @@ namespace Tankito.Netcode.Simulation
         /// <summary>
         /// Relates NetworkClientId(ulong) to a specific <see cref="RemoteTankInput"/>.  
         /// </summary>
-        public Dictionary<ulong, RemoteTankInput> remoteInputTanks;
+        public Dictionary<ulong, RemoteTankInput> remoteInputTanks = new Dictionary<ulong,RemoteTankInput>();
+        
+
         void Start()
         {
             if (!NetworkManager.Singleton.IsServer)
@@ -26,5 +29,27 @@ namespace Tankito.Netcode.Simulation
             //GatherPlayerInput(); // Samplear la ventana de inputs. Aqui tambien iria la logica de client throttling
             base.Simulate();
         }
+
+        #region DEBUG_TESTING_METHODS
+
+        [ContextMenu("Send ClockSignal.Start")]
+        public void SendClockSignalStart()
+        {
+            Debug.Log("Sending ClockSignal.Start broadcast");
+            ClockSignal signal = new ClockSignal();
+            signal.header = ClockSignalHeader.Start;
+            CustomNamedMessageHandler.Instance.SendClockSignal(signal);
+        }
+
+        [ContextMenu("Send ClockSignal.Stop")]
+        public void SendClockSignalStop()
+        {
+            Debug.Log("Sending ClockSignal.Start broadcast");
+            ClockSignal signal = new ClockSignal();
+            signal.header = ClockSignalHeader.Stop;
+            CustomNamedMessageHandler.Instance.SendClockSignal(signal);
+        }
+
+        #endregion
     }
 }

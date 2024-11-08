@@ -26,15 +26,23 @@ namespace Tankito
         [SerializeField]
         private TankController m_tankController;
         [SerializeField]
-        private Animator m_TurretAnimator, m_HullAnimator;
+        private Animator m_turretAnimator, m_hullAnimator;
         [SerializeField]
         private Rigidbody2D m_turretRB;
+
+        public TankPlayerInput(TankController controller, Animator turretAnim, Animator hullAnim, Rigidbody2D turretRB)
+        {
+            m_tankController = controller;
+            m_turretAnimator = turretAnim;
+            m_hullAnimator = hullAnim;
+            m_turretRB = turretRB;
+        }
 
         void Start()
         {
             if (m_turretRB == null) Debug.LogWarning("Turret Rigidbody2D reference not set.");
-            if (m_TurretAnimator == null) Debug.LogWarning("Turret Animator reference not set!");
-            if (m_HullAnimator == null) Debug.LogWarning("Hull Animator reference not set!");
+            if (m_turretAnimator == null) Debug.LogWarning("Turret Animator reference not set!");
+            if (m_hullAnimator == null) Debug.LogWarning("Hull Animator reference not set!");
             if (m_tankController == null) m_tankController = GetComponent<TankController>();
             if (m_tankController == null) Debug.LogWarning("Tank Controller reference not set!");
             m_inputReplayTick = NO_REPLAY;
@@ -152,8 +160,8 @@ namespace Tankito
             {
                 //m_parrying = true; // Solo se utiliza para la animacion no lo entiendo ????
                 m_currentInput.action = TankAction.Parry;
-                m_TurretAnimator.SetTrigger("Parry");
-                m_HullAnimator.SetTrigger("Parry");
+                m_turretAnimator.SetTrigger("Parry");
+                m_hullAnimator.SetTrigger("Parry");
             }
             else
             {

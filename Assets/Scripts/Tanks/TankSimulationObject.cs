@@ -32,20 +32,31 @@ namespace Tankito.Netcode.Simulation
         {
             base.OnNetworkSpawn();
             
+            var playerInput = gameObject.GetComponent<TankPlayerInput>();
+
+            if (playerInput == null)
+            {
+                Debug.LogWarning("Incorrect ITankInput setup! It should start ONLY with the TankPlayerInput component connected, so it can be then disconnected if it doesn't need it.");
+            }
+
             if (IsLocalPlayer)
             {
-                m_inputComponent = gameObject.AddComponent<TankPlayerInput>();
-                GameManager.Instance.BindInputActions((TankPlayerInput)m_inputComponent);
+                m_inputComponent = playerInput;
+                GameManager.Instance.BindInputActions(playerInput);
             }
             else if (IsServer)
             {
+                Destroy(playerInput);
+
                 m_inputComponent = gameObject.AddComponent<RemoteTankInput>();
                 // WARNING: OwnerClientId PUEDE QUE NO FUNCIONE (Se supone que los objetos son Server-Owned??)
                 ServerSimulationManager.Instance.remoteInputTanks[OwnerClientId] = (RemoteTankInput)m_inputComponent;
             }
             else if (IsClient)
             {
-                throw new NotImplementedException("TODO: Dead Reckoning");
+                Destroy(playerInput);
+
+                throw new NotImplementedException("TODO: Plug Dead Reckoning Input Component");
                 // m_inputComponent = gameObject.AddComponent<EmulatedTankInput>();
             }
         }

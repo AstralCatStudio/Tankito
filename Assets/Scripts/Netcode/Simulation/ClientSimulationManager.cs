@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Tankito.Netcode.Messaging;
 using Tankito.Utils;
 using Unity.Netcode;
 using UnityEditor.PackageManager.UI;
@@ -100,6 +101,8 @@ namespace Tankito.Netcode.Simulation
         }
 
         
+        #region DEBUG_TESTING_METHODS
+
         [ContextMenu("TestGetSet")]
         public void TestGetSet()
         {
@@ -133,5 +136,13 @@ namespace Tankito.Netcode.Simulation
 
             ClockManager.Instance.ResumeClock();
         }
+
+        [ContextMenu("TestInputWindowMessaging")]
+        public void TestInputWindowMessaging()
+        {
+            CustomNamedMessageHandler.Instance.SendInputWindowToServer(InputWindowBuffer.Instance.InputBuffer);
+        }
+
+        #endregion
     }
 }

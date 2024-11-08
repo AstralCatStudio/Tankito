@@ -117,5 +117,15 @@ namespace Tankito.Utils
         {
             return GetEnumerator();
         }
+
+        public override string ToString()
+        {
+            string res = "{";
+            for (int i = 0; i < size; i++)
+            {
+                res += buffer[i] + ((i < size-1) ? ", " : "}");
+            }
+            return res;
+        }
     }
 }
