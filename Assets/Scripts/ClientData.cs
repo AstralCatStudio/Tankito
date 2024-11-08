@@ -19,7 +19,6 @@ public class ClientData : Singleton<ClientData>
     public int skin;   //skin que tenga el jugador puesta. Actualmente es un int pero habrá que hacer que sea una clase o algun tipo para referenciar a la skin
     public int numShopContent;
     public string username;
-    public Character characterSelected;
     public accountType accountT;   //Tipo de la cuenta al iniciar sesión
     public event Action onMoneyChanged, onUsernameChanged, onCharacterPurchased;
 
@@ -37,8 +36,8 @@ public class ClientData : Singleton<ClientData>
         accountT = 0;
         skin = 0;
         username = "guest";
-        characters[0].unlocked = true;
-        characterSelected = characters[0];  //->Fish
+        characters[0].unlocked = true;  // characters[0] -> fish
+        characters[0].selected = true;
     }
 
     private void InitCharactersData()
@@ -57,7 +56,7 @@ public class ClientData : Singleton<ClientData>
         int i = 0;
         while (i < numShopContent)
         {
-            Character characterPicked = characters[UnityEngine.Random.Range(0, characters.Count)];
+            Character characterPicked = characters[UnityEngine.Random.Range(1, characters.Count)];  //Pilla desde el 1, porque el 0 es el Pez
             if (!characterPicked.inShop)
             {
                 Debug.Log(characterPicked.data.characterName.ToString());

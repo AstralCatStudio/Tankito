@@ -11,6 +11,8 @@ namespace Tankito
         //Character Data
         public Character character;
         //ButtonMedia
+        [SerializeField] private GameObject priceTag;
+        [SerializeField] private GameObject ownTag;
         [SerializeField] private TextMeshProUGUI textPrice;
         [SerializeField] private TextMeshProUGUI textName;
         [SerializeField] private Image characterImage;
@@ -25,7 +27,8 @@ namespace Tankito
             textPrice.text = character.data.price.ToString();
             if (character.unlocked)
             {
-                GetComponent<Image>().color = Color.green;
+                priceTag.SetActive(false);
+                ownTag.SetActive(true);
             }
             else
             {
@@ -46,7 +49,8 @@ namespace Tankito
         {
             if (character.unlocked)
             {
-                GetComponent<Image>().color = Color.green;
+                priceTag.SetActive(false);
+                ownTag.SetActive(true);
                 ClientData.Instance.onCharacterPurchased -= UnlockCharacter;
             }
         }

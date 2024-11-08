@@ -10,6 +10,7 @@ public class CharacterSelectionButton : MonoBehaviour
     //Character Data
     public Character character;
     //ButtonMedia
+    [SerializeField] private GameObject ownTag;
     [SerializeField] private TextMeshProUGUI textName;
     [SerializeField] private Image characterImage;
     //Animation Data
@@ -23,7 +24,7 @@ public class CharacterSelectionButton : MonoBehaviour
 
         if (character.unlocked)
         {
-            GetComponent<Image>().color = Color.green;
+            ownTag.SetActive(true);
         } else
         {
             ClientData.Instance.onCharacterPurchased += UnlockCharacter;
@@ -44,9 +45,8 @@ public class CharacterSelectionButton : MonoBehaviour
     {
         if (character.unlocked)
         {
-            GetComponent<Image>().color = Color.green;
+            ownTag.SetActive(true);
             ClientData.Instance.onCharacterPurchased -= UnlockCharacter;
         }
-        
     }
 }

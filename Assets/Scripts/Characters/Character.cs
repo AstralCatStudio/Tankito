@@ -8,4 +8,5 @@ public class Character
     //skin variable: añadiria un scriptable object de skins tal
     public bool unlocked;
     public bool inShop;
+    public bool selected;
 }

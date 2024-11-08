@@ -10,6 +10,14 @@ public class DropdownSelectionCharacter : MonoBehaviour
     [SerializeField] private TextMeshProUGUI title;
     [SerializeField] private TextMeshProUGUI description;
     [SerializeField] private Image characterImage;
+    [SerializeField] private Button selectButton;
+    [SerializeField] private GameObject message;
+    [SerializeField] private GameObject messageText;
+
+    private Coroutine disableCoroutine;
+    public float openMessageDuration = 0.3f;
+    public float closeMessageDuration = 2f;
+    private Color buttonDefaultColor;
 
     // Start is called before the first frame update
     void Start()
@@ -17,17 +25,88 @@ public class DropdownSelectionCharacter : MonoBehaviour
         title.text = character.data.characterName;
         description.text = character.data.description;
         characterImage.sprite = character.data.sprite;
+        buttonDefaultColor = selectButton.image.color;
+        if (character.selected)
+        {
+            ChangeButtonToSelected();
+        }
     }
     public void SelectItem()
     {
-        if(character.unlocked)
+        if (character.selected)
         {
-            ClientData.Instance.characterSelected = character;
-            Debug.Log("seleccionao");
-        }
-        else
+            ShowMessage("This character is already selected.");
+        } else if (!character.unlocked)
         {
-            Debug.Log("No tienes este personaje todavía");
+            ShowMessage("You don't have this character yet.");
+        } else
+        {
+            DeselectAll();
+            character.selected = true;
+            ShowMessage("Selected");
+            ChangeButtonToSelected();
         }
+    }
+    public void DeselectAll()
+    {
+        foreach (var c in ClientData.Instance.characters)
+        {
+            c.selected = false;
+            selectButton.GetComponent<Image>().color = buttonDefaultColor;
+        }
+    }
+    private void ChangeButtonToSelected()
+    {
+        selectButton.GetComponent<Image>().color = Color.gray;
+        selectButton.transform.GetComponentInChildren<TextMeshProUGUI>().text = "Selected";
+    }
+
+    private void ShowMessage(string text)
+    {
+        message.gameObject.SetActive(true);
+        message.GetComponentInChildren<TextMeshProUGUI>().text = text;
+        Transition();
+    }
+
+    private void Transition()
+    {
+
+        RectTransform messageRect = message.GetComponentInChildren<RectTransform>();
+        Color alphaZero = new Color(0, 0, 0, 0);
+        Color alphaOne = new Color(255, 255, 255, 1);
+
+        LeanTween.cancelAll();
+
+        LeanTween.alpha(messageRect, 1f, 0f);
+        LeanTween.value(messageText.gameObject, updateAlphaCallback, alphaZero, alphaOne, 0f);
+
+        LeanTween.scale(messageRect, Vector2.one, openMessageDuration).setEase(LeanTweenType.easeOutElastic);
+
+        LeanTween.alpha(messageRect, 0f, closeMessageDuration);
+        LeanTween.value(messageText.gameObject, updateAlphaCallback, alphaOne, alphaZero, closeMessageDuration);
+
+        if (disableCoroutine != null)
+        {
+            StopCoroutine(disableCoroutine);
+        }
+        disableCoroutine = StartCoroutine(DisableMessage());
+    }
+
+    private void updateAlphaCallback(Color val, object child)
+    {
+        messageText.GetComponent<TextMeshProUGUI>().color = val;
+    }
+
+    private IEnumerator DisableMessage()
+    {
+        float i = 0f;
+        float disableDuration = openMessageDuration + closeMessageDuration;
+        LeanTween.scale(message, Vector2.zero, 0f);
+        while (i < disableDuration)
+        {
+            i += Time.deltaTime;
+            yield return null;
+        }
+        message.gameObject.SetActive(false);
     }
 }
