@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.PlayerLoop;
 
@@ -25,10 +27,10 @@ namespace Tankito.Netcode.Simulation
         Acknowledged
     }
 
-    public struct GlobalSimulationSnapshot
+    public struct GlobalSimulationSnapshot : INetworkSerializable
     {
         public int timestamp;
-        public SnapshotState state;
+        public SnapshotState state; 
         public Dictionary<ASimulationObject, ISimulationState> objectSnapshots; // Se hace de  ISimulationState para poder mantenerlo generico entre cosas distintas, como balas que tan solo tienen un par de variables y los tanques, que tienen mas info
         
         public ISimulationState this[ASimulationObject obj]
@@ -40,6 +42,21 @@ namespace Tankito.Netcode.Simulation
         public void Initialize()
         {
             objectSnapshots = new Dictionary<ASimulationObject, ISimulationState>();
+        }
+
+        public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+        {
+            serializer.SerializeValue(ref timestamp);
+
+            int nObjects = objectSnapshots.Keys.Count;
+            serializer.SerializeValue(ref nObjects);
+
+            foreach(var objStatePair in objectSnapshots)
+            {
+                var newUpdate = new SimulationObjectUpdate(objStatePair.Key.NetworkObjectId, objStatePair.Value);
+                newUpdate.SetType(objStatePair.Key);
+                serializer.SerializeValue(ref newUpdate);
+            }
         }
     }
 }

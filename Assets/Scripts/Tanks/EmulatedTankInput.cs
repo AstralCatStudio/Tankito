@@ -7,67 +7,70 @@ using Tankito.Netcode;
 using Tankito.Utils;
 using UnityEngine;
 
-public class EmulatedTankInput : MonoBehaviour, ITankInput
+namespace Tankito
 {
-    private const int INPUT_CACHE_SIZE = 256;
-    private CircularBuffer<InputPayload> m_inputBuffer = new CircularBuffer<InputPayload>(INPUT_CACHE_SIZE);
-    [SerializeField] private float m_attenuationSeconds = 3;
-    private InputPayload m_currentInput;
-    private InputPayload m_lastReceivedInput;
-
-    private int m_inputReplayTick = NO_REPLAY;
-    private const int NO_REPLAY = -1;
-
-    float decayFactor;
-
-    void Start()
+    public class EmulatedTankInput : MonoBehaviour, ITankInput
     {
-        decayFactor = Mathf.Pow(1 / Mathf.Epsilon, 1 / (ClockManager.SimDeltaTime * m_attenuationSeconds));
-    }
+        private const int INPUT_CACHE_SIZE = 256;
+        private CircularBuffer<InputPayload> m_inputBuffer = new CircularBuffer<InputPayload>(INPUT_CACHE_SIZE);
+        [SerializeField] private float m_attenuationSeconds = 3;
+        private InputPayload m_currentInput;
+        private InputPayload m_lastReceivedInput;
 
-    private void ReceiveInputWindow(InputPayload[] inputWindow)
-    {
-        int i = Array.FindIndex(inputWindow, m => m.timestamp == m_lastReceivedInput.timestamp);
-        if (i == -1) i = 0;
-        else i++;
-        for (; i < inputWindow.Length; i++)
+        private int m_inputReplayTick = NO_REPLAY;
+        private const int NO_REPLAY = -1;
+
+        float decayFactor;
+
+        void Start()
         {
-            m_inputBuffer.Add(inputWindow[i], inputWindow[i].timestamp);
+            decayFactor = 1f-ClockManager.SimDeltaTime/m_attenuationSeconds;
         }
-        m_lastReceivedInput = inputWindow[i-1];
-    }
 
-    public InputPayload GetInput()
-    {
-        if (m_inputReplayTick == NO_REPLAY)
+        public void ReceiveInputWindow(InputPayload[] inputWindow)
         {
-            m_currentInput = m_inputBuffer.Get(ClockManager.TickCounter);
-            if(m_currentInput.timestamp >= m_lastReceivedInput.timestamp)
+            int i = Array.FindIndex(inputWindow, m => m.timestamp == m_lastReceivedInput.timestamp);
+            if (i == -1) i = 0;
+            else i++;
+            for (; i < inputWindow.Length; i++)
             {
-                InputPayload attenuatedInput = m_currentInput;
-                attenuatedInput.moveVector *= decayFactor;
-                m_inputBuffer.Add(attenuatedInput, attenuatedInput.timestamp+1);
+                m_inputBuffer.Add(inputWindow[i], inputWindow[i].timestamp);
             }
-            return m_currentInput;
+            m_lastReceivedInput = inputWindow[i-1];
         }
-        else
+
+        public InputPayload GetInput()
         {
-            // Input Replay Mode
-            var replayedInput = m_inputBuffer.Get(m_inputReplayTick);
-            m_inputReplayTick++;
-            return replayedInput;
+            if (m_inputReplayTick == NO_REPLAY)
+            {
+                m_currentInput = m_inputBuffer.Get(ClockManager.TickCounter);
+                if(m_currentInput.timestamp >= m_lastReceivedInput.timestamp)
+                {
+                    InputPayload attenuatedInput = m_currentInput;
+                    attenuatedInput.moveVector *= decayFactor;
+                    m_inputBuffer.Add(attenuatedInput, attenuatedInput.timestamp+1);
+                }
+                return m_currentInput;
+            }
+            else
+            {
+                // Input Replay Mode
+                var replayedInput = m_inputBuffer.Get(m_inputReplayTick);
+                m_inputReplayTick++;
+                return replayedInput;
+            }
         }
-    }
 
-    public void StartInputReplay(int timestamp)
-    {
-        m_inputReplayTick = timestamp;
-    }
+        public void StartInputReplay(int timestamp)
+        {
+            m_inputReplayTick = timestamp;
+        }
 
-    public int StopInputReplay()
-    {
-        var lastReplayTick = m_inputReplayTick;
-        m_inputReplayTick = NO_REPLAY;
-        return lastReplayTick;
+        public int StopInputReplay()
+        {
+            var lastReplayTick = m_inputReplayTick;
+            m_inputReplayTick = NO_REPLAY;
+            return lastReplayTick;
+        }
     }
 }

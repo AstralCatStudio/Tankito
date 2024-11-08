@@ -1,24 +1,38 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Tankito.Netcode.Simulation;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace Tankito.Netcode.Simulation
 {
-        // POSSIBLE OPTIMIZATION: make struct immutable by marking struct readonly
-    public /*readonly*/ struct TankSimulationState : ISimulationState
+    public struct TankSimulationState : ISimulationState
     {
-        public Vector2 Position { get; private set; }
-        public float HullRotation { get; private set; }
-        public Vector2 Velocity { get; private set; }
-        public float TurretRotation { get; private set; }
+        public Vector2 Position { get => position; }
+        public float HullRotation { get => hullRotation; }
+        public Vector2 Velocity { get => velocity; }
+        public float TurretRotation { get => turretRotation; }
+
+        private Vector2 position;
+        private float hullRotation;
+        private Vector2 velocity;
+        private float turretRotation;
 
         public TankSimulationState(Vector2 position, float hullRotation, Vector2 velocity, float turretRotation)
         {
-            this.Position = position;
-            this.HullRotation = hullRotation;
-            this.Velocity = velocity;
-            this.TurretRotation = turretRotation;
+            this.position = position;
+            this.hullRotation = hullRotation;
+            this.velocity = velocity;
+            this.turretRotation = turretRotation;
+        }
+
+        internal void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+        {
+            serializer.SerializeValue(ref position);
+            serializer.SerializeValue(ref hullRotation);
+            serializer.SerializeValue(ref velocity);
+            serializer.SerializeValue(ref turretRotation);
         }
     }
 }

@@ -83,6 +83,7 @@ namespace Tankito
         {
             m_tickTimer = 0;
             m_active = true;
+            AutoPhysics2DUpdate(false);
         }
 
         internal void StopClock()
@@ -104,6 +105,19 @@ namespace Tankito
         internal void ThrottleClock(int throttleTicks)
         {
             throw new NotImplementedException();
+        }
+
+        
+        public void AutoPhysics2DUpdate(bool auto)
+        {
+            if (!auto)
+            {
+                Physics2D.simulationMode = SimulationMode2D.Script;
+            }
+            else
+            {
+                Physics2D.simulationMode = SimulationMode2D.FixedUpdate;
+            }
         }
     }
 

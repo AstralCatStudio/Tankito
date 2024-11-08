@@ -8,6 +8,8 @@ namespace Tankito.Netcode.Simulation
         [SerializeField] private Rigidbody2D m_tankRB;
         [SerializeField] private Rigidbody2D m_turretRB;
         [SerializeField] private ITankInput m_inputComponent;
+        [SerializeField] private ulong m_controllerClientId;
+
         public void StartInputReplay(int timestamp) { m_inputComponent.StartInputReplay(timestamp); }
         public int StopInputReplay() { return m_inputComponent.StopInputReplay(); }
 
@@ -26,6 +28,11 @@ namespace Tankito.Netcode.Simulation
             {
                 Debug.Log("Error tank turret reference not set.");
             }
+        }
+
+        public void SetClientController(ulong clientId)
+        {
+            m_controllerClientId = clientId;
         }
 
         public override void OnNetworkSpawn()
@@ -49,15 +56,14 @@ namespace Tankito.Netcode.Simulation
                 Destroy(playerInput);
 
                 m_inputComponent = gameObject.AddComponent<RemoteTankInput>();
-                // WARNING: OwnerClientId PUEDE QUE NO FUNCIONE (Se supone que los objetos son Server-Owned??)
                 ServerSimulationManager.Instance.remoteInputTanks[OwnerClientId] = (RemoteTankInput)m_inputComponent;
             }
             else if (IsClient)
             {
                 Destroy(playerInput);
 
-                throw new NotImplementedException("TODO: Plug Dead Reckoning Input Component");
-                // m_inputComponent = gameObject.AddComponent<EmulatedTankInput>();
+                m_inputComponent = gameObject.AddComponent<EmulatedTankInput>();
+                ClientSimulationManager.Instance.emulatedInputTanks[OwnerClientId] = (EmulatedTankInput)m_inputComponent;
             }
         }
 

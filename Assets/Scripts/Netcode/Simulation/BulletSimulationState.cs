@@ -1,20 +1,36 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Tankito.Netcode.Simulation;
+using Unity.Netcode;
 using UnityEngine;
 
 public struct BulletSimulationState : ISimulationState
 {
-    public Vector2 Position { private set; get; }
-    public float Rotation { private set; get; }
-    public Vector2 Velocity { private set; get; }
-    public float LifeTime { private set; get; } // In seconds
+
+    public Vector2 Position { get => position; }
+    public float Rotation { get => rotation; }
+    public Vector2 Velocity { get => velocity; }
+    public float LifeTime { get => lifeTime; }
+
+    private Vector2 position;
+    private float rotation;
+    private Vector2 velocity;
+    private float lifeTime; // In seconds
 
     public BulletSimulationState(Vector2 position, float rotation, Vector2 velocity, float lifeTime)
     {
-        this.Position = position;
-        this.Rotation = rotation;
-        this.Velocity = velocity;
-        this.LifeTime = lifeTime;
+        this.position = position;
+        this.rotation = rotation;
+        this.velocity = velocity;
+        this.lifeTime = lifeTime;
+    }
+
+    internal void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+    {
+        serializer.SerializeValue(ref position);
+        serializer.SerializeValue(ref rotation);
+        serializer.SerializeValue(ref velocity);
+        serializer.SerializeValue(ref lifeTime);
     }
 }

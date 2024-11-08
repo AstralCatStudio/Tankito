@@ -30,12 +30,9 @@ namespace Tankito
         [SerializeField]
         private Rigidbody2D m_turretRB;
 
-        public TankPlayerInput(TankController controller, Animator turretAnim, Animator hullAnim, Rigidbody2D turretRB)
+        void Awake()
         {
-            m_tankController = controller;
-            m_turretAnimator = turretAnim;
-            m_hullAnimator = hullAnim;
-            m_turretRB = turretRB;
+            m_inputCache = new CircularBuffer<InputPayload>(INPUT_CACHE_SIZE);
         }
 
         void Start()
@@ -58,6 +55,7 @@ namespace Tankito
             if (m_inputReplayTick == NO_REPLAY)
             {
                 // Live Input Mode
+                Debug.Log("Tick:" + ClockManager.TickCounter);
                 m_inputCache.Add(m_currentInput, ClockManager.TickCounter);
                 InputWindowBuffer.Instance.AddInputToWindow(m_currentInput);
                 return m_currentInput;

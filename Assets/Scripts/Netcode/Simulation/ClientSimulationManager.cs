@@ -15,6 +15,11 @@ namespace Tankito.Netcode.Simulation
         const int SNAPSHOT_BUFFER_SIZE = 256;
         CircularBuffer<GlobalSimulationSnapshot> m_snapshotBuffer = new CircularBuffer<GlobalSimulationSnapshot>(SNAPSHOT_BUFFER_SIZE);
 
+        /// <summary>
+        /// Relates NetworkClientId(ulong) to a specific <see cref="RemoteTankInput"/>.  
+        /// </summary>
+        public Dictionary<ulong, EmulatedTankInput> emulatedInputTanks = new Dictionary<ulong,EmulatedTankInput>();
+
         private GlobalSimulationSnapshot AuthSnapshot
         {
             get => m_snapshotBuffer
@@ -53,14 +58,7 @@ namespace Tankito.Netcode.Simulation
                 
             }
                 // Cache Simulation State
-                var newSnapshot = new GlobalSimulationSnapshot();
-                newSnapshot.Initialize();
-                newSnapshot.timestamp = ClockManager.TickCounter;
-                
-                foreach(var simObj in simulationObjects)
-                {
-                    newSnapshot[simObj] = simObj.GetSimState();
-                }
+                GlobalSimulationSnapshot newSnapshot = CaptureSnapshot();
                 m_snapshotBuffer[newSnapshot.timestamp] = newSnapshot;
         }
 
@@ -140,7 +138,7 @@ namespace Tankito.Netcode.Simulation
         [ContextMenu("TestInputWindowMessaging")]
         public void TestInputWindowMessaging()
         {
-            CustomNamedMessageHandler.Instance.SendInputWindowToServer(InputWindowBuffer.Instance.InputBuffer);
+            MessageHandlers.Instance.SendInputWindowToServer(InputWindowBuffer.Instance.InputBuffer);
         }
 
         #endregion

@@ -11,7 +11,6 @@ namespace Tankito.Netcode.Simulation
         /// Relates NetworkClientId(ulong) to a specific <see cref="RemoteTankInput"/>.  
         /// </summary>
         public Dictionary<ulong, RemoteTankInput> remoteInputTanks = new Dictionary<ulong,RemoteTankInput>();
-        
 
         void Start()
         {
@@ -38,7 +37,7 @@ namespace Tankito.Netcode.Simulation
             Debug.Log("Sending ClockSignal.Start broadcast");
             ClockSignal signal = new ClockSignal();
             signal.header = ClockSignalHeader.Start;
-            CustomNamedMessageHandler.Instance.SendClockSignal(signal);
+            MessageHandlers.Instance.SendClockSignal(signal);
         }
 
         [ContextMenu("Send ClockSignal.Stop")]
@@ -47,7 +46,13 @@ namespace Tankito.Netcode.Simulation
             Debug.Log("Sending ClockSignal.Start broadcast");
             ClockSignal signal = new ClockSignal();
             signal.header = ClockSignalHeader.Stop;
-            CustomNamedMessageHandler.Instance.SendClockSignal(signal);
+            MessageHandlers.Instance.SendClockSignal(signal);
+        }
+
+        [ContextMenu("Broadcast Last Snapshot")]
+        public void BroadcastLastSnapshot()
+        {
+            MessageHandlers.Instance.SendSimulationSnapshot(CaptureSnapshot());
         }
 
         #endregion

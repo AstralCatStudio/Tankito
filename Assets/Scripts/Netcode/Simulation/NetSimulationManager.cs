@@ -9,6 +9,7 @@ namespace Tankito.Netcode.Simulation
     public abstract class NetSimulationManager<T> : Singleton<T> where T : Component
     {
         protected List<ASimulationObject> simulationObjects;
+        
 
         protected override void Awake()
         {
@@ -50,5 +51,18 @@ namespace Tankito.Netcode.Simulation
             Physics2D.Simulate(ClockManager.SimDeltaTime);
         }
 
+        public GlobalSimulationSnapshot CaptureSnapshot()
+        {
+            var newSnapshot = new GlobalSimulationSnapshot();
+            newSnapshot.Initialize();
+            newSnapshot.timestamp = ClockManager.TickCounter;
+            
+            foreach(var simObj in simulationObjects)
+            {
+                newSnapshot[simObj] = simObj.GetSimState();
+            }
+            
+            return newSnapshot;
+        }
     }
 }

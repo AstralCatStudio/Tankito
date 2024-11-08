@@ -17,7 +17,7 @@ namespace Tankito.Netcode
         public void AddInputToWindow(InputPayload newInput)
         {
             inputBuffer.Add(newInput, newInput.timestamp);
-            CustomNamedMessageHandler.Instance.SendInputWindowToServer(inputBuffer);
+            MessageHandlers.Instance.SendInputWindowToServer(inputBuffer);
         }
     }
 }

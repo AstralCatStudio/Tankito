@@ -99,7 +99,6 @@ namespace Tankito
                 // IMPORTANTE: Siempre instanciar objetos con la sobrecarga de parentesco para asegurar la escena en la que residen
                 // (evitando su destruccion no intencionada al cargarse sobre escenas aditivas que se descargan posteriormente eg. LA PANTALLA DE CARGA)
                 var newPlayer = Instantiate(m_playerPrefab, GameInstanceParent.Instance.transform).GetComponent<NetworkObject>();
-
                 newPlayer.SpawnAsPlayerObject(clientId);
             }
             FindPlayerInput();
@@ -166,18 +165,6 @@ namespace Tankito
         public string GetPlayerName()
         {
             return m_playerName;
-        }
-
-        public void AutoPhysics2DUpdate(bool auto)
-        {
-            if (!auto)
-            {
-                Physics2D.simulationMode = SimulationMode2D.Script;
-            }
-            else
-            {
-                Physics2D.simulationMode = SimulationMode2D.FixedUpdate;
-            }
         }
     }
 }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Tankito.Netcode.Simulation
 {
-    public abstract class ASimulationObject : NetworkBehaviour
+    public abstract class ASimulationObject : NetworkBehaviour, INetworkSerializable
     {
         public bool IsKinematic {get => m_isKinematic; set => m_isKinematic = value; }
         [SerializeField]
@@ -58,5 +58,10 @@ namespace Tankito.Netcode.Simulation
         public abstract ISimulationState GetSimState();
         public abstract void SetSimState(in ISimulationState state);
 
+        public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+        {
+            ulong objectId = NetworkObjectId;
+            serializer.SerializeValue(ref objectId);
+        }
     }
 }
