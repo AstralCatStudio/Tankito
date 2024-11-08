@@ -6,9 +6,11 @@ using Unity.Services.Core;
 using Unity.Services.Relay.Models;
 using Unity.Services.Relay;
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Collections;
+using TMPro;
 
 namespace Tankito.Netcode
 {
@@ -32,6 +34,13 @@ namespace Tankito.Netcode
         private GUIStages m_stage;
         private ConnectionMode m_connectionMode;
 
+        [SerializeField]
+        GameObject buttonPrefab;
+        [SerializeField]
+        GameObject inputFieldPrefab;
+
+        private TMP_InputField joinCodeInputField;
+
         private enum ConnectionMode
         {
             Client,
@@ -50,60 +59,54 @@ namespace Tankito.Netcode
         {
             ((UnityTransport)NetworkManager.Singleton.NetworkConfig.NetworkTransport).UseWebSockets = USE_WEB_SOCKETS;
             Debug.Log("UseWebSockets: " + USE_WEB_SOCKETS);
+            StartButtons();
         }
 
-        void OnGUI()
+        /*void OnGUI()
         {
             GUILayout.BeginArea(new Rect(20, 20, 500, 500));
             switch(m_stage)
             {
-                case GUIStages.Mode: StartButtons(); break;
+                case GUIStages.Mode:
+                    if (!buttonsCreated)
+                    {
+                        StartButtons(); 
+                    }
+                    break;
 
                 case GUIStages.Region: RegionSelection(); break;
 
                 case GUIStages.Run: StatusLabels(); break;
             }
             GUILayout.EndArea();
-        }
+        }*/
 
-        async void StartButtons()
+        private void StartButtons()
         {
-            if (GUILayout.Button("Host"))
-            {
-                if (m_region != "") StartHost();
-                else {
-                    m_connectionMode = ConnectionMode.Host; await FetchRegions(); return;
-                }
-            }
-            if (GUILayout.Button("Server"))
-            {
-                if (m_region != "") StartServer();
-                else {
-                    m_connectionMode = ConnectionMode.Server; await FetchRegions(); return;
-                }
-            }
-            if (GUILayout.Button("Client"))
-            {
-                m_connectionMode = ConnectionMode.Client; StartClient();
-            }
+            transform.GetChild(0).gameObject.SetActive(true);
 
-            m_joinCode = GUILayout.TextField(m_joinCode);
+            GameObject buttonHost = GameObject.Instantiate(buttonPrefab, transform.GetChild(0));
+            ConfigButton(buttonHost, HostButton, "Host");
+            
+            GameObject buttonServer = GameObject.Instantiate(buttonPrefab, transform.GetChild(0));
+            ConfigButton(buttonServer, ServerButton, "Server");
+
+            GameObject buttonClient = GameObject.Instantiate(buttonPrefab, transform.GetChild(0));
+            ConfigButton(buttonClient, ClientButton, "Client");
+
+            GameObject inputField = GameObject.Instantiate(inputFieldPrefab, transform.GetChild(0));
+            joinCodeInputField = inputField.GetComponent<TMP_InputField>();
         }
 
         void RegionSelection()
-        {            
+        {
+            transform.GetChild(1).gameObject.SetActive(true);
+
             foreach(var reg in m_relayRegions)
             {
-                if(GUILayout.Button(reg.desc))
-                {
-                    m_region = reg.id;
-                    switch (m_connectionMode)
-                    {
-                        case ConnectionMode.Server: StartServer(); break;
-                        case ConnectionMode.Host: StartHost(); break;
-                    }
-                    m_stage = GUIStages.Run;
-                }
+                Debug.Log($"{reg.desc}: {reg.id}");
+                GameObject buttonRegion = GameObject.Instantiate(buttonPrefab, transform.GetChild(1).GetChild(0).GetChild(0));
+                ConfigRegionButton(buttonRegion, reg.desc, reg.id);
             }
         }
 
@@ -123,7 +126,9 @@ namespace Tankito.Netcode
         {
             await LoginUnityAuth();
             m_relayRegions = await RelayRegionFetcher.FetchRelayRegionsAsync(AuthenticationService.Instance.AccessToken);
-            m_stage = GUIStages.Region;
+            //m_stage = GUIStages.Region;
+            transform.GetChild(0).gameObject.SetActive(false);
+            RegionSelection();
         }
 
         async Task LoginUnityAuth()
@@ -176,6 +181,58 @@ namespace Tankito.Netcode
 
             SceneLoader.Singleton.LoadGameScene();
         }
+
+        #region Buttons
+        private void ConfigButton(GameObject button, UnityEngine.Events.UnityAction func, string text)
+        {
+            button.GetComponent<Button>().onClick.AddListener(func);
+            button.GetComponentInChildren<TextMeshProUGUI>().text = text;
+        }
+
+        async void HostButton()
+        {
+            if (m_region != "") StartHost();
+            else
+            {
+                m_connectionMode = ConnectionMode.Host; await FetchRegions(); return;
+            }
+        }
+        
+        async void ServerButton()
+        {
+            if (m_region != "") StartServer();
+            else
+            {
+                m_connectionMode = ConnectionMode.Server; await FetchRegions(); return;
+            }
+        }
+        
+        private void ClientButton()
+        {
+            m_connectionMode = ConnectionMode.Client;
+            m_joinCode = joinCodeInputField.text;
+            StartClient();
+        }
+
+        private void ConfigRegionButton(GameObject button, string text, string regId)
+        {
+            button.GetComponent<Button>().onClick.AddListener(() => RegionButton(regId));
+            button.GetComponentInChildren<TextMeshProUGUI>().text = text;
+        }
+
+        private void RegionButton(string regId)
+        {
+            Debug.Log(regId);
+
+            m_region = regId;
+            switch (m_connectionMode)
+            {
+                case ConnectionMode.Server: StartServer(); break;
+                case ConnectionMode.Host: StartHost(); break;
+            }
+        }
+
+        #endregion
     }
 }
 
