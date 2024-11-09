@@ -27,7 +27,7 @@ namespace Tankito
             decayFactor = 1f-ClockManager.SimDeltaTime/m_attenuationSeconds;
         }
 
-    private void ReceiveInputWindow(InputPayload[] inputWindow)
+    public void ReceiveInputWindow(InputPayload[] inputWindow)
     {
         int i = Array.FindIndex(inputWindow, m => m.timestamp == m_lastReceivedInput.timestamp);
         if (i == -1) i = 0;

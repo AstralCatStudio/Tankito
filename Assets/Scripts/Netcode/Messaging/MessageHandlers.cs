@@ -125,7 +125,7 @@ namespace Tankito.Netcode.Messaging
         {
             if (!ServerSimulationManager.Instance.remoteInputTanks.ContainsKey(senderId))
             {
-                Debug.Log($"{senderId} is not registered in {ServerSimulationManager.Instance.remoteInputTanks}");
+                Debug.Log($"Client[{senderId}] is not registered in {ServerSimulationManager.Instance.remoteInputTanks}");
                 return;
             }
 
@@ -141,7 +141,7 @@ namespace Tankito.Netcode.Messaging
                 {
                     byte[] payloadBytes = new byte[payload.Length];
                     payload.ReadBytes(ref payloadBytes, 0,payload.Length);
-                    relayWriter.WriteBytes(payloadBytes);
+                    relayWriter.WriteBytesSafe(payloadBytes);
                     NetworkManager.CustomMessagingManager.SendNamedMessageToAll(MessageName.InputWindow, relayWriter, NetworkDelivery.Unreliable);
                 }
                 // Store inputWindow
@@ -154,12 +154,12 @@ namespace Tankito.Netcode.Messaging
             }
 
 
-            Debug.Log($"Recieved input window from client {senderId}: {receivedInputWindow}");
+            //Debug.Log($"Recieved input window from client {senderId}: {receivedInputWindow}");
         }
 
         public void SendSimulationSnapshot(GlobalSimulationSnapshot snapshot)
         {
-            var writer = new FastBufferWriter(System.Runtime.InteropServices.Marshal.SizeOf(snapshot), Allocator.Temp);
+            var writer = new FastBufferWriter(GlobalSimulationSnapshot.MAX_SERIALIZED_SIZE, Allocator.Temp);
             var customMessagingManager = NetworkManager.CustomMessagingManager;
 
             using (writer)

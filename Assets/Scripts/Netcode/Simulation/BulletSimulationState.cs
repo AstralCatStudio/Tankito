@@ -18,6 +18,8 @@ public struct BulletSimulationState : ISimulationState
     private Vector2 velocity;
     private float lifeTime; // In seconds
 
+    public const int MAX_SERIALIZED_SIZE = sizeof(float)*2 + sizeof(float)*2*2;
+
     public BulletSimulationState(Vector2 position, float rotation, Vector2 velocity, float lifeTime)
     {
         this.position = position;

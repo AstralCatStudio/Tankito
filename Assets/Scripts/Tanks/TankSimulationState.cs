@@ -19,6 +19,8 @@ namespace Tankito.Netcode.Simulation
         private Vector2 velocity;
         private float turretRotation;
 
+        public const int MAX_SERIALIZED_SIZE = sizeof(float)*2 + sizeof(float)*2*2;
+
         public TankSimulationState(Vector2 position, float hullRotation, Vector2 velocity, float turretRotation)
         {
             this.position = position;
