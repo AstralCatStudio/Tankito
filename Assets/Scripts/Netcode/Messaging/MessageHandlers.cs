@@ -78,6 +78,8 @@ namespace Tankito.Netcode.Messaging
 
         private void RecieveClockSignal(ulong serverId, FastBufferReader payload)
         {
+            if (IsServer) return;
+            
             if (serverId != NetworkManager.ServerClientId)
             {
                 Debug.LogWarning("Can only receive clock signal messages from the server!");
@@ -87,41 +89,22 @@ namespace Tankito.Netcode.Messaging
             ClockSignal signal;
             payload.ReadValue(out signal);
 
-            if (IsServer)
+            switch(signal.header)
             {
-                switch(signal.header)
-                {
-                    case ClockSignalHeader.ACK_Start:
-                        throw new NotImplementedException("TODO");
-                        break;
+                case ClockSignalHeader.Start:
+                    ClockManager.Instance.StartClock();
+                    break;
 
-                    case ClockSignalHeader.ACK_Stop:
-                        throw new NotImplementedException("TODO");
-                        break;
+                case ClockSignalHeader.Stop:
+                    ClockManager.Instance.StopClock();
+                    break;
 
-                    default:
-                        throw new InvalidOperationException("Invalid clock signal header: " + signal.header);
-                }
-            }
-            else
-            {
-                switch(signal.header)
-                {
-                    case ClockSignalHeader.Start:
-                        ClockManager.Instance.StartClock();
-                        break;
+                case ClockSignalHeader.Throttle:
+                    ClockManager.Instance.ThrottleClock(signal.throttleTicks);
+                    break;
 
-                    case ClockSignalHeader.Stop:
-                        ClockManager.Instance.StopClock();
-                        break;
-
-                    case ClockSignalHeader.Throttle:
-                        ClockManager.Instance.ThrottleClock(signal.throttleTicks);
-                        break;
-
-                    default:
-                        throw new InvalidOperationException("Invalid clock signal header: " + signal.header);
-                }
+                default:
+                    throw new InvalidOperationException("Invalid clock signal header: " + signal.header);
             }
 
             if (DEBUG_CLOCK) Debug.Log($"Received clock signal: {signal}");
