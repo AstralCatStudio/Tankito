@@ -168,7 +168,7 @@ namespace Tankito.Netcode.Messaging
 
                 using (relayWriter)
                 {
-                    relayWriter.WriteBytes(payloadBytes);
+                    relayWriter.WriteBytesSafe(payloadBytes);
                     var relayDestinations = NetworkManager.Singleton.ConnectedClientsIds.Where(id => id != senderId).ToArray();
                     NetworkManager.CustomMessagingManager.SendNamedMessage(MessageName.InputWindow, relayDestinations, relayWriter, NetworkDelivery.Unreliable);
                 }
