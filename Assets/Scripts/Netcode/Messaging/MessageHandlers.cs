@@ -80,7 +80,7 @@ namespace Tankito.Netcode.Messaging
 
         private void RecieveClockSignal(ulong serverId, FastBufferReader payload)
         {
-            if (IsServer) return;
+            if (IsServer && !IsClient) return;
             
             if (serverId != NetworkManager.ServerClientId)
             {
