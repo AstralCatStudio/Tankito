@@ -177,17 +177,17 @@ namespace Tankito.Netcode.Messaging
                 if (senderId != NetworkManager.LocalClientId)
                 {
                     ServerSimulationManager.Instance.remoteInputTanks[senderId].AddInput(receivedInputWindow.ToArray());
-                }
-                
-                // Respond with throttling signal
-                int throttleTicks = ServerSimulationManager.Instance.remoteInputTanks[senderId].IdealBufferSize-ServerSimulationManager.Instance.remoteInputTanks[senderId].BufferSize;
-                var throttleSignal = new ClockSignal(ClockSignalHeader.Throttle, throttleTicks);
-                var throttleWriter = new FastBufferWriter(FastBufferWriter.GetWriteSize(throttleSignal), Allocator.Temp);
 
-                using (throttleWriter)
-                {
-                    throttleWriter.WriteValue(throttleSignal);
-                    NetworkManager.CustomMessagingManager.SendNamedMessage(MessageName.ClockSignal, senderId, throttleWriter, NetworkDelivery.Unreliable);
+                    // Respond with throttling signal
+                    int throttleTicks = ServerSimulationManager.Instance.remoteInputTanks[senderId].IdealBufferSize-ServerSimulationManager.Instance.remoteInputTanks[senderId].BufferSize;
+                    var throttleSignal = new ClockSignal(ClockSignalHeader.Throttle, throttleTicks);
+                    var throttleWriter = new FastBufferWriter(FastBufferWriter.GetWriteSize(throttleSignal), Allocator.Temp);
+
+                    using (throttleWriter)
+                    {
+                        throttleWriter.WriteValue(throttleSignal);
+                        NetworkManager.CustomMessagingManager.SendNamedMessage(MessageName.ClockSignal, senderId, throttleWriter, NetworkDelivery.Unreliable);
+                    }
                 }
             }
             else
