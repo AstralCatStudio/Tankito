@@ -6,7 +6,10 @@ namespace Tankito.Netcode.Messaging
     public enum ClockSignalHeader
     {
         Start,
+        ACK_Start,
         Stop,
+        ACK_Stop,
+
         Throttle
     }
 
@@ -22,6 +25,12 @@ namespace Tankito.Netcode.Messaging
             {
                 serializer.SerializeValue(ref throttleTicks);
             }
+        }
+
+        public ClockSignal(ClockSignalHeader header, int throttleTicks)
+        {
+            this.header = header;
+            this.throttleTicks = throttleTicks;
         }
 
         public override string ToString()

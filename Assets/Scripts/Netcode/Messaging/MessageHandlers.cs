@@ -23,6 +23,7 @@ namespace Tankito.Netcode.Messaging
         public static MessageHandlers Instance;
         [SerializeField] private bool DEBUG_INPUT = false;
         [SerializeField] private bool DEBUG_CLOCK = false;
+        [SerializeField] private bool DEBUG_SNAPSHOTS = false;
 
         void Awake()
         {
@@ -82,26 +83,47 @@ namespace Tankito.Netcode.Messaging
                 Debug.LogWarning("Can only receive clock signal messages from the server!");
                 return;
             }
-            
+
             ClockSignal signal;
             payload.ReadValue(out signal);
-            switch(signal.header)
+
+            if (IsServer)
             {
-                case ClockSignalHeader.Start:
-                    ClockManager.Instance.StartClock();
-                    break;
+                switch(signal.header)
+                {
+                    case ClockSignalHeader.ACK_Start:
+                        throw new NotImplementedException("TODO");
+                        break;
 
-                case ClockSignalHeader.Stop:
-                    ClockManager.Instance.StopClock();
-                    break;
+                    case ClockSignalHeader.ACK_Stop:
+                        throw new NotImplementedException("TODO");
+                        break;
 
-                case ClockSignalHeader.Throttle:
-                    ClockManager.Instance.ThrottleClock(signal.throttleTicks);
-                    break;
-
-                default:
-                    throw new InvalidOperationException($"{signal.header} is not a valid clock signal header!");
+                    default:
+                        throw new InvalidOperationException("Invalid clock signal header: " + signal.header);
+                }
             }
+            else
+            {
+                switch(signal.header)
+                {
+                    case ClockSignalHeader.Start:
+                        ClockManager.Instance.StartClock();
+                        break;
+
+                    case ClockSignalHeader.Stop:
+                        ClockManager.Instance.StopClock();
+                        break;
+
+                    case ClockSignalHeader.Throttle:
+                        ClockManager.Instance.ThrottleClock(signal.throttleTicks);
+                        break;
+
+                    default:
+                        throw new InvalidOperationException("Invalid clock signal header: " + signal.header);
+                }
+            }
+
             if (DEBUG_CLOCK) Debug.Log($"Received clock signal: {signal}");
         }
 
@@ -163,7 +185,7 @@ namespace Tankito.Netcode.Messaging
 
                 using (relayWriter)
                 {
-                    relayWriter.WriteBytesSafe(payloadBytes);
+                    relayWriter.WriteBytes(payloadBytes);
                     var relayDestinations = NetworkManager.Singleton.ConnectedClientsIds.Where(id => id != senderId).ToArray();
                     NetworkManager.CustomMessagingManager.SendNamedMessage(MessageName.InputWindow, relayDestinations, relayWriter, NetworkDelivery.Unreliable);
                 }
@@ -172,6 +194,17 @@ namespace Tankito.Netcode.Messaging
                 if (senderId != NetworkManager.LocalClientId)
                 {
                     ServerSimulationManager.Instance.remoteInputTanks[senderId].AddInput(receivedInputWindow.ToArray());
+                }
+                
+                // Respond with throttling signal
+                int throttleTicks = ServerSimulationManager.Instance.remoteInputTanks[senderId].IdealBufferSize-ServerSimulationManager.Instance.remoteInputTanks[senderId].BufferSize;
+                var throttleSignal = new ClockSignal(ClockSignalHeader.Throttle, throttleTicks);
+                var throttleWriter = new FastBufferWriter(FastBufferWriter.GetWriteSize(throttleSignal), Allocator.Temp);
+
+                using (throttleWriter)
+                {
+                    throttleWriter.WriteValue(throttleSignal);
+                    NetworkManager.CustomMessagingManager.SendNamedMessage(MessageName.ClockSignal, senderId, throttleWriter, NetworkDelivery.Unreliable);
                 }
             }
             else
@@ -202,7 +235,7 @@ namespace Tankito.Netcode.Messaging
                 customMessagingManager.SendNamedMessageToAll(MessageName.InputWindow, writer, NetworkDelivery.Unreliable);
             }
 
-            Debug.Log($"Sent snapshot[{snapshot.timestamp}] to ALL clients.");
+            if (DEBUG_SNAPSHOTS) Debug.Log($"Sent snapshot[{snapshot.timestamp}] to ALL clients.");
         }
 
         private void ReceiveSimulationSnapshot(ulong serverId, FastBufferReader snapshotPayload)
@@ -216,7 +249,7 @@ namespace Tankito.Netcode.Messaging
             GlobalSimulationSnapshot snapshot;
             snapshotPayload.ReadValue(out snapshot);
 
-            Debug.Log($"Received snapshot[{snapshot.timestamp}] from server.");
+            if (DEBUG_SNAPSHOTS) Debug.Log($"Received snapshot[{snapshot.timestamp}] from server.");
         }
     }
 }

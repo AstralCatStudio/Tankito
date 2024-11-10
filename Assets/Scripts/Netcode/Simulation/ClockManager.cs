@@ -5,27 +5,15 @@ using Tankito.Netcode;
 using Unity.Netcode;
 using Tankito.Netcode.Simulation;
 using System;
+using NUnit.Framework;
 
 namespace Tankito
 {
     public class ClockManager : Singleton<ClockManager>
     {
-        // La razon de que exista este script y ademas como singleton es para que todos los demas scripts tengan acceso al respectivo reloj de la instancia de juego
-        
-        // Lo he puesto enganchado al GameManager por ponerlo en un lugar localizable y persistente,
-        // pero probablemente deberia ir en su propio GameObject de modo que se cree para usarse solo
-        // durante el scope de una partida (contemplay AdditiveLoading para la escena de combate...)
-        //public const int SERVER_SIMULATION_TICKRATE = 60;
-        //public const float SERVER_SIMULATION_DELTA_TIME = 1f/SERVER_SIMULATION_TICKRATE;
-        //public const int INPUT_SENDING_TICKRATE = 15;
+        const int TICKS_PER_SECOND = 30;
+        const float SIM_DELTA_TIME = 1f/TICKS_PER_SECOND;
 
-        //public Clock simulationClock; // Para la simulacion con lockstep
-
-        // Pensandolo mejor probablemente tiene sentido aglutinar la maxima cantidad de informacion por RPC posible para ahorrar overhead y simplificar el codigo... Lo dejo como posible opcion en un futuro...
-        //public Clock inputSendClock; // Para no saturar la red mandando RPCs de input al polling rate de nuestra I/O
-
-
-        // PROVISIONAL: Hasta que hagamos funcionar nuestro propio clock con los metodos Update()
         float m_tickTimer;
         [SerializeField]
         private int m_tickCounter;
@@ -33,6 +21,7 @@ namespace Tankito
         private float m_simulationDeltaTime;
         [SerializeField]
         private bool m_active;
+        private float m_throttleDeltaTime;
 
         public bool Active { get => m_active; }
         public static float SimDeltaTime { get => Instance.m_simulationDeltaTime; set => Instance.m_simulationDeltaTime = value; }
@@ -50,7 +39,7 @@ namespace Tankito
             m_tickTimer = 0;
             m_tickCounter = 0;
             m_active = false;
-            SimDeltaTime = Time.fixedDeltaTime;
+            SimDeltaTime = SIM_DELTA_TIME;
 
             if (NetworkManager.Singleton.IsServer)
             {
@@ -67,13 +56,12 @@ namespace Tankito
         // Update is called once per frame
         void Update()
         {
-            //simulationClock.Update(Time.deltaTime);
             if (!m_active) return;
 
             m_tickTimer += Time.deltaTime;
-            if (m_tickTimer >= Time.fixedDeltaTime)
+            if (m_tickTimer >= m_throttleDeltaTime)
             {
-                m_tickTimer -= Time.fixedDeltaTime;
+                m_tickTimer -= m_throttleDeltaTime;
                 m_tickCounter++;
                 OnTick?.Invoke();
             }
@@ -104,7 +92,12 @@ namespace Tankito
 
         internal void ThrottleClock(int throttleTicks)
         {
-            throw new NotImplementedException();
+            if (NetworkManager.Singleton.IsServer)
+            {
+                throw new InvalidOperationException("SERVER MUSTN'T Throttle");
+            }
+
+            m_throttleDeltaTime = m_simulationDeltaTime + throttleTicks/TICKS_PER_SECOND;
         }
 
         

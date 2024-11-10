@@ -24,8 +24,8 @@ namespace Tankito
             m_idealElements = idealElements;
         }
 
-        public int N_Elemets => m_nElements;
-        public int IdealElements => m_nElements;
+        public int Count => m_nElements;
+        public int IdealElements => m_idealElements;
 
         public void Add(int key, T element)
         {
@@ -89,12 +89,6 @@ namespace Tankito
             {
                 return false;
             }
-        }
-
-        public void CheckThrottling()
-        {
-            int dif = m_nElements - m_idealElements;
-            OnCheckThrottling?.Invoke(dif);
         }
     }
 }

@@ -10,6 +10,8 @@ public class RemoteTankInput : MonoBehaviour, ITankInput
     private OrderQueueSyncronize<InputPayload> queue = new OrderQueueSyncronize<InputPayload>(N_IDEAL_INPUT);
 
     private const int N_IDEAL_INPUT = 15;
+    public int IdealBufferSize { get => queue.IdealElements; }
+    public int BufferSize { get => queue.Count; }
 
     public void AddInput(InputPayload[] newInputWindow)
     {
@@ -25,13 +27,11 @@ public class RemoteTankInput : MonoBehaviour, ITankInput
         {
             queue.Add(newInput.timestamp, newInput);
         }
-        queue.CheckThrottling();
     }
 
     public InputPayload GetInput()
     {
         var input = queue.Pop();
-        queue.CheckThrottling();
         return input;
     }
 

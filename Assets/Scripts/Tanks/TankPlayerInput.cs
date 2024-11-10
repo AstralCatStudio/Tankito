@@ -53,21 +53,29 @@ namespace Tankito
         /// <returns></returns>
         public InputPayload GetInput()
         {
+            InputPayload gotPayload;
             if (m_inputReplayTick == NO_REPLAY)
             {
                 // Live Input Mode
-                if (DEBUG) Debug.Log("Tick:" + ClockManager.TickCounter);
+                m_currentInput.timestamp = ClockManager.TickCounter;
                 m_inputCache.Add(m_currentInput, ClockManager.TickCounter);
                 InputWindowBuffer.Instance.AddInputToWindow(m_currentInput);
-                return m_currentInput;
+                gotPayload = m_currentInput;
             }
             else
             {
                 // Input Replay Mode
                 var replayedInput = m_inputCache.Get(m_inputReplayTick);
                 m_inputReplayTick++;
-                return replayedInput;
+                gotPayload = replayedInput;
             }
+
+            if (DEBUG)
+            {
+                Debug.Log("GetInput:" + m_currentInput);
+            }
+
+            return gotPayload;
         }
 
         /// <summary>
