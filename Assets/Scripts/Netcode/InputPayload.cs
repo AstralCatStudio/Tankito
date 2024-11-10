@@ -27,6 +27,7 @@ namespace Tankito.Netcode
             serializer.SerializeValue(ref aimVector);
             serializer.SerializeValue(ref action);
         }
+        
         public override string ToString() => $"(timestamp:{timestamp}, movementInput:{moveVector}, aimInput:{aimVector}, actionInput:{action})";
 
         // Probablemente habria q repensar como hacer esto:
