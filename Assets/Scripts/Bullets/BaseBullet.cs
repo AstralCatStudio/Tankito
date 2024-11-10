@@ -9,14 +9,12 @@ namespace Tankito
     {
         [SerializeField]
         private Rigidbody2D m_rb;
-        [SerializeField]
-        private GameObject m_explosion;
         
         public override void Init()
         {
             base.Init();
             m_bouncesLeft = m_properties.bouncesTotal;
-            m_explosion = NetworkManager.Singleton.NetworkConfig.Prefabs.Prefabs[2].Prefab;
+            //m_explosion = NetworkManager.Singleton.NetworkConfig.Prefabs.Prefabs[2].Prefab;
             m_rb.velocity = m_properties.velocity* m_properties.direction;
         }
 
@@ -40,11 +38,6 @@ namespace Tankito
         public void Detonate()
         {
             OnDetonate.Invoke();
-
-            var explosion = Instantiate(m_explosion,transform.position, transform.rotation);
-            var explosionNetworkObject = explosion.GetComponent<NetworkObject>();
-            explosionNetworkObject.Spawn();
-            
             // Return to the pool from whence it came.
             var networkObject = gameObject.GetComponent<NetworkObject>();
             networkObject.Despawn();

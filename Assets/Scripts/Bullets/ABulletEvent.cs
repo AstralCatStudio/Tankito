@@ -1,14 +1,14 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace Tankito
 {
-    public class ABulletEvent : MonoBehaviour, IBulletEvent
+    [System.Serializable]
+    public abstract class ABulletEvent : NetworkBehaviour, IModifierEvent
     {
-        virtual public void StartEvent(ABullet bullet)
-        {
-
-        }
+        public abstract void StartEvent(ABullet bullet);
     }
 }

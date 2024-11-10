@@ -61,7 +61,7 @@ namespace Tankito {
             
             foreach (var modifier in m_modifierList)
             {
-                modifier.ConnectModifier(this);
+                //modifier.ConnectModifier(this);
             }
         }
 
