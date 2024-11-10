@@ -86,6 +86,7 @@ public class RoundButtons : NetworkBehaviour
     }
     public override void OnNetworkSpawn()
     {
+        base.OnNetworkSpawn();
         if (IsServer)
         {
             Debug.Log("Entro en network spawn");
@@ -97,6 +98,7 @@ public class RoundButtons : NetworkBehaviour
 
     public override void OnDestroy()
     {
+        base.OnDestroy();
         if (IsServer)
         {
             NetworkManager.Singleton.OnClientConnectedCallback -= OnClientConnected;

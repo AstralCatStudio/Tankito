@@ -3081,7 +3081,6 @@ MonoBehaviour:
   _roundUI: {fileID: 0}
   _countdownTime: 3
   _countdownText: {fileID: 0}
-  _playerInput: {fileID: 902069715}
 --- !u!4 &1603395879
 Transform:
   m_ObjectHideFlags: 0
@@ -3468,10 +3467,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'Para el host:
 
-    pulsa 1 para empezar la partida
-
-    pulsa 2 para eliminar
-    al jugador 2'
+    Pulsa 2 para eliminar al jugador 2'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -4012,7 +4008,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'JOINCODE: 111111'
+  m_text: 'JOINCODE: '
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

@@ -20,16 +20,18 @@ public class RoundManager : NetworkBehaviour
     private float _currentTime;
     private bool _isCountingDown = false;
 
-    private List<GameObject> _players = new List<GameObject>();
-    private List<GameObject> _alivePlayers;
+    private Dictionary<ulong, GameObject> _players = new Dictionary<ulong, GameObject>();
+    private Dictionary<ulong, GameObject> _alivePlayers = new Dictionary<ulong, GameObject>();
 
     private bool _startedGame;
+    private bool _startedRound;
 
     private GameObject _playerInput;
 
     void Start()
     {
         _startedGame = false;
+        _startedRound = false;
 
         _playerInput = GameObject.Find("PlayerInput");
 
@@ -47,12 +49,7 @@ public class RoundManager : NetworkBehaviour
     {
         if (IsServer)
         {
-            /*if (Input.GetKeyUp(KeyCode.Alpha1) && !_startedGame && _players.Count > 1)
-            {
-                InitializeRound();
-            }*/
-
-            if (Input.GetKeyUp(KeyCode.Alpha2) && _alivePlayers.Count > 1)
+            if (Input.GetKeyUp(KeyCode.Alpha2) && _startedRound && _alivePlayers.Count > 1)
             {
                 DebugDamagePlayer();
             }
@@ -82,7 +79,12 @@ public class RoundManager : NetworkBehaviour
     #region PlayerManagement
     public void AddPlayer(GameObject player)
     {
-        _players.Add(player);
+        ulong clientId = player.GetComponent<NetworkObject>().OwnerClientId;
+        if (!_players.ContainsKey(clientId))
+        {
+            _players.Add(clientId, player);
+            Debug.Log($"Jugador anadido. Nº de jugadores: {_players.Count}");
+        }
         Debug.Log("Jugador añadido. Nº jugadores: " + _players.Count);
     }
 
@@ -90,12 +92,16 @@ public class RoundManager : NetworkBehaviour
     {
         if (!IsServer) return;
 
-        if (_alivePlayers.Contains(player))
+        ulong clientId = player.GetComponent<NetworkObject>().OwnerClientId;
+
+        if (_alivePlayers.ContainsKey(clientId))
         {
-            _alivePlayers.Remove(player);
+            _alivePlayers.Remove(clientId);
             DisablePlayerInputClientRpc(player.GetComponent<NetworkObject>().OwnerClientId);
             player.GetComponent<TankData>().IncreasePoints(_players.Count - _alivePlayers.Count);
+
             Debug.Log($"El jugador {player.GetComponent<NetworkObject>().OwnerClientId} de puntuacion {player.GetComponent<TankData>().points} ha sido eliminado");
+
             UpdateRemainingPlayersTextClientRpc(_alivePlayers.Count);
             CheckForWinner();
         }
@@ -124,13 +130,18 @@ public class RoundManager : NetworkBehaviour
         _roundUI.SetActivePowerUps(false);
         DisablePowerUpsClientRpc();
 
-        _alivePlayers = new List<GameObject>(_players);
+        _alivePlayers = new Dictionary<ulong, GameObject>(_players);
         _currentRound++;
+
         if (_currentRound > 1)
         {
-            for (int i = 0; i < _alivePlayers.Count; i++)
+            foreach (var aux in _alivePlayers)
             {
-                _alivePlayers[i].GetComponent<TankData>().Reset();
+                GameObject player = aux.Value;
+                if (player != null)
+                {
+                    player.GetComponent<TankData>().Reset();
+                }
             }
         }
 
@@ -166,6 +177,8 @@ public class RoundManager : NetworkBehaviour
 
         SetCountdownTextClientRpc("BATTLE!");
 
+        _startedRound = true;
+
         EnablePlayerInputClientRpc();
     }
 
@@ -173,6 +186,7 @@ public class RoundManager : NetworkBehaviour
     private void SetCountdownTextClientRpc(string text)
     {
         _startedGame = true;
+        
         if (_countdownText != null)
         {
             _countdownText.text = text;
@@ -181,6 +195,7 @@ public class RoundManager : NetworkBehaviour
 
     #endregion
 
+    #region PlayerInputManagement
     private void DisablePlayerInput()
     {
         _playerInput.SetActive(false);
@@ -227,6 +242,8 @@ public class RoundManager : NetworkBehaviour
         }
     }
 
+    #endregion
+
     #region FlujoPartida
 
     [ClientRpc]
@@ -252,6 +269,7 @@ public class RoundManager : NetworkBehaviour
     private void EndRound()
     {
         Debug.Log("NETLESS: Fin de ronda");
+        _startedRound = false;
         EndRoundClientRpc();
         DisablePlayerInputClientRpc();
         BetweenRounds();
@@ -347,7 +365,7 @@ public class RoundManager : NetworkBehaviour
             _ranking = "Ranking: ";
         }
 
-        List<GameObject> sortedPlayers = _players.OrderByDescending(player => player.GetComponent<TankData>().points).ToList<GameObject>();
+        List<GameObject> sortedPlayers = _players.Values.OrderByDescending(player => player.GetComponent<TankData>().points).ToList<GameObject>();
 
         for (int i = 0; i < sortedPlayers.Count; i++)
         {
