@@ -16,15 +16,15 @@ namespace Tankito.Netcode.Simulation
         {
             if (!NetworkManager.Singleton.IsServer)
             {
-                Debug.LogWarning("Proceeding to destroy ServerSimulationManager (because it's NOT a SERVER)");
+                Debug.Log("Proceeding to destroy ServerSimulationManager (because it's NOT a SERVER)");
                 Destroy(this);
             }
         }
 
         public override void Simulate()
         {
-            Debug.Log("SERVER SimulationManager Simulate() called!");
-            Debug.Log("TODO: Implement Input Gathering and Client Throttling RPC's on Server.");
+            //Debug.Log("SERVER SimulationManager Simulate() called!");
+            //Debug.Log("TODO: Implement Input Gathering and Client Throttling RPC's on Server.");
             //GatherPlayerInput(); // Samplear la ventana de inputs. Aqui tambien iria la logica de client throttling
             base.Simulate();
         }
@@ -34,7 +34,7 @@ namespace Tankito.Netcode.Simulation
         [ContextMenu("Send ClockSignal.Start")]
         public void SendClockSignalStart()
         {
-            Debug.Log("Sending ClockSignal.Start broadcast");
+            //Debug.Log("Sending ClockSignal.Start broadcast");
             ClockSignal signal = new ClockSignal();
             signal.header = ClockSignalHeader.Start;
             MessageHandlers.Instance.SendClockSignal(signal);
@@ -43,7 +43,7 @@ namespace Tankito.Netcode.Simulation
         [ContextMenu("Send ClockSignal.Stop")]
         public void SendClockSignalStop()
         {
-            Debug.Log("Sending ClockSignal.Start broadcast");
+            //Debug.Log("Sending ClockSignal.Start broadcast");
             ClockSignal signal = new ClockSignal();
             signal.header = ClockSignalHeader.Stop;
             MessageHandlers.Instance.SendClockSignal(signal);

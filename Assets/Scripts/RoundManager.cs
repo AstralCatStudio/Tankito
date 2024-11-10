@@ -26,6 +26,7 @@ public class RoundManager : NetworkBehaviour
     private bool _startedGame;
 
     public GameObject _playerInput;
+    [SerializeField] private bool DEBUG = false;
 
     void Start()
     {
@@ -82,7 +83,7 @@ public class RoundManager : NetworkBehaviour
     public void AddPlayer(GameObject player)
     {
         _players.Add(player);
-        Debug.Log("Jugador añadido. Nº jugadores: " + _players.Count);
+        if (DEBUG) Debug.Log("Jugador aï¿½adido. Nï¿½ jugadores: " + _players.Count);
     }
 
     public void EliminatePlayer(GameObject player)
@@ -93,7 +94,7 @@ public class RoundManager : NetworkBehaviour
         {
             _alivePlayers.Remove(player);
             player.GetComponent<TankData>().IncreasePoints(_players.Count - _alivePlayers.Count);
-            Debug.Log($"El jugador {player.name} de puntuacion {player.GetComponent<TankData>().points} ha sido eliminado");
+            if (DEBUG) Debug.Log($"El jugador {player.name} de puntuacion {player.GetComponent<TankData>().points} ha sido eliminado");
             UpdateRemainingPlayersText();
             CheckForWinner();
         }
@@ -101,13 +102,13 @@ public class RoundManager : NetworkBehaviour
 
     private void OnEnable()
     {
-        Debug.Log("Se suscribe al evento de morir tanque");
+        if (DEBUG) Debug.Log("Se suscribe al evento de morir tanque");
         TankData.OnTankDestroyed += EliminatePlayer;
     }
 
     private void OnDisable()
     {
-        Debug.Log("Se desuscribe al evento de morir tanque");
+        if (DEBUG) Debug.Log("Se desuscribe al evento de morir tanque");
         TankData.OnTankDestroyed -= EliminatePlayer;
     }
 
@@ -132,7 +133,7 @@ public class RoundManager : NetworkBehaviour
             }
         }
 
-        Debug.Log("Inicio ronda " + _currentRound);
+        if (DEBUG) Debug.Log("Inicio ronda " + _currentRound);
         UpdateRemainingPlayersText();
         StartCountdown();
     }
@@ -156,7 +157,7 @@ public class RoundManager : NetworkBehaviour
         _currentTime = _countdownTime;
         _isCountingDown = true;
 
-        Debug.Log("Cuenta atras iniciada");
+        if (DEBUG) Debug.Log("Cuenta atras iniciada");
 
         DisablePlayerInput();
     }
@@ -165,7 +166,7 @@ public class RoundManager : NetworkBehaviour
     {
         _isCountingDown = false;
 
-        Debug.Log("Fin de cuenta atras");
+        if (DEBUG) Debug.Log("Fin de cuenta atras");
         _countdownText.text = "BATTLE!";
         SetCountdownTextClientRpc("BATTLE!");
         _startedGame = true;
@@ -226,19 +227,19 @@ public class RoundManager : NetworkBehaviour
     {
         if (_alivePlayers.Count == 1)
         {
-            Debug.Log("Alguien ha ganado la ronda");
+            if (DEBUG) Debug.Log("Alguien ha ganado la ronda");
             _alivePlayers[0].GetComponent<TankData>().IncreasePoints(_players.Count);
             EndRound();
         }
         else
         {
-            Debug.Log("La ronda sigue");
+            if (DEBUG) Debug.Log("La ronda sigue");
         }
     }
 
     private void EndRound()
     {
-        Debug.Log("NETLESS: Fin de ronda");
+        if (DEBUG) Debug.Log("NETLESS: Fin de ronda");
         EndRoundClientRpc();
         DisablePlayerInput();
         BetweenRounds();
@@ -247,7 +248,7 @@ public class RoundManager : NetworkBehaviour
     [ClientRpc]
     private void EndRoundClientRpc()
     {
-        Debug.Log("NETCODE: Fin de ronda en todos");
+        if (DEBUG) Debug.Log("NETCODE: Fin de ronda en todos");
     }
 
     private void BetweenRounds()
@@ -269,7 +270,7 @@ public class RoundManager : NetworkBehaviour
 
     private void ShowRanking()
     {
-        Debug.Log("NETLESS: Se muestra el ranking");
+        if (DEBUG) Debug.Log("NETLESS: Se muestra el ranking");
         GenerateRanking();
         _roundUI.SetActiveRanking(true);
         _roundUI.SetRankingText(_ranking);
@@ -279,14 +280,14 @@ public class RoundManager : NetworkBehaviour
     [ClientRpc]
     private void ShowRankingClientRpc(string ranking)
     {
-        Debug.Log("NETCODE: Se muestra el ranking en todos");
+        if (DEBUG) Debug.Log("NETCODE: Se muestra el ranking en todos");
         _roundUI.SetActiveRanking(true);
         _roundUI.SetRankingText(ranking);
     }
 
     private void ShowFinalRanking()
     {
-        Debug.Log("NETLESS: Se muestra el ranking final");
+        if (DEBUG) Debug.Log("NETLESS: Se muestra el ranking final");
         _roundUI.SetActiveRankingFinal(true);
         ShowFinalRankingClientRpc();
     }
@@ -294,13 +295,13 @@ public class RoundManager : NetworkBehaviour
     [ClientRpc]
     private void ShowFinalRankingClientRpc()
     {
-        Debug.Log("NETCODE: Se muestra el ranking final en todos");
+        if (DEBUG) Debug.Log("NETCODE: Se muestra el ranking final en todos");
         _roundUI.SetActiveRankingFinal(true);
     }
 
     private void PowerUpSelection()
     {
-        Debug.Log("NETLESS: Se eligen power ups");
+        if (DEBUG) Debug.Log("NETLESS: Se eligen power ups");
         _roundUI.SetActiveRanking(false);
         _roundUI.SetActivePowerUps(true);
         ShowPowerUpsClientRpc();
@@ -309,21 +310,21 @@ public class RoundManager : NetworkBehaviour
     [ClientRpc]
     private void ShowPowerUpsClientRpc()
     {
-        Debug.Log("NETCODE: Se muestran los power ups en todos");
+        if (DEBUG) Debug.Log("NETCODE: Se muestran los power ups en todos");
         _roundUI.SetActiveRanking(false);
         _roundUI.SetActivePowerUps(true);
     }
 
     private void EndGame()
     {
-        Debug.Log("NETLESS: Fin de la partida");
+        if (DEBUG) Debug.Log("NETLESS: Fin de la partida");
         EndGameClientRpc();
     }
 
     [ClientRpc]
     private void EndGameClientRpc()
     {
-        Debug.Log("NETCODE: Final de partida en todos");
+        if (DEBUG) Debug.Log("NETCODE: Final de partida en todos");
     }
     #endregion
 

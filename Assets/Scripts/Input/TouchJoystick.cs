@@ -51,7 +51,7 @@ namespace Tankito.Mobile
         [SerializeField] private ScreenHotspot m_hotspotPosition;
         [SerializeField] private float m_hotspotDeadzone = 100f;
 
-        public bool debugGUI;
+        [SerializeField] private bool DEBUG = false;
 
         public override string ToString()
         {
@@ -70,7 +70,7 @@ namespace Tankito.Mobile
                 m_touchControlManager = m_joystickRect.GetComponentInParent<TouchControlManager>(true);
             }
             m_parentCanvas = m_touchControlManager.GetComponentInChildren<Canvas>(true);
-            Debug.Log($"{this} m_parentCanvas:{m_parentCanvas} | m_touchControlManager:{m_touchControlManager}");
+            if (DEBUG) Debug.Log($"{this} m_parentCanvas:{m_parentCanvas} | m_touchControlManager:{m_touchControlManager}");
         }
 
         protected override void OnEnable()
@@ -116,10 +116,10 @@ namespace Tankito.Mobile
                     
                     if (Vector2.Distance(touchScreenPosition, m_joystickRect.anchoredPosition) > m_joystickSize.x/2f)
                     {
-                    Debug.Log($"FAILED touch at {touchScreenPosition} | stick anchor {m_joystickRect.anchoredPosition}");
+                    if (DEBUG) Debug.Log($"FAILED touch at {touchScreenPosition} | stick anchor {m_joystickRect.anchoredPosition}");
                         return;
                     }
-                    Debug.Log($"SUCCESFUL touch at {touchScreenPosition} | stick anchor {m_joystickRect.anchoredPosition}");
+                    if (DEBUG) Debug.Log($"SUCCESFUL touch at {touchScreenPosition} | stick anchor {m_joystickRect.anchoredPosition}");
 
                 break;
 
@@ -169,10 +169,10 @@ namespace Tankito.Mobile
 
                 if (Vector2.Distance(currentTouchScreenPosition, m_joystickRect.anchoredPosition) > maxMovement)
                 {
-                    //Debug.Log("Finger outside yolk");
+                    if (DEBUG) Debug.Log("Finger outside yolk");
                     if (m_stickType == StickType.Follow)
                     {
-                        Debug.Log("TODO: Implement Follow stick");
+                        if (DEBUG) Debug.Log("TODO: Implement Follow stick");
                     }
                     knobPosition = (currentTouchScreenPosition - m_joystickRect.anchoredPosition).normalized * maxMovement;
                 }
@@ -232,7 +232,7 @@ namespace Tankito.Mobile
 
         private void OnGUI()
         {
-            if (debugGUI)
+            if (DEBUG)
             {
                 GUIStyle labelStyle = new GUIStyle()
                 {

@@ -29,6 +29,7 @@ namespace Tankito
         private Animator m_turretAnimator, m_hullAnimator;
         [SerializeField]
         private Rigidbody2D m_turretRB;
+        [SerializeField] private bool DEBUG = false;
 
         void Awake()
         {
@@ -55,7 +56,7 @@ namespace Tankito
             if (m_inputReplayTick == NO_REPLAY)
             {
                 // Live Input Mode
-                Debug.Log("Tick:" + ClockManager.TickCounter);
+                if (DEBUG) Debug.Log("Tick:" + ClockManager.TickCounter);
                 m_inputCache.Add(m_currentInput, ClockManager.TickCounter);
                 InputWindowBuffer.Instance.AddInputToWindow(m_currentInput);
                 return m_currentInput;
@@ -108,7 +109,7 @@ namespace Tankito
             }
             else
             {
-                Debug.Log("SE RECOGE EL INPUT WHILE DASH");
+                if (DEBUG) Debug.Log("SE RECOGE EL INPUT WHILE DASH");
                 m_tankController.inputWhileDash = ctx.ReadValue<Vector2>(); // Esto no deberia de hacerse asi....
             }
         }
@@ -163,7 +164,7 @@ namespace Tankito
             }
             else
             {
-                Debug.Log($"Parry {ctx.phase}");
+                if (DEBUG) Debug.Log($"Parry {ctx.phase}");
             }
         }
 
@@ -176,7 +177,7 @@ namespace Tankito
             }
             else
             {
-                Debug.Log($"Fire {ctx.phase}");
+                if (DEBUG) Debug.Log($"Fire {ctx.phase}");
             }
         }
 

@@ -20,6 +20,7 @@ namespace Tankito.Netcode.Messaging
     public class MessageHandlers : NetworkBehaviour
     {
         public static MessageHandlers Instance;
+        [SerializeField] private bool DEBUG = false;
 
         void Awake()
         {
@@ -115,7 +116,7 @@ namespace Tankito.Netcode.Messaging
                 customMessagingManager.SendNamedMessage(MessageName.InputWindow, NetworkManager.ServerClientId, writer, NetworkDelivery.Unreliable);
             }
 
-            Debug.Log($"Sent input window to server : {inputWindow}");
+            //Debug.Log($"Sent input window to server : {inputWindow}");
         }
 
         /// <summary>
@@ -123,29 +124,34 @@ namespace Tankito.Netcode.Messaging
         /// </summary>
         private void ReceiveInputWindow(ulong senderId, FastBufferReader payload)
         {
-            if (!ServerSimulationManager.Instance.remoteInputTanks.ContainsKey(senderId))
-            {
-                Debug.Log($"Client[{senderId}] is not registered in {ServerSimulationManager.Instance.remoteInputTanks}");
-                return;
-            }
+            //if (senderId != NetworkManager.LocalClientId && !ServerSimulationManager.Instance.remoteInputTanks.ContainsKey(senderId))
+            //{
+            //    Debug.LogWarning($"Client[{senderId}] is not registered in {ServerSimulationManager.Instance.remoteInputTanks}");
+            //    return;
+            //}
 
             InputPayload[] receivedInputWindow = new InputPayload[InputWindowBuffer.WINDOW_SIZE];
             payload.ReadValue(out receivedInputWindow);
 
             if (IsServer)
             {
-
                 // Relay Client inputs
                 var relayWriter = new FastBufferWriter(payload.Length, Allocator.Temp);
+                byte[] payloadBytes = new byte[payload.Length];
+                payload.ReadBytes(ref payloadBytes, 0, payload.Length);
+
                 using (relayWriter)
                 {
-                    byte[] payloadBytes = new byte[payload.Length];
-                    payload.ReadBytes(ref payloadBytes, 0,payload.Length);
                     relayWriter.WriteBytesSafe(payloadBytes);
-                    NetworkManager.CustomMessagingManager.SendNamedMessageToAll(MessageName.InputWindow, relayWriter, NetworkDelivery.Unreliable);
+                    var relayDestinations = (System.Collections.Generic.IReadOnlyList<ulong>)NetworkManager.Singleton.ConnectedClientsIds.Where(id => id != senderId);
+                    NetworkManager.CustomMessagingManager.SendNamedMessage(MessageName.InputWindow, relayDestinations, relayWriter, NetworkDelivery.Unreliable);
                 }
+
                 // Store inputWindow
-                ServerSimulationManager.Instance.remoteInputTanks[senderId].AddInput(receivedInputWindow);
+                if (senderId != NetworkManager.LocalClientId)
+                {
+                    ServerSimulationManager.Instance.remoteInputTanks[senderId].AddInput(receivedInputWindow);
+                }
             }
             else
             {
@@ -154,7 +160,7 @@ namespace Tankito.Netcode.Messaging
             }
 
 
-            //Debug.Log($"Recieved input window from client {senderId}: {receivedInputWindow}");
+            if (DEBUG) Debug.Log($"Recieved input window from client {senderId}: {receivedInputWindow}");
         }
 
         public void SendSimulationSnapshot(GlobalSimulationSnapshot snapshot)

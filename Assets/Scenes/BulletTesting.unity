@@ -965,6 +965,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c31bd23f6531cae458d32c3c9772362a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  DEBUG: 1
 --- !u!4 &411366310
 Transform:
   m_ObjectHideFlags: 0
@@ -1823,7 +1824,7 @@ MonoBehaviour:
   m_stickType: 1
   m_hotspotPosition: 1
   m_hotspotDeadzone: 100
-  debugGUI: 0
+  DEBUG: 0
 --- !u!114 &953111503
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1844,7 +1845,7 @@ MonoBehaviour:
   m_stickType: 1
   m_hotspotPosition: 0
   m_hotspotDeadzone: 100
-  debugGUI: 0
+  DEBUG: 0
 --- !u!4 &953111505
 Transform:
   m_ObjectHideFlags: 0
@@ -2313,6 +2314,7 @@ MonoBehaviour:
   PooledPrefabsList:
   - Prefab: {fileID: 4570257745151390860, guid: 85797559142c3c94b8f11faacad78b7f, type: 3}
     PrewarmCount: 2
+  DEBUG: 0
 --- !u!4 &1130587845
 Transform:
   m_ObjectHideFlags: 0
@@ -2650,6 +2652,7 @@ MonoBehaviour:
   _countdownTime: 7
   _countdownText: {fileID: 0}
   _playerInput: {fileID: 953111501}
+  DEBUG: 0
 --- !u!4 &1368221248
 Transform:
   m_ObjectHideFlags: 0

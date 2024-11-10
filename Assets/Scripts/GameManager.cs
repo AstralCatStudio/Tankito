@@ -47,7 +47,7 @@ namespace Tankito
             m_networkManager = NetworkManager.Singleton;
 
             if (m_playerPrefab == null) m_playerPrefab = m_networkManager.NetworkConfig.Prefabs.Prefabs[0].Prefab;
-            if (m_playerPrefab == null) Debug.LogWarning("Something went wron, couldn't obtain player prefab (frist prefab in networkconfig)");
+            if (m_playerPrefab == null) Debug.LogWarning("Something went wrong, couldn't obtain player prefab (frist prefab in networkconfig)");
 
             m_networkManager.OnServerStarted += OnServerStarted;
             m_networkManager.OnClientConnectedCallback += OnClientConnected;
@@ -68,16 +68,16 @@ namespace Tankito
 
         private void OnServerStarted()
         {
-            print("Servidor inicalizado.");        
+            //print("Servidor inicalizado.");        
         }
 
         private void OnClientConnected(ulong clientId)
         {
-            Debug.Log("GameManager CLIENT CONNECTED called.");
+            //Debug.Log("GameManager CLIENT CONNECTED called.");
             
             if (m_loadingSceneFlag)
             {
-                Debug.Log("loadingScene");
+                //Debug.Log("loadingScene");
                 if (IsServer)
                 { NetworkManager.SceneManager.OnLoadEventCompleted += (string sceneName, LoadSceneMode loadSceneMode, List<ulong> clientsCompleted, List<ulong> clientsTimedOut) => OnClientConnected(clientId); }
                 else
@@ -87,7 +87,7 @@ namespace Tankito
             }
             else
             {
-                Debug.Log("notLoading");
+                //Debug.Log("notLoading");
                 if (IsServer)
                 { NetworkManager.SceneManager.OnLoadEventCompleted -= (string sceneName, LoadSceneMode loadSceneMode, List<ulong> clientsCompleted, List<ulong> clientsTimedOut) => OnClientConnected(clientId); }
                 else
@@ -142,7 +142,7 @@ namespace Tankito
         {
             FindPlayerInput();
 
-            Debug.Log($"{predictedController}");
+            //Debug.Log($"{predictedController}");
             m_inputActions.Player.Move.performed += predictedController.OnMove;
             m_inputActions.Player.Move.canceled += predictedController.OnMove;
             m_inputActions.Player.Look.performed += predictedController.OnAim;
@@ -159,7 +159,7 @@ namespace Tankito
         public void SetPlayerName(string name)
         {
             m_playerName = name;
-            Debug.Log("GameManager guarda el nombre:" + m_playerName);
+            //Debug.Log("GameManager guarda el nombre:" + m_playerName);
         }
 
         public string GetPlayerName()

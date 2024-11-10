@@ -36,6 +36,7 @@ namespace Tankito
         [SerializeField] public bool canDash = true;
 
         [SerializeField] private ITankInput m_tankInput;
+        [SerializeField] private bool DEBUG = false;
 
         void Start()
         {
@@ -44,19 +45,19 @@ namespace Tankito
                 m_tankRB = GetComponent<Rigidbody2D>();
                 if (m_tankRB == null)
                 {
-                    Debug.Log("Error tank Rigibody2D reference not set.");
+                    Debug.LogWarning("Error tank Rigibody2D reference not set.");
                 }
             }
 
             if (m_turretRB == null)
             {
-                Debug.Log("Error tank turret reference not set.");
+                Debug.LogWarning("Error tank turret reference not set.");
             }
 
             if (m_tankInput == null)
             {
                 m_tankInput = GetComponent<ITankInput>();
-                if (m_tankInput == null) Debug.Log("ITankInput Reference not set!");
+                if (m_tankInput == null) Debug.LogWarning("ITankInput Reference not set!");
             }
 
             // Subscribe to SimulationObject Kinematics
@@ -73,13 +74,13 @@ namespace Tankito
         public void ProcessInput(float deltaTime)
         {
             var input = m_tankInput.GetInput();
-            Debug.Log($"GetInput called, received input: {input}");
+            if (DEBUG) Debug.Log($"GetInput called, received input: {input}");
             ProcessInput(input, deltaTime);
         }
         
         private void ProcessInput(InputPayload input, float deltaTime)
         {
-            Debug.Log($"Processing {gameObject} input: {input}");
+            if (DEBUG) Debug.Log($"Processing {gameObject} input: {input}");
             if (input.action != TankAction.Dash) // No puedes hacer esto asi, si vas a tener una variable de can dash la tienes que usar aqui, NO cuando estas RECOGIENDO inputs
             {
                 MoveTank(input.moveVector, deltaTime);

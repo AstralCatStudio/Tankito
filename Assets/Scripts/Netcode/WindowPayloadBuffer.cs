@@ -17,7 +17,7 @@ namespace Tankito.Netcode
         public void AddInputToWindow(InputPayload newInput)
         {
             inputBuffer.Add(newInput, newInput.timestamp);
-            MessageHandlers.Instance.SendInputWindowToServer(inputBuffer);
+            if (!NetworkManager.Singleton.IsServer) MessageHandlers.Instance.SendInputWindowToServer(inputBuffer);
         }
     }
 }

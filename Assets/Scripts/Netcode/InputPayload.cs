@@ -12,7 +12,6 @@ namespace Tankito.Netcode
         Fire = 3,
     }
 
-    [System.Serializable]
     public struct InputPayload : INetworkSerializable
     {
         public int timestamp; // net clock count
@@ -42,11 +41,6 @@ namespace Tankito.Netcode
         //    writer.WriteValue(moveVector);
         //    writer.WriteValue(aimVector);
         //    writer.WriteValue(action);
-        //}
-//
-        //public static int GetSerializationSize()
-        //{
-        //    return sizeof(int)+FastBufferWriter.GetWriteSize(default(Vector2))*2+sizeof(TankAction);
         //}
     }
 }
