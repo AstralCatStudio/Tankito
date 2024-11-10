@@ -18,13 +18,13 @@ namespace Tankito
         [SerializeField]
         private int m_tickCounter;
         public static int TickCounter { get => Instance.m_tickCounter; }
-        private float m_simulationDeltaTime;
         [SerializeField]
         private bool m_active;
-        private float m_throttleDeltaTime;
 
         public bool Active { get => m_active; }
-        public static float SimDeltaTime { get => Instance.m_simulationDeltaTime; set => Instance.m_simulationDeltaTime = value; }
+        public static float SimDeltaTime { get => Instance.m_throttleDeltaTime; }
+        private float m_simulationDeltaTime;
+        private float m_throttleDeltaTime;
 
         public delegate void UpdateSimulation();
         public static event UpdateSimulation OnTick;
@@ -39,7 +39,8 @@ namespace Tankito
             m_tickTimer = 0;
             m_tickCounter = 0;
             m_active = false;
-            SimDeltaTime = SIM_DELTA_TIME;
+            m_simulationDeltaTime = SIM_DELTA_TIME;
+            m_throttleDeltaTime = m_simulationDeltaTime;
 
             if (NetworkManager.Singleton.IsServer)
             {
