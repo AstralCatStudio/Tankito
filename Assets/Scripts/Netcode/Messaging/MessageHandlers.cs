@@ -181,7 +181,7 @@ namespace Tankito.Netcode.Messaging
                     ServerSimulationManager.Instance.remoteInputTanks[senderId].AddInput(receivedInputWindow.ToArray());
 
                     // Respond with throttling signal
-                    int throttleTicks = ServerSimulationManager.Instance.remoteInputTanks[senderId].IdealBufferSize-ServerSimulationManager.Instance.remoteInputTanks[senderId].BufferSize;
+                    int throttleTicks = ServerSimulationManager.Instance.remoteInputTanks[senderId].BufferSize-ServerSimulationManager.Instance.remoteInputTanks[senderId].IdealBufferSize;
                     var throttleSignal = new ClockSignal(ClockSignalHeader.Throttle, throttleTicks);
                     var throttleWriter = new FastBufferWriter(FastBufferWriter.GetWriteSize(throttleSignal), Allocator.Temp);
 
