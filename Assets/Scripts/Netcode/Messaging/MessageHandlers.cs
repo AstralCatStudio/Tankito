@@ -73,6 +73,8 @@ namespace Tankito.Netcode.Messaging
                 writer.WriteValue(signal);
                 customMessagingManager.SendNamedMessageToAll(MessageName.ClockSignal, writer, NetworkDelivery.ReliableSequenced);
             }
+
+            ClockManager.Instance.StartClock();
             if (DEBUG_CLOCK) Debug.Log($"Sent clock signal: {signal}");
         }
 
