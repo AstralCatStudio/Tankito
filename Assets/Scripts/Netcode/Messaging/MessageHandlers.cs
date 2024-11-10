@@ -7,6 +7,7 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Linq;
 using Tankito.Netcode.Simulation;
+using System.Collections.Generic;
 
 namespace Tankito.Netcode.Messaging
 {
@@ -20,7 +21,8 @@ namespace Tankito.Netcode.Messaging
     public class MessageHandlers : NetworkBehaviour
     {
         public static MessageHandlers Instance;
-        [SerializeField] private bool DEBUG = false;
+        [SerializeField] private bool DEBUG_INPUT = false;
+        [SerializeField] private bool DEBUG_CLOCK = false;
 
         void Awake()
         {
@@ -67,9 +69,10 @@ namespace Tankito.Netcode.Messaging
 
             using (writer)
             {
-                writer.WriteValue<ClockSignal>(signal);
+                writer.WriteValue(signal);
                 customMessagingManager.SendNamedMessageToAll(MessageName.ClockSignal, writer, NetworkDelivery.ReliableSequenced);
             }
+            if (DEBUG_CLOCK) Debug.Log($"Sent clock signal: {signal}");
         }
 
         private void RecieveClockSignal(ulong serverId, FastBufferReader payload)
@@ -99,6 +102,7 @@ namespace Tankito.Netcode.Messaging
                 default:
                     throw new InvalidOperationException($"{signal.header} is not a valid clock signal header!");
             }
+            if (DEBUG_CLOCK) Debug.Log($"Received clock signal: {signal}");
         }
 
         /// <summary>
@@ -106,17 +110,28 @@ namespace Tankito.Netcode.Messaging
         /// </summary>
         public void SendInputWindowToServer(CircularBuffer<InputPayload> inputWindow)
         {
-            var inputArr = inputWindow.ToArray();
-            var writer = new FastBufferWriter(FastBufferWriter.GetWriteSize(inputArr), Allocator.Temp);
+            var writer = new FastBufferWriter(FastBufferWriter.GetWriteSize<InputPayload>()*inputWindow.Count, Allocator.Temp);
             var customMessagingManager = NetworkManager.CustomMessagingManager;
 
             using (writer)
             {
-                writer.WriteValue(inputArr);
+                foreach(var input in inputWindow)
+                {
+                    writer.WriteValue(input);
+                }
+                
                 customMessagingManager.SendNamedMessage(MessageName.InputWindow, NetworkManager.ServerClientId, writer, NetworkDelivery.Unreliable);
             }
 
-            //Debug.Log($"Sent input window to server : {inputWindow}");
+            if (DEBUG_INPUT)
+            {
+                string inputWindowTicks = "";
+                foreach(var ip in inputWindow)
+                {
+                    inputWindowTicks += ip.timestamp + ((ip.timestamp != inputWindow.Last().timestamp) ? ", " : "");
+                }
+                if (DEBUG_INPUT) Debug.Log($"Sent input window: ticks({inputWindowTicks})");
+            }
         }
 
         /// <summary>
@@ -130,8 +145,14 @@ namespace Tankito.Netcode.Messaging
             //    return;
             //}
 
-            InputPayload[] receivedInputWindow = new InputPayload[InputWindowBuffer.WINDOW_SIZE];
-            payload.ReadValue(out receivedInputWindow);
+            List<InputPayload> receivedInputWindow = new List<InputPayload>();
+
+            while (payload.TryBeginRead(FastBufferWriter.GetWriteSize<InputPayload>()))
+            {
+                InputPayload inputPayload;
+                payload.ReadValue(out inputPayload);
+                receivedInputWindow.Add(inputPayload);
+            }
 
             if (IsServer)
             {
@@ -143,24 +164,31 @@ namespace Tankito.Netcode.Messaging
                 using (relayWriter)
                 {
                     relayWriter.WriteBytesSafe(payloadBytes);
-                    var relayDestinations = (System.Collections.Generic.IReadOnlyList<ulong>)NetworkManager.Singleton.ConnectedClientsIds.Where(id => id != senderId);
+                    var relayDestinations = NetworkManager.Singleton.ConnectedClientsIds.Where(id => id != senderId).ToArray();
                     NetworkManager.CustomMessagingManager.SendNamedMessage(MessageName.InputWindow, relayDestinations, relayWriter, NetworkDelivery.Unreliable);
                 }
 
                 // Store inputWindow
                 if (senderId != NetworkManager.LocalClientId)
                 {
-                    ServerSimulationManager.Instance.remoteInputTanks[senderId].AddInput(receivedInputWindow);
+                    ServerSimulationManager.Instance.remoteInputTanks[senderId].AddInput(receivedInputWindow.ToArray());
                 }
             }
             else
             {
                 // Store inputWindow
-                ClientSimulationManager.Instance.emulatedInputTanks[senderId].ReceiveInputWindow(receivedInputWindow);
+                ClientSimulationManager.Instance.emulatedInputTanks[senderId].ReceiveInputWindow(receivedInputWindow.ToArray());
             }
 
-
-            if (DEBUG) Debug.Log($"Recieved input window from client {senderId}: {receivedInputWindow}");
+            if (DEBUG_INPUT)
+            {
+                string inputWindowTicks = "";
+                foreach(var ip in receivedInputWindow)
+                {
+                    inputWindowTicks += ip.timestamp + ((ip.timestamp != receivedInputWindow.Last().timestamp) ? ", " : "");
+                }
+                Debug.Log($"Recieved input window from client {senderId}: ticks({inputWindowTicks})");
+            }
         }
 
         public void SendSimulationSnapshot(GlobalSimulationSnapshot snapshot)

@@ -23,5 +23,13 @@ namespace Tankito.Netcode.Messaging
                 serializer.SerializeValue(ref throttleTicks);
             }
         }
+
+        public override string ToString()
+        {
+            string res = "";
+            res += header.ToString();
+            if (header == ClockSignalHeader.Throttle) res += "-" + throttleTicks;
+            return res;
+        }
     }
 }
