@@ -25,16 +25,18 @@ public class RoundManager : NetworkBehaviour
 
     private bool _startedGame;
 
-    public GameObject _playerInput;
+    private GameObject _playerInput;
 
     void Start()
     {
+        _startedGame = false;
+
+        _playerInput = GameObject.Find("PlayerInput");
+
         if (!_startedGame)
         {
             DisablePlayerInput();
         }
-
-        _startedGame = false;
 
         _roundUI = FindObjectOfType<RoundUI>();
 
@@ -45,10 +47,10 @@ public class RoundManager : NetworkBehaviour
     {
         if (IsServer)
         {
-            if (Input.GetKeyUp(KeyCode.Alpha1) && !_startedGame && _players.Count > 1)
+            /*if (Input.GetKeyUp(KeyCode.Alpha1) && !_startedGame && _players.Count > 1)
             {
                 InitializeRound();
-            }
+            }*/
 
             if (Input.GetKeyUp(KeyCode.Alpha2) && _alivePlayers.Count > 1)
             {
@@ -64,7 +66,6 @@ public class RoundManager : NetworkBehaviour
             if (_countdownText != null)
             {
                 string newText = Mathf.Ceil(_currentTime).ToString();
-                _countdownText.text = newText;
                 SetCountdownTextClientRpc(newText);
             }
 
@@ -92,9 +93,10 @@ public class RoundManager : NetworkBehaviour
         if (_alivePlayers.Contains(player))
         {
             _alivePlayers.Remove(player);
+            DisablePlayerInputClientRpc(player.GetComponent<NetworkObject>().OwnerClientId);
             player.GetComponent<TankData>().IncreasePoints(_players.Count - _alivePlayers.Count);
-            Debug.Log($"El jugador {player.name} de puntuacion {player.GetComponent<TankData>().points} ha sido eliminado");
-            UpdateRemainingPlayersText();
+            Debug.Log($"El jugador {player.GetComponent<NetworkObject>().OwnerClientId} de puntuacion {player.GetComponent<TankData>().points} ha sido eliminado");
+            UpdateRemainingPlayersTextClientRpc(_alivePlayers.Count);
             CheckForWinner();
         }
     }
@@ -133,19 +135,14 @@ public class RoundManager : NetworkBehaviour
         }
 
         Debug.Log("Inicio ronda " + _currentRound);
-        UpdateRemainingPlayersText();
-        StartCountdown();
-    }
-
-    private void UpdateRemainingPlayersText()
-    {
-        _roundUI.SetPlayersAlive(_alivePlayers.Count);
         UpdateRemainingPlayersTextClientRpc(_alivePlayers.Count);
+        StartCountdown();
     }
 
     [ClientRpc]
     private void UpdateRemainingPlayersTextClientRpc(int players)
     {
+        Debug.Log("Rpc player text");
         _roundUI.SetPlayersAlive(players);
     }
 
@@ -158,7 +155,7 @@ public class RoundManager : NetworkBehaviour
 
         Debug.Log("Cuenta atras iniciada");
 
-        DisablePlayerInput();
+        DisablePlayerInputClientRpc();
     }
 
     private void EndCountdown()
@@ -166,10 +163,10 @@ public class RoundManager : NetworkBehaviour
         _isCountingDown = false;
 
         Debug.Log("Fin de cuenta atras");
-        _countdownText.text = "BATTLE!";
+
         SetCountdownTextClientRpc("BATTLE!");
-        _startedGame = true;
-        EnablePlayerInput();
+
+        EnablePlayerInputClientRpc();
     }
 
     [ClientRpc]
@@ -187,7 +184,6 @@ public class RoundManager : NetworkBehaviour
     private void DisablePlayerInput()
     {
         _playerInput.SetActive(false);
-        DisablePlayerInputClientRpc();
     }
 
     [ClientRpc]
@@ -195,14 +191,31 @@ public class RoundManager : NetworkBehaviour
     {
         if (_playerInput != null)
         {
+            Debug.Log("Player input desactivado");
             _playerInput.SetActive(false);
+        }
+        else
+        {
+            Debug.Log("Player input no encontrado");
         }
     }
 
-    private void EnablePlayerInput()
+    [ClientRpc]
+    private void DisablePlayerInputClientRpc(ulong clientId)
     {
-        _playerInput.SetActive(true);
-        EnablePlayerInputClientRpc();
+        if (clientId == NetworkManager.Singleton.LocalClientId)
+        {
+            //Debug.Log("Desactivo input porque me han derrotado");
+            if (_playerInput != null)
+            {
+                Debug.Log("Player input desactivado");
+                _playerInput.SetActive(false);
+            }
+            else
+            {
+                Debug.Log("Player input no encontrado");
+            }
+        }
     }
 
     [ClientRpc]
@@ -240,7 +253,7 @@ public class RoundManager : NetworkBehaviour
     {
         Debug.Log("NETLESS: Fin de ronda");
         EndRoundClientRpc();
-        DisablePlayerInput();
+        DisablePlayerInputClientRpc();
         BetweenRounds();
     }
 
@@ -255,7 +268,6 @@ public class RoundManager : NetworkBehaviour
         if (_currentRound < _maxRounds)
         {
             ShowRanking();
-            //ShowRankingClientRpc();
             Invoke(nameof(PowerUpSelection), 3.0f);
             Invoke(nameof(InitializeRound), 8.0f);
         }
@@ -271,8 +283,6 @@ public class RoundManager : NetworkBehaviour
     {
         Debug.Log("NETLESS: Se muestra el ranking");
         GenerateRanking();
-        _roundUI.SetActiveRanking(true);
-        _roundUI.SetRankingText(_ranking);
         ShowRankingClientRpc(_ranking);
     }
 
@@ -287,7 +297,7 @@ public class RoundManager : NetworkBehaviour
     private void ShowFinalRanking()
     {
         Debug.Log("NETLESS: Se muestra el ranking final");
-        _roundUI.SetActiveRankingFinal(true);
+        //_roundUI.SetActiveRankingFinal(true);
         ShowFinalRankingClientRpc();
     }
 
@@ -301,8 +311,7 @@ public class RoundManager : NetworkBehaviour
     private void PowerUpSelection()
     {
         Debug.Log("NETLESS: Se eligen power ups");
-        _roundUI.SetActiveRanking(false);
-        _roundUI.SetActivePowerUps(true);
+        // Aqui se meteria la logica de elegir power ups supongo
         ShowPowerUpsClientRpc();
     }
 
@@ -342,7 +351,7 @@ public class RoundManager : NetworkBehaviour
 
         for (int i = 0; i < sortedPlayers.Count; i++)
         {
-            _ranking += $"\n{i + 1}. {sortedPlayers[i].name}  {sortedPlayers[i].GetComponent<TankData>().points} puntos";
+            _ranking += $"\n{i + 1}. Jugador {sortedPlayers[i].GetComponent<NetworkObject>().OwnerClientId}:  {sortedPlayers[i].GetComponent<TankData>().points} puntos";
         }
     }
 }
