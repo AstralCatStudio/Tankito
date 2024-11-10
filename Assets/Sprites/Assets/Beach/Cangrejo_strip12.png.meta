@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 39b2b1b06b02145469f1fbb3bb837995
+guid: 6fe39ffd1e1aba9488efbe9302210662
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -123,13 +123,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: spr_castillo_de_arena_strip6_0
+      name: Cangrejo_strip12_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 187
-        height: 182
+        width: 128
+        height: 128
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -137,20 +137,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7c527896df5f39649ba13a765cbaef51
-      internalID: 203773422
+      spriteID: f27a036bb8409be47bdf8e3b56bb278c
+      internalID: -1951603946
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: spr_castillo_de_arena_strip6_1
+      name: Cangrejo_strip12_1
       rect:
         serializedVersion: 2
-        x: 187
+        x: 128
         y: 0
-        width: 187
-        height: 182
+        width: 128
+        height: 128
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -158,20 +158,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a93352aa4b7f08f448c8ce4d80b80ead
-      internalID: 2008322218
+      spriteID: e6f327b4c1ebde54eb295e1789eb5905
+      internalID: 1287002132
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: spr_castillo_de_arena_strip6_2
+      name: Cangrejo_strip12_2
       rect:
         serializedVersion: 2
-        x: 374
+        x: 256
         y: 0
-        width: 187
-        height: 182
+        width: 128
+        height: 128
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -179,20 +179,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b3dd974fde311604f898d92be9ab7149
-      internalID: 48575
+      spriteID: f180e85514f5fe448bd84a69320231fd
+      internalID: 1777216841
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: spr_castillo_de_arena_strip6_3
+      name: Cangrejo_strip12_3
       rect:
         serializedVersion: 2
-        x: 561
+        x: 384
         y: 0
-        width: 187
-        height: 182
+        width: 128
+        height: 128
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -200,20 +200,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2b9f9c8bfeb23f84abe7ec9250587c7d
-      internalID: 80577114
+      spriteID: 289908a1fbc0cc04fb47b1b170ad72a4
+      internalID: 1342966081
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: spr_castillo_de_arena_strip6_4
+      name: Cangrejo_strip12_4
       rect:
         serializedVersion: 2
-        x: 748
+        x: 512
         y: 0
-        width: 187
-        height: 182
+        width: 128
+        height: 128
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -221,20 +221,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 278dca02987e3ad48a33456b779dc315
-      internalID: -1416485132
+      spriteID: e92cc992f43a08d4cbee75d5260b7033
+      internalID: 168020759
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: spr_castillo_de_arena_strip6_5
+      name: Cangrejo_strip12_5
       rect:
         serializedVersion: 2
-        x: 935
+        x: 640
         y: 0
-        width: 187
-        height: 182
+        width: 128
+        height: 128
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -242,8 +242,134 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 4c587907c8c2f7046ac952451f2d59be
-      internalID: 1256196695
+      spriteID: 8a3dde7066584a044a38f8327d1995e2
+      internalID: -10679843
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cangrejo_strip12_6
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 0
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5537c186b4cab334199b5821faa5fac6
+      internalID: 1918001736
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cangrejo_strip12_7
+      rect:
+        serializedVersion: 2
+        x: 896
+        y: 0
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2352b680bec1a924eb5670af9119404f
+      internalID: -1024239314
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cangrejo_strip12_8
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 0
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8de47fdf4b2237a4c85ef923ae6957bd
+      internalID: 115449082
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cangrejo_strip12_9
+      rect:
+        serializedVersion: 2
+        x: 1152
+        y: 0
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 48381a979a6ae3c418a8b6544dd4882c
+      internalID: 1751320780
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cangrejo_strip12_10
+      rect:
+        serializedVersion: 2
+        x: 1280
+        y: 0
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7d955c91c29664b40ae04e803086a788
+      internalID: 117195004
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cangrejo_strip12_11
+      rect:
+        serializedVersion: 2
+        x: 1408
+        y: 0
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7ee0bddb29d95024fbc49c9c2eecb641
+      internalID: -205351872
       vertices: []
       indices: 
       edges: []
@@ -259,12 +385,18 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      spr_castillo_de_arena_strip6_0: 203773422
-      spr_castillo_de_arena_strip6_1: 2008322218
-      spr_castillo_de_arena_strip6_2: 48575
-      spr_castillo_de_arena_strip6_3: 80577114
-      spr_castillo_de_arena_strip6_4: -1416485132
-      spr_castillo_de_arena_strip6_5: 1256196695
+      Cangrejo_strip12_0: -1951603946
+      Cangrejo_strip12_1: 1287002132
+      Cangrejo_strip12_10: 117195004
+      Cangrejo_strip12_11: -205351872
+      Cangrejo_strip12_2: 1777216841
+      Cangrejo_strip12_3: 1342966081
+      Cangrejo_strip12_4: 168020759
+      Cangrejo_strip12_5: -10679843
+      Cangrejo_strip12_6: 1918001736
+      Cangrejo_strip12_7: -1024239314
+      Cangrejo_strip12_8: 115449082
+      Cangrejo_strip12_9: 1751320780
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
