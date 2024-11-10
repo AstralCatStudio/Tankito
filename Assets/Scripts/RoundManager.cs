@@ -5,6 +5,7 @@ using Unity.Netcode;
 using UnityEngine.UI;
 using TMPro;
 using System.Linq;
+using UnityEditor.PackageManager;
 
 public class RoundManager : NetworkBehaviour
 {
@@ -97,7 +98,12 @@ public class RoundManager : NetworkBehaviour
         if (_alivePlayers.ContainsKey(clientId))
         {
             _alivePlayers.Remove(clientId);
+
             DisablePlayerInputClientRpc(player.GetComponent<NetworkObject>().OwnerClientId);
+
+            NetworkObjectReference playerReference = new NetworkObjectReference(player.GetComponent<NetworkObject>());
+            DisableTankClientRpc(playerReference);
+
             player.GetComponent<TankData>().IncreasePoints(_players.Count - _alivePlayers.Count);
 
             Debug.Log($"El jugador {player.GetComponent<NetworkObject>().OwnerClientId} de puntuacion {player.GetComponent<TankData>().points} ha sido eliminado");
@@ -121,8 +127,43 @@ public class RoundManager : NetworkBehaviour
 
     public void DebugDamagePlayer()
     {
-        _alivePlayers[1].GetComponent<TankData>().TakeDamage(2);
+        _alivePlayers.ElementAt(1).Value.GetComponent<TankData>().TakeDamage(2);
     }
+
+    [ClientRpc]
+    private void DisableTankClientRpc(NetworkObjectReference targetObjectReference)
+    {
+        if(targetObjectReference.TryGet(out var targetObject))
+        {
+            if(targetObject != null)
+            {
+                Debug.Log($"GameObject del jugador {targetObject.GetComponent<NetworkObject>().OwnerClientId} desactivado en todos los clientes.");
+                targetObject.gameObject.SetActive(false);
+            }
+            else
+            {
+                Debug.LogWarning($"No se encontró el PlayerObject para el cliente con ID {targetObject.GetComponent<NetworkObject>().OwnerClientId}");
+            }
+        }
+    }
+    
+    [ClientRpc]
+    private void EnableTankClientRpc(NetworkObjectReference targetObjectReference)
+    {
+        if(targetObjectReference.TryGet(out var targetObject))
+        {
+            if(targetObject != null)
+            {
+                Debug.Log($"GameObject del jugador {targetObject.GetComponent<NetworkObject>().OwnerClientId} activado en todos los clientes.");
+                targetObject.gameObject.SetActive(true);
+            }
+            else
+            {
+                Debug.LogWarning($"No se encontró el PlayerObject para el cliente con ID {targetObject.GetComponent<NetworkObject>().OwnerClientId}");
+            }
+        }
+    }
+
     #endregion
 
     public void InitializeRound()
@@ -130,24 +171,32 @@ public class RoundManager : NetworkBehaviour
         _roundUI.SetActivePowerUps(false);
         DisablePowerUpsClientRpc();
 
-        _alivePlayers = new Dictionary<ulong, GameObject>(_players);
         _currentRound++;
+
+        ResetPlayers();
+
+        Debug.Log("Inicio ronda " + _currentRound);
+        UpdateRemainingPlayersTextClientRpc(_alivePlayers.Count);
+        StartCountdown();
+    }
+
+    private void ResetPlayers()
+    {
+        _alivePlayers = new Dictionary<ulong, GameObject>(_players);
 
         if (_currentRound > 1)
         {
             foreach (var aux in _alivePlayers)
             {
                 GameObject player = aux.Value;
-                if (player != null)
+                if (player != null && !player.activeSelf)
                 {
-                    player.GetComponent<TankData>().Reset();
+                    NetworkObjectReference targetObject = new NetworkObjectReference(player.GetComponent<NetworkObject>());
+                    EnableTankClientRpc(targetObject);
+                    player.GetComponent<TankData>().ResetTank();
                 }
             }
         }
-
-        Debug.Log("Inicio ronda " + _currentRound);
-        UpdateRemainingPlayersTextClientRpc(_alivePlayers.Count);
-        StartCountdown();
     }
 
     [ClientRpc]

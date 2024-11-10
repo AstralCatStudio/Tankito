@@ -15,6 +15,8 @@ public class TankData : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
+        base.OnNetworkSpawn();
+
         if (IsServer)
         {
             RegisterToRoundManager();
@@ -53,7 +55,7 @@ public class TankData : NetworkBehaviour
             }
         }
     }
-    public void Reset()
+    public void ResetTank()
     {
         health.Value = 2;
         isAlive.Value = true;
