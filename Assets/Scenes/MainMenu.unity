@@ -410,7 +410,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 0e3347dcfdb1d9a4ca382050e6fea7bd, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 4a118fec42c93f84abbd63f5c4230346, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -2604,8 +2604,8 @@ MonoBehaviour:
   currentMenuIndex: 0
   xUnit: 23.44
   yUnit: 12.8
-  bgParallaxFactor: 2
-  mgParallaxFactor: 1.4
+  bgParallaxFactor: 1.55
+  mgParallaxFactor: 1.2
   fgParallaxFactor: 1
   menuChanged:
     m_PersistentCalls:
@@ -4185,12 +4185,12 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: -2
-  m_Sprite: {fileID: 21300000, guid: 84902723079ad5043b6bac4090588c16, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 1b5368c4194cd93459ae757ea027a50e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 25.6, y: 12.8}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -14347,7 +14347,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 710772d21d0896e4e95c75fc31cd2201, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shopContent: []
   contentParent: {fileID: 92942789}
   contentPrefab: {fileID: 8252116669272352229, guid: df6bcb737e4d03a43bd6ee760d06d2e2, type: 3}
 --- !u!1 &1399344443
@@ -15471,7 +15470,7 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 4
+          m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -15572,7 +15571,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: -1
-  m_Sprite: {fileID: 21300000, guid: 27bbec3601893354f94cdd77e5d90b6a, type: 3}
+  m_Sprite: {fileID: 21300000, guid: ca1c148f7f24087459f808160f9e3082, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
