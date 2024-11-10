@@ -12,3 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8b3a5143a39cad4b84f6da055a79388, type: 3}
   m_Name: TestBulletModifier
   m_EditorClassIdentifier: 
+  onSpawnEvents: []
+  onFlyEvents: []
+  onHitEvents: []
+  onBounceEvents: []
+  onDetonateEvents:
+  - {fileID: 0}
+  bulletStatsModifier:
+    speedMultiplier: 0
+    sizeMultiplier: 0
+    accelerationAdded: 0
+    BouncesAdded: 0
+    lifeTimeAdded: 0
+    boomerangEffect: 0
