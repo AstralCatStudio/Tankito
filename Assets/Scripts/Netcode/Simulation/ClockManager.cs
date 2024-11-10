@@ -94,7 +94,8 @@ namespace Tankito
         {
             if (NetworkManager.Singleton.IsServer)
             {
-                throw new InvalidOperationException("SERVER MUSTN'T Throttle");
+                Debug.LogWarning("SERVER MUSTN'T Throttle");
+                return;
             }
 
             m_throttleDeltaTime = m_simulationDeltaTime + throttleTicks/TICKS_PER_SECOND;
