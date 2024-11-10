@@ -8,7 +8,6 @@ namespace Tankito.Netcode.Simulation
         [SerializeField] private Rigidbody2D m_tankRB;
         [SerializeField] private Rigidbody2D m_turretRB;
         [SerializeField] private ITankInput m_inputComponent;
-        [SerializeField] private ulong m_controllerClientId;
 
         public void StartInputReplay(int timestamp) { m_inputComponent.StartInputReplay(timestamp); }
         public int StopInputReplay() { return m_inputComponent.StopInputReplay(); }
@@ -28,11 +27,6 @@ namespace Tankito.Netcode.Simulation
             {
                 Debug.Log("Error tank turret reference not set.");
             }
-        }
-
-        public void SetClientController(ulong clientId)
-        {
-            m_controllerClientId = clientId;
         }
 
         public override void OnNetworkSpawn()
