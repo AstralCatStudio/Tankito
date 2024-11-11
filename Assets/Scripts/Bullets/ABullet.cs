@@ -44,6 +44,7 @@ namespace Tankito {
         public ulong m_shooterID;
         protected int m_bouncesLeft = 0;
         protected float m_lifetime = 0; // Life Time counter
+        protected Vector2 lastCollisionNormal = Vector2.zero;
         public Action<ABullet> OnSpawn = (ABullet) => { }, OnFly = (ABullet) => { }, OnHit = (ABullet) => { }, OnBounce = (ABullet) => { }, OnDetonate = (ABullet) => { };
 
 

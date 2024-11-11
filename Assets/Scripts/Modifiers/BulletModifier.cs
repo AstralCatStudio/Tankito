@@ -23,11 +23,11 @@ namespace Tankito
     {
         
 
-        public List<AModifierEvent> onSpawnEvents;
-        public List<AModifierEvent> onFlyEvents;
-        public List<AModifierEvent> onHitEvents;
-        public List<AModifierEvent> onBounceEvents;
-        public List<AModifierEvent> onDetonateEvents;
+        public List<ABulletModifierEvent> onSpawnEvents;
+        public List<ABulletModifierEvent> onFlyEvents;
+        public List<ABulletModifierEvent> onHitEvents;
+        public List<ABulletModifierEvent> onBounceEvents;
+        public List<ABulletModifierEvent> onDetonateEvents;
         public BulletStatsModifier bulletStatsModifier;
         public void ConnectModifier(ABullet newBullet)
         {

@@ -37,10 +37,14 @@ namespace Tankito
 
         public void Detonate()
         {
-            OnDetonate.Invoke(this);
-            // Return to the pool from whence it came.
-            var networkObject = gameObject.GetComponent<NetworkObject>();
-            networkObject.Despawn();
+            if (IsServer)
+            {
+                OnDetonate.Invoke(this);
+                // Return to the pool from whence it came.
+                var networkObject = gameObject.GetComponent<NetworkObject>();
+                networkObject.Despawn();
+            }
+            
             
                 // Posiblemente esconderlo/hacer lo que haga falta antes de tiempo como "prediccion" client-side ??
             
@@ -48,6 +52,7 @@ namespace Tankito
         
         private void OnCollisionEnter2D(Collision2D collision)
         {
+            lastCollisionNormal = collision.GetContact(0).normal;
             switch (collision.gameObject.tag)
             {
                 case "NormalWall":
