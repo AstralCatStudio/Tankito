@@ -73,8 +73,14 @@ namespace Tankito
 
             //SceneManager.LoadSceneAsync("GameInitTest", LoadSceneMode.Additive);
 
-
-            yield return NetworkManager.Singleton.SceneManager.LoadScene("GameInitTest", LoadSceneMode.Additive); // ("BulletTesting", LoadSceneMode.Additive);
+            if(NetworkManager.Singleton.IsServer)
+            {
+                yield return NetworkManager.Singleton.SceneManager.LoadScene("GameInitTest", LoadSceneMode.Additive);
+            }
+            else
+            {
+                SceneManager.LoadScene("GameInitTest", LoadSceneMode.Additive);
+            }
 
             Debug.Log("Game Loaded!");
 

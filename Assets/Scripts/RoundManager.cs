@@ -29,12 +29,19 @@ public class RoundManager : NetworkBehaviour
 
     private GameObject _playerInput;
 
+    private SpawnManager _spawnManager;
+
     void Start()
     {
         _startedGame = false;
         _startedRound = false;
 
         _playerInput = GameObject.Find("PlayerInput");
+
+        if (IsServer)
+        {
+            _spawnManager = GameObject.Find("SpawnManager").GetComponent<SpawnManager>();
+        }
 
         if (!_startedGame)
         {
@@ -133,9 +140,9 @@ public class RoundManager : NetworkBehaviour
     [ClientRpc]
     private void DisableTankClientRpc(NetworkObjectReference targetObjectReference)
     {
-        if(targetObjectReference.TryGet(out var targetObject))
+        if (targetObjectReference.TryGet(out var targetObject))
         {
-            if(targetObject != null)
+            if (targetObject != null)
             {
                 Debug.Log($"GameObject del jugador {targetObject.GetComponent<NetworkObject>().OwnerClientId} desactivado en todos los clientes.");
                 targetObject.gameObject.SetActive(false);
@@ -146,13 +153,30 @@ public class RoundManager : NetworkBehaviour
             }
         }
     }
-    
+
+    [ClientRpc]
+    private void SetObjectPositionClientRpc(NetworkObjectReference targetObjectReference, Vector3 newPosition)
+    {
+        if (targetObjectReference.TryGet(out var targetObject))
+        {
+            if (targetObject != null)
+            {
+                targetObject.gameObject.GetComponent<Transform>().position = newPosition;
+                Debug.Log($"GameObject del jugador {targetObject.GetComponent<NetworkObject>().OwnerClientId} colocado en el punto {newPosition.ToString()}");
+            }
+            else
+            {
+                Debug.LogWarning($"No se encontró el PlayerObject para el cliente con ID {targetObject.GetComponent<NetworkObject>().OwnerClientId}");
+            }
+        }
+    }
+
     [ClientRpc]
     private void EnableTankClientRpc(NetworkObjectReference targetObjectReference)
     {
-        if(targetObjectReference.TryGet(out var targetObject))
+        if (targetObjectReference.TryGet(out var targetObject))
         {
-            if(targetObject != null)
+            if (targetObject != null)
             {
                 Debug.Log($"GameObject del jugador {targetObject.GetComponent<NetworkObject>().OwnerClientId} activado en todos los clientes.");
                 targetObject.gameObject.SetActive(true);
@@ -186,14 +210,20 @@ public class RoundManager : NetworkBehaviour
 
         if (_currentRound > 1)
         {
+            _spawnManager.ResetSpawnPoints();
+
             foreach (var aux in _alivePlayers)
             {
                 GameObject player = aux.Value;
-                if (player != null && !player.activeSelf)
+                if (player != null)
                 {
-                    NetworkObjectReference targetObject = new NetworkObjectReference(player.GetComponent<NetworkObject>());
-                    EnableTankClientRpc(targetObject);
-                    player.GetComponent<TankData>().ResetTank();
+                    SetObjectPositionClientRpc(player, _spawnManager.GetSpawnPoint());
+                    if (!player.activeSelf)
+                    {
+                        NetworkObjectReference targetObject = new NetworkObjectReference(player.GetComponent<NetworkObject>());
+                        EnableTankClientRpc(targetObject);
+                        player.GetComponent<TankData>().ResetTank();
+                    }
                 }
             }
         }
@@ -235,7 +265,7 @@ public class RoundManager : NetworkBehaviour
     private void SetCountdownTextClientRpc(string text)
     {
         _startedGame = true;
-        
+
         if (_countdownText != null)
         {
             _countdownText.text = text;
