@@ -257,7 +257,7 @@ namespace Tankito.Netcode
             }
             else
             {
-                Debug.Log($"Fire {ctx.phase}");
+                //Debug.Log($"Fire {ctx.phase}");
             }
         }
         #endregion

@@ -16,6 +16,18 @@ namespace Tankito
         public float amountAdded;
         public float amountMultiplier;
         public float spreadMultiplier;
+        public BulletStatsModifier(float speed, Vector2 size, float acceleration, int bounces, float lifetime, float boomerang, float amount, float amountmult, float spread)
+        {
+            speedMultiplier=speed;
+            sizeMultiplier=size;
+            accelerationAdded=acceleration;
+            BouncesAdded=bounces;
+            lifeTimeAdded = lifetime;
+            boomerangEffect=boomerang;
+            amountAdded=amount;
+            amountMultiplier=amountmult;
+            spreadMultiplier=spread;
+        }
     }
 
     [CreateAssetMenu(menuName = "Modificadores/ModificadorBalas", order = 2, fileName = "Nuevo Modificador Balas")]
@@ -28,7 +40,7 @@ namespace Tankito
         public List<ABulletModifierEvent> onHitEvents;
         public List<ABulletModifierEvent> onBounceEvents;
         public List<ABulletModifierEvent> onDetonateEvents;
-        public BulletStatsModifier bulletStatsModifier;
+        public BulletStatsModifier bulletStatsModifier = new BulletStatsModifier(1,Vector2.one,0,0,0,0,0,1,1);
         public void ConnectModifier(ABullet newBullet)
         {
             newBullet.OnSpawn += OnSpawn;

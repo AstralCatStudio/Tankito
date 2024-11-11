@@ -101,13 +101,13 @@ public class RoundManager : NetworkBehaviour
 
     private void OnEnable()
     {
-        Debug.Log("Se suscribe al evento de morir tanque");
+        //Debug.Log("Se suscribe al evento de morir tanque");
         TankData.OnTankDestroyed += EliminatePlayer;
     }
 
     private void OnDisable()
     {
-        Debug.Log("Se desuscribe al evento de morir tanque");
+        //Debug.Log("Se desuscribe al evento de morir tanque");
         TankData.OnTankDestroyed -= EliminatePlayer;
     }
 

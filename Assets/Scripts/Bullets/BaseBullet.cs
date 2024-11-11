@@ -9,7 +9,6 @@ namespace Tankito
     {
         [SerializeField]
         private Rigidbody2D m_rb;
-        
         public override void Init()
         {
             base.Init();
@@ -37,17 +36,19 @@ namespace Tankito
 
         public void Detonate()
         {
+            OnDetonate.Invoke(this);
             if (IsServer)
             {
-                OnDetonate.Invoke(this);
-                // Return to the pool from whence it came.
+                DetonateClientRpc();
                 var networkObject = gameObject.GetComponent<NetworkObject>();
                 networkObject.Despawn();
             }
-            
-            
-                // Posiblemente esconderlo/hacer lo que haga falta antes de tiempo como "prediccion" client-side ??
-            
+        }
+
+        [ClientRpc]
+        void DetonateClientRpc()
+        {
+                OnDetonate.Invoke(this);
         }
         
         private void OnCollisionEnter2D(Collision2D collision)

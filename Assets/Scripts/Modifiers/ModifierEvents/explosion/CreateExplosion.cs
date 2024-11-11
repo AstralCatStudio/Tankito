@@ -9,7 +9,7 @@ using UnityEngine.SceneManagement;
 namespace Tankito
 {
     [System.Serializable]
-    public class CreateExplosion : NetworkBehaviour
+    public class CreateExplosion : MonoBehaviour
     {
         public GameObject explosionPrefab;
         public float size;
@@ -18,42 +18,11 @@ namespace Tankito
         public float timeUntilBig;
         public void  StartEvent(ABullet bullet)
         {
-            if (IsServer)
-            {
-                Debug.Log("Hola");
-
                 GameObject explosion = Instantiate<GameObject>(explosionPrefab, bullet.transform.position, bullet.transform.rotation);
-                
                 explosion.GetComponent<Explosion>().size *= size;
                 explosion.transform.position += relativePosition;
                 explosion.GetComponent<Explosion>().timeUntilBig = timeUntilBig;
                 explosion.GetComponent<Explosion>().timeUntilDead = totalLifetime;
-                explosion.GetComponent<NetworkObject>().SpawnWithOwnership(bullet.GetComponent<NetworkObject>().OwnerClientId);
-                syncronizeExplosionClientRpc(explosion.GetComponent<NetworkObject>().NetworkObjectId);
-                Destroy(this);
-            }
-            
-
-        }
-        [ClientRpc]
-        void syncronizeExplosionClientRpc(ulong explosionID)
-        {
-            Debug.Log("Hola");
-            NetworkObject explosion=null;
-            foreach (var item in FindObjectsOfType<NetworkObject>())
-            {
-                if(item.NetworkObjectId== explosionID)
-                {
-                    explosion = item;
-                }
-            }
-            if(explosion != null)
-            {
-                explosion.GetComponent<Explosion>().size *= size;
-                explosion.transform.position += relativePosition;
-                explosion.GetComponent<Explosion>().timeUntilBig = timeUntilBig;
-                explosion.GetComponent<Explosion>().timeUntilDead = totalLifetime;
-            }
         }
     }
 }

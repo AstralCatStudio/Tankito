@@ -50,7 +50,7 @@ namespace Tankito {
 
         public override void OnNetworkSpawn()
         {
-            Debug.Log($"{this} properties: {m_properties}");
+            //Debug.Log($"{this} properties: {m_properties}");
         }
         public override void OnNetworkDespawn()
         {
