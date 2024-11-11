@@ -59,6 +59,8 @@ namespace Tankito.Netcode.Simulation
                 m_inputComponent = gameObject.AddComponent<EmulatedTankInput>();
                 ClientSimulationManager.Instance.emulatedInputTanks[OwnerClientId] = (EmulatedTankInput)m_inputComponent;
             }
+
+            GetComponent<TankController>().BindInputSource(m_inputComponent);
         }
 
         public override void OnNetworkDespawn()

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -12,12 +13,26 @@ namespace Tankito.Netcode
         Fire = 3,
     }
 
-    public struct InputPayload : INetworkSerializable
+    public class ByTimestamp : IComparer<InputPayload>
+    {
+        public int Compare(InputPayload x, InputPayload y)
+        {
+            return x.timestamp-y.timestamp;
+        }
+    }
+
+    public struct InputPayload : INetworkSerializable, IComparable<int>
     {
         public int timestamp; // net clock count
         public Vector2 moveVector;
         public Vector2 aimVector;
         public TankAction action;
+
+        public int CompareTo(int other)
+        {
+            return timestamp-other;
+        }
+
         //public static readonly InputPayload INVALID_INPUT = new InputPayload { timestamp = -1, moveVector = Vector2.zero, aimVector = Vector2.zero, action = TankAction.None };
 
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
@@ -30,8 +45,28 @@ namespace Tankito.Netcode
         
         public override string ToString() => $"(timestamp:{timestamp}, movementInput:{moveVector}, aimInput:{aimVector}, actionInput:{action})";
 
+        public static bool operator <(InputPayload left, int right)
+        {
+            return left.CompareTo(right) < 0;
+        }
+
+        public static bool operator >(InputPayload left, int right)
+        {
+            return left.CompareTo(right) > 0;
+        }
+
+        public static bool operator <=(InputPayload left, int right)
+        {
+            return left.CompareTo(right) <= 0;
+        }
+
+        public static bool operator >=(InputPayload left, int right)
+        {
+            return left.CompareTo(right) >= 0;
+        }
+
         // Probablemente habria q repensar como hacer esto:
-        
+
         //void Serialize(FastBufferWriter writer)
         //{
         //    if (!writer.TryBeginWrite(GetSerializationSize()))

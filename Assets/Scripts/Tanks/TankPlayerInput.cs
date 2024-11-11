@@ -57,8 +57,8 @@ namespace Tankito
             if (m_inputReplayTick == NO_REPLAY)
             {
                 // Live Input Mode
-                m_currentInput.timestamp = ClockManager.TickCounter;
-                m_inputCache.Add(m_currentInput, ClockManager.TickCounter);
+                m_currentInput.timestamp = SimClock.TickCounter;
+                m_inputCache.Add(m_currentInput, SimClock.TickCounter);
                 InputWindowBuffer.Instance.AddInputToWindow(m_currentInput);
                 gotPayload = m_currentInput;
             }

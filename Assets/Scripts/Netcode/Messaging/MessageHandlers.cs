@@ -74,7 +74,7 @@ namespace Tankito.Netcode.Messaging
                 customMessagingManager.SendNamedMessageToAll(MessageName.ClockSignal, writer, NetworkDelivery.ReliableSequenced);
             }
 
-            if (IsServer && !IsClient) ClockManager.Instance.StartClock();
+            if (IsServer && !IsClient) SimClock.Instance.StartClock();
             if (DEBUG_CLOCK) Debug.Log($"Sent clock signal: {signal}");
         }
 
@@ -94,15 +94,15 @@ namespace Tankito.Netcode.Messaging
             switch(signal.header)
             {
                 case ClockSignalHeader.Start:
-                    ClockManager.Instance.StartClock();
+                    SimClock.Instance.StartClock();
                     break;
 
                 case ClockSignalHeader.Stop:
-                    ClockManager.Instance.StopClock();
+                    SimClock.Instance.StopClock();
                     break;
 
                 case ClockSignalHeader.Throttle:
-                    ClockManager.Instance.ThrottleClock(signal.throttleTicks);
+                    SimClock.Instance.ThrottleClock(signal.throttleTicks, signal.serverTime);
                     break;
 
                 default:
@@ -113,9 +113,9 @@ namespace Tankito.Netcode.Messaging
         }
 
         /// <summary>
-        /// Invoke to send an <see cref="InputWindowBuffer.inputBuffer"/> to the server
+        /// Invoke to send an <see cref="InputWindowBuffer.inputWindow"/> to the server
         /// </summary>
-        public void SendInputWindowToServer(CircularBuffer<InputPayload> inputWindow)
+        public void SendInputWindowToServer(FixedSizeQueue<InputPayload> inputWindow)
         {
             var writer = new FastBufferWriter(FastBufferWriter.GetWriteSize<InputPayload>()*inputWindow.Count, Allocator.Temp);
             var customMessagingManager = NetworkManager.CustomMessagingManager;
@@ -132,12 +132,7 @@ namespace Tankito.Netcode.Messaging
 
             if (DEBUG_INPUT)
             {
-                string inputWindowTicks = "";
-                foreach(var ip in inputWindow)
-                {
-                    inputWindowTicks += ip.timestamp + ((ip.timestamp != inputWindow.Last().timestamp) ? ", " : "");
-                }
-                if (DEBUG_INPUT) Debug.Log($"Sent input window: ticks({inputWindowTicks})");
+                if (DEBUG_INPUT) Debug.Log($"Sent input window: {inputWindow})");
             }
         }
 
@@ -175,14 +170,14 @@ namespace Tankito.Netcode.Messaging
                     NetworkManager.CustomMessagingManager.SendNamedMessage(MessageName.InputWindow, relayDestinations, relayWriter, NetworkDelivery.Unreliable);
                 }
 
-                // Store inputWindow
                 if (senderId != NetworkManager.LocalClientId)
                 {
+                    // Store inputWindow
                     ServerSimulationManager.Instance.remoteInputTanks[senderId].AddInput(receivedInputWindow.ToArray());
 
                     // Respond with throttling signal
-                    int throttleTicks = ServerSimulationManager.Instance.remoteInputTanks[senderId].BufferSize-ServerSimulationManager.Instance.remoteInputTanks[senderId].IdealBufferSize;
-                    var throttleSignal = new ClockSignal(ClockSignalHeader.Throttle, throttleTicks);
+                    int throttleTicks = ServerSimulationManager.Instance.remoteInputTanks[senderId].IdealBufferSize-ServerSimulationManager.Instance.remoteInputTanks[senderId].BufferSize;
+                    var throttleSignal = new ClockSignal(ClockSignalHeader.Throttle, throttleTicks, SimClock.TickCounter);
                     var throttleWriter = new FastBufferWriter(FastBufferWriter.GetWriteSize(throttleSignal), Allocator.Temp);
 
                     using (throttleWriter)
@@ -200,12 +195,7 @@ namespace Tankito.Netcode.Messaging
 
             if (DEBUG_INPUT)
             {
-                string inputWindowTicks = "";
-                foreach(var ip in receivedInputWindow)
-                {
-                    inputWindowTicks += ip.timestamp + ((ip.timestamp != receivedInputWindow.Last().timestamp) ? ", " : "");
-                }
-                Debug.Log($"Recieved input window from client {senderId}: ticks({inputWindowTicks})");
+                Debug.Log($"Recieved input window from client {senderId}: {receivedInputWindow})");
             }
         }
 

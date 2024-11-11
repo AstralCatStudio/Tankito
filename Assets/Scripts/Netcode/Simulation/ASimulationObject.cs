@@ -15,7 +15,6 @@ namespace Tankito.Netcode.Simulation
 
         // Define an event based on the delegate
         public event KinematicFunction OnComputeKinematics;
-        
 
         public override void OnNetworkSpawn() // Should work and be called for pooled objects too!
         {

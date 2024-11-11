@@ -29,33 +29,33 @@ namespace Tankito.Netcode.Simulation
 
         private void OnEnable()
         {
-            ClockManager.OnTick += Simulate;
+            SimClock.OnTick += Simulate;
         }
 
         private void OnDisable()
         {
-            ClockManager.OnTick -= Simulate;
+            SimClock.OnTick -= Simulate;
         }
 
         /// <summary>
-        /// Advance the simulation forward by 1 simulation tick (simulation tick is determined by <see cref="ClockManager.SimDeltaTime" />).
+        /// Advance the simulation forward by 1 simulation tick (simulation tick is determined by <see cref="SimClock.SimDeltaTime" />).
         /// </summary>
         public virtual void Simulate()
         {
             foreach (var obj in simulationObjects.Where(obj => obj.IsKinematic))
             {
-                obj.ComputeKinematics(ClockManager.SimDeltaTime);
+                obj.ComputeKinematics(SimClock.SimDeltaTime);
                 //Debug.Log($"ComputedKinematics for: {obj}");
             }
 
-            Physics2D.Simulate(ClockManager.SimDeltaTime);
+            Physics2D.Simulate(SimClock.SimDeltaTime);
         }
 
         public GlobalSimulationSnapshot CaptureSnapshot()
         {
             var newSnapshot = new GlobalSimulationSnapshot();
             newSnapshot.Initialize();
-            newSnapshot.timestamp = ClockManager.TickCounter;
+            newSnapshot.timestamp = SimClock.TickCounter;
             
             foreach(var simObj in simulationObjects)
             {

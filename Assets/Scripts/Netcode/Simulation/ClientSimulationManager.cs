@@ -67,7 +67,7 @@ namespace Tankito.Netcode.Simulation
             int rollbackCounter = AuthSnapshot.timestamp;
             
             //Pause Simulation Clock
-            ClockManager.Instance.StopClock();
+            SimClock.Instance.StopClock();
 
             foreach(var obj in simulationObjects)
             {
@@ -80,7 +80,7 @@ namespace Tankito.Netcode.Simulation
                 // Habra que hacer algo para restaurar objetos que puedieran haber deespawneado y todo eso supongo
             }
             
-            while(rollbackCounter < ClockManager.TickCounter)
+            while(rollbackCounter < SimClock.TickCounter)
             {
                 // ---TODO: Input Replay--- DONE => Implicitly consumes inputs from input caches when pulling InputPayloads on Kinematic Functions
                 Simulate();
@@ -95,7 +95,7 @@ namespace Tankito.Netcode.Simulation
             }
 
             //Resume Simulation Clock
-            ClockManager.Instance.StartClock();
+            SimClock.Instance.StartClock();
         }
 
         
@@ -112,9 +112,9 @@ namespace Tankito.Netcode.Simulation
         public void TestTimeTravel()
         {
             const float rewindTime = 1;
-            int rewindTicks = (int)(rewindTime/ClockManager.SimDeltaTime);
+            int rewindTicks = (int)(rewindTime/SimClock.SimDeltaTime);
             // Warp back 1s in time
-            int warpTick = ClockManager.TickCounter-rewindTicks;
+            int warpTick = SimClock.TickCounter-rewindTicks;
             var pastSnapshot = m_snapshotBuffer[warpTick];
 
             if (pastSnapshot.Equals(default))
@@ -122,7 +122,7 @@ namespace Tankito.Netcode.Simulation
                 throw new IndexOutOfRangeException($"No snapshot to warp to at tick - {warpTick}");
             }
 
-            ClockManager.Instance.StopClock();
+            SimClock.Instance.StopClock();
             
             foreach(var obj in pastSnapshot.objectSnapshots.Keys)
             {
@@ -132,13 +132,13 @@ namespace Tankito.Netcode.Simulation
                 }
             }
 
-            ClockManager.Instance.ResumeClock();
+            SimClock.Instance.ResumeClock();
         }
 
         [ContextMenu("TestInputWindowMessaging")]
         public void TestInputWindowMessaging()
         {
-            MessageHandlers.Instance.SendInputWindowToServer(InputWindowBuffer.Instance.InputBuffer);
+            MessageHandlers.Instance.SendInputWindowToServer(InputWindowBuffer.Instance.inputWindow);
         }
 
         #endregion

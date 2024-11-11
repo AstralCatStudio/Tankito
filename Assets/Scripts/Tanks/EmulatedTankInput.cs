@@ -24,7 +24,7 @@ namespace Tankito
 
         void Start()
         {
-            decayFactor = 1f-ClockManager.SimDeltaTime/m_attenuationSeconds;
+            decayFactor = 1f-SimClock.SimDeltaTime/m_attenuationSeconds;
         }
 
     public void ReceiveInputWindow(InputPayload[] inputWindow)
@@ -46,7 +46,7 @@ namespace Tankito
     {
         if (m_inputReplayTick == NO_REPLAY)
         {
-            m_currentInput = m_inputBuffer.Get(ClockManager.TickCounter);
+            m_currentInput = m_inputBuffer.Get(SimClock.TickCounter);
             if(m_currentInput.timestamp >= m_lastReceivedInput.timestamp)
             {
                 AttenuateInput();

@@ -16,9 +16,6 @@ namespace Tankito
         private int m_idealElements;
         private T lastPopped = default(T);
 
-        public delegate void ChangeInBuffer(int dif);
-        public event ChangeInBuffer OnCheckThrottling;
-
         public OrderQueueSyncronize(int idealElements)
         {
             m_idealElements = idealElements;
@@ -31,12 +28,14 @@ namespace Tankito
         {
             m_keys.Add(key);
             m_keys.Sort();
+
             if(m_keys.IndexOf(key) == m_queue.Count)
             {
                 m_queue.Add(element);
                 m_nElements++;
                 return;
             }
+            
             for(int i = m_queue.Count - 1; i == m_keys.IndexOf(key); i++) 
             {
                 if(i == m_queue.Count - 1)
@@ -53,24 +52,39 @@ namespace Tankito
         {
             if(m_keys.Count > 0)
             {
-                if (m_keys[0] == ClockManager.TickCounter)
+                if (m_keys[0] == SimClock.TickCounter)
                 {
-                    T lastPopped = m_queue[0];
+                    lastPopped = m_queue[0];
                     m_keys.RemoveAt(0);
                     m_queue.RemoveAt(0);
                     m_nElements--;
                     return lastPopped;
                 }
-                else
+            }
+            
+            return lastPopped;
+
+        }
+
+        public T PeekValue()
+        {
+            if(m_keys.Count > 0)
+            {
+                if (m_keys[0] == SimClock.TickCounter)
                 {
-                    return lastPopped;
+                    return m_queue[0];
                 }
             }
-            else
-            {
-                return lastPopped;
-            }
+            return lastPopped;
+        }
 
+        public int? PeekKey()
+        {
+            if(m_keys.Count > 0)
+            {
+                return m_keys[0];
+            }
+            return null;
         }
 
         public void Clear()

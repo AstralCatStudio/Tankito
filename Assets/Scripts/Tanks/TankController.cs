@@ -35,6 +35,7 @@ namespace Tankito
         public PlayerState PlayerState { get => playerState; }
         [SerializeField] public bool canDash = true;
 
+        public ITankInput TankInputComponent { get => m_tankInput; set { if (m_tankInput==null) m_tankInput = value; else Debug.LogWarning($"TankInputComponent for {this} was already set!");} }
         [SerializeField] private ITankInput m_tankInput;
         [SerializeField] private bool DEBUG = false;
 
@@ -53,17 +54,21 @@ namespace Tankito
             {
                 Debug.LogWarning("Error tank turret reference not set.");
             }
+        }
 
-            if (m_tankInput == null)
-            {
-                m_tankInput = GetComponent<ITankInput>();
-                if (m_tankInput == null) Debug.LogWarning("ITankInput Reference not set!");
-            }
-
+        void OnEnable()
+        {
             // Subscribe to SimulationObject Kinematics
             var tankSimObj = GetComponent<TankSimulationObject>();
             tankSimObj.OnComputeKinematics += ProcessInput;
             tankSimObj.IsKinematic = true;
+        }
+
+        void OnDisable()
+        {
+            // Subscribe to SimulationObject Kinematics
+            var tankSimObj = GetComponent<TankSimulationObject>();
+            tankSimObj.OnComputeKinematics -= ProcessInput;
         }
 
         public void BindInputSource(ITankInput inputSource)

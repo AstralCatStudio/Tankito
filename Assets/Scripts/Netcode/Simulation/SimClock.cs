@@ -9,7 +9,7 @@ using NUnit.Framework;
 
 namespace Tankito
 {
-    public class ClockManager : Singleton<ClockManager>
+    public class SimClock : Singleton<SimClock>
     {
         const int TICKS_PER_SECOND = 30;
         const float SIM_DELTA_TIME = 1f/TICKS_PER_SECOND;
@@ -22,9 +22,16 @@ namespace Tankito
         private bool m_active;
 
         public bool Active { get => m_active; }
-        public static float SimDeltaTime { get => Instance.m_throttleDeltaTime; }
+        public static float SimDeltaTime { get => Instance.m_simulationDeltaTime; }
         private float m_simulationDeltaTime;
-        private float m_throttleDeltaTime;
+
+        const int THROTTLE_COOLDOWN = 0;
+        private int m_throttleCooldown; // In TPS (Ticks Per Second)
+        private float m_averageThrottleTicks;
+        private int m_throttleMessages;
+        [SerializeField] private float m_throttleMultiplier = 1;
+
+        [SerializeField] private bool DEBUG;
 
         public delegate void UpdateSimulation();
         public static event UpdateSimulation OnTick;
@@ -40,17 +47,6 @@ namespace Tankito
             m_tickCounter = 0;
             m_active = false;
             m_simulationDeltaTime = SIM_DELTA_TIME;
-            m_throttleDeltaTime = m_simulationDeltaTime;
-
-            if (NetworkManager.Singleton.IsServer)
-            {
-                OnTick += ServerSimulationManager.Instance.Simulate;
-            }
-            
-            if (NetworkManager.Singleton.IsClient)
-            {
-                OnTick += ClientSimulationManager.Instance.Simulate;
-            }
         }
 
 
@@ -60,9 +56,9 @@ namespace Tankito
             if (!m_active) return;
 
             m_tickTimer += Time.deltaTime;
-            if (m_tickTimer >= m_throttleDeltaTime)
+            if (m_tickTimer >= m_simulationDeltaTime)
             {
-                m_tickTimer -= m_throttleDeltaTime;
+                m_tickTimer -= m_simulationDeltaTime;
                 m_tickCounter++;
                 OnTick?.Invoke();
             }
@@ -91,7 +87,7 @@ namespace Tankito
             m_tickTimer = 0;
         }
 
-        internal void ThrottleClock(int throttleTicks)
+        internal void ThrottleClock(int throttleTicks, int serverTime)
         {
             if (NetworkManager.Singleton.IsServer)
             {
@@ -99,7 +95,9 @@ namespace Tankito
                 return;
             }
 
-            m_throttleDeltaTime = m_simulationDeltaTime + throttleTicks/TICKS_PER_SECOND;
+            float newTPS = TICKS_PER_SECOND+Mathf.Clamp(throttleTicks, -TICKS_PER_SECOND, TICKS_PER_SECOND-1);
+            m_simulationDeltaTime = 1f/newTPS;
+
         }
 
         

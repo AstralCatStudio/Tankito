@@ -112,19 +112,17 @@ namespace Tankito.Netcode
                     postDash = false;
                 }
 
-                m_currentInput.timestamp = ClockManager.TickCounter; // MUY IMPORTANTE timestampear el input antes de pushearlo
+                m_currentInput.timestamp = SimClock.TickCounter; // MUY IMPORTANTE timestampear el input antes de pushearlo
 
                 if (!oAS)
                 {
                     ProcessInput(m_currentInput);
                 }
 
-                var currentState = GetSimulationState(ClockManager.TickCounter);
+                var currentState = GetSimulationState(SimClock.TickCounter);
 
-                InputWindowBuffer.Instance.AddInputToWindow(m_currentInput);
-
-                m_inputStateCache.Add(m_currentInput, ClockManager.TickCounter);
-                m_simulationStateCache.Add(currentState, ClockManager.TickCounter);
+                m_inputStateCache.Add(m_currentInput, SimClock.TickCounter);
+                m_simulationStateCache.Add(currentState, SimClock.TickCounter);
 
                 SendPayloadsServerRpc(m_currentInput, currentState);
 
@@ -162,7 +160,7 @@ namespace Tankito.Netcode
                 }
 
                 // Obtain the current SimulationState.
-                var newAuthState = GetSimulationState(ClockManager.TickCounter);
+                var newAuthState = GetSimulationState(SimClock.TickCounter);
 
                 // Send the state back to the client.
                 SendAuthStateClientRpc(newAuthState);
@@ -288,9 +286,9 @@ namespace Tankito.Netcode
             var targetAngle = Vector2.SignedAngle(m_tankRB.transform.right, movementVector);
             float rotDeg = 0f;
 
-            if (Mathf.Abs(targetAngle) >= ClockManager.SimDeltaTime * m_rotationSpeed)
+            if (Mathf.Abs(targetAngle) >= SimClock.SimDeltaTime * m_rotationSpeed)
             {
-                rotDeg = Mathf.Sign(targetAngle) * ClockManager.SimDeltaTime * m_rotationSpeed;
+                rotDeg = Mathf.Sign(targetAngle) * SimClock.SimDeltaTime * m_rotationSpeed;
             }
             else
             {
@@ -301,7 +299,7 @@ namespace Tankito.Netcode
             m_tankRB.MoveRotation(m_tankRB.rotation + rotDeg);
             m_turretRB.MoveRotation(-rotDeg);
 
-            m_tankRB.MovePosition(m_tankRB.position + m_speed * movementVector * ClockManager.SimDeltaTime);
+            m_tankRB.MovePosition(m_tankRB.position + m_speed * movementVector * SimClock.SimDeltaTime);
         }
 
         private void DashTank(Vector2 movementVector)
@@ -353,9 +351,9 @@ namespace Tankito.Netcode
             var targetAngle = Vector2.SignedAngle(m_turretRB.transform.right, aimVector);
             float rotDeg = 0f;
 
-            if (Mathf.Abs(targetAngle) >= ClockManager.SimDeltaTime * m_aimSpeed)
+            if (Mathf.Abs(targetAngle) >= SimClock.SimDeltaTime * m_aimSpeed)
             {
-                rotDeg = Mathf.Sign(targetAngle) * ClockManager.SimDeltaTime * m_aimSpeed;
+                rotDeg = Mathf.Sign(targetAngle) * SimClock.SimDeltaTime * m_aimSpeed;
             }
             else
             {

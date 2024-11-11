@@ -646,6 +646,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77d8b32ced226be40b3f7f2c56f1f036, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  DEBUG: 0
 --- !u!4 &211007693
 Transform:
   m_ObjectHideFlags: 0
@@ -966,7 +967,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DEBUG_INPUT: 1
-  DEBUG_CLOCK: 0
+  DEBUG_CLOCK: 1
+  DEBUG_SNAPSHOTS: 0
 --- !u!4 &411366310
 Transform:
   m_ObjectHideFlags: 0
@@ -1983,6 +1985,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_tickCounter: 0
   m_active: 0
+  m_throttleMultiplier: 1
+  DEBUG: 0
 --- !u!4 &977943811
 Transform:
   m_ObjectHideFlags: 0
