@@ -22,6 +22,7 @@ namespace Tankito
         float timeUntilBig = 0.5f;
         public override void StartEvent(ABullet bullet)
         {
+            createExplosion = bullet.gameObject.AddComponent<CreateExplosion>();
             createExplosion.explosionPrefab = explosionPrefab;
             createExplosion.size = size;
             createExplosion.relativePosition = relativePosition;

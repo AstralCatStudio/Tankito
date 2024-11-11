@@ -44,7 +44,7 @@ namespace Tankito {
         public ulong m_shooterID;
         protected int m_bouncesLeft = 0;
         protected float m_lifetime = 0; // Life Time counter
-        public Action OnSpawn = () => { }, OnFly = () => { }, OnHit = () => { }, OnBounce = () => { }, OnDetonate = () => { };
+        public Action<ABullet> OnSpawn = (ABullet) => { }, OnFly = (ABullet) => { }, OnHit = (ABullet) => { }, OnBounce = (ABullet) => { }, OnDetonate = (ABullet) => { };
 
 
         public override void OnNetworkSpawn()
@@ -67,12 +67,12 @@ namespace Tankito {
 
         public virtual void Init()
         {
-            OnSpawn.Invoke();
+            OnSpawn.Invoke(this);
         }
         
         void Update()
         {
-            OnFly.Invoke();
+            OnFly.Invoke(this);
         }
 
         public void SetProperties(BulletProperties newProperties)
@@ -87,11 +87,11 @@ namespace Tankito {
             m_bouncesLeft = 0;
             m_lifetime = 0;
             m_modifierList.Clear();
-            OnSpawn = () => {};
-            OnFly = () => {};
-            OnHit = () => {};
-            OnBounce = () => {};
-            OnDetonate = () => {};
+            OnSpawn = (ABullet) => {};
+            OnFly = (ABullet) => {};
+            OnHit = (ABullet) => {};
+            OnBounce = (ABullet) => {};
+            OnDetonate = (ABullet) => {};
         }
 
         

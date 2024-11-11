@@ -13,12 +13,15 @@ namespace Tankito
         public int BouncesAdded;
         public float lifeTimeAdded;
         public float boomerangEffect;
+        public float amountAdded;
+        public float amountMultiplier;
+        public float spreadMultiplier;
     }
 
     [CreateAssetMenu(menuName = "Modificadores/ModificadorBalas", order = 2, fileName = "Nuevo Modificador Balas")]
     public class BulletModifier : ScriptableObject
     {
-        ABullet bullet;
+        
 
         public List<AModifierEvent> onSpawnEvents;
         public List<AModifierEvent> onFlyEvents;
@@ -33,37 +36,37 @@ namespace Tankito
             newBullet.OnHit += OnHit;
             newBullet.OnBounce += OnBounce;
             newBullet.OnDetonate += OnDetonate;
-            bullet = newBullet;
         }
-        void OnSpawn()
+        void OnSpawn(ABullet bullet)
         {
             foreach (var item in onSpawnEvents)
             {
                 item.StartEvent(bullet);
             }
         }
-        void OnFly()
+        void OnFly(ABullet bullet)
         {
             foreach (var item in onFlyEvents)
             {
                 item.StartEvent(bullet);
             }
         }
-        void OnHit()
+        void OnHit(ABullet bullet)
         {
             foreach (var item in onHitEvents)
             {
                 item.StartEvent(bullet);
             }
         }
-        void OnBounce()
+        void OnBounce(ABullet bullet)
         {
             foreach (var item in onBounceEvents)
             {
                 item.StartEvent(bullet);
+
             }
         }
-        void OnDetonate()
+        void OnDetonate(ABullet bullet)
         {
             foreach (var item in onDetonateEvents)
             {

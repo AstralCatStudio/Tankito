@@ -37,7 +37,7 @@ namespace Tankito
 
         public void Detonate()
         {
-            OnDetonate.Invoke();
+            OnDetonate.Invoke(this);
             // Return to the pool from whence it came.
             var networkObject = gameObject.GetComponent<NetworkObject>();
             networkObject.Despawn();

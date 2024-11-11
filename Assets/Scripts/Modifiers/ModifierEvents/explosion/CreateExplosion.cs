@@ -17,15 +17,15 @@ namespace Tankito
         public float timeUntilBig;
         public void  StartEvent(ABullet bullet)
         {
-            if (IsServer)
-            {
+            //if (IsServer)
+            //{
                 GameObject explosion = Instantiate<GameObject>(explosionPrefab, bullet.transform.position, bullet.transform.rotation);
                 explosion.GetComponent<Explosion>().size *= size;
                 explosion.transform.position += relativePosition;
                 explosion.GetComponent<Explosion>().timeUntilBig=timeUntilBig;
                 explosion.GetComponent<Explosion>().timeUntilDead = totalLifetime;
                 explosion.GetComponent<NetworkObject>().Spawn();
-            }
+            //}
         }
     }
 }
