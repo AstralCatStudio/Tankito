@@ -29,7 +29,6 @@ namespace Tankito
         private int m_throttleCooldown; // In TPS (Ticks Per Second)
         private float m_averageThrottleTicks;
         private int m_throttleMessages;
-        [SerializeField] private float m_throttleMultiplier = 1;
 
         [SerializeField] private bool DEBUG;
 

@@ -11,12 +11,12 @@ namespace Tankito.Netcode
     public class RemoteTankInput : MonoBehaviour, ITankInput
     {
         //private OrderQueueSyncronize<InputPayload> queue = new OrderQueueSyncronize<InputPayload>(N_IDEAL_INPUT); // Bro no va
-        private SortedSet<InputPayload> inputBuffer = new SortedSet<InputPayload>(new ByTimestamp());
-        private InputPayload replayInput;
+        private SortedSet<InputPayload> m_inputBuffer = new SortedSet<InputPayload>(new ByTimestamp());
+        private InputPayload m_replayInput;
 
         private const int N_IDEAL_INPUT = 15;
         public int IdealBufferSize { get => N_IDEAL_INPUT; }
-        public int BufferSize { get => inputBuffer.Count; }
+        public int BufferSize { get => m_inputBuffer.Count; }
 
         public void AddInput(InputPayload[] newInputWindow)
         {
@@ -25,7 +25,7 @@ namespace Tankito.Netcode
                 return;
             }
 
-            inputBuffer.UnionWith(newInputWindow);
+            m_inputBuffer.UnionWith(newInputWindow);
 
             RemoveStaleInput();
         }
@@ -39,23 +39,23 @@ namespace Tankito.Netcode
         
         public void RemoveStaleInput()
         {
-            while( inputBuffer.Count > 0 && inputBuffer.First() < SimClock.TickCounter)
+            while( m_inputBuffer.Count > 0 && m_inputBuffer.First() < SimClock.TickCounter)
             {
-                inputBuffer.Remove(inputBuffer.First());
+                m_inputBuffer.Remove(m_inputBuffer.First());
             }
         }
 
         private InputPayload PopInput()
         {
-            InputPayload? input = inputBuffer.First();
+            InputPayload input = m_inputBuffer.FirstOrDefault();
 
-            if (input != null)
+            if (!input.Equals(default(InputPayload)))
             {
-                inputBuffer.Remove(inputBuffer.First());
-                replayInput = (InputPayload)input;
+                m_inputBuffer.Remove(m_inputBuffer.First());
+                m_replayInput = input;
             }
             
-            return replayInput;
+            return m_replayInput;
         }
         
 

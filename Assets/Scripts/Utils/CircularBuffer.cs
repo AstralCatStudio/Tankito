@@ -69,19 +69,33 @@ namespace Tankito.Utils
         /// <summary>
         /// Gets an item from the circular buffer at a specific index (clamped to buffer size).
         /// </summary>
-        /// <param name="i"></param>
+        /// <param name="idx"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public T Get(int i)
+        public T Get(int idx, bool wrapAroundIndex = false)
         {
-            int idx = Math.Mod(i, size);
+            T res;
 
-            if (idx < 0 || idx >= size)
+            if (!TryGet(out res, idx, wrapAroundIndex))
             {
                 throw new ArgumentOutOfRangeException("Index is out of the bounds of the buffer.");
             }
 
-            return buffer[idx];
+            return res;
+        }
+
+        public bool TryGet(out T value, int idx, bool wrapAroundIndex = false)
+        {
+            int i = (wrapAroundIndex) ? Math.Mod(idx, size) : idx;
+
+            if (i < 0 || i >= size)
+            {
+                value = default;
+                return false;
+            }
+
+            value = buffer[i];
+            return true;
         }
 
         public T this[int i]

@@ -15,30 +15,40 @@ namespace Tankito
         private CircularBuffer<InputPayload> m_inputBuffer = new CircularBuffer<InputPayload>(INPUT_CACHE_SIZE);
         [SerializeField] private float m_attenuationSeconds = 3;
         private InputPayload m_currentInput;
-        private InputPayload m_lastReceivedInput;
+        //private InputPayload m_lastReceivedInput;
+
 
         private int m_inputReplayTick = NO_REPLAY;
         private const int NO_REPLAY = -1;
 
-        float decayFactor;
+        float m_decayFactor;
 
         void Start()
         {
-            decayFactor = 1f-SimClock.SimDeltaTime/m_attenuationSeconds;
+            m_decayFactor = 1f-SimClock.SimDeltaTime/m_attenuationSeconds;
         }
 
     public void ReceiveInputWindow(InputPayload[] inputWindow)
     {
-        int i = Array.FindIndex(inputWindow, m => m.timestamp == m_lastReceivedInput.timestamp);
-        if (i == -1) i = 0;
-        else i++;
-        for (; i < inputWindow.Length; i++)
+        // int i = Array.FindIndex(inputWindow, m => m.timestamp == m_lastReceivedInput.timestamp); // Esto sencillamente no va a pasar. Por que ibas a tener la marca temporal del ultimo input recibido en la nueva ventana? Hay que asumir que los paquetes no llegan en orden.
+        // if (i == -1) i = 0;
+        // else i++;
+        // for (; i < inputWindow.Length; i++)
+        // {
+        //     m_inputBuffer.Add(inputWindow[i], inputWindow[i].timestamp);
+        // }
+        // if(m_lastReceivedInput.timestamp < inputWindow[i-1].timestamp)
+        // {
+        //     m_lastReceivedInput = inputWindow[i - 1];
+        // }
+        if (inputWindow[0] < (SimClock.TickCounter - 256) || inputWindow.Last() > SimClock.TickCounter + 256)
         {
-            m_inputBuffer.Add(inputWindow[i], inputWindow[i].timestamp);
+            return; // En caso de que el input sea muy viejo no lo guardamos, porque puede machacarnos datos nuevos de prediccion, y viceversa.
         }
-        if(m_lastReceivedInput.timestamp < inputWindow[i-1].timestamp)
+
+        foreach(var input in inputWindow)
         {
-            m_lastReceivedInput = inputWindow[i - 1];
+            m_inputBuffer[input.timestamp] = input;
         }
     }
 
@@ -46,8 +56,8 @@ namespace Tankito
     {
         if (m_inputReplayTick == NO_REPLAY)
         {
-            m_currentInput = m_inputBuffer.Get(SimClock.TickCounter);
-            if(m_currentInput.timestamp >= m_lastReceivedInput.timestamp)
+            InputPayload newInput;
+            if(!m_inputBuffer.TryGet(out newInput, SimClock.TickCounter) && newInput.timestamp != SimClock.TickCounter)
             {
                 AttenuateInput();
             }
@@ -64,10 +74,10 @@ namespace Tankito
 
     private void AttenuateInput()
     {
-        InputPayload attenuatedInput = m_currentInput;
-        attenuatedInput.moveVector *= decayFactor;
-        attenuatedInput.action = TankAction.None;
-        m_inputBuffer.Add(attenuatedInput, attenuatedInput.timestamp + 1);
+        m_currentInput.moveVector *= m_decayFactor;
+        m_currentInput.action = TankAction.None;
+        //m_inputBuffer.Add(attenuatedInput, attenuatedInput.timestamp + 1);// Mejor no ensuciar el buffer de referencia para la reconciliacion con inputs confabulados,
+                                                                            // y asi preservamos datos de simulacion legitimos.
     }
 
         public void StartInputReplay(int timestamp)
