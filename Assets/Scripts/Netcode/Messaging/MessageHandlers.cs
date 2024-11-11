@@ -132,7 +132,7 @@ namespace Tankito.Netcode.Messaging
 
             if (DEBUG_INPUT)
             {
-                if (DEBUG_INPUT) Debug.Log($"Sent input window: {inputWindow})");
+                if (DEBUG_INPUT) Debug.Log($"Sent input window: {inputWindow.First().timestamp}-{inputWindow.Last().timestamp})");
             }
         }
 
@@ -195,7 +195,7 @@ namespace Tankito.Netcode.Messaging
 
             if (DEBUG_INPUT)
             {
-                Debug.Log($"Recieved input window from client {senderId}: {receivedInputWindow})");
+                Debug.Log($"Recieved input window from client {senderId}: Ticks[{receivedInputWindow.First().timestamp-receivedInputWindow.Last().timestamp}-]");
             }
         }
 

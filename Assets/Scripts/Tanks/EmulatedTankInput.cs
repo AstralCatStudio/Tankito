@@ -17,6 +17,8 @@ namespace Tankito
         private InputPayload m_currentInput;
         //private InputPayload m_lastReceivedInput;
 
+        [SerializeField] private bool DEBUG = true;
+
 
         private int m_inputReplayTick = NO_REPLAY;
         private const int NO_REPLAY = -1;
@@ -43,6 +45,7 @@ namespace Tankito
         // }
         if (inputWindow[0] < (SimClock.TickCounter - 256) || inputWindow.Last() > SimClock.TickCounter + 256)
         {
+            if (DEBUG) Debug.Log($"Discarded InputWindow[{inputWindow.First().timestamp}-{inputWindow.Last().timestamp}]");
             return; // En caso de que el input sea muy viejo no lo guardamos, porque puede machacarnos datos nuevos de prediccion, y viceversa.
         }
 

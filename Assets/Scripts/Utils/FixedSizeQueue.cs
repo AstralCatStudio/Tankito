@@ -30,7 +30,7 @@ namespace Tankito.Utils
             var arr = ToArray();
             for(int i=0; i<Capacity;i++)
             {
-                res += ((i < arr.Length) ? arr[i] : " ") + ((i<Capacity-1) ? " | " : " ]");
+                res += ((i < arr.Length) ? arr[i] : "___") + ((i < Capacity-1) ? " | " : " ]");
             }
             return res;
         }

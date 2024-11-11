@@ -967,7 +967,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DEBUG_INPUT: 1
-  DEBUG_CLOCK: 1
+  DEBUG_CLOCK: 0
   DEBUG_SNAPSHOTS: 0
 --- !u!4 &411366310
 Transform:
@@ -1985,7 +1985,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_tickCounter: 0
   m_active: 0
-  m_throttleMultiplier: 1
   DEBUG: 0
 --- !u!4 &977943811
 Transform:
