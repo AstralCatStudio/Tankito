@@ -20,6 +20,7 @@ public class TankData : NetworkBehaviour
         if (IsServer)
         {
             RegisterToRoundManager();
+            SetInSpawnPoint();
             points = 0;
         }
     }
@@ -32,6 +33,12 @@ public class TankData : NetworkBehaviour
         {
             roundManager.AddPlayer(gameObject);
         }
+    }
+
+    public void SetInSpawnPoint()
+    {
+        SpawnManager spawnManager = FindObjectOfType<SpawnManager>();
+        GetComponent<Transform>().position = spawnManager.GetSpawnPoint();
     }
 
     public void Die()

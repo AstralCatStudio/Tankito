@@ -93,7 +93,6 @@ public class RoundManager : NetworkBehaviour
             _players.Add(clientId, player);
             Debug.Log($"Jugador anadido. Nº de jugadores: {_players.Count}");
         }
-        Debug.Log("Jugador añadido. Nº jugadores: " + _players.Count);
     }
 
     public void EliminatePlayer(GameObject player)
@@ -230,10 +229,16 @@ public class RoundManager : NetworkBehaviour
     }
 
     [ClientRpc]
+    private void SetActiveRemainingPlayersClientRpc(bool active)
+    {
+        _roundUI.SetRemainingPlayersActive(active);
+    }
+
+    [ClientRpc]
     private void UpdateRemainingPlayersTextClientRpc(int players)
     {
         Debug.Log("Rpc player text");
-        _roundUI.SetPlayersAlive(players);
+        _roundUI.SetRemainingPlayers(players);
     }
 
     #region Countdown
@@ -257,6 +262,8 @@ public class RoundManager : NetworkBehaviour
         SetCountdownTextClientRpc("BATTLE!");
 
         _startedRound = true;
+
+        SetActiveRemainingPlayersClientRpc(true);
 
         EnablePlayerInputClientRpc();
     }
@@ -351,6 +358,7 @@ public class RoundManager : NetworkBehaviour
         _startedRound = false;
         EndRoundClientRpc();
         DisablePlayerInputClientRpc();
+        SetActiveRemainingPlayersClientRpc(false);
         BetweenRounds();
     }
 

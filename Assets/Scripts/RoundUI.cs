@@ -30,8 +30,13 @@ public class RoundUI : MonoBehaviour
         PanelRanking.GetComponentInChildren<TextMeshProUGUI>().text = text;
     }
 
-    public void SetPlayersAlive(int players)
+    public void SetRemainingPlayers(int players)
     {
         PanelAlivePlayers.GetComponentInChildren<TextMeshProUGUI>().text = $"Remaining players: {players}";
+    }
+
+    public void SetRemainingPlayersActive(bool active)
+    {
+        PanelAlivePlayers.SetActive(active);
     }
 }

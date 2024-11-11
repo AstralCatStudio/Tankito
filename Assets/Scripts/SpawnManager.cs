@@ -1,38 +1,37 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Netcode;
 using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
 {
     public List<(Transform tPosition, bool isFree)> _spawnPoints;
 
-    void Start()
+    void Awake()
     {
-        Transform[] transforms = GetComponentsInChildren<Transform>();
-
-        Debug.Log($"Spawn points encontrados: {transforms.Length - 1}");
-
-        if (transforms.Length != 6)
+        if (NetworkManager.Singleton.IsServer)
         {
-            Debug.Log("Spawns encontrados");
+            Transform[] transforms = GetComponentsInChildren<Transform>();
 
-            _spawnPoints = new List<(Transform tPosition, bool isFree)>();
+            Debug.Log($"Spawn points encontrados: {transforms.Length - 1}");
 
-            for (int i = 1; i < transforms.Length; i++)
+            if (transforms.Length != 6)
             {
-                _spawnPoints.Add((transforms[i], true));
-            }
+                _spawnPoints = new List<(Transform tPosition, bool isFree)>();
 
-            Debug.Log("Spawn points añadidos a la lista");
+                for (int i = 1; i < transforms.Length; i++)
+                {
+                    _spawnPoints.Add((transforms[i], true));
+                }
 
-            for (int i = 0; i < _spawnPoints.Count; i++)
-            {
-                Debug.Log($"Spawn point {i + 1}: ({_spawnPoints.ElementAt(i).tPosition.position.x}, {_spawnPoints.ElementAt(i).tPosition.position.y}. " +
-                    $"Libre: {_spawnPoints.ElementAt(i).isFree})");
+                /*for (int i = 0; i < _spawnPoints.Count; i++)
+                {
+                    Debug.Log($"Spawn point {i + 1}: ({_spawnPoints.ElementAt(i).tPosition.position.x}, {_spawnPoints.ElementAt(i).tPosition.position.y}. " +
+                        $"Libre: {_spawnPoints.ElementAt(i).isFree})");
+                }*/
             }
         }
-
     }
 
     public Vector3 GetSpawnPoint()
