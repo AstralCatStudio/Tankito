@@ -8,7 +8,7 @@ namespace Tankito
     public struct BulletStatsModifier
     {
         public float speedMultiplier;
-        public float sizeMultiplier;
+        public Vector2 sizeMultiplier;
         public float accelerationAdded;
         public int BouncesAdded;
         public float lifeTimeAdded;
@@ -20,12 +20,11 @@ namespace Tankito
     {
         ABullet bullet;
 
-        
-        public List<ABulletEvent> onSpawnEvents;
-        public List<ABulletEvent> onFlyEvents;
-        public List<ABulletEvent> onHitEvents;
-        public List<ABulletEvent> onBounceEvents;
-        public List<ABulletEvent> onDetonateEvents;
+        public List<AModifierEvent> onSpawnEvents;
+        public List<AModifierEvent> onFlyEvents;
+        public List<AModifierEvent> onHitEvents;
+        public List<AModifierEvent> onBounceEvents;
+        public List<AModifierEvent> onDetonateEvents;
         public BulletStatsModifier bulletStatsModifier;
         public void ConnectModifier(ABullet newBullet)
         {

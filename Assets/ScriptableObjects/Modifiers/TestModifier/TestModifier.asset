@@ -12,5 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8cd9a9b75cfb494c8fa78e72de18880, type: 3}
   m_Name: TestModifier
   m_EditorClassIdentifier: 
-  bulletModifiers: []
-  hullModifiers: []
+  bulletModifiers:
+  - {fileID: 11400000, guid: 05f92a0accaca0f49b833b2ae4b7ada0, type: 2}
+  hullModifiers:
+  - {fileID: 11400000, guid: 74fc6191f2223ec429dbc8fdb5dc26da, type: 2}

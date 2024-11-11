@@ -8,6 +8,7 @@ namespace Tankito
     public struct HulltStatsModifier
     {
         public float speedMultiplier;
+        public float rotationSpeedMultiplier;
         public float reloadTimeAdded;
         public float dashCooldownTimeAdded;
         public int extraHealth;
@@ -19,5 +20,6 @@ namespace Tankito
     public class HullModifier : ScriptableObject
     {
         public HulltStatsModifier hullStatsModifier;
+        //TODO conectar los eventos del modificador al clientpredictedtankcontroller
     }
 }

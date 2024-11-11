@@ -15,8 +15,10 @@ namespace Tankito.Netcode
         #region Variables
         bool oAS = false;
         [SerializeField] private Rigidbody2D m_tankRB;
-        [SerializeField] private float m_speed = 25.0f;
-        [SerializeField] private float m_rotationSpeed = 1.0f;
+        [SerializeField] private float m_baseSpeed = 5;
+        [SerializeField] private float m_baseRotationSpeed = 560;
+        public float m_speed = 25.0f;
+        public float m_rotationSpeed = 1.0f;
         [SerializeField] private Rigidbody2D m_turretRB;
         [Tooltip("How fast the turret can turn to aim in the specified direction.")]
         [SerializeField]
@@ -27,11 +29,16 @@ namespace Tankito.Netcode
         [SerializeField] private Animator m_TurretAnimator, m_HullAnimator;
 
         //Variables Dash
-        [SerializeField] private float accelerationMultiplier = 6;
-        [SerializeField] private float dashDuration = 0.5f;
-        [SerializeField] private float fullDashDuration = 0.2f;
-        [SerializeField] private float currentDashTick = 0;
-        [SerializeField] private float dashReloadDuration = 1;
+        [SerializeField] private float baseAccelerationMultiplier = 6;
+        [SerializeField] private float baseDashDuration = 0.5f;
+        [SerializeField] private float baseFullDashDuration = 0.2f;
+        [SerializeField] private float baseCurrentDashTick = 0;
+        [SerializeField] private float baseDashReloadDuration = 1;
+        public float accelerationMultiplier = 6;
+        public float dashDuration = 0.5f;
+        public float fullDashDuration = 0.2f;
+        public float currentDashTick = 0;
+        public float dashReloadDuration = 1;
         [SerializeField] Vector2 inputWhileDash;
 
         [SerializeField] private PlayerState playerState = PlayerState.Moving;
@@ -465,7 +472,20 @@ namespace Tankito.Netcode
             GameManager.Instance.AutoPhysics2DUpdate(true);
         }
 
-#endregion
+        #endregion
+
+
+        //no se donde poner esto asi que lo pongo al final
+        public void restartStats()
+        {
+            m_speed = m_baseSpeed;
+            m_rotationSpeed = m_baseRotationSpeed;
+            accelerationMultiplier = baseAccelerationMultiplier;
+            dashDuration = baseDashDuration;
+            fullDashDuration = baseFullDashDuration;
+            currentDashTick = baseCurrentDashTick;
+            dashReloadDuration = baseDashReloadDuration;
+        }
     }
 
     [Serializable]
@@ -511,6 +531,9 @@ namespace Tankito.Netcode
         {
             return new Tolerances(value.pos, value.rot, value.vel);
         }
+
+        
     }
+
 }
 

@@ -7,7 +7,7 @@ using UnityEngine;
 namespace Tankito
 {
     [System.Serializable]
-    public abstract class ABulletEvent : NetworkBehaviour, IModifierEvent
+    public abstract class AModifierEvent : ScriptableObject, IModifierEvent
     {
         public abstract void StartEvent(ABullet bullet);
     }
