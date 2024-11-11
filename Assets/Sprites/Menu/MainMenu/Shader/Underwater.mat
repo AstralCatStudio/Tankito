@@ -74,19 +74,24 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _Blend_Opacity: 0.3
     - _Center: 0
-    - _Density: 0
+    - _Density: 0.2
     - _EnableExternalAlpha: 0
     - _LerpValue: 0.5
-    - _NoiseTime: 0.01
+    - _NoiseScale: 20
+    - _NoiseTime: 0.03
     - _Offset: 0.37
     - _OpacityY: 0.5
+    - _Saturation_bg: 3
     - _SpherizeStrength: 0
     - _Time: 0
+    - _Voronoi_speed: 0
     - _blendOpacity: 1
     - _noiseScale: 10
     - _offset: 1
     - _voronoiOffset: 5
+    - _voronoi_speed: 0.3
     m_Colors:
     - _Center: {r: 0.5, g: 1, b: 0, a: 0}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
@@ -94,4 +99,10 @@ Material:
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
     - _SphStrng: {r: 1, g: 1, b: 0, a: 0}
     - _SpherizeStrength: {r: 10, g: 10, b: 0, a: 0}
+    - _Strength: {r: 1, g: 3, b: 0, a: 0}
+    - _SunPosition: {r: 0.5, g: 0.5, b: 0, a: 0}
+    - _Sun_Power_In: {r: 1, g: 0, b: 0, a: 0}
+    - _Sun_Power_Out: {r: -4, g: 10, b: 0, a: 0}
+    - _Sun_distance_1: {r: 0.5, g: 1, b: 0, a: 0}
+    - _Water_Effect_Pos: {r: 0.5, g: 1, b: 0, a: 0}
   m_BuildTextureStacks: []
