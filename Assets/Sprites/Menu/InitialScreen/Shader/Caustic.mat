@@ -1,0 +1,78 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-6261321440843431615
+MonoBehaviour:
+  m_ObjectHideFlags: 11
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 7
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Caustic
+  m_Shader: {fileID: -6465566751694194690, guid: 9c383a59c0f50b442a9fef0aad723a73, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _Sprite:
+        m_Texture: {fileID: 2800000, guid: 351a51e4cd92d6f48a0cf2a7760385ae, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_Lightmaps:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_LightmapsInd:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_ShadowMasks:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _Alpha: 0.8
+    - _Distance: 0
+    - _Offset: 1
+    - _Power: 3
+    - _Range: 3
+    - _Scale: 0
+    - _ScaleX: 1
+    - _ScalebyY: 0
+    - _density: 5
+    m_Colors:
+    - _Color: {r: 0, g: 0.7859535, b: 1, a: 1}
+    - _Scale: {r: 0, g: 0, b: 0, a: 0}
+    - _ScaleY: {r: 0, g: 1, b: 0, a: 0}
+    - _Scale_Perspective: {r: 0, g: 1.55, b: 0, a: 0}
+    - _offset: {r: 0, g: 5.85, b: 0, a: 0}
+    - _offsetX: {r: 0.4, g: 1, b: 0, a: 0}
+    - _offsetX2: {r: 1, g: 0, b: 0, a: 0}
+    - _offsetX_1: {r: 2.89, g: 1, b: 0, a: 0}
+    - _tiling: {r: 0, g: -6.92, b: 0, a: 0}
+    - _tilingX: {r: 1.58, g: 0.5, b: 0, a: 0}
+    - _tilingX2: {r: -1, g: 0, b: 0, a: 0}
+  m_BuildTextureStacks: []
