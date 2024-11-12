@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -44,6 +45,15 @@ namespace Tankito.Netcode
         }
         
         public override string ToString() => $"(timestamp:{timestamp}, movementInput:{moveVector}, aimInput:{aimVector}, actionInput:{action})";
+
+        internal void Interpolate(InputPayload targetInput, int interpolationTick)
+        {
+            float factor = Mathf.Clamp01((timestamp-interpolationTick)/(float)targetInput.timestamp);
+            
+            moveVector = math.lerp(moveVector, targetInput.moveVector, factor);
+            aimVector = math.lerp(aimVector, targetInput.aimVector, factor);
+            action = (factor == 0) ? action : (factor == 1) ? targetInput.action : TankAction.None;
+        }
 
         public static bool operator <(InputPayload left, int right)
         {

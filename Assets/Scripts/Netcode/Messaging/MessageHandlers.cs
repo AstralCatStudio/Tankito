@@ -109,7 +109,7 @@ namespace Tankito.Netcode.Messaging
                     throw new InvalidOperationException("Invalid clock signal header: " + signal.header);
             }
 
-            if (DEBUG_CLOCK) Debug.Log($"Received clock signal: {signal}");
+            if (DEBUG_CLOCK) Debug.Log($"[{SimClock.TickCounter}]Received clock signal: {signal}");
         }
 
         /// <summary>
@@ -130,10 +130,10 @@ namespace Tankito.Netcode.Messaging
                 customMessagingManager.SendNamedMessage(MessageName.InputWindow, NetworkManager.ServerClientId, writer, NetworkDelivery.Unreliable);
             }
 
-            /*if (DEBUG_INPUT)
+            if (DEBUG_INPUT)
             {
-                if (DEBUG_INPUT) Debug.Log($"Sent input window: {inputWindow.First().timestamp}-{inputWindow.Last().timestamp})");
-            }*/
+                if (DEBUG_INPUT) Debug.Log($"[{SimClock.TickCounter}]Sent input window: Ticks[{inputWindow.First().timestamp}-{inputWindow.Last().timestamp}]");
+            }
         }
 
         /// <summary>
@@ -160,12 +160,13 @@ namespace Tankito.Netcode.Messaging
             {
                 // Relay Client inputs
                 var relayWriter = new FastBufferWriter(payload.Length, Allocator.Temp);
-                byte[] payloadBytes = new byte[payload.Length];
-                payload.ReadBytes(ref payloadBytes, 0, payload.Length);
 
                 using (relayWriter)
                 {
-                    relayWriter.WriteBytesSafe(payloadBytes);
+                    foreach(var input in receivedInputWindow)
+                    {
+                        relayWriter.WriteValue(input);
+                    }
                     var relayDestinations = NetworkManager.Singleton.ConnectedClientsIds.Where(id => id != senderId).ToArray();
                     NetworkManager.CustomMessagingManager.SendNamedMessage(MessageName.InputWindow, relayDestinations, relayWriter, NetworkDelivery.Unreliable);
                 }
@@ -195,7 +196,7 @@ namespace Tankito.Netcode.Messaging
 
             if (DEBUG_INPUT)
             {
-                Debug.Log($"Recieved input window from client {senderId}: Ticks[{receivedInputWindow.First().timestamp-receivedInputWindow.Last().timestamp}-]");
+                Debug.Log($"[{SimClock.TickCounter}]Recieved input window from client {senderId}: Ticks[{receivedInputWindow.First().timestamp}-{receivedInputWindow.Last().timestamp}]");
             }
         }
 
@@ -210,7 +211,7 @@ namespace Tankito.Netcode.Messaging
                 customMessagingManager.SendNamedMessageToAll(MessageName.InputWindow, writer, NetworkDelivery.Unreliable);
             }
 
-            if (DEBUG_SNAPSHOTS) Debug.Log($"Sent snapshot[{snapshot.timestamp}] to ALL clients.");
+            if (DEBUG_SNAPSHOTS) Debug.Log($"[{SimClock.TickCounter}]Sent snapshot[{snapshot.timestamp}] to ALL clients.");
         }
 
         private void ReceiveSimulationSnapshot(ulong serverId, FastBufferReader snapshotPayload)
@@ -225,7 +226,7 @@ namespace Tankito.Netcode.Messaging
             snapshotPayload.ReadValue(out snapshot);
             ClientSimulationManager.Instance.CheckNewGlobalSnapshot(snapshot);
 
-            if (DEBUG_SNAPSHOTS) Debug.Log($"Received snapshot[{snapshot.timestamp}] from server.");
+            if (DEBUG_SNAPSHOTS) Debug.Log($"[{SimClock.TickCounter}]Received snapshot[{snapshot.timestamp}] from server.");
         }
     }
 }
