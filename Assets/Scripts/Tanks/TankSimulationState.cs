@@ -20,7 +20,7 @@ namespace Tankito.Netcode.Simulation
         private Vector2 velocity;
         private float turretRotation;
 
-        private TankTolerance tolerances;
+        //private TankTolerance tolerances;
 
         public const int MAX_SERIALIZED_SIZE = sizeof(float)*2 + sizeof(float)*2*2;
 
@@ -30,24 +30,28 @@ namespace Tankito.Netcode.Simulation
             this.hullRotation = hullRotation;
             this.velocity = velocity;
             this.turretRotation = turretRotation;
-            tolerances = new TankTolerance(0, 0, 0, 0);
+            //tolerances = new TankTolerance(0, 0, 0, 0);
         }
 
+        /*
         public TankSimulationState(Vector2 position, float hullRotation, Vector2 velocity, float turretRotation, TankTolerance tankTolerance)
         {
             this.position = position;
             this.hullRotation = hullRotation;
             this.velocity = velocity;
             this.turretRotation = turretRotation;
-            tolerances = tankTolerance;
+            //tolerances = tankTolerance;
         }
+        */
 
+        /*
         public bool CheckReconcilation(ISimulationState state)
         {
             TankSimulationState bulletState = (TankSimulationState)state;
             (float posDiff, float rotHullDiff, float velDiff, float turretRotDiff) diffs = Diff(bulletState);
             return tolerances.CheckTolerances(new TankTolerance(diffs.posDiff, diffs.rotHullDiff, diffs.velDiff, diffs.turretRotDiff));
         }
+        */
 
         internal (float posDiff, float rotHullDiff, float velDiff, float turrretRotDiff) Diff(TankSimulationState state)
         {
@@ -68,6 +72,8 @@ namespace Tankito.Netcode.Simulation
     }
 }
 
+// Haria que las tolerancias simplemente fueran Deltas concretos en el simulation manager llamado tolerancias
+/*
 public struct TankTolerance
 {
     public float posTol;
@@ -89,3 +95,4 @@ public struct TankTolerance
         else return false;
     }
 }
+*/

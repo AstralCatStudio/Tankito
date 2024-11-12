@@ -125,7 +125,7 @@ namespace Tankito.Netcode.Simulation
             {
                 if (newAuthSnapshot.objectSnapshots.ContainsKey(objSnapShot))
                 {
-                    if (clientSnapShot.objectSnapshots[objSnapShot].CheckReconcilation(newAuthSnapshot.objectSnapshots[objSnapShot]))
+                    if (clientSnapShot.objectSnapshots[objSnapShot].CheckForDesync(newAuthSnapshot.objectSnapshots[objSnapShot]))
                     {
                         Rollback(newAuthSnapshot);
                         break;
@@ -134,6 +134,13 @@ namespace Tankito.Netcode.Simulation
             }
             newAuthSnapshot.state = SnapshotState.Authoritative;
             m_snapshotBuffer.Add(newAuthSnapshot, newAuthSnapshot.timestamp);
+        }
+
+        // Bernat: A lo mejor no queremos hacer esto asi y queremos implementar una metrica mas sofisticada para decidir si reconciliar o no,
+        // de momento lo dejo como esta con el bool por simplicidad.
+        private bool CheckForDesync<T>(in T simObjA,in T simObjB) where T : ISimulationState
+        {
+            
         }
 
         #region DEBUG_TESTING_METHODS

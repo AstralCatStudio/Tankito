@@ -7,6 +7,8 @@ namespace Tankito.Netcode.Simulation
 {
     public interface ISimulationState 
     {
-        public bool CheckReconcilation(ISimulationState state);
+        // Reconciliation is not a responsibilty of Simulation States, they shouldn't even be aware of the concept of reconciliation
+        // public bool CheckReconcilation(ISimulationState state);
     }
+
 }
