@@ -52,7 +52,7 @@ namespace Tankito.Netcode.Simulation
         [ContextMenu("Broadcast Last Snapshot")]
         public void BroadcastLastSnapshot()
         {
-            MessageHandlers.Instance.SendSimulationSnapshot(CaptureSnapshot());
+            MessageHandlers.Instance.BroadcastSimulationSnapshot(CaptureSnapshot());
         }
 
         #endregion

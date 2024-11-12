@@ -15,6 +15,7 @@ namespace Tankito.Netcode.Messaging
     {
         public static string ClockSignal => "ClockSignal";
         public static string InputWindow => "InputWindow";
+        public static string RelayInputWindow => "RelayWindow";
         public static string SimulationSnapshot => "SimulationSnapshot";
     }
 
@@ -46,6 +47,7 @@ namespace Tankito.Netcode.Messaging
             // Both the server-host and client(s) register the custom named message.
             NetworkManager.CustomMessagingManager.RegisterNamedMessageHandler(MessageName.ClockSignal, RecieveClockSignal);
             NetworkManager.CustomMessagingManager.RegisterNamedMessageHandler(MessageName.InputWindow, ReceiveInputWindow);
+            NetworkManager.CustomMessagingManager.RegisterNamedMessageHandler(MessageName.RelayInputWindow, ReceiveRelayedInputWindow);
             NetworkManager.CustomMessagingManager.RegisterNamedMessageHandler(MessageName.SimulationSnapshot, ReceiveSimulationSnapshot);
         }
 
@@ -54,6 +56,7 @@ namespace Tankito.Netcode.Messaging
             // De-register when the associated NetworkObject is despawned.
             NetworkManager.CustomMessagingManager.UnregisterNamedMessageHandler(MessageName.ClockSignal);
             NetworkManager.CustomMessagingManager.UnregisterNamedMessageHandler(MessageName.InputWindow);
+            NetworkManager.CustomMessagingManager.UnregisterNamedMessageHandler(MessageName.RelayInputWindow);
             NetworkManager.CustomMessagingManager.UnregisterNamedMessageHandler(MessageName.SimulationSnapshot);
         }
 
@@ -61,7 +64,8 @@ namespace Tankito.Netcode.Messaging
         {
             if (!IsServer)
             {
-                Debug.Log("Client's can't send clock signals");
+                Debug.LogException(new InvalidOperationException("Client's can't send clock signals"));
+                return;
             }
             
             
@@ -106,7 +110,8 @@ namespace Tankito.Netcode.Messaging
                     break;
 
                 default:
-                    throw new InvalidOperationException("Invalid clock signal header: " + signal.header);
+                    Debug.LogException(new InvalidOperationException("Invalid clock signal header: " + signal.header));
+                    return;
             }
 
             if (DEBUG_CLOCK) Debug.Log($"[{SimClock.TickCounter}]Received clock signal: {signal}");
@@ -117,6 +122,11 @@ namespace Tankito.Netcode.Messaging
         /// </summary>
         public void SendInputWindowToServer(FixedSizeQueue<InputPayload> inputWindow)
         {
+            if (!IsClient)
+            {
+                throw new InvalidOperationException("Server should not send raw inputs to clients, it should relay them through RelayInput messages!");
+            }
+            
             var writer = new FastBufferWriter(FastBufferWriter.GetWriteSize<InputPayload>()*inputWindow.Count, Allocator.Temp);
             var customMessagingManager = NetworkManager.CustomMessagingManager;
 
@@ -141,11 +151,11 @@ namespace Tankito.Netcode.Messaging
         /// </summary>
         private void ReceiveInputWindow(ulong senderId, FastBufferReader payload)
         {
-            //if (senderId != NetworkManager.LocalClientId && !ServerSimulationManager.Instance.remoteInputTanks.ContainsKey(senderId))
-            //{
-            //    Debug.LogWarning($"Client[{senderId}] is not registered in {ServerSimulationManager.Instance.remoteInputTanks}");
-            //    return;
-            //}
+            if (IsClient && !IsServer)
+            {
+                Debug.LogException(new InvalidOperationException($"Clients receiving raw inputs is not supported. Did senderId[{senderId}] mean to relay an input payload?"));
+                return;
+            }
 
             List<InputPayload> receivedInputWindow = new List<InputPayload>();
 
@@ -159,17 +169,7 @@ namespace Tankito.Netcode.Messaging
             if (IsServer)
             {
                 // Relay Client inputs
-                var relayWriter = new FastBufferWriter(payload.Length, Allocator.Temp);
-
-                using (relayWriter)
-                {
-                    foreach(var input in receivedInputWindow)
-                    {
-                        relayWriter.WriteValue(input);
-                    }
-                    var relayDestinations = NetworkManager.Singleton.ConnectedClientsIds.Where(id => id != senderId).ToArray();
-                    NetworkManager.CustomMessagingManager.SendNamedMessage(MessageName.InputWindow, relayDestinations, relayWriter, NetworkDelivery.Unreliable);
-                }
+                RelayClientInput(senderId, receivedInputWindow.ToArray());
 
                 if (senderId != NetworkManager.LocalClientId)
                 {
@@ -188,11 +188,6 @@ namespace Tankito.Netcode.Messaging
                     }
                 }
             }
-            else
-            {
-                // Store inputWindow
-                ClientSimulationManager.Instance.emulatedInputTanks[senderId].ReceiveInputWindow(receivedInputWindow.ToArray());
-            }
 
             if (DEBUG_INPUT)
             {
@@ -200,15 +195,94 @@ namespace Tankito.Netcode.Messaging
             }
         }
 
-        public void SendSimulationSnapshot(GlobalSimulationSnapshot snapshot)
+        public void RelayClientInput(ulong originalSenderId, InputPayload[] windowToRelay)
         {
+            var relayWriter = new FastBufferWriter(sizeof(ulong)+FastBufferWriter.GetWriteSize(windowToRelay), Allocator.Temp);
+
+            using (relayWriter)
+            {
+                relayWriter.WriteValueSafe(originalSenderId);
+                foreach(var input in windowToRelay)
+                {
+                    relayWriter.WriteValue(input);
+                }
+
+                // Exclude originalSender and Server IDs from relay message targets
+                var relayTargets = NetworkManager.Singleton.ConnectedClientsIds.Where(id => (id != originalSenderId) && (id != NetworkManager.ServerClientId)).ToArray();
+                NetworkManager.CustomMessagingManager.SendNamedMessage(MessageName.RelayInputWindow, relayTargets, relayWriter, NetworkDelivery.Unreliable);
+
+                if (DEBUG_INPUT)
+                {
+                    var relayTargetsString = "( ";
+                    Array.ForEach(relayTargets, t => relayTargetsString += t.ToString() + ((t != relayTargets.Last()) ? ", " : " )"));
+                    Debug.Log($"[{SimClock.TickCounter}]Relaying client[{originalSenderId}]'s inputs to: " + relayTargetsString);
+                }
+            }
+        }
+
+        public void ReceiveRelayedInputWindow(ulong senderId, FastBufferReader inputRelayPayload)
+        {
+            if (senderId != NetworkManager.ServerClientId)
+            {
+                Debug.LogException(new InvalidOperationException("Relayed Inputs are only taken from the server, clients shouldn't be able to emit them."));
+                return;
+            }
+            if (IsServer)
+            {
+                Debug.LogException(new InvalidOperationException("Input mustn't be relayed to the server (it already received the input window)."));
+                return;
+            }
+
+            List<InputPayload> relayedInputWindow = new List<InputPayload>();
+            ulong originalSenderId;
+
+            inputRelayPayload.ReadValueSafe(out originalSenderId);
+
+            if (originalSenderId == NetworkManager.LocalClientId)
+            {
+                if (DEBUG_INPUT)
+                {
+                    Debug.Log($"[{SimClock.TickCounter}]Recieved relayed input window from client {originalSenderId}(SELF) - TODO: Implement input payload acknowledgement.");
+                    return;
+                }
+            }
+
+            while (inputRelayPayload.TryBeginRead(FastBufferWriter.GetWriteSize<InputPayload>()))
+            {
+                InputPayload inputPayload;
+                inputRelayPayload.ReadValue(out inputPayload);
+                relayedInputWindow.Add(inputPayload);
+            }
+
+            // Store RelayedInputWindow to emulated input remote clients
+            ClientSimulationManager.Instance.emulatedInputTanks[originalSenderId].ReceiveInputWindow(relayedInputWindow.ToArray());
+
+            if (DEBUG_INPUT)
+            {
+                Debug.Log($"[{SimClock.TickCounter}]Recieved relayed input window from client {originalSenderId}: Ticks[{relayedInputWindow.First().timestamp}-{relayedInputWindow.Last().timestamp}]");
+            }
+        }
+
+        public void BroadcastSimulationSnapshot(GlobalSimulationSnapshot snapshot)
+        {
+            SendSimulationSnapshot(snapshot, NetworkManager.ConnectedClientsIds.Where(clId => clId != NetworkManager.ServerClientId).ToArray());
+        }
+
+        public void SendSimulationSnapshot(GlobalSimulationSnapshot snapshot, ulong[] targetClientIds)
+        {
+            if (!IsServer)
+            {
+                Debug.LogException(new InvalidOperationException($"[{SimClock.TickCounter}]Client's shouldn't send simulation snapshots, only inputs."));
+                return;
+            }
+
             var writer = new FastBufferWriter(GlobalSimulationSnapshot.MAX_SERIALIZED_SIZE, Allocator.Temp);
             var customMessagingManager = NetworkManager.CustomMessagingManager;
 
             using (writer)
             {
                 writer.WriteValue(snapshot);
-                customMessagingManager.SendNamedMessageToAll(MessageName.InputWindow, writer, NetworkDelivery.Unreliable);
+                customMessagingManager.SendNamedMessage(MessageName.SimulationSnapshot, targetClientIds, writer, NetworkDelivery.Unreliable);
             }
 
             if (DEBUG_SNAPSHOTS) Debug.Log($"[{SimClock.TickCounter}]Sent snapshot[{snapshot.timestamp}] to ALL clients.");
@@ -216,14 +290,25 @@ namespace Tankito.Netcode.Messaging
 
         private void ReceiveSimulationSnapshot(ulong serverId, FastBufferReader snapshotPayload)
         {
+            // La loggeamos en lugar de lanzar la excepcion porque no queremos que malos actores nos manden paquetes por
+            // el canal de SimulationSnapshot y nos tiren el server (lo mismo aplica a el cliente)!!!
+            if (IsServer)
+            {
+                Debug.LogException(new InvalidOperationException($"[{SimClock.TickCounter}]The SERVER shouldn't receive simulation snapshots, only inputs."));
+                return;
+            }
+
             if (serverId != NetworkManager.ServerClientId)
             {
-                Debug.LogWarning("Can only receive Simulation Snapshot messages from the server!");
+                Debug.LogException(new InvalidOperationException("Can only receive Simulation Snapshot messages from the server!"));
                 return;
             }
             
-            GlobalSimulationSnapshot snapshot;
+            GlobalSimulationSnapshot snapshot = new GlobalSimulationSnapshot();
             snapshotPayload.ReadValue(out snapshot);
+
+            // TESTING !!!!
+            ClientSimulationManager.Instance.SetSimulation(snapshot);
 
             if (DEBUG_SNAPSHOTS) Debug.Log($"[{SimClock.TickCounter}]Received snapshot[{snapshot.timestamp}] from server.");
         }

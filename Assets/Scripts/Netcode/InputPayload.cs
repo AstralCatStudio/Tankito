@@ -44,7 +44,7 @@ namespace Tankito.Netcode
             serializer.SerializeValue(ref action);
         }
         
-        public override string ToString() => $"(timestamp:{timestamp}, movementInput:{moveVector}, aimInput:{aimVector}, actionInput:{action})";
+        public override string ToString() => $"Input[{timestamp}](movementInput:{moveVector}, aimInput:{aimVector}, actionInput:{action})";
 
         internal void Interpolate(InputPayload targetInput, int interpolationTick)
         {

@@ -98,6 +98,22 @@ namespace Tankito.Netcode.Simulation
             SimClock.Instance.StartClock();
         }
 
+        // WIP !!
+        public void SetSimulation(GlobalSimulationSnapshot newSimSnapshot)
+        {
+            SimClock.Instance.StopClock();
+            
+            foreach(var obj in newSimSnapshot.objectSnapshots.Keys)
+            {
+                if (simulationObjects.Contains(obj))
+                {
+                    obj.SetSimState(newSimSnapshot[obj]);
+                }
+            }
+
+            SimClock.Instance.ResumeClock();
+        }
+
         
         #region DEBUG_TESTING_METHODS
 
@@ -121,18 +137,8 @@ namespace Tankito.Netcode.Simulation
             {
                 throw new IndexOutOfRangeException($"No snapshot to warp to at tick - {warpTick}");
             }
-
-            SimClock.Instance.StopClock();
             
-            foreach(var obj in pastSnapshot.objectSnapshots.Keys)
-            {
-                if (simulationObjects.Contains(obj))
-                {
-                    obj.SetSimState(pastSnapshot[obj]);
-                }
-            }
-
-            SimClock.Instance.ResumeClock();
+            SetSimulation(pastSnapshot);
         }
 
         [ContextMenu("TestInputWindowMessaging")]
