@@ -93,6 +93,23 @@ public class RoundManager : NetworkBehaviour
             Debug.Log($"Jugador anadido. Nº de jugadores: {_players.Count}");
         }
     }
+    
+    public void RemovePlayer(ulong clientId)
+    {
+        if (_players.ContainsKey(clientId))
+        {
+            _players.Remove(clientId);
+            if(_startedGame && _alivePlayers.ContainsKey(clientId))
+            {
+                _alivePlayers.Remove(clientId);
+            }
+
+            Debug.Log($"Jugador desconectado y eliminado. Nº de jugadores: {_players.Count}");
+
+            UpdateRemainingPlayersTextClientRpc(_alivePlayers.Count);
+            CheckForWinner();
+        }
+    }
 
     public void EliminatePlayer(GameObject player)
     {
@@ -152,6 +169,7 @@ public class RoundManager : NetworkBehaviour
         }
     }
 
+    /*
     [ClientRpc]
     private void SetObjectPositionClientRpc(NetworkObjectReference targetObjectReference, Vector3 newPosition)
     {
@@ -167,7 +185,7 @@ public class RoundManager : NetworkBehaviour
                 Debug.LogWarning($"No se encontró el PlayerObject para el cliente con ID {targetObject.GetComponent<NetworkObject>().OwnerClientId}");
             }
         }
-    }
+    }*/
 
     [ClientRpc]
     private void EnableTankClientRpc(NetworkObjectReference targetObjectReference)
@@ -215,13 +233,12 @@ public class RoundManager : NetworkBehaviour
                 GameObject player = aux.Value;
                 if (player != null)
                 {
-                    SetObjectPositionClientRpc(player, _spawnManager.GetSpawnPoint());
                     if (!player.activeSelf)
                     {
                         NetworkObjectReference targetObject = new NetworkObjectReference(player.GetComponent<NetworkObject>());
                         EnableTankClientRpc(targetObject);
-                        player.GetComponent<TankData>().ResetTank();
                     }
+                    player.GetComponent<TankData>().ResetTank();
                 }
             }
         }

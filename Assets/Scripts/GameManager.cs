@@ -104,6 +104,17 @@ namespace Tankito
                 var newPlayer = Instantiate(m_playerPrefab, GameInstanceParent.Instance.transform).GetComponent<NetworkObject>();
 
                 newPlayer.SpawnAsPlayerObject(clientId);
+
+                // Primeras llamadas a round manager y spawn manager
+                SpawnManager spawnManager = FindObjectOfType<SpawnManager>();
+                spawnManager.SetPlayerInSpawn(clientId);
+
+                RoundManager roundManager = FindObjectOfType<RoundManager>();
+                roundManager.AddPlayer(newPlayer.gameObject);
+
+                // IMPORTANTE: Se propaga la nueva posicion a los clientes (SUJETO A CAMBIOS)
+                NetworkObjectReference networkObjectReference = new NetworkObjectReference(newPlayer);
+                SetObjectPositionClientRpc(newPlayer, newPlayer.GetComponent<Transform>().position);
             }
             if (IsClient)
             {
@@ -115,7 +126,17 @@ namespace Tankito
 
         private void OnClientDisconnect(ulong obj)
         {
-            //throw new NotImplementedException();
+            //Debug.LogException(new NotImplementedException());
+
+            //Gestionar desconexion del spawn manager
+            if (IsServer)
+            {
+                SpawnManager spawnManager = FindObjectOfType<SpawnManager>();
+                spawnManager.FreeSpawnPoint(obj);
+
+                RoundManager roundManager = FindObjectOfType<RoundManager>();
+                roundManager.RemovePlayer(obj);
+            }
         }
 
         private void OnSceneLoaded()
@@ -207,6 +228,23 @@ namespace Tankito
             Debug.Log("Starting client clocks...");
             ClockManager.Instance.StartClock();
             AutoPhysics2DUpdate(false);
+        }
+
+        [ClientRpc]
+        private void SetObjectPositionClientRpc(NetworkObjectReference targetObjectReference, Vector3 newPosition)
+        {
+            if (targetObjectReference.TryGet(out var targetObject))
+            {
+                if (targetObject != null)
+                {
+                    targetObject.gameObject.GetComponent<Transform>().position = newPosition;
+                    Debug.Log($"GameObject del jugador {targetObject.GetComponent<NetworkObject>().OwnerClientId} colocado en el punto {newPosition.ToString()}");
+                }
+                else
+                {
+                    Debug.LogWarning($"No se encontró el NetworkObject para el cliente con ID {targetObject.GetComponent<NetworkObject>().OwnerClientId}");
+                }
+            }
         }
     }
 }
