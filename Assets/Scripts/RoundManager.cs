@@ -23,7 +23,7 @@ public class RoundManager : NetworkBehaviour
     private Dictionary<ulong, GameObject> _players = new Dictionary<ulong, GameObject>();
     private Dictionary<ulong, GameObject> _alivePlayers = new Dictionary<ulong, GameObject>();
 
-    private bool _startedGame;
+    public bool _startedGame;
     private bool _startedRound;
 
     private GameObject _playerInput;

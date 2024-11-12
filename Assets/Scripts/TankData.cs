@@ -11,6 +11,8 @@ public class TankData : NetworkBehaviour
     public NetworkVariable<int> health = new NetworkVariable<int>(2);
     public NetworkVariable<bool> isAlive = new NetworkVariable<bool>(true);
 
+    private Vector3 _spawnPoint;
+
     public int points;
 
     public override void OnNetworkSpawn()
@@ -25,11 +27,26 @@ public class TankData : NetworkBehaviour
         }
     }
 
+    public override void OnNetworkDespawn()
+    {
+        base.OnNetworkDespawn();
+
+        if (IsServer)
+        {
+            //RegisterToRoundManager();
+            RoundManager roundManager = FindObjectOfType<RoundManager>();
+            if (!roundManager._startedGame)
+            {
+                FreeSpawnPoint();
+            }
+        }
+    }
+
     private void RegisterToRoundManager()
     {
         RoundManager roundManager = FindObjectOfType<RoundManager>();
 
-        if(roundManager != null )
+        if (roundManager != null)
         {
             roundManager.AddPlayer(gameObject);
         }
@@ -38,7 +55,16 @@ public class TankData : NetworkBehaviour
     public void SetInSpawnPoint()
     {
         SpawnManager spawnManager = FindObjectOfType<SpawnManager>();
-        GetComponent<Transform>().position = spawnManager.GetSpawnPoint();
+        _spawnPoint = spawnManager.GetSpawnPoint();
+        GetComponent<Transform>().position = _spawnPoint;
+    }
+
+    public void FreeSpawnPoint()
+    {
+        SpawnManager spawnManager = FindObjectOfType<SpawnManager>();
+        spawnManager.FreeSpawnPoint(_spawnPoint);
+
+        //GetComponent<Transform>().position = spawnManager.FreeSpawnPoint();
     }
 
     public void Die()
@@ -55,7 +81,7 @@ public class TankData : NetworkBehaviour
         if (IsServer)
         {
             health.Value -= damage;
-            if(health.Value <= 0 )
+            if (health.Value <= 0)
             {
                 isAlive.Value = false;
                 Die();

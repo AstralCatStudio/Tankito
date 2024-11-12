@@ -71,13 +71,13 @@ namespace Tankito
 
         private void OnServerStarted()
         {
-            print("Servidor inicalizado.");        
+            print("Servidor inicalizado.");
         }
 
         private void OnClientConnected(ulong clientId)
         {
             Debug.Log("GameManager CLIENT CONNECTED called.");
-            
+
             if (m_loadingSceneFlag)
             {
                 Debug.Log("loadingScene");
@@ -85,7 +85,7 @@ namespace Tankito
                 { NetworkManager.SceneManager.OnLoadEventCompleted += (string sceneName, LoadSceneMode loadSceneMode, List<ulong> clientsCompleted, List<ulong> clientsTimedOut) => OnClientConnected(clientId); }
                 else
                 { NetworkManager.SceneManager.OnSynchronizeComplete += (ulong syncedClientId) => OnClientConnected(clientId); }
-                
+
                 return;
             }
             else
@@ -105,25 +105,29 @@ namespace Tankito
 
                 newPlayer.SpawnAsPlayerObject(clientId);
             }
-            FindPlayerInput();
+            if (IsClient)
+            {
+                FindPlayerInput();
+            }
+
             // BindInputActions(); Bound by the player controller itself on network spawn.
         }
 
         private void OnClientDisconnect(ulong obj)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
-        
+
         private void OnSceneLoaded()
         {
             m_loadingSceneFlag = false;
         }
-        
+
         public void UnloadScene()
         {
             // Assure only the server calls this when the NetworkObject is
             // spawned and the scene is loaded.
-            if (!IsServer || !IsSpawned )//|| !sceneLoaded.IsValid() || !sceneLoaded.isLoaded) // ADAPTAR??
+            if (!IsServer || !IsSpawned)//|| !sceneLoaded.IsValid() || !sceneLoaded.isLoaded) // ADAPTAR??
             {
                 return;
             }
