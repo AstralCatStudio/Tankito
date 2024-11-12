@@ -5,5 +5,8 @@ using UnityEngine;
 
 namespace Tankito.Netcode.Simulation
 {
-    public interface ISimulationState { }
+    public interface ISimulationState 
+    {
+        public bool CheckReconcilation(ISimulationState state);
+    }
 }

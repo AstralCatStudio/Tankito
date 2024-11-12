@@ -20,7 +20,8 @@ namespace Tankito.Netcode.Simulation
         /// </summary>
         public Dictionary<ulong, EmulatedTankInput> emulatedInputTanks = new Dictionary<ulong,EmulatedTankInput>();
 
-        private GlobalSimulationSnapshot AuthSnapshot
+        private GlobalSimulationSnapshot AuthSnapshot //Por como funciona el rollback, igual esto no hace falta y unicamente podemos necesitar 
+                                                      //que se guarde el timestamp
         {
             get => m_snapshotBuffer
                 .Where(s => s.state == SnapshotState.Authoritative)
@@ -62,16 +63,17 @@ namespace Tankito.Netcode.Simulation
                 m_snapshotBuffer[newSnapshot.timestamp] = newSnapshot;
         }
 
-        public void Rollback()
+        public void Rollback(GlobalSimulationSnapshot authSnapshot)
         {
-            int rollbackCounter = AuthSnapshot.timestamp;
+            int rollbackCounter = authSnapshot.timestamp;
             
             //Pause Simulation Clock
             SimClock.Instance.StopClock();
+            Debug.Log("Se inicia reconciliacion");
 
             foreach(var obj in simulationObjects)
             {
-                obj.SetSimState(AuthSnapshot[obj]);
+                obj.SetSimState(authSnapshot[obj]);
                 // Put Input Components into replay mode
                 if(obj is TankSimulationObject tank)
                 {
@@ -98,7 +100,26 @@ namespace Tankito.Netcode.Simulation
             SimClock.Instance.StartClock();
         }
 
-        
+        public void CheckNewGlobalSnapshot(GlobalSimulationSnapshot newAuthSnapshot)
+        {
+            Debug.Log("Se recibe estado autoritativo");
+            if (newAuthSnapshot.timestamp <= AuthSnapshot.timestamp) return;
+            GlobalSimulationSnapshot clientSnapShot = m_snapshotBuffer.Where(s => s.timestamp == newAuthSnapshot.timestamp).FirstOrDefault();
+            foreach(var objSnapShot in clientSnapShot.objectSnapshots.Keys)
+            {
+                if (newAuthSnapshot.objectSnapshots.ContainsKey(objSnapShot))
+                {
+                    if (clientSnapShot.objectSnapshots[objSnapShot].CheckReconcilation(newAuthSnapshot.objectSnapshots[objSnapShot]))
+                    {
+                        Rollback(newAuthSnapshot);
+                        break;
+                    }
+                }
+            }
+            newAuthSnapshot.state = SnapshotState.Authoritative;
+            m_snapshotBuffer.Add(newAuthSnapshot, newAuthSnapshot.timestamp);
+        }
+
         #region DEBUG_TESTING_METHODS
 
         [ContextMenu("TestGetSet")]
@@ -133,6 +154,14 @@ namespace Tankito.Netcode.Simulation
             }
 
             SimClock.Instance.ResumeClock();
+        }
+
+        [ContextMenu("TestRollback")]
+        public void TestRollback()
+        {
+            GlobalSimulationSnapshot testSnapShot = m_snapshotBuffer.Get(SimClock.TickCounter - 50, true);
+            testSnapShot.timestamp -= 50;
+            CheckNewGlobalSnapshot(testSnapShot);
         }
 
         [ContextMenu("TestInputWindowMessaging")]

@@ -130,10 +130,10 @@ namespace Tankito.Netcode.Messaging
                 customMessagingManager.SendNamedMessage(MessageName.InputWindow, NetworkManager.ServerClientId, writer, NetworkDelivery.Unreliable);
             }
 
-            if (DEBUG_INPUT)
+            /*if (DEBUG_INPUT)
             {
                 if (DEBUG_INPUT) Debug.Log($"Sent input window: {inputWindow.First().timestamp}-{inputWindow.Last().timestamp})");
-            }
+            }*/
         }
 
         /// <summary>
@@ -223,6 +223,7 @@ namespace Tankito.Netcode.Messaging
             
             GlobalSimulationSnapshot snapshot;
             snapshotPayload.ReadValue(out snapshot);
+            ClientSimulationManager.Instance.CheckNewGlobalSnapshot(snapshot);
 
             if (DEBUG_SNAPSHOTS) Debug.Log($"Received snapshot[{snapshot.timestamp}] from server.");
         }
