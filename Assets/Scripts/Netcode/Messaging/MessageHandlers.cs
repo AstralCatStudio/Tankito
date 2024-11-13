@@ -11,7 +11,7 @@ using System.Collections.Generic;
 
 namespace Tankito.Netcode.Messaging
 {
-    public class MessageName
+    public struct MessageName
     {
         public static string ClockSignal => "ClockSignal";
         public static string InputWindow => "InputWindow";
@@ -166,26 +166,23 @@ namespace Tankito.Netcode.Messaging
                 receivedInputWindow.Add(inputPayload);
             }
 
-            if (IsServer)
+            // Relay Client inputs
+            RelayClientInput(senderId, receivedInputWindow.ToArray());
+
+            if (senderId != NetworkManager.LocalClientId)
             {
-                // Relay Client inputs
-                RelayClientInput(senderId, receivedInputWindow.ToArray());
+                // Store inputWindow
+                ServerSimulationManager.Instance.remoteInputTanks[senderId].AddInput(receivedInputWindow.ToArray());
 
-                if (senderId != NetworkManager.LocalClientId)
+                // Respond with throttling signal
+                int throttleTicks = ServerSimulationManager.Instance.remoteInputTanks[senderId].IdealBufferSize-ServerSimulationManager.Instance.remoteInputTanks[senderId].BufferSize;
+                var throttleSignal = new ClockSignal(ClockSignalHeader.Throttle, throttleTicks, SimClock.TickCounter);
+                var throttleWriter = new FastBufferWriter(FastBufferWriter.GetWriteSize(throttleSignal), Allocator.Temp);
+
+                using (throttleWriter)
                 {
-                    // Store inputWindow
-                    ServerSimulationManager.Instance.remoteInputTanks[senderId].AddInput(receivedInputWindow.ToArray());
-
-                    // Respond with throttling signal
-                    int throttleTicks = ServerSimulationManager.Instance.remoteInputTanks[senderId].IdealBufferSize-ServerSimulationManager.Instance.remoteInputTanks[senderId].BufferSize;
-                    var throttleSignal = new ClockSignal(ClockSignalHeader.Throttle, throttleTicks, SimClock.TickCounter);
-                    var throttleWriter = new FastBufferWriter(FastBufferWriter.GetWriteSize(throttleSignal), Allocator.Temp);
-
-                    using (throttleWriter)
-                    {
-                        throttleWriter.WriteValue(throttleSignal);
-                        NetworkManager.CustomMessagingManager.SendNamedMessage(MessageName.ClockSignal, senderId, throttleWriter, NetworkDelivery.Unreliable);
-                    }
+                    throttleWriter.WriteValue(throttleSignal);
+                    NetworkManager.CustomMessagingManager.SendNamedMessage(MessageName.ClockSignal, senderId, throttleWriter, NetworkDelivery.Unreliable);
                 }
             }
 
