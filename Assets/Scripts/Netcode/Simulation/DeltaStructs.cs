@@ -1,27 +1,39 @@
 using System;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace Tankito.Netcode.Simulation
 {
-    public interface IStateDelta<TState> where TState : ISimulationState
+    public interface IStateDelta
     {
         
     }
 
     [Serializable]
-    public readonly struct TankDelta : IStateDelta<TankSimulationState>
+    public readonly struct TankDelta : IStateDelta
     {
-        public readonly float posDiff;
+        public readonly Vector2 posDiff;
         public readonly float hullRotDiff;
-        public readonly float velDiff;
+        public readonly Vector2 velDiff;
         public readonly float turrRotDiff;
+        public readonly int actionDiff;
 
-        public TankDelta(float posDiff, float hullRotDiff, float velDiff, float turrRotDiff)
+        public TankDelta(Vector2 posDiff, float hullRotDiff, Vector2 velDiff, float turrRotDiff, int actionDiff)
         {
             this.posDiff = posDiff;
             this.hullRotDiff = hullRotDiff;
             this.velDiff = velDiff;
             this.turrRotDiff = turrRotDiff;
+            this.actionDiff = actionDiff; 
+        }
+
+        public TankDelta(in TankSimulationState tankState)
+        {
+            posDiff = tankState.Position;
+            hullRotDiff = tankState.HullRotation;
+            velDiff = tankState.Velocity;
+            turrRotDiff = tankState.TurretRotation;
+            actionDiff = (int)tankState.PerformedAction;
         }
 
         public override string ToString()
@@ -31,17 +43,24 @@ namespace Tankito.Netcode.Simulation
     }
 
     [Serializable]
-    public readonly struct BulletDelta : IStateDelta<BulletSimulationState>
+    public readonly struct BulletDelta : IStateDelta
     {
-        public readonly float posDiff;
+        public readonly Vector2 posDiff;
         public readonly float rotDiff;
-        public readonly float velDiff;
+        public readonly Vector2 velDiff;
 
-        public BulletDelta(float posDiff, float rotDiff, float velDiff)
+        public BulletDelta(Vector2 posDiff, float rotDiff, Vector2 velDiff)
         {
             this.posDiff = posDiff;
             this.rotDiff = rotDiff;
             this.velDiff = velDiff;
+        }
+
+        public BulletDelta(in BulletSimulationState bulletState)
+        {
+            posDiff = bulletState.Position;
+            rotDiff = bulletState.Rotation;
+            velDiff = bulletState.Velocity;
         }
         public override string ToString()
         {
