@@ -94,7 +94,7 @@ public class SpawnManager : MonoBehaviour
             {
                 if(_spawnPoints[i].clientId != null)
                 {
-                    GameObject player = NetworkManager.Singleton.ConnectedClients[id].PlayerObject.gameObject;
+                    GameObject player = NetworkManager.Singleton.ConnectedClients[(ulong)_spawnPoints[i].clientId].PlayerObject.gameObject;
                     GameManager.Instance.SetObjectPosition(player, _spawnPoints[i].pos);
                 }
             }
