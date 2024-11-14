@@ -5,83 +5,106 @@ namespace Tankito.Netcode.Simulation
 {
     public static class SimExtensions
     {
-        public static IStateDelta<ISimulationState>[] Delta(in SimulationSnapshot snapA, in SimulationSnapshot snapB)
+        public static IStateDelta[] Delta(in SimulationSnapshot snapA, in SimulationSnapshot snapB)
         {
-            IStateDelta<ISimulationState>[] snapshotDeltas = new IStateDelta<ISimulationState>[Math.Max(snapA.objectStates.Count, snapB.objectStates.Count)];
+            IStateDelta[] snapshotDeltas = new IStateDelta[Math.Max(snapA.ObjCount, snapB.ObjCount)];
             int i = 0;
 
-            foreach(var obj in snapA.objectStates.Keys)
+            foreach(var obj in snapA.Keys)
             {
-                if (snapB.objectStates.ContainsKey(obj))
+                if (snapB.ContainsKey(obj))
                 {
                     snapshotDeltas[i] = Delta(snapA[obj], snapB[obj]);
                 }
                 else
                 {
-                    snapshotDeltas[i] = (IStateDelta<ISimulationState>)snapA[obj];
+                    snapshotDeltas[i] = Delta(snapA[obj]);
                 }
             }
+
+            throw new NotImplementedException("TODO: falta recoger los objetos que estan presentes en el snapshot B pero no en el A");
 
             return snapshotDeltas;
         }
 
-        public static IStateDelta<TState> Delta<TState>(in TState a, in TState b) where TState : ISimulationState
+        public static IStateDelta Delta<TState>(in TState a, in TState b) where TState : ISimulationState
         {
-            if (a is TankSimulationState tstateA && b is TankSimulationState tstateB)
+            if (a is TankSimulationState tankStateA && b is TankSimulationState tankStateB)
             {
-                return (IStateDelta<TState>)(object) ComputeTankStateDelta(in tstateA, in tstateB);
+                return ComputeTankStateDelta(in tankStateA, in tankStateB);
 
             }
-            else if(a is BulletSimulationState bstateA && b is BulletSimulationState bstateB)
+            else if(a is BulletSimulationState bulletStateA && b is BulletSimulationState bulletStateB)
             {
-                return (IStateDelta<TState>)(object)ComputeBulletStateDelta(in bstateA, in bstateB);
+                return ComputeBulletStateDelta(in bulletStateA, in bulletStateB);
             }
 
-            throw new InvalidOperationException("Delta computation not supported for this type.");
+            throw new InvalidOperationException($"Delta computation not supported for type{typeof(TState)}.");
+        }
+        public static IStateDelta Delta<TState>(in TState state) where TState : ISimulationState
+        {
+            if (state is TankSimulationState tankState)
+            {
+                return new TankDelta(in tankState);
+
+            }
+            else if(state is BulletSimulationState bulletState)
+            {
+                return new BulletDelta(in bulletState);
+            }
+
+            throw new InvalidOperationException($"Delta constructor not supported for type{typeof(TState)}.");
         }
 
         // Specialized ComputeDelta method for TankSimulationState
         private static TankDelta ComputeTankStateDelta(in TankSimulationState a, in TankSimulationState b)
         {
-            float positionDiff = Vector2.SqrMagnitude(b.Position - a.Position);
-            float hullRotationDiff = Mathf.Abs(b.HullRotation - a.HullRotation);
-            float velocityDiff = Vector2.SqrMagnitude(b.Velocity - a.Velocity);
-            float turretRotationDiff = Mathf.Abs(b.TurretRotation - a.TurretRotation);
+            Vector2 positionDiff = b.Position - a.Position;
+            float hullRotationDiff = b.HullRotation - a.HullRotation;
+            Vector2 velocityDiff = b.Velocity - a.Velocity;
+            float turretRotationDiff = b.TurretRotation - a.TurretRotation;
+            int actionDiff = b.PerformedAction - a.PerformedAction;
 
-            return new TankDelta(positionDiff, hullRotationDiff, velocityDiff, turretRotationDiff);
+            return new TankDelta(positionDiff, hullRotationDiff, velocityDiff, turretRotationDiff, actionDiff);
         }
 
         private static BulletDelta ComputeBulletStateDelta(in BulletSimulationState a, in BulletSimulationState b)
         {
-            float positionDiff = Vector2.SqrMagnitude(b.Position - a.Position);
-            float rotationDiff = Mathf.Abs(b.Rotation - a.Rotation);
-            float velocityDiff = Vector2.SqrMagnitude(b.Velocity - a.Velocity);
+            Vector2 positionDiff = b.Position - a.Position;
+            float rotationDiff = b.Rotation - a.Rotation;
+            Vector2 velocityDiff = b.Velocity - a.Velocity;
 
             return new BulletDelta(positionDiff, rotationDiff, velocityDiff);
         }
 
-        public static bool CompareDeltas<TState>(in IStateDelta<TState> a, in IStateDelta<TState> b) where TState : ISimulationState
+        public static bool CompareDeltas(in IStateDelta a, in IStateDelta b)
         {
-            if (a is TankDelta tDeltaA && b is TankDelta tDeltaB)
+            if (a is TankDelta tankDeltaA && b is TankDelta tankDeltaB)
             {
-                return CompareTankStateDeltas(tDeltaA, tDeltaA);
+                return CompareTankStateDeltas(tankDeltaA, tankDeltaB);
             }
-            else if (a is BulletDelta bDeltaA && b is BulletDelta bDeltaB)
+            else if (a is BulletDelta bulletDeltaA && b is BulletDelta bulletDeltaB)
             {
-                return CompareBulletStateDeltas(bDeltaA, bDeltaB);
+                return CompareBulletStateDeltas(bulletDeltaA, bulletDeltaB);
             }
 
-            throw new InvalidOperationException("CompareDeltas computation not supported for this type.");
+            throw new InvalidOperationException($"CompareDeltas computation not supported for {a} and {b}.");
         }
 
-        private static bool CompareTankStateDeltas(TankDelta a, TankDelta b)
+        private static bool CompareTankStateDeltas(in TankDelta a, in TankDelta b)
         {
-            return (a.posDiff > b.posDiff || a.hullRotDiff > b.hullRotDiff || a.velDiff > b.velDiff || a.turrRotDiff > b.turrRotDiff);
+            return  a.posDiff.sqrMagnitude > b.posDiff.sqrMagnitude ||
+                    Mathf.Abs(a.hullRotDiff) > Mathf.Abs(b.hullRotDiff) ||
+                    a.velDiff.sqrMagnitude > b.velDiff.sqrMagnitude ||
+                    Mathf.Abs(a.turrRotDiff) > Mathf.Abs(b.turrRotDiff) ||
+                    a.actionDiff > b.actionDiff;
         }
 
-        private static bool CompareBulletStateDeltas(BulletDelta a, BulletDelta b)
+        private static bool CompareBulletStateDeltas(in BulletDelta a, in BulletDelta b)
         {
-            return (a.posDiff > b.posDiff || a.rotDiff > b.rotDiff || a.velDiff > b.velDiff);
+            return  a.posDiff.sqrMagnitude > b.posDiff.sqrMagnitude ||
+                    a.rotDiff > b.rotDiff ||
+                    a.velDiff.sqrMagnitude > b.velDiff.sqrMagnitude;
         }
     }
 }

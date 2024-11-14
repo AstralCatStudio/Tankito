@@ -26,7 +26,7 @@ namespace Tankito.Netcode.Simulation
                                                       //que se guarde el timestamp
         {
             get => m_snapshotBuffer
-                .Where(s => s.state == SnapshotState.Authoritative)
+                .Where(s => s.status == SnapshotState.Authoritative)
                 .OrderByDescending(s => s.timestamp)
                 .FirstOrDefault();
         }
@@ -38,8 +38,8 @@ namespace Tankito.Netcode.Simulation
                 Debug.LogWarning("ClientSimulationManager is network node that is NOT a CLIENT (is server). this should not happen!");
                 Destroy(this);
             }
-            m_tankSimulationTolerance = new TankDelta(0.1f, 0.1f, 0.1f, 0.1f);
-            m_bulletSimulationTolerance = new BulletDelta(0.1f, 0.1f, 0.1f);
+            m_tankSimulationTolerance = new TankDelta(new Vector2(0.1f,0.1f), 0.1f, new Vector2(0.1f,0.1f), 0.1f, 100000);
+            m_bulletSimulationTolerance = new BulletDelta(new Vector2(0.1f,0.1f), 0.1f, new Vector2(0.1f,0.1f));
         }
 
         public override void Simulate()
@@ -109,7 +109,7 @@ namespace Tankito.Netcode.Simulation
         {
             SimClock.Instance.StopClock();
             
-            foreach(var obj in newSimSnapshot.objectStates.Keys)
+            foreach(var obj in newSimSnapshot.Keys)
             {
                 if (simulationObjects.Contains(obj))
                 {
@@ -125,34 +125,34 @@ namespace Tankito.Netcode.Simulation
             Debug.Log("Se recibe estado autoritativo");
             if (newAuthSnapshot.timestamp <= AuthSnapshot.timestamp) return;
             SimulationSnapshot clientSnapShot = m_snapshotBuffer.Where(s => s.timestamp == newAuthSnapshot.timestamp).FirstOrDefault();
-            foreach(var objSnapShot in clientSnapShot.objectStates.Keys)
+            foreach(var objSnapShot in clientSnapShot.Keys)
             {
-                if (newAuthSnapshot.objectStates.ContainsKey(objSnapShot))
+                if (newAuthSnapshot.ContainsKey(objSnapShot))
                 {
-                    if (CheckForDesync(clientSnapShot.objectStates[objSnapShot], newAuthSnapshot.objectStates[objSnapShot]))
+                    if (CheckForDesync(clientSnapShot[objSnapShot], newAuthSnapshot[objSnapShot]))
                     {
                         Rollback(newAuthSnapshot);
                         break;
                     }
                 }
             }
-            newAuthSnapshot.state = SnapshotState.Authoritative;
+            newAuthSnapshot.status = SnapshotState.Authoritative;
             m_snapshotBuffer.Add(newAuthSnapshot, newAuthSnapshot.timestamp);
         }
 
         // Bernat: A lo mejor no queremos hacer esto asi y queremos implementar una metrica mas sofisticada para decidir si reconciliar o no,
         // de momento lo dejo como esta con el bool por simplicidad.
-        private bool CheckForDesync<T>(in T simObjA,in T simObjB) where T : ISimulationState
+        private bool CheckForDesync(in ISimulationState simStateA,in ISimulationState simStateB)
         {
-            IStateDelta<T> delta = SimExtensions.Delta(simObjA, simObjB);
-            if(simObjA is TankSimulationState)
+            IStateDelta delta = SimExtensions.Delta(simStateA, simStateB);
+            if(simStateA is TankSimulationState && simStateB is TankSimulationState)
             {
-                TankDelta tankDelta = (TankDelta)(IStateDelta<TankSimulationState>)delta;
+                TankDelta tankDelta = (TankDelta)delta;
                 return SimExtensions.CompareDeltas(tankDelta, m_tankSimulationTolerance);
             }
-            else if(simObjA is BulletSimulationState)
+            else if(simStateA is BulletSimulationState && simStateB is BulletSimulationState)
             {
-                BulletDelta bulletDelta = (BulletDelta)(IStateDelta<BulletSimulationState>)delta;
+                BulletDelta bulletDelta = (BulletDelta)delta;
                 return SimExtensions.CompareDeltas(bulletDelta, m_bulletSimulationTolerance);
             }
             return false;
@@ -170,8 +170,8 @@ namespace Tankito.Netcode.Simulation
         [ContextMenu("StateComparison")]
         public void StateComparison()
         {
-            TankSimulationState tankA = new TankSimulationState(Vector2.right, 90, Vector2.zero, 0);
-            TankSimulationState tankB = new TankSimulationState(Vector2.right*0.9f, 90, Vector2.zero, 0);
+            TankSimulationState tankA = new TankSimulationState(Vector2.right, 90, Vector2.zero, 0, TankAction.None);
+            TankSimulationState tankB = new TankSimulationState(Vector2.right*0.9f, 90, Vector2.zero, 0, TankAction.Fire);
             Debug.Log(SimExtensions.Delta(tankA, tankB));
         }
 
@@ -184,10 +184,33 @@ namespace Tankito.Netcode.Simulation
             int warpTick = SimClock.TickCounter-rewindTicks;
             var pastSnapshot = m_snapshotBuffer[warpTick];
 
-            
+            var lastSnapshot =  m_snapshotBuffer.Last();
 
+            var deltas = SimExtensions.Delta(pastSnapshot, lastSnapshot);
             
-            Debug.Log(SimExtensions.Delta(tankA, tankB));
+            Debug.Log("DeltaSnapshot: " + deltas.Select(d => d.ToString()));
+
+            string desyncs = "Desyncs: ";
+            foreach(var obj in pastSnapshot.Keys)
+            {
+                if (lastSnapshot.ContainsKey(obj))
+                {
+                    desyncs += $"[{obj.NetworkObjectId}]-> " + CheckForDesync(lastSnapshot[obj], pastSnapshot[obj]) + "   ";
+                }
+                else
+                {
+                    desyncs += $"[{obj.NetworkObjectId}]-> missing in LastSnapshot. ";
+                }
+            }
+            foreach(var obj in lastSnapshot.Keys)
+            {
+                if (!pastSnapshot.ContainsKey(obj))
+                {
+                    desyncs += $"[{obj.NetworkObjectId}]-> missing in PastSnapshot. ";
+                }
+            }
+            
+            Debug.Log("Thresholds check: " + desyncs);
         }
 
         [ContextMenu("TestTimeTravel")]
