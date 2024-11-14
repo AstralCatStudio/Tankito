@@ -113,8 +113,9 @@ namespace Tankito
                 roundManager.AddPlayer(newPlayer.gameObject);
 
                 // IMPORTANTE: Se propaga la nueva posicion a los clientes (SUJETO A CAMBIOS)
-                NetworkObjectReference networkObjectReference = new NetworkObjectReference(newPlayer);
-                SetObjectPositionClientRpc(newPlayer, newPlayer.GetComponent<Transform>().position);
+                //NetworkObjectReference networkObjectReference = new NetworkObjectReference(newPlayer);
+                //SetObjectPositionClientRpc(newPlayer, newPlayer.GetComponent<Transform>().position);
+                // Ahora se maneja directamente en el spawn manager llamando a la funcion SetObjectPosition del GameManager
             }
             if (IsClient)
             {
@@ -228,6 +229,12 @@ namespace Tankito
             Debug.Log("Starting client clocks...");
             ClockManager.Instance.StartClock();
             AutoPhysics2DUpdate(false);
+        }
+
+        public void SetObjectPosition(GameObject targetObject, Vector3 newPosition)
+        {
+            NetworkObjectReference networkObjectReference = new NetworkObjectReference(targetObject);
+            SetObjectPositionClientRpc(networkObjectReference, newPosition);
         }
 
         [ClientRpc]

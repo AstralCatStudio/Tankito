@@ -220,6 +220,11 @@ public class RoundManager : NetworkBehaviour
         StartCountdown();
     }
 
+    public bool IsGameStarted()
+    {
+        return _startedGame;
+    }
+
     private void ResetPlayers()
     {
         _alivePlayers = new Dictionary<ulong, GameObject>(_players);
