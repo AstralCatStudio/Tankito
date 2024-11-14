@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Tankito;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -18,7 +19,7 @@ public class SpawnManager : MonoBehaviour
 
             Debug.Log($"Spawn points encontrados: {transforms.Length - 1}");
 
-            if (transforms.Length != 6)
+            if ((transforms.Length > 0) && transforms.Length <= 5)
             {
                 _spawnPoints = new List<(Vector3 pos, ulong? clientId)>();
 
@@ -27,11 +28,11 @@ public class SpawnManager : MonoBehaviour
                     _spawnPoints.Add((transforms[i].position, null));
                 }
 
-                /*for (int i = 0; i < _spawnPoints.Count; i++)
+                for (int i = 0; i < _spawnPoints.Count; i++)
                 {
-                    Debug.Log($"Spawn point {i + 1}: ({_spawnPoints.ElementAt(i).tPosition.position.x}, {_spawnPoints.ElementAt(i).tPosition.position.y}. " +
-                        $"Libre: {_spawnPoints.ElementAt(i).isFree})");
-                }*/
+                    Debug.Log($"Spawn point {i + 1}: ({_spawnPoints.ElementAt(i).pos.x}, {_spawnPoints.ElementAt(i).pos.y}. " +
+                        $"Libre: {_spawnPoints.ElementAt(i).clientId == null})");
+                }
             }
 
             //NetworkManager.Singleton.OnClientConnectedCallback += SetPlayerInSpawn;
@@ -51,7 +52,8 @@ public class SpawnManager : MonoBehaviour
                 _spawnPoints[i] = newTupla;
 
                 // Coloca al jugador de ID recibido en el punto de spawn
-                NetworkManager.Singleton.ConnectedClients[id].PlayerObject.GetComponent<Transform>().position = _spawnPoints[i].pos;
+                GameObject player = NetworkManager.Singleton.ConnectedClients[id].PlayerObject.gameObject;
+                GameManager.Instance.SetObjectPosition(player, _spawnPoints[i].pos);
                 break;
             }
         }
@@ -84,6 +86,16 @@ public class SpawnManager : MonoBehaviour
 
         // Se vacia el ultimo spawn point
         _spawnPoints[_spawnPoints.Count - 1] = (_spawnPoints[_spawnPoints.Count - 1].pos, null);
+
+        // Si no se ha empezado la partida, se recolocan todos los tanques que han cambiado de spawn
+        if (FindObjectOfType<RoundManager>().IsGameStarted())
+        {
+            for (int i = index + 1; i < _spawnPoints.Count; i++)
+            {
+                GameObject player = NetworkManager.Singleton.ConnectedClients[id].PlayerObject.gameObject;
+                GameManager.Instance.SetObjectPosition(player, _spawnPoints[i].pos);
+            }
+        }
     }
 
     public void ResetSpawnPoints()
@@ -94,7 +106,11 @@ public class SpawnManager : MonoBehaviour
         {
             if (_spawnPoints[i].clientId != null)
             {
+                Debug.Log($"Cliente {_spawnPoints[i].clientId} recolocado en el spawn {i}");
                 NetworkManager.Singleton.ConnectedClients[(ulong)_spawnPoints[i].clientId].PlayerObject.GetComponent<Transform>().position = _spawnPoints[i].pos;
+
+                GameObject player = NetworkManager.Singleton.ConnectedClients[(ulong)_spawnPoints[i].clientId].PlayerObject.gameObject;
+                GameManager.Instance.SetObjectPosition(player, _spawnPoints[i].pos);
             }
         }
     }
