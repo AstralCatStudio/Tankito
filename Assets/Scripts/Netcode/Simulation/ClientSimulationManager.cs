@@ -19,6 +19,8 @@ namespace Tankito.Netcode.Simulation
         /// Relates NetworkClientId(ulong) to a specific <see cref="RemoteTankInput"/>.  
         /// </summary>
         public Dictionary<ulong, EmulatedTankInput> emulatedInputTanks = new Dictionary<ulong,EmulatedTankInput>();
+        [SerializeField] private TankStateDelta m_tankSimulationTolerance;
+        [SerializeField] private BulletStateDelta m_bulletSimulationTolerance;
 
         private GlobalSimulationSnapshot AuthSnapshot //Por como funciona el rollback, igual esto no hace falta y unicamente podemos necesitar 
                                                       //que se guarde el timestamp
@@ -36,6 +38,8 @@ namespace Tankito.Netcode.Simulation
                 Debug.LogWarning("ClientSimulationManager is network node that is NOT a CLIENT (is server). this should not happen!");
                 Destroy(this);
             }
+            m_tankSimulationTolerance = new TankStateDelta(0.1f, 0.1f, 0.1f, 0.1f);
+            m_bulletSimulationTolerance = new BulletStateDelta(0.1f, 0.1f, 0.1f);
         }
 
         public override void Simulate()
@@ -125,7 +129,7 @@ namespace Tankito.Netcode.Simulation
             {
                 if (newAuthSnapshot.objectSnapshots.ContainsKey(objSnapShot))
                 {
-                    if (clientSnapShot.objectSnapshots[objSnapShot].CheckForDesync(newAuthSnapshot.objectSnapshots[objSnapShot]))
+                    if (CheckForDesync(clientSnapShot.objectSnapshots[objSnapShot], newAuthSnapshot.objectSnapshots[objSnapShot]))
                     {
                         Rollback(newAuthSnapshot);
                         break;
@@ -140,7 +144,18 @@ namespace Tankito.Netcode.Simulation
         // de momento lo dejo como esta con el bool por simplicidad.
         private bool CheckForDesync<T>(in T simObjA,in T simObjB) where T : ISimulationState
         {
-            
+            IStateDelta<T> delta = SimExtensions.Delta(simObjA, simObjB);
+            if(simObjA is TankSimulationState)
+            {
+                TankStateDelta tankDelta = (TankStateDelta)(IStateDelta<TankSimulationState>)delta;
+                return SimExtensions.CompareDeltas(tankDelta, m_tankSimulationTolerance);
+            }
+            else if(simObjA is BulletSimulationState)
+            {
+                BulletStateDelta bulletDelta = (BulletStateDelta)(IStateDelta<BulletSimulationState>)delta;
+                return SimExtensions.CompareDeltas(bulletDelta, m_bulletSimulationTolerance);
+            }
+            return false;
         }
 
         #region DEBUG_TESTING_METHODS

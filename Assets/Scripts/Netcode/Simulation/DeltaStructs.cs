@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Tankito.Netcode.Simulation
@@ -7,6 +8,7 @@ namespace Tankito.Netcode.Simulation
         
     }
 
+    [Serializable]
     public readonly struct TankStateDelta : IStateDelta<TankSimulationState>
     {
         public readonly float posDiff;
@@ -20,6 +22,21 @@ namespace Tankito.Netcode.Simulation
             this.hullRotDiff = hullRotDiff;
             this.velDiff = velDiff;
             this.turrRotDiff = turrRotDiff;
+        }
+    }
+
+    [Serializable]
+    public readonly struct BulletStateDelta : IStateDelta<BulletSimulationState>
+    {
+        public readonly float posDiff;
+        public readonly float rotDiff;
+        public readonly float velDiff;
+
+        public BulletStateDelta(float posDiff, float rotDiff, float velDiff)
+        {
+            this.posDiff = posDiff;
+            this.rotDiff = rotDiff;
+            this.velDiff = velDiff;
         }
     }
 }
