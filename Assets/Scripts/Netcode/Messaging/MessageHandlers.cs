@@ -302,6 +302,7 @@ namespace Tankito.Netcode.Messaging
             }
             
             SimulationSnapshot snapshot = new SimulationSnapshot();
+            snapshot.Initialize();
             snapshotPayload.ReadValue(out snapshot);
             ClientSimulationManager.Instance.CheckNewGlobalSnapshot(snapshot);
 

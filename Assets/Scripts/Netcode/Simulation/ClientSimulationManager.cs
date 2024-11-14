@@ -187,7 +187,7 @@ namespace Tankito.Netcode.Simulation
             
 
             
-            Debug.Log(SimExtensions.Delta(tankA, tankB));
+            //Debug.Log(SimExtensions.Delta(tankA, tankB));
         }
 
         [ContextMenu("TestTimeTravel")]

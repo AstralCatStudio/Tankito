@@ -27,6 +27,7 @@ namespace Tankito.Netcode.Simulation
             //Debug.Log("TODO: Implement Input Gathering and Client Throttling RPC's on Server.");
             //GatherPlayerInput(); // Samplear la ventana de inputs. Aqui tambien iria la logica de client throttling
             base.Simulate();
+            MessageHandlers.Instance.BroadcastSimulationSnapshot(CaptureSnapshot());
         }
 
         #region DEBUG_TESTING_METHODS
