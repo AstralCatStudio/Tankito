@@ -51,9 +51,9 @@ namespace Tankito.Netcode.Simulation
             Physics2D.Simulate(SimClock.SimDeltaTime);
         }
 
-        public GlobalSimulationSnapshot CaptureSnapshot()
+        public SimulationSnapshot CaptureSnapshot()
         {
-            var newSnapshot = new GlobalSimulationSnapshot();
+            var newSnapshot = new SimulationSnapshot();
             newSnapshot.Initialize();
             newSnapshot.timestamp = SimClock.TickCounter;
             

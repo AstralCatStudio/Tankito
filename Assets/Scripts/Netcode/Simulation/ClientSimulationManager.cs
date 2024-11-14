@@ -13,16 +13,16 @@ namespace Tankito.Netcode.Simulation
     {
         //GlobalSimulationSnapshot m_authSnapshot;
         const int SNAPSHOT_BUFFER_SIZE = 256;
-        CircularBuffer<GlobalSimulationSnapshot> m_snapshotBuffer = new CircularBuffer<GlobalSimulationSnapshot>(SNAPSHOT_BUFFER_SIZE);
+        CircularBuffer<SimulationSnapshot> m_snapshotBuffer = new CircularBuffer<SimulationSnapshot>(SNAPSHOT_BUFFER_SIZE);
 
         /// <summary>
         /// Relates NetworkClientId(ulong) to a specific <see cref="RemoteTankInput"/>.  
         /// </summary>
         public Dictionary<ulong, EmulatedTankInput> emulatedInputTanks = new Dictionary<ulong,EmulatedTankInput>();
-        [SerializeField] private TankStateDelta m_tankSimulationTolerance;
-        [SerializeField] private BulletStateDelta m_bulletSimulationTolerance;
+        [SerializeField] private TankDelta m_tankSimulationTolerance;
+        [SerializeField] private BulletDelta m_bulletSimulationTolerance;
 
-        private GlobalSimulationSnapshot AuthSnapshot //Por como funciona el rollback, igual esto no hace falta y unicamente podemos necesitar 
+        private SimulationSnapshot AuthSnapshot //Por como funciona el rollback, igual esto no hace falta y unicamente podemos necesitar 
                                                       //que se guarde el timestamp
         {
             get => m_snapshotBuffer
@@ -38,8 +38,8 @@ namespace Tankito.Netcode.Simulation
                 Debug.LogWarning("ClientSimulationManager is network node that is NOT a CLIENT (is server). this should not happen!");
                 Destroy(this);
             }
-            m_tankSimulationTolerance = new TankStateDelta(0.1f, 0.1f, 0.1f, 0.1f);
-            m_bulletSimulationTolerance = new BulletStateDelta(0.1f, 0.1f, 0.1f);
+            m_tankSimulationTolerance = new TankDelta(0.1f, 0.1f, 0.1f, 0.1f);
+            m_bulletSimulationTolerance = new BulletDelta(0.1f, 0.1f, 0.1f);
         }
 
         public override void Simulate()
@@ -63,11 +63,11 @@ namespace Tankito.Netcode.Simulation
                 
             }
                 // Cache Simulation State
-                GlobalSimulationSnapshot newSnapshot = CaptureSnapshot();
+                SimulationSnapshot newSnapshot = CaptureSnapshot();
                 m_snapshotBuffer[newSnapshot.timestamp] = newSnapshot;
         }
 
-        public void Rollback(GlobalSimulationSnapshot authSnapshot)
+        public void Rollback(SimulationSnapshot authSnapshot)
         {
             int rollbackCounter = authSnapshot.timestamp;
             
@@ -105,11 +105,11 @@ namespace Tankito.Netcode.Simulation
         }
 
         // WIP !!
-        public void SetSimulation(GlobalSimulationSnapshot newSimSnapshot)
+        public void SetSimulation(SimulationSnapshot newSimSnapshot)
         {
             SimClock.Instance.StopClock();
             
-            foreach(var obj in newSimSnapshot.objectSnapshots.Keys)
+            foreach(var obj in newSimSnapshot.objectStates.Keys)
             {
                 if (simulationObjects.Contains(obj))
                 {
@@ -120,16 +120,16 @@ namespace Tankito.Netcode.Simulation
             SimClock.Instance.ResumeClock();
         }
 
-        public void CheckNewGlobalSnapshot(GlobalSimulationSnapshot newAuthSnapshot)
+        public void CheckNewGlobalSnapshot(SimulationSnapshot newAuthSnapshot)
         {
             Debug.Log("Se recibe estado autoritativo");
             if (newAuthSnapshot.timestamp <= AuthSnapshot.timestamp) return;
-            GlobalSimulationSnapshot clientSnapShot = m_snapshotBuffer.Where(s => s.timestamp == newAuthSnapshot.timestamp).FirstOrDefault();
-            foreach(var objSnapShot in clientSnapShot.objectSnapshots.Keys)
+            SimulationSnapshot clientSnapShot = m_snapshotBuffer.Where(s => s.timestamp == newAuthSnapshot.timestamp).FirstOrDefault();
+            foreach(var objSnapShot in clientSnapShot.objectStates.Keys)
             {
-                if (newAuthSnapshot.objectSnapshots.ContainsKey(objSnapShot))
+                if (newAuthSnapshot.objectStates.ContainsKey(objSnapShot))
                 {
-                    if (CheckForDesync(clientSnapShot.objectSnapshots[objSnapShot], newAuthSnapshot.objectSnapshots[objSnapShot]))
+                    if (CheckForDesync(clientSnapShot.objectStates[objSnapShot], newAuthSnapshot.objectStates[objSnapShot]))
                     {
                         Rollback(newAuthSnapshot);
                         break;
@@ -147,12 +147,12 @@ namespace Tankito.Netcode.Simulation
             IStateDelta<T> delta = SimExtensions.Delta(simObjA, simObjB);
             if(simObjA is TankSimulationState)
             {
-                TankStateDelta tankDelta = (TankStateDelta)(IStateDelta<TankSimulationState>)delta;
+                TankDelta tankDelta = (TankDelta)(IStateDelta<TankSimulationState>)delta;
                 return SimExtensions.CompareDeltas(tankDelta, m_tankSimulationTolerance);
             }
             else if(simObjA is BulletSimulationState)
             {
-                BulletStateDelta bulletDelta = (BulletStateDelta)(IStateDelta<BulletSimulationState>)delta;
+                BulletDelta bulletDelta = (BulletDelta)(IStateDelta<BulletSimulationState>)delta;
                 return SimExtensions.CompareDeltas(bulletDelta, m_bulletSimulationTolerance);
             }
             return false;
@@ -165,6 +165,29 @@ namespace Tankito.Netcode.Simulation
         {
             ISimulationState stateToCopy = simulationObjects[0].GetSimState(); // Explicit casting is not necessary
             simulationObjects[1].SetSimState(stateToCopy);
+        }
+
+        [ContextMenu("StateComparison")]
+        public void StateComparison()
+        {
+            TankSimulationState tankA = new TankSimulationState(Vector2.right, 90, Vector2.zero, 0);
+            TankSimulationState tankB = new TankSimulationState(Vector2.right*0.9f, 90, Vector2.zero, 0);
+            Debug.Log(SimExtensions.Delta(tankA, tankB));
+        }
+
+        [ContextMenu("StateComparison")]
+        public void SnapshotComparison()
+        {
+            const float rewindTime = 1;
+            int rewindTicks = (int)(rewindTime/SimClock.SimDeltaTime);
+            // Warp back 1s in time
+            int warpTick = SimClock.TickCounter-rewindTicks;
+            var pastSnapshot = m_snapshotBuffer[warpTick];
+
+            
+
+            
+            Debug.Log(SimExtensions.Delta(tankA, tankB));
         }
 
         [ContextMenu("TestTimeTravel")]
@@ -187,7 +210,7 @@ namespace Tankito.Netcode.Simulation
         [ContextMenu("TestRollback")]
         public void TestRollback()
         {
-            GlobalSimulationSnapshot testSnapShot = m_snapshotBuffer.Get(SimClock.TickCounter - 50, true);
+            SimulationSnapshot testSnapShot = m_snapshotBuffer.Get(SimClock.TickCounter - 50, true);
             testSnapShot.timestamp -= 50;
             CheckNewGlobalSnapshot(testSnapShot);
         }

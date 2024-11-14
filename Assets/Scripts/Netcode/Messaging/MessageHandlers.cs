@@ -260,12 +260,12 @@ namespace Tankito.Netcode.Messaging
             }
         }
 
-        public void BroadcastSimulationSnapshot(GlobalSimulationSnapshot snapshot)
+        public void BroadcastSimulationSnapshot(SimulationSnapshot snapshot)
         {
             SendSimulationSnapshot(snapshot, NetworkManager.ConnectedClientsIds.Where(clId => clId != NetworkManager.ServerClientId).ToArray());
         }
 
-        public void SendSimulationSnapshot(GlobalSimulationSnapshot snapshot, ulong[] targetClientIds)
+        public void SendSimulationSnapshot(SimulationSnapshot snapshot, ulong[] targetClientIds)
         {
             if (!IsServer)
             {
@@ -273,7 +273,7 @@ namespace Tankito.Netcode.Messaging
                 return;
             }
 
-            var writer = new FastBufferWriter(GlobalSimulationSnapshot.MAX_SERIALIZED_SIZE, Allocator.Temp);
+            var writer = new FastBufferWriter(SimulationSnapshot.MAX_SERIALIZED_SIZE, Allocator.Temp);
             var customMessagingManager = NetworkManager.CustomMessagingManager;
 
             using (writer)
@@ -301,7 +301,7 @@ namespace Tankito.Netcode.Messaging
                 return;
             }
             
-            GlobalSimulationSnapshot snapshot = new GlobalSimulationSnapshot();
+            SimulationSnapshot snapshot = new SimulationSnapshot();
             snapshotPayload.ReadValue(out snapshot);
             ClientSimulationManager.Instance.CheckNewGlobalSnapshot(snapshot);
 
