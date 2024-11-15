@@ -24,6 +24,7 @@ namespace Tankito.Netcode
         HashSet<GameObject> m_Prefabs = new HashSet<GameObject>();
 
         Dictionary<GameObject, ObjectPool<NetworkObject>> m_PooledObjects = new Dictionary<GameObject, ObjectPool<NetworkObject>>();
+        [SerializeField] private bool DEBUG = false;
 
         public void Awake()
         {
@@ -112,25 +113,25 @@ namespace Tankito.Netcode
             {
                 // We parent the spawned prefab to our transform, to make sure that it isn't loaded onto another scene (because of additive scene loading);
                 var no = Instantiate(prefab, transform).GetComponent<NetworkObject>();
-                Debug.Log($"CreateFunc called on {prefab}, instantiated {no}");
+                if (DEBUG) Debug.Log($"CreateFunc called on {prefab}, instantiated {no}");
                 return no;
             }
 
             void ActionOnGet(NetworkObject networkObject)
             {
-                Debug.Log($"ActionOnGet called on {networkObject}");
+                if (DEBUG) Debug.Log($"ActionOnGet called on {networkObject}");
                 networkObject.gameObject.SetActive(true);
             }
 
             void ActionOnRelease(NetworkObject networkObject)
             {
-                Debug.Log($"ActionOnRelease called on {networkObject}");
+                if (DEBUG) Debug.Log($"ActionOnRelease called on {networkObject}");
                 networkObject.gameObject.SetActive(false);
             }
 
             void ActionOnDestroy(NetworkObject networkObject)
             {
-                Debug.Log($"ActionOnDestroy called on {networkObject}");
+                if (DEBUG) Debug.Log($"ActionOnDestroy called on {networkObject}");
                 Destroy(networkObject.gameObject);
             }
 
@@ -181,7 +182,7 @@ namespace Tankito.Netcode
 
         void INetworkPrefabInstanceHandler.Destroy(NetworkObject networkObject)
         {
-            Debug.Log($"Destroying {networkObject}");
+            //Debug.Log($"Destroying {networkObject}");
             m_Pool.ReturnNetworkObject(networkObject, m_Prefab);
         }
     }

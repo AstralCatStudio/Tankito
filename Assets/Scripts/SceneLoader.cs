@@ -2,16 +2,22 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
+using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace Tankito
 {
+
+    public enum SceneToLoad{
+        lobby,
+        mainMenu
+    }
     public class SceneLoader : MonoBehaviour
     {
         public static SceneLoader Singleton;
-
-
+        [SerializeField] private bool DEBUG = false;
+        public SceneToLoad escenaInicial;
         void Awake()
         {
             if (Singleton == null) Singleton = this;
@@ -22,9 +28,23 @@ namespace Tankito
 
         void Start()
         {
-            LoadMainMenu();
-        }
+            //LoadMainMenu();
+            loadScene(escenaInicial);
 
+
+        }
+        void loadScene(SceneToLoad scene)
+        {
+            switch (scene)
+            {
+                case SceneToLoad.lobby:
+                    LoadLobby();
+                break;
+                case SceneToLoad.mainMenu:
+                    LoadMainMenu();
+                break;
+            }
+        }
         public void LoadLobby()
         {
             StartCoroutine("LoadLobbyAsync");
@@ -44,9 +64,9 @@ namespace Tankito
         {
             SceneManager.LoadScene("Loading", LoadSceneMode.Additive);
 
-            Debug.Log("Loading Lobby...");
+            if (DEBUG) Debug.Log("Loading Lobby...");
             yield return SceneManager.LoadSceneAsync("Lobby", LoadSceneMode.Additive);
-            Debug.Log("Lobby Loaded!");
+            if (DEBUG) Debug.Log("Lobby Loaded!");
 
             SceneManager.UnloadSceneAsync("Loading");
         }
@@ -55,9 +75,9 @@ namespace Tankito
         {
             SceneManager.LoadScene("Loading", LoadSceneMode.Additive);
 
-            Debug.Log("Loading Main Menu...");
+            if (DEBUG) Debug.Log("Loading Main Menu...");
             yield return SceneManager.LoadSceneAsync("MainMenu", LoadSceneMode.Additive);
-            Debug.Log("Main Menu Loaded!");
+            if (DEBUG) Debug.Log("Main Menu Loaded!");
 
             SceneManager.UnloadSceneAsync("Loading");
         }
@@ -68,7 +88,7 @@ namespace Tankito
 
             SceneManager.LoadScene("Loading");
 
-            Debug.Log("Loading Game...");
+            if (DEBUG) Debug.Log("Loading Game...");
 
 
             //SceneManager.LoadSceneAsync("GameInitTest", LoadSceneMode.Additive);
@@ -82,7 +102,7 @@ namespace Tankito
                 SceneManager.LoadScene("GameInitTest", LoadSceneMode.Additive);
             }
 
-            Debug.Log("Game Loaded!");
+            if (DEBUG) Debug.Log("Game Loaded!");
 
             SceneManager.UnloadSceneAsync("Loading");
         }

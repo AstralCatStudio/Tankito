@@ -156,7 +156,7 @@ MonoBehaviour:
   m_ProtocolType: 1
   m_UseWebSockets: 1
   m_UseEncryption: 1
-  m_MaxPacketQueueSize: 128
+  m_MaxPacketQueueSize: 256
   m_MaxPayloadSize: 6144
   m_HeartbeatTimeoutMS: 500
   m_ConnectTimeoutMS: 1000
@@ -189,7 +189,7 @@ MonoBehaviour:
     Prefabs:
       NetworkPrefabsLists:
       - {fileID: 11400000, guid: 8a4897daf3b43fe4f9108bcdb4681091, type: 2}
-    TickRate: 50
+    TickRate: 40
     ClientConnectionBufferTimeout: 10
     ConnectionApproval: 0
     ConnectionData: 
@@ -251,6 +251,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2302b94061c90a2439f8beeb4097992a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  DEBUG: 0
+  escenaInicial: 1
 --- !u!4 &1609486872
 Transform:
   m_ObjectHideFlags: 0
@@ -276,7 +278,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2079099566}
   - component: {fileID: 2079099565}
-  - component: {fileID: 2079099564}
   - component: {fileID: 2079099563}
   m_Layer: 0
   m_Name: '@GameManager'
@@ -299,26 +300,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   GlobalObjectIdHash: 789076589
   AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
+  SynchronizeTransform: 0
   ActiveSceneSynchronization: 0
   SceneMigrationSynchronization: 1
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
-  AutoObjectParentSync: 1
---- !u!114 &2079099564
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2079099562}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d6abb2d47833511449e24b3fcee7d040, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_tickCounter: 0
-  m_active: 0
+  AutoObjectParentSync: 0
 --- !u!114 &2079099565
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -332,6 +319,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_playerInput: {fileID: 0}
+  joinCode: 
 --- !u!4 &2079099566
 Transform:
   m_ObjectHideFlags: 0

@@ -43,13 +43,15 @@ namespace Tankito {
         protected List<Modifier> m_modifierList = new List<Modifier>();
         public ulong m_shooterID;
         protected int m_bouncesLeft = 0;
+        public float LifeTime { get => m_lifetime; }
         protected float m_lifetime = 0; // Life Time counter
-        public Action OnSpawn = () => { }, OnFly = () => { }, OnHit = () => { }, OnBounce = () => { }, OnDetonate = () => { };
+        protected Vector2 lastCollisionNormal = Vector2.zero;
+        public Action<ABullet> OnSpawn = (ABullet) => { }, OnFly = (ABullet) => { }, OnHit = (ABullet) => { }, OnBounce = (ABullet) => { }, OnDetonate = (ABullet) => { };
 
 
         public override void OnNetworkSpawn()
         {
-            Debug.Log($"{this} properties: {m_properties}");
+            //Debug.Log($"{this} properties: {m_properties}");
         }
         public override void OnNetworkDespawn()
         {
@@ -61,18 +63,18 @@ namespace Tankito {
             
             foreach (var modifier in m_modifierList)
             {
-                modifier.ConnectModifier(this);
+                //modifier.ConnectModifier(this);
             }
         }
 
         public virtual void Init()
         {
-            OnSpawn.Invoke();
+            OnSpawn.Invoke(this);
         }
         
         void Update()
         {
-            OnFly.Invoke();
+            OnFly.Invoke(this);
         }
 
         public void SetProperties(BulletProperties newProperties)
@@ -87,11 +89,11 @@ namespace Tankito {
             m_bouncesLeft = 0;
             m_lifetime = 0;
             m_modifierList.Clear();
-            OnSpawn = () => {};
-            OnFly = () => {};
-            OnHit = () => {};
-            OnBounce = () => {};
-            OnDetonate = () => {};
+            OnSpawn = (ABullet) => {};
+            OnFly = (ABullet) => {};
+            OnHit = (ABullet) => {};
+            OnBounce = (ABullet) => {};
+            OnDetonate = (ABullet) => {};
         }
 
         
