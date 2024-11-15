@@ -273,6 +273,49 @@ public class MusicManager : MonoBehaviour
         audioSource.Play();
         activeSounds[audioSource] = Time.time + clip.length;
     }
+
+
+
+
+    public void PlaySoundPitch(string soundName)
+    {
+        AudioClip clip = Resources.Load<AudioClip>($"Sonidos/{soundName}");
+
+        AudioSource audioSource = GetAvailableAudioSource();
+        audioSource.clip = clip;
+        audioSource.pitch = Random.Range(0.9f, 1.1f);
+        audioSource.Play();
+        activeSounds[audioSource] = Time.time + clip.length / Mathf.Abs(audioSource.pitch);
+    }
+
+    public void PlaySoundPitch(string soundName, float pitchVariation)
+    {
+        AudioClip clip = Resources.Load<AudioClip>($"Sonidos/{soundName}");
+
+        if (clip == null)
+        {
+            Debug.LogError($"El sonido '{soundName}' no se encontró en la carpeta Resources/Sonidos.");
+            return;
+        }
+
+        pitchVariation = Mathf.Clamp(pitchVariation, 0f, 1f);
+
+        AudioSource audioSource = GetAvailableAudioSource();
+        audioSource.clip = clip;
+
+        float minPitch = 1f - pitchVariation;
+        float maxPitch = 1f + pitchVariation;
+
+        audioSource.pitch = Random.Range(minPitch, maxPitch);
+        audioSource.Play();
+
+        activeSounds[audioSource] = Time.time + clip.length / Mathf.Abs(audioSource.pitch);
+    }
+
+
+
+
+
 }
 
 

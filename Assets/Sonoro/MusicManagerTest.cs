@@ -64,7 +64,7 @@ public class MusicManagerTest : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
         {
             Debug.Log("Emitiendo sonido");
-            MusicManager.Instance.PlaySound("snd_parry");
+            MusicManager.Instance.PlaySoundPitch("snd_parry");
         }
 
         //*/
