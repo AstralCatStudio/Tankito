@@ -9,14 +9,11 @@ namespace Tankito
     {
         [SerializeField]
         private Rigidbody2D m_rb;
-        [SerializeField]
-        private GameObject m_explosion;
-        
         public override void Init()
         {
             base.Init();
             m_bouncesLeft = m_properties.bouncesTotal;
-            m_explosion = NetworkManager.Singleton.NetworkConfig.Prefabs.Prefabs[2].Prefab;
+            //m_explosion = NetworkManager.Singleton.NetworkConfig.Prefabs.Prefabs[2].Prefab;
             m_rb.velocity = m_properties.velocity* m_properties.direction;
         }
 
@@ -39,22 +36,24 @@ namespace Tankito
 
         public void Detonate()
         {
-            OnDetonate.Invoke();
+            OnDetonate.Invoke(this);
+            if (IsServer)
+            {
+                DetonateClientRpc();
+                var networkObject = gameObject.GetComponent<NetworkObject>();
+                networkObject.Despawn();
+            }
+        }
 
-            var explosion = Instantiate(m_explosion,transform.position, transform.rotation);
-            var explosionNetworkObject = explosion.GetComponent<NetworkObject>();
-            explosionNetworkObject.Spawn();
-            
-            // Return to the pool from whence it came.
-            var networkObject = gameObject.GetComponent<NetworkObject>();
-            networkObject.Despawn();
-            
-                // Posiblemente esconderlo/hacer lo que haga falta antes de tiempo como "prediccion" client-side ??
-            
+        [ClientRpc]
+        void DetonateClientRpc()
+        {
+                OnDetonate.Invoke(this);
         }
         
         private void OnCollisionEnter2D(Collision2D collision)
         {
+            lastCollisionNormal = collision.GetContact(0).normal;
             switch (collision.gameObject.tag)
             {
                 case "NormalWall":

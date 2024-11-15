@@ -335,6 +335,7 @@ GameObject:
   - component: {fileID: 5921551077853929906}
   - component: {fileID: 8824432701014434289}
   - component: {fileID: 233019374531165043}
+  - component: {fileID: 166466840981824635}
   m_Layer: 0
   m_Name: Tank
   m_TagString: Player
@@ -419,6 +420,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_tankRB: {fileID: 8520293575514935909}
+  m_baseSpeed: 5
+  m_baseRotationSpeed: 560
   m_speed: 5
   m_rotationSpeed: 560
   m_turretRB: {fileID: 8342253699622009969}
@@ -427,6 +430,11 @@ MonoBehaviour:
   m_parrying: 0
   m_TurretAnimator: {fileID: 6117245905817614025}
   m_HullAnimator: {fileID: 5873195794702409541}
+  baseAccelerationMultiplier: 6
+  baseDashDuration: 0.5
+  baseFullDashDuration: 0.2
+  baseCurrentDashTick: 0
+  baseDashReloadDuration: 1
   accelerationMultiplier: 5
   dashDuration: 0.3
   fullDashDuration: 0.2
@@ -492,6 +500,22 @@ CapsuleCollider2D:
   m_Offset: {x: -0.18, y: 0}
   m_Size: {x: 1.3403772, y: 1.0000124}
   m_Direction: 1
+--- !u!114 &166466840981824635
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5904161972637957731}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f3fe6949ed78184f8a55d21f67e9bc3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  modifiers:
+  - {fileID: 11400000, guid: 546cf7272e984d74ea1565c1f06f210c, type: 2}
+  bulletCreator: {fileID: 792954130975718086}
+  tankController: {fileID: 5921551077853929906}
 --- !u!1 &6459951814770460290
 GameObject:
   m_ObjectHideFlags: 0
@@ -743,4 +767,14 @@ MonoBehaviour:
     rotationSpeed: 0
     bouncesTotal: 1
     lifetimeTotal: 10
+  m_baseBulletProperties:
+    scaleMultiplier: {x: 0, y: 0}
+    startingPosition: {x: 0, y: 0}
+    velocity: 5
+    acceleration: 0
+    direction: {x: 0, y: 0}
+    rotationSpeed: 0
+    bouncesTotal: 0
+    lifetimeTotal: 10
   interval: 0.2
+  modifiers: []

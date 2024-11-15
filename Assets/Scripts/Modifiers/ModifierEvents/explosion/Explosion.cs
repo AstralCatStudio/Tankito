@@ -3,9 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using Tankito.Netcode;
+using System;
 namespace Tankito
 {
-    public class Explosion : NetworkBehaviour
+    public class Explosion : MonoBehaviour
     {
         public float size = 1;
         public float timer = 0;
@@ -14,12 +15,12 @@ namespace Tankito
         private void Update()
         {
             timer += Time.deltaTime;
-            if (IsServer)
+            if (NetworkManager.Singleton.IsServer)
             {
                 if (timer >= timeUntilDead)
                 {
-                    GetComponent<NetworkObject>().Despawn();
-                    //Destroy(gameObject);
+                    //GetComponent<NetworkObject>().Despawn();
+                    Destroy(gameObject);
                 }
             }
             
