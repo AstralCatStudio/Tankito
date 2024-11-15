@@ -1,10 +1,8 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class MusicManager : MonoBehaviour
+public class MusicManager : Singleton<MusicManager>
 {
-    public static MusicManager Instance { get; private set; }
-
     [SerializeField] private AudioClip[] playaClips;
     [SerializeField] private AudioClip[] sushiClips;
     [SerializeField] private AudioClip[] barcoClips;
@@ -34,12 +32,6 @@ public class MusicManager : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
-        Instance = this;
         DontDestroyOnLoad(gameObject);
 
         audioSourceA = CreateAudioSource(true);
