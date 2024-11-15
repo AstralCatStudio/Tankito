@@ -272,7 +272,7 @@ namespace Tankito.Netcode.Messaging
                 Debug.LogException(new InvalidOperationException($"[{SimClock.TickCounter}]Client's shouldn't send simulation snapshots, only inputs."));
                 return;
             }
-            
+
             snapshot.status = SnapshotStatus.Authoritative;
 
             var writer = new FastBufferWriter(SimulationSnapshot.MAX_SERIALIZED_SIZE, Allocator.Temp);
@@ -304,7 +304,6 @@ namespace Tankito.Netcode.Messaging
             }
             
             SimulationSnapshot snapshot = new SimulationSnapshot();
-            snapshot.Initialize();
             snapshotPayload.ReadValue(out snapshot);
             if (snapshot.status == SnapshotStatus.Authoritative)
             {

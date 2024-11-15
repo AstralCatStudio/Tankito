@@ -64,10 +64,12 @@ namespace Tankito.Utils
             {
                 throw new ArgumentOutOfRangeException("Index is out of the bounds of the buffer.");
             }
-
+            if (buffer[idx].Equals(default(T)) && count < size)
+            {
+                count++;
+            }
             buffer[idx] = item;
             lastIdx = idx;
-            count = Math.Min(count + 1, size); // Increment count up to the buffer size
         }
 
         /// <summary>

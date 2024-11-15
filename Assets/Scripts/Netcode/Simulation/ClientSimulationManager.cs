@@ -64,7 +64,7 @@ namespace Tankito.Netcode.Simulation
             }
                 // Cache Simulation State
                 SimulationSnapshot newSnapshot = CaptureSnapshot();
-                m_snapshotBuffer[newSnapshot.timestamp] = newSnapshot;
+                m_snapshotBuffer.Add(newSnapshot, newSnapshot.timestamp);
         }
 
         public void Rollback(SimulationSnapshot authSnapshot)
@@ -127,9 +127,10 @@ namespace Tankito.Netcode.Simulation
         public void EvaluateForReconciliation(SimulationSnapshot newAuthSnapshot)
         {
             Debug.Log($"[{SimClock.TickCounter}]Se recibe snapshot[{newAuthSnapshot.timestamp}] autoritativo");
-            
+            Debug.Log(AuthSnapshot.timestamp +  " " + m_snapshotBuffer.Last.timestamp + " " + m_snapshotBuffer.Count);
             if (newAuthSnapshot.timestamp >= AuthSnapshot.timestamp && newAuthSnapshot.timestamp < (m_snapshotBuffer.Last.timestamp - m_snapshotBuffer.Count))
             {
+                Debug.Log("Entramos en la mandanga");
                 SimulationSnapshot predictedSnapshot = m_snapshotBuffer.Where(s => s.timestamp == newAuthSnapshot.timestamp).First();
 
                 foreach(var objSnapShot in predictedSnapshot.Keys)
@@ -144,11 +145,6 @@ namespace Tankito.Netcode.Simulation
                     }
                 }
             }
-            else
-            {
-
-            }
-
             
             //newAuthSnapshot.status = SnapshotStatus.Authoritative;   DEBE LLEGAR AUTH DESDE SERVER
             m_snapshotBuffer.Add(newAuthSnapshot, newAuthSnapshot.timestamp);

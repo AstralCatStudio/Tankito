@@ -11,23 +11,23 @@ namespace Tankito.Netcode.Simulation
 {
     public enum SnapshotStatus
     {
-        Payload,
+        Payload = 0,
         /// <summary>
         /// When it's a client prediction of what the Snapshot at any given tick
         /// is going to look like in the server (guess at authoritative snapshot).
         /// </summary>
-        Predicted,
+        Predicted = 1,
         /// <summary>
         /// When the snapshot has been certified against the server's simulation.
         /// This happens when we receive server snapshots and we confirm our predictions were correct,
         /// or when we replace a miss prediction with an Authoritative snapshot. 
         /// </summary>
-        Authoritative,
+        Authoritative = 2,
         /// <summary>
         /// When the snapshot has been checked as authoritative, but the server has also been notified
         /// that we acknowledge the reception of said authoritative snapshot. 
         /// </summary>
-        Acknowledged
+        Acknowledged = 3
     }
 
     public struct SimulationSnapshot : INetworkSerializable
@@ -63,6 +63,7 @@ namespace Tankito.Netcode.Simulation
             int nObjects = default;
 
             serializer.SerializeValue(ref timestamp);
+
             serializer.SerializeValue(ref status);
 
             if (serializer.IsWriter) nObjects = objectStates.Keys.Count;
@@ -80,7 +81,6 @@ namespace Tankito.Netcode.Simulation
             else if (serializer.IsReader)
             {
                 objectStates = new();
-                status = SnapshotStatus.Payload;
                 for(int i=0; i<nObjects; i++)
                 {
                     SimulationObjectUpdate simObjUpdate = new();
