@@ -29,7 +29,7 @@ namespace Tankito
         void Start()
         {
             //LoadMainMenu();
-            LoadLobby();
+            loadScene(escenaInicial);
 
 
         }
