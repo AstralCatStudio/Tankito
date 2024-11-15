@@ -2,16 +2,22 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
+using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace Tankito
 {
+
+    public enum SceneToLoad{
+        lobby,
+        mainMenu
+    }
     public class SceneLoader : MonoBehaviour
     {
         public static SceneLoader Singleton;
         [SerializeField] private bool DEBUG = false;
-
+        public SceneToLoad escenaInicial;
         void Awake()
         {
             if (Singleton == null) Singleton = this;
@@ -24,8 +30,21 @@ namespace Tankito
         {
             //LoadMainMenu();
             LoadLobby();
-        }
 
+
+        }
+        void loadScene(SceneToLoad scene)
+        {
+            switch (scene)
+            {
+                case SceneToLoad.lobby:
+                    LoadLobby();
+                break;
+                case SceneToLoad.mainMenu:
+                    LoadMainMenu();
+                break;
+            }
+        }
         public void LoadLobby()
         {
             StartCoroutine("LoadLobbyAsync");
