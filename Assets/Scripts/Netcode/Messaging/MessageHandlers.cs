@@ -272,6 +272,8 @@ namespace Tankito.Netcode.Messaging
                 Debug.LogException(new InvalidOperationException($"[{SimClock.TickCounter}]Client's shouldn't send simulation snapshots, only inputs."));
                 return;
             }
+            
+            snapshot.status = SnapshotStatus.Authoritative;
 
             var writer = new FastBufferWriter(SimulationSnapshot.MAX_SERIALIZED_SIZE, Allocator.Temp);
             var customMessagingManager = NetworkManager.CustomMessagingManager;
@@ -304,7 +306,10 @@ namespace Tankito.Netcode.Messaging
             SimulationSnapshot snapshot = new SimulationSnapshot();
             snapshot.Initialize();
             snapshotPayload.ReadValue(out snapshot);
-            ClientSimulationManager.Instance.CheckNewGlobalSnapshot(snapshot);
+            if (snapshot.status == SnapshotStatus.Authoritative)
+            {
+                ClientSimulationManager.Instance.EvaluateForReconciliation(snapshot);
+            }
 
             // TESTING !!!!
             ClientSimulationManager.Instance.SetSimulation(snapshot);
