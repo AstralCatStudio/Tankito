@@ -63,6 +63,7 @@ namespace Tankito.Netcode.Simulation
             int nObjects = default;
 
             serializer.SerializeValue(ref timestamp);
+            serializer.SerializeValue(ref status);
 
             if (serializer.IsWriter) nObjects = objectStates.Keys.Count;
 

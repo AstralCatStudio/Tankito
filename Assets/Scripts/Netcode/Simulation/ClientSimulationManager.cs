@@ -88,7 +88,7 @@ namespace Tankito.Netcode.Simulation
             
             while(rollbackCounter < SimClock.TickCounter)
             {
-                // ---TODO: Input Replay--- DONE => Implicitly consumes inputs from input caches when pulling InputPayloads on Kinematic Functions
+                // - Input Replay - DONE => Implicitly consumes inputs from input caches when pulling InputPayloads on Kinematic Functions
                 Simulate();
                 rollbackCounter++;
             }
@@ -124,19 +124,19 @@ namespace Tankito.Netcode.Simulation
             SimClock.Instance.ResumeClock();
         }
 
-        public void CheckNewGlobalSnapshot(SimulationSnapshot newAuthSnapshot)
+        public void EvaluateForReconciliation(SimulationSnapshot newAuthSnapshot)
         {
-            //Debug.Log($"[{SimClock.TickCounter}]Se recibe snapshot[{newAuthSnapshot.timestamp}] autoritativo");
-            if (newAuthSnapshot.timestamp <= AuthSnapshot.timestamp) return;
-            SimulationSnapshot clientSnapshot = m_snapshotBuffer.Where(s => s.timestamp == newAuthSnapshot.timestamp).FirstOrDefault();
-
-            if (!EqualityComparer<SimulationSnapshot>.Default.Equals(clientSnapshot, default))
+            Debug.Log($"[{SimClock.TickCounter}]Se recibe snapshot[{newAuthSnapshot.timestamp}] autoritativo");
+            
+            if (newAuthSnapshot.timestamp >= AuthSnapshot.timestamp && newAuthSnapshot.timestamp < (m_snapshotBuffer.Last.timestamp - m_snapshotBuffer.Count))
             {
-                foreach (var objSnapShot in clientSnapshot.Keys)
+                SimulationSnapshot predictedSnapshot = m_snapshotBuffer.Where(s => s.timestamp == newAuthSnapshot.timestamp).First();
+
+                foreach(var objSnapShot in predictedSnapshot.Keys)
                 {
                     if (newAuthSnapshot.ContainsKey(objSnapShot))
-                    { 
-                        if (CheckForDesync(clientSnapshot[objSnapShot], newAuthSnapshot[objSnapShot]))
+                    {
+                        if (CheckForDesync(predictedSnapshot[objSnapShot], newAuthSnapshot[objSnapShot]))
                         {
                             Rollback(newAuthSnapshot);
                             break;
@@ -146,9 +146,11 @@ namespace Tankito.Netcode.Simulation
             }
             else
             {
-                SetSimulation(newAuthSnapshot);
+
             }
-            newAuthSnapshot.status = SnapshotStatus.Authoritative;
+
+            
+            //newAuthSnapshot.status = SnapshotStatus.Authoritative;   DEBE LLEGAR AUTH DESDE SERVER
             m_snapshotBuffer.Add(newAuthSnapshot, newAuthSnapshot.timestamp);
         }
 
@@ -247,7 +249,7 @@ namespace Tankito.Netcode.Simulation
         {
             SimulationSnapshot testSnapShot = m_snapshotBuffer.Get(SimClock.TickCounter - 50, true);
             testSnapShot.timestamp -= 50;
-            CheckNewGlobalSnapshot(testSnapShot);
+            EvaluateForReconciliation(testSnapShot);
         }
 
         [ContextMenu("TestInputWindowMessaging")]
