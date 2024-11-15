@@ -20,7 +20,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Underwater
+  m_Name: UnderwaterInitial
   m_Shader: {fileID: -6465566751694194690, guid: cdd16c70b62987a4b8a0d88d5d1047a2, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -57,7 +57,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Sprite:
-        m_Texture: {fileID: 2800000, guid: c364b73bf2c2c5a4994b4641da797696, type: 3}
+        m_Texture: {fileID: 2800000, guid: 1b5368c4194cd93459ae757ea027a50e, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
@@ -79,7 +79,7 @@ Material:
     - _Density: 0
     - _EnableExternalAlpha: 0
     - _LerpValue: 0.5
-    - _NoiseScale: 20
+    - _NoiseScale: 30
     - _NoiseTime: 0.03
     - _Offset: 0.37
     - _OpacityY: 0.5
@@ -93,17 +93,17 @@ Material:
     - _voronoiOffset: 5
     - _voronoi_speed: 0.3
     m_Colors:
-    - _BgColor: {r: 0.4392157, g: 0.6784314, b: 1, a: 0}
-    - _Center: {r: 0.5, g: 1, b: 0, a: 0}
+    - _BgColor: {r: 0.103184976, g: 0.05473478, b: 0.2830189, a: 0}
+    - _Center: {r: 0.5, g: 1.4, b: 0, a: 0}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _Flip: {r: 1, g: 1, b: 1, a: 1}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
     - _SphStrng: {r: 1, g: 1, b: 0, a: 0}
     - _SpherizeStrength: {r: 10, g: 10, b: 0, a: 0}
     - _Strength: {r: 1, g: 3, b: 0, a: 0}
-    - _SunPosition: {r: 0.5, g: 0.5, b: 0, a: 0}
-    - _Sun_Power_In: {r: 1, g: 0, b: 0, a: 0}
-    - _Sun_Power_Out: {r: -4, g: 10, b: 0, a: 0}
+    - _SunPosition: {r: 0.5, g: 1.25, b: 0, a: 0}
+    - _Sun_Power_In: {r: 0.5, g: 0, b: 0, a: 0}
+    - _Sun_Power_Out: {r: -0.5, g: 4, b: 0, a: 0}
     - _Sun_distance_1: {r: 0.5, g: 1, b: 0, a: 0}
-    - _Water_Effect_Pos: {r: 0.5, g: 1, b: 0, a: 0}
+    - _Water_Effect_Pos: {r: 0.5, g: 1.47, b: 0, a: 0}
   m_BuildTextureStacks: []
