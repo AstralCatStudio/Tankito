@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using Tankito.Netcode.Simulation;
 using Unity.Netcode;
 using UnityEngine;
-using static Tankito.Netcode.ClientPredictedTankController;
 
 namespace Tankito.Netcode.Simulation
 {

@@ -99,6 +99,11 @@ namespace Tankito
             }
         }
 
+        public InputPayload GetCurrentInput()
+        {
+            return m_currentInput;
+        }
+
         private InputPayload InterpolateInputAt(int tick)
         {
             InputPayload interpInput;

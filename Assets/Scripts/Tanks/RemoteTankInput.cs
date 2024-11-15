@@ -58,7 +58,10 @@ namespace Tankito.Netcode
             return m_replayInput;
         }
         
-
+        public InputPayload GetCurrentInput()
+        {
+            return m_replayInput;
+        }
 
         public void StartInputReplay(int timestamp) { }
         public int StopInputReplay() { return -1; }

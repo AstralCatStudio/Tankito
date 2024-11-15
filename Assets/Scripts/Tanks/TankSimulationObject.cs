@@ -80,8 +80,9 @@ namespace Tankito.Netcode.Simulation
                 m_tankRB.position,
                 m_tankRB.rotation,
                 m_tankRB.velocity,
-                m_turretRB.rotation
-            );
+                m_turretRB.rotation,
+                m_inputComponent.GetCurrentInput().action
+            ); ; 
         }
 
         public override void SetSimState(in ISimulationState state)

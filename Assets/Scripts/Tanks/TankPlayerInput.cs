@@ -10,6 +10,7 @@ namespace Tankito
     public interface ITankInput
     {
         InputPayload GetInput();
+        InputPayload GetCurrentInput();
         void StartInputReplay(int timestamp);
         int StopInputReplay();
 
@@ -76,6 +77,11 @@ namespace Tankito
             }
 
             return gotPayload;
+        }
+
+        public InputPayload GetCurrentInput()
+        {
+            return m_currentInput;
         }
 
         /// <summary>

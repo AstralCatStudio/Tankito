@@ -61,9 +61,7 @@ namespace Tankito.Netcode.Simulation
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
         {
             serializer.SerializeValue(ref timestamp);
-
-            int nObjects = objectStates.Keys.Count;
-            serializer.SerializeValue(ref nObjects);
+            serializer.SerializeValue(ref objCount);
 
             foreach(var objStatePair in objectStates)
             {
