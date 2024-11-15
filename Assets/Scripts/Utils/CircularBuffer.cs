@@ -50,6 +50,12 @@ namespace Tankito.Utils
         /// </summary>
         public int Capacity => size;
 
+        public bool Full()
+        {
+            if(Count == Capacity) return true;
+            else return false;
+        }
+
         /// <summary>
         /// Adds an item to the circular buffer at a specific index (clamped to buffer size).
         /// </summary>

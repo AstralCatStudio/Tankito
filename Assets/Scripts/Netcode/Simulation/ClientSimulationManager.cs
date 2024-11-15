@@ -127,23 +127,25 @@ namespace Tankito.Netcode.Simulation
         public void EvaluateForReconciliation(SimulationSnapshot newAuthSnapshot)
         {
             Debug.Log($"[{SimClock.TickCounter}]Se recibe snapshot[{newAuthSnapshot.timestamp}] autoritativo");
-            Debug.Log(AuthSnapshot.timestamp +  " " + m_snapshotBuffer.Last.timestamp + " " + m_snapshotBuffer.Count);
-            if (newAuthSnapshot.timestamp >= AuthSnapshot.timestamp && newAuthSnapshot.timestamp < (m_snapshotBuffer.Last.timestamp - m_snapshotBuffer.Count))
-            {
-                Debug.Log("Entramos en la mandanga");
-                SimulationSnapshot predictedSnapshot = m_snapshotBuffer.Where(s => s.timestamp == newAuthSnapshot.timestamp).First();
-
-                foreach(var objSnapShot in predictedSnapshot.Keys)
+            Debug.Log(AuthSnapshot.timestamp + " " + m_snapshotBuffer.Last.timestamp + " " + m_snapshotBuffer.Count);
+            if (m_snapshotBuffer.Count > 0 && newAuthSnapshot.timestamp >= AuthSnapshot.timestamp && (!m_snapshotBuffer.Full() || newAuthSnapshot.timestamp < (m_snapshotBuffer.Last.timestamp - m_snapshotBuffer.Count)))
+            {        
+                SimulationSnapshot predictedSnapshot = m_snapshotBuffer.Where(s => s.timestamp == newAuthSnapshot.timestamp 
+                    && s.status == SnapshotStatus.Predicted).FirstOrDefault();
+                if (!predictedSnapshot.Equals(default(SimulationSnapshot)))
                 {
-                    if (newAuthSnapshot.ContainsKey(objSnapShot))
+                    foreach (var objSnapShot in predictedSnapshot.Keys)
                     {
-                        if (CheckForDesync(predictedSnapshot[objSnapShot], newAuthSnapshot[objSnapShot]))
+                        if (newAuthSnapshot.ContainsKey(objSnapShot))
                         {
-                            Rollback(newAuthSnapshot);
-                            break;
+                            if (CheckForDesync(predictedSnapshot[objSnapShot], newAuthSnapshot[objSnapShot]))
+                            {
+                                Rollback(newAuthSnapshot);
+                                break;
+                            }
                         }
                     }
-                }
+                } 
             }
             
             //newAuthSnapshot.status = SnapshotStatus.Authoritative;   DEBE LLEGAR AUTH DESDE SERVER
