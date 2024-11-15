@@ -8,23 +8,32 @@ namespace Tankito.Netcode.Simulation
     // en las clases que heredan de NetSimulationManager....
     public abstract class NetSimulationManager<T> : Singleton<T> where T : Component
     {
-        protected List<ASimulationObject> simulationObjects;
+        /// <summary>
+        /// Key -> Associated NetworkObjectId
+        /// Value -> ASimulationObject component
+        /// </summary>
+        protected Dictionary<ulong, ASimulationObject> m_simulationObjects;
+
+        public ASimulationObject GetSimObj(ulong netObjId)
+        {
+            return m_simulationObjects[netObjId];
+        }
         
 
         protected override void Awake()
         {
             base.Awake();
-            simulationObjects = new List<ASimulationObject>();
+            m_simulationObjects = new Dictionary<ulong, ASimulationObject>();
         }
 
         public virtual void AddToSim(ASimulationObject obj)
         {
-            simulationObjects.Add(obj);
+            m_simulationObjects.Add(obj.NetworkObjectId, obj);
         }
  
         public virtual void RemoveFromSim(ASimulationObject obj)
         {
-            simulationObjects.Remove(obj);
+            m_simulationObjects.Remove(obj.NetworkObjectId);
         }
 
         private void OnEnable()
@@ -42,7 +51,7 @@ namespace Tankito.Netcode.Simulation
         /// </summary>
         public virtual void Simulate()
         {
-            foreach (var obj in simulationObjects.Where(obj => obj.IsKinematic))
+            foreach (var obj in m_simulationObjects.Values.Where(obj => obj.IsKinematic))
             {
                 obj.ComputeKinematics(SimClock.SimDeltaTime);
                 //Debug.Log($"ComputedKinematics for: {obj}");
@@ -57,7 +66,7 @@ namespace Tankito.Netcode.Simulation
             newSnapshot.Initialize();
             newSnapshot.timestamp = SimClock.TickCounter;
             
-            foreach(var simObj in simulationObjects)
+            foreach(var simObj in m_simulationObjects.Values)
             {
                 newSnapshot[simObj] = simObj.GetSimState();
             }

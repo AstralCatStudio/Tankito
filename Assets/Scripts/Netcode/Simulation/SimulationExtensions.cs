@@ -7,7 +7,7 @@ namespace Tankito.Netcode.Simulation
     {
         public static IStateDelta[] Delta(in SimulationSnapshot snapA, in SimulationSnapshot snapB)
         {
-            IStateDelta[] snapshotDeltas = new IStateDelta[Math.Max(snapA.ObjCount, snapB.ObjCount)];
+            IStateDelta[] snapshotDeltas = new IStateDelta[Math.Max(snapA.Count, snapB.Count)];
             int i = 0;
 
             foreach(var obj in snapA.Keys)

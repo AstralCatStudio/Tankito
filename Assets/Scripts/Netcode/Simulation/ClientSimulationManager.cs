@@ -75,7 +75,7 @@ namespace Tankito.Netcode.Simulation
             SimClock.Instance.StopClock();
             Debug.Log("Se inicia reconciliacion");
 
-            foreach(var obj in simulationObjects)
+            foreach(var obj in m_simulationObjects.Values)
             {
                 obj.SetSimState(authSnapshot[obj]);
                 // Put Input Components into replay mode
@@ -94,7 +94,7 @@ namespace Tankito.Netcode.Simulation
             }
 
             // Set tank's input components back on live input mode
-            foreach(var tank in simulationObjects.OfType<TankSimulationObject>())
+            foreach(var tank in m_simulationObjects.OfType<TankSimulationObject>())
             {
                 var lastReplayTick = tank.StopInputReplay();
                 Debug.Log($"{tank}'s last replayed input was on Tick- {lastReplayTick}");
@@ -111,7 +111,7 @@ namespace Tankito.Netcode.Simulation
             
             foreach(var obj in newSimSnapshot.Keys)
             {
-                if (simulationObjects.Contains(obj))
+                if (m_simulationObjects.Values.Contains(obj))
                 {
                     obj.SetSimState(newSimSnapshot[obj]);
                 }
@@ -163,8 +163,8 @@ namespace Tankito.Netcode.Simulation
         [ContextMenu("TestGetSet")]
         public void TestGetSet()
         {
-            ISimulationState stateToCopy = simulationObjects[0].GetSimState(); // Explicit casting is not necessary
-            simulationObjects[1].SetSimState(stateToCopy);
+            ISimulationState stateToCopy = m_simulationObjects[0].GetSimState(); // Explicit casting is not necessary
+            m_simulationObjects[1].SetSimState(stateToCopy);
         }
 
         [ContextMenu("StateComparison")]

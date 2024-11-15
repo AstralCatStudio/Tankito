@@ -16,12 +16,20 @@ namespace Tankito.Netcode.Simulation
         public SimulationObjectType simObjType;
         public ISimulationState state;
 
+        public SimulationObjectUpdate(ASimulationObject simObj, ISimulationState newState)
+        {
+            netObjectId = simObj.NetworkObjectId;
+            simObjType = GetType(simObj);
+            this.state = newState;
+        }
+
         public SimulationObjectUpdate(ulong netObjectId, ISimulationState state)
         {
             this.netObjectId = netObjectId;
             simObjType = SimulationObjectType.NULL;
             this.state = state;
         }
+
         public SimulationObjectUpdate(ulong netObjectId, SimulationObjectType simObjType, ISimulationState state)
         {
             this.netObjectId = netObjectId;
@@ -29,17 +37,15 @@ namespace Tankito.Netcode.Simulation
             this.state = state;
         }
 
-        public void SetType(ASimulationObject obj)
+        private static SimulationObjectType GetType(ASimulationObject obj)
         {
             if (obj is TankSimulationObject)
             {
-                simObjType = SimulationObjectType.Tank;
-                return;
+                return SimulationObjectType.Tank;
             }
             if (obj is BulletSimulationObject)
             {
-                simObjType = SimulationObjectType.Bullet;
-                return;
+                return SimulationObjectType.Bullet;
             }
             throw new ArgumentException($"Type of {obj} is not supported.");
         }

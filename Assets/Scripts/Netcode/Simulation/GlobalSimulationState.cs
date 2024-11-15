@@ -34,7 +34,6 @@ namespace Tankito.Netcode.Simulation
         public int timestamp;
         public SnapshotState status; 
         private Dictionary<ASimulationObject, ISimulationState> objectStates; // Se hace de  ISimulationState para poder mantenerlo generico entre cosas distintas, como balas que tan solo tienen un par de variables y los tanques, que tienen mas info
-        private int objCount;
 
         const int MAX_TANKS_IN_LOBBY = 6;
         const int MAX_PROJECTILES_IN_LOBBY = 60;
@@ -42,7 +41,7 @@ namespace Tankito.Netcode.Simulation
 
         public IEnumerable<ASimulationObject> Keys { get => objectStates.Keys; }
         public IEnumerable<ISimulationState> Values { get => objectStates.Values; }
-        public int ObjCount { get => objCount; }
+        public int Count { get => objectStates.Count; }
 
         public void Initialize()
         {
@@ -52,7 +51,7 @@ namespace Tankito.Netcode.Simulation
         public ISimulationState this[ASimulationObject obj]
         {
             get => objectStates[obj];
-            set { objectStates[obj] = value; objCount++; }
+            set => objectStates[obj] = value;
         }
         internal bool ContainsKey(ASimulationObject obj) { return objectStates.ContainsKey(obj); }
         internal bool ContainsValue(ISimulationState state) { return objectStates.ContainsValue(state); }
@@ -60,14 +59,30 @@ namespace Tankito.Netcode.Simulation
 
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
         {
-            serializer.SerializeValue(ref timestamp);
-            serializer.SerializeValue(ref objCount);
+            int nObjects = default;
 
-            foreach(var objStatePair in objectStates)
+            serializer.SerializeValue(ref timestamp);
+
+            if (serializer.IsWriter) nObjects = objectStates.Keys.Count;
+
+            serializer.SerializeValue(ref nObjects);
+            
+            if (serializer.IsWriter)
             {
-                var newUpdate = new SimulationObjectUpdate(objStatePair.Key.NetworkObjectId, objStatePair.Value);
-                newUpdate.SetType(objStatePair.Key);
-                serializer.SerializeValue(ref newUpdate);
+                foreach(var objStatePair in objectStates)
+                {
+                    SimulationObjectUpdate simObjUpdate = new SimulationObjectUpdate(objStatePair.Key, objStatePair.Value);
+                    simObjUpdate.NetworkSerialize(serializer);
+                }
+            }
+            else if (serializer.IsReader)
+            {
+                for(int i=0; i<nObjects; i++)
+                {
+                    SimulationObjectUpdate simObjUpdate = new();
+                    simObjUpdate.NetworkSerialize(serializer);
+                    objectStates.Add(ClientSimulationManager.Instance.GetSimObj(simObjUpdate.netObjectId), simObjUpdate.state);
+                }
             }
         }
     }
