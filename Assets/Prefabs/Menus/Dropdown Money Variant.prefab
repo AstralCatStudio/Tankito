@@ -83,13 +83,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2289336450636049709}
     m_Modifications:
+    - target: {fileID: 83313656943332145, guid: 78302555670f8464faf03ad055a3043f, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: fb0efa222aa29c44eb5e68553450b640, type: 3}
     - target: {fileID: 1035833309985834682, guid: 78302555670f8464faf03ad055a3043f, type: 3}
       propertyPath: m_text
       value: "49,95\u20AC"
       objectReference: {fileID: 0}
     - target: {fileID: 1035833309985834682, guid: 78302555670f8464faf03ad055a3043f, type: 3}
       propertyPath: m_fontSize
-      value: 51.35
+      value: 52.75
       objectReference: {fileID: 0}
     - target: {fileID: 1408562699764472814, guid: 78302555670f8464faf03ad055a3043f, type: 3}
       propertyPath: m_Name
@@ -213,7 +217,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8729240116288873798, guid: 78302555670f8464faf03ad055a3043f, type: 3}
       propertyPath: m_fontSize
-      value: 81.85
+      value: 73.95
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -233,13 +237,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2289336450636049709}
     m_Modifications:
+    - target: {fileID: 83313656943332145, guid: 78302555670f8464faf03ad055a3043f, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: fb0efa222aa29c44eb5e68553450b640, type: 3}
     - target: {fileID: 1035833309985834682, guid: 78302555670f8464faf03ad055a3043f, type: 3}
       propertyPath: m_text
       value: "17,95\u20AC"
       objectReference: {fileID: 0}
     - target: {fileID: 1035833309985834682, guid: 78302555670f8464faf03ad055a3043f, type: 3}
       propertyPath: m_fontSize
-      value: 51.35
+      value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 1408562699764472814, guid: 78302555670f8464faf03ad055a3043f, type: 3}
       propertyPath: m_Name
@@ -363,7 +371,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8729240116288873798, guid: 78302555670f8464faf03ad055a3043f, type: 3}
       propertyPath: m_fontSize
-      value: 81.85
+      value: 84.2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -569,6 +577,34 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3955652519819332307, guid: 55ce9b0ed337be1429d7845612283adf, type: 3}
+      propertyPath: m_text
+      value: x
+      objectReference: {fileID: 0}
+    - target: {fileID: 3955652519819332307, guid: 55ce9b0ed337be1429d7845612283adf, type: 3}
+      propertyPath: m_fontSize
+      value: 120
+      objectReference: {fileID: 0}
+    - target: {fileID: 3955652519819332307, guid: 55ce9b0ed337be1429d7845612283adf, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: fad49edd3f1ba994b9dc455e85bc49d9, type: 2}
+    - target: {fileID: 3955652519819332307, guid: 55ce9b0ed337be1429d7845612283adf, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 120
+      objectReference: {fileID: 0}
+    - target: {fileID: 3955652519819332307, guid: 55ce9b0ed337be1429d7845612283adf, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: -8745628639582675782, guid: fad49edd3f1ba994b9dc455e85bc49d9, type: 2}
+    - target: {fileID: 3955652519819332307, guid: 55ce9b0ed337be1429d7845612283adf, type: 3}
+      propertyPath: m_enableAutoSizing
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3955652519819332307, guid: 55ce9b0ed337be1429d7845612283adf, type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4621714948320595692, guid: 55ce9b0ed337be1429d7845612283adf, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -669,6 +705,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Dropdown Money Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 6192588854881257961, guid: 55ce9b0ed337be1429d7845612283adf, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: fb0efa222aa29c44eb5e68553450b640, type: 3}
     - target: {fileID: 6591499421756586180, guid: 55ce9b0ed337be1429d7845612283adf, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -805,6 +845,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2289336450636049709}
     m_Modifications:
+    - target: {fileID: 83313656943332145, guid: 78302555670f8464faf03ad055a3043f, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: fb0efa222aa29c44eb5e68553450b640, type: 3}
     - target: {fileID: 1408562699764472814, guid: 78302555670f8464faf03ad055a3043f, type: 3}
       propertyPath: m_Name
       value: 100
@@ -939,6 +983,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2289336450636049709}
     m_Modifications:
+    - target: {fileID: 83313656943332145, guid: 78302555670f8464faf03ad055a3043f, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: fb0efa222aa29c44eb5e68553450b640, type: 3}
     - target: {fileID: 1035833309985834682, guid: 78302555670f8464faf03ad055a3043f, type: 3}
       propertyPath: m_text
       value: "5,95\u20AC"
@@ -1081,6 +1129,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2289336450636049709}
     m_Modifications:
+    - target: {fileID: 83313656943332145, guid: 78302555670f8464faf03ad055a3043f, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: fb0efa222aa29c44eb5e68553450b640, type: 3}
     - target: {fileID: 1035833309985834682, guid: 78302555670f8464faf03ad055a3043f, type: 3}
       propertyPath: m_text
       value: Free
@@ -1250,6 +1302,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2289336450636049709}
     m_Modifications:
+    - target: {fileID: 83313656943332145, guid: 78302555670f8464faf03ad055a3043f, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: fb0efa222aa29c44eb5e68553450b640, type: 3}
     - target: {fileID: 1035833309985834682, guid: 78302555670f8464faf03ad055a3043f, type: 3}
       propertyPath: m_text
       value: "9,95\u20AC"

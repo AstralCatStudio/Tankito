@@ -56,6 +56,10 @@ namespace Tankito.Netcode
             Run
         }
 
+        private void Awake()
+        {
+            GetComponent<Canvas>().worldCamera = Camera.main;
+        }
         void Start()
         {
             ((UnityTransport)NetworkManager.Singleton.NetworkConfig.NetworkTransport).UseWebSockets = USE_WEB_SOCKETS;
@@ -85,7 +89,6 @@ namespace Tankito.Netcode
         private void StartButtons()
         {
             transform.GetChild(0).gameObject.SetActive(true);
-            transform.GetChild(2).GetComponent<Button>().onClick.AddListener(BackButton);
 
             GameObject buttonHost = GameObject.Instantiate(buttonPrefab, transform.GetChild(0));
             ConfigButton(buttonHost, HostButton, "Host");
@@ -172,6 +175,7 @@ namespace Tankito.Netcode
             NetworkManager.Singleton.StartClient();
 
             SceneLoader.Singleton.LoadGameScene();
+            GameManager.Instance.joinCode = m_joinCode;
         }
 
         async void StartServer()
@@ -181,6 +185,7 @@ namespace Tankito.Netcode
             NetworkManager.Singleton.StartServer();
 
             SceneLoader.Singleton.LoadGameScene();
+            GameManager.Instance.joinCode = m_joinCode;
         }
 
         #region Buttons
@@ -234,11 +239,6 @@ namespace Tankito.Netcode
         }
 
         #endregion
-
-        private void BackButton()
-        {
-            SceneManager.UnloadSceneAsync("Lobby");
-        }
     }
 }
 
