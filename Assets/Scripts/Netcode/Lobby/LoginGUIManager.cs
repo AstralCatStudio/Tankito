@@ -89,7 +89,6 @@ namespace Tankito.Netcode
         private void StartButtons()
         {
             transform.GetChild(0).gameObject.SetActive(true);
-            transform.GetChild(2).GetComponent<Button>().onClick.AddListener(BackButton);
 
             GameObject buttonHost = GameObject.Instantiate(buttonPrefab, transform.GetChild(0));
             ConfigButton(buttonHost, HostButton, "Host");
@@ -238,11 +237,6 @@ namespace Tankito.Netcode
         }
 
         #endregion
-
-        private void BackButton()
-        {
-            SceneManager.UnloadSceneAsync("Lobby");
-        }
     }
 }
 
