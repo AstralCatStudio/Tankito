@@ -10,7 +10,7 @@ namespace Tankito
     public class SceneLoader : MonoBehaviour
     {
         public static SceneLoader Singleton;
-
+        [SerializeField] private bool DEBUG = false;
 
         void Awake()
         {
@@ -22,7 +22,8 @@ namespace Tankito
 
         void Start()
         {
-            LoadMainMenu();
+            //LoadMainMenu();
+            LoadLobby();
         }
 
         public void LoadLobby()
@@ -44,9 +45,9 @@ namespace Tankito
         {
             SceneManager.LoadScene("Loading", LoadSceneMode.Additive);
 
-            Debug.Log("Loading Lobby...");
+            if (DEBUG) Debug.Log("Loading Lobby...");
             yield return SceneManager.LoadSceneAsync("Lobby", LoadSceneMode.Additive);
-            Debug.Log("Lobby Loaded!");
+            if (DEBUG) Debug.Log("Lobby Loaded!");
 
             SceneManager.UnloadSceneAsync("Loading");
         }
@@ -55,9 +56,9 @@ namespace Tankito
         {
             SceneManager.LoadScene("Loading", LoadSceneMode.Additive);
 
-            Debug.Log("Loading Main Menu...");
+            if (DEBUG) Debug.Log("Loading Main Menu...");
             yield return SceneManager.LoadSceneAsync("MainMenu", LoadSceneMode.Additive);
-            Debug.Log("Main Menu Loaded!");
+            if (DEBUG) Debug.Log("Main Menu Loaded!");
 
             SceneManager.UnloadSceneAsync("Loading");
         }
@@ -68,7 +69,7 @@ namespace Tankito
 
             SceneManager.LoadScene("Loading");
 
-            Debug.Log("Loading Game...");
+            if (DEBUG) Debug.Log("Loading Game...");
 
 
             //SceneManager.LoadSceneAsync("GameInitTest", LoadSceneMode.Additive);
@@ -82,7 +83,7 @@ namespace Tankito
                 SceneManager.LoadScene("GameInitTest", LoadSceneMode.Additive);
             }
 
-            Debug.Log("Game Loaded!");
+            if (DEBUG) Debug.Log("Game Loaded!");
 
             SceneManager.UnloadSceneAsync("Loading");
         }

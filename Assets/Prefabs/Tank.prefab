@@ -332,10 +332,12 @@ GameObject:
   - component: {fileID: 6924379706836283280}
   - component: {fileID: 8019476000441952616}
   - component: {fileID: 8520293575514935909}
-  - component: {fileID: 5921551077853929906}
   - component: {fileID: 8824432701014434289}
   - component: {fileID: 233019374531165043}
   - component: {fileID: 166466840981824635}
+  - component: {fileID: 1979050206698400908}
+  - component: {fileID: 258216026692416356}
+  - component: {fileID: 5903910165241873950}
   m_Layer: 0
   m_Name: Tank
   m_TagString: Player
@@ -374,12 +376,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   GlobalObjectIdHash: 951099334
   AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
+  SynchronizeTransform: 0
   ActiveSceneSynchronization: 0
   SceneMigrationSynchronization: 1
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
-  AutoObjectParentSync: 1
+  AutoObjectParentSync: 0
 --- !u!50 &8520293575514935909
 Rigidbody2D:
   serializedVersion: 4
@@ -392,7 +394,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 500
+  m_Mass: 10
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 0
@@ -407,47 +409,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &5921551077853929906
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5904161972637957731}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4178e24b6e7d7344aacebb82b7e01d39, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_tankRB: {fileID: 8520293575514935909}
-  m_baseSpeed: 5
-  m_baseRotationSpeed: 560
-  m_speed: 5
-  m_rotationSpeed: 560
-  m_turretRB: {fileID: 8342253699622009969}
-  m_aimSpeed: 900
-  m_cannon: {fileID: 792954130975718086}
-  m_parrying: 0
-  m_TurretAnimator: {fileID: 6117245905817614025}
-  m_HullAnimator: {fileID: 5873195794702409541}
-  baseAccelerationMultiplier: 6
-  baseDashDuration: 0.5
-  baseFullDashDuration: 0.2
-  baseCurrentDashTick: 0
-  baseDashReloadDuration: 1
-  accelerationMultiplier: 5
-  dashDuration: 0.3
-  fullDashDuration: 0.2
-  currentDashTick: 0
-  dashReloadDuration: 1
-  inputWhileDash: {x: 0, y: 0}
-  playerState: 0
-  m_reconciliationTolerance:
-    pos: 0.1
-    rot: 0.1
-    vel: 0.1
-  postDashInput: {x: 0, y: 0}
-  canDash: 1
 --- !u!114 &8824432701014434289
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -500,7 +461,7 @@ CapsuleCollider2D:
   m_Offset: {x: -0.18, y: 0}
   m_Size: {x: 1.3403772, y: 1.0000124}
   m_Direction: 1
---- !u!114 &166466840981824635
+--- !u!114 &1979050206698400908
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -509,13 +470,55 @@ MonoBehaviour:
   m_GameObject: {fileID: 5904161972637957731}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f3fe6949ed78184f8a55d21f67e9bc3, type: 3}
+  m_Script: {fileID: 11500000, guid: a651c3c3c8b279e4f81772302254b6dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  modifiers:
-  - {fileID: 11400000, guid: 546cf7272e984d74ea1565c1f06f210c, type: 2}
-  bulletCreator: {fileID: 792954130975718086}
-  tankController: {fileID: 5921551077853929906}
+  m_isKinematic: 1
+  m_tankRB: {fileID: 8520293575514935909}
+  m_turretRB: {fileID: 8342253699622009969}
+--- !u!114 &258216026692416356
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5904161972637957731}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6cdd9da2576f6654890f582649fea450, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_tankRB: {fileID: 8520293575514935909}
+  m_speed: 2.2
+  m_rotationSpeed: 270
+  m_turretRB: {fileID: 8342253699622009969}
+  m_aimSpeed: 720
+  accelerationMultiplier: 3
+  dashDuration: 0.25
+  fullDashDuration: 0.1
+  currentDashTick: 0
+  postDash: 0
+  postDashInput: {x: 0, y: 0}
+  dashReloadDuration: 1
+  inputWhileDash: {x: 0, y: 0}
+  playerState: 0
+  canDash: 1
+--- !u!114 &5903910165241873950
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5904161972637957731}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ff19012e515e554cb488adae31a349c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_tankController: {fileID: 258216026692416356}
+  m_turretAnimator: {fileID: 6117245905817614025}
+  m_hullAnimator: {fileID: 5873195794702409541}
+  m_turretRB: {fileID: 8342253699622009969}
 --- !u!1 &6459951814770460290
 GameObject:
   m_ObjectHideFlags: 0

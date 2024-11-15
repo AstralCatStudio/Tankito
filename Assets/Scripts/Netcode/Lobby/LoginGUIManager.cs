@@ -156,7 +156,6 @@ namespace Tankito.Netcode
         async void StartHost()
         {
             await CreateRelayAllocation();
-            Debug.Log("Debug point B");
             TextEditor te = new TextEditor(); te.text = m_joinCode; te.SelectAll(); te.Copy();
             NetworkManager.Singleton.StartHost();
             

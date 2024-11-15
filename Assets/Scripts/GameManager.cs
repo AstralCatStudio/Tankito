@@ -47,14 +47,11 @@ namespace Tankito
             m_networkManager = NetworkManager.Singleton;
 
             if (m_playerPrefab == null) m_playerPrefab = m_networkManager.NetworkConfig.Prefabs.Prefabs[0].Prefab;
-            if (m_playerPrefab == null) Debug.LogWarning("Something went wron, couldn't obtain player prefab (frist prefab in networkconfig)");
+            if (m_playerPrefab == null) Debug.LogWarning("Something went wrong, couldn't obtain player prefab (frist prefab in networkconfig)");
 
             m_networkManager.OnServerStarted += OnServerStarted;
             m_networkManager.OnClientConnectedCallback += OnClientConnected;
             m_networkManager.OnClientDisconnectCallback += OnClientDisconnect;
-
-            AutoPhysics2DUpdate(true);
-
         }
 
         public override void OnNetworkSpawn()
@@ -71,16 +68,16 @@ namespace Tankito
 
         private void OnServerStarted()
         {
-            print("Servidor inicalizado.");
+            //print("Servidor inicalizado.");        
         }
 
         private void OnClientConnected(ulong clientId)
         {
-            Debug.Log("GameManager CLIENT CONNECTED called.");
-
+            //Debug.Log("GameManager CLIENT CONNECTED called.");
+            
             if (m_loadingSceneFlag)
             {
-                Debug.Log("loadingScene");
+                //Debug.Log("loadingScene");
                 if (IsServer)
                 { NetworkManager.SceneManager.OnLoadEventCompleted += (string sceneName, LoadSceneMode loadSceneMode, List<ulong> clientsCompleted, List<ulong> clientsTimedOut) => OnClientConnected(clientId); }
                 else
@@ -90,7 +87,7 @@ namespace Tankito
             }
             else
             {
-                Debug.Log("notLoading");
+                //Debug.Log("notLoading");
                 if (IsServer)
                 { NetworkManager.SceneManager.OnLoadEventCompleted -= (string sceneName, LoadSceneMode loadSceneMode, List<ulong> clientsCompleted, List<ulong> clientsTimedOut) => OnClientConnected(clientId); }
                 else
@@ -102,7 +99,6 @@ namespace Tankito
                 // IMPORTANTE: Siempre instanciar objetos con la sobrecarga de parentesco para asegurar la escena en la que residen
                 // (evitando su destruccion no intencionada al cargarse sobre escenas aditivas que se descargan posteriormente eg. LA PANTALLA DE CARGA)
                 var newPlayer = Instantiate(m_playerPrefab, GameInstanceParent.Instance.transform).GetComponent<NetworkObject>();
-
                 newPlayer.SpawnAsPlayerObject(clientId);
 
                 // Primeras llamadas a round manager y spawn manager
@@ -117,12 +113,8 @@ namespace Tankito
                 //SetObjectPositionClientRpc(newPlayer, newPlayer.GetComponent<Transform>().position);
                 // Ahora se maneja directamente en el spawn manager llamando a la funcion SetObjectPosition del GameManager
             }
-            if (IsClient)
-            {
-                FindPlayerInput();
-            }
-
-            // BindInputActions(); Bound by the player controller itself on network spawn.
+            FindPlayerInput();
+            // BindInputActions(); Bound by the player input script itself on network spawn.
         }
 
         private void OnClientDisconnect(ulong obj)
@@ -168,11 +160,11 @@ namespace Tankito
             m_playerInput.actions = m_inputActions.asset;
         }
 
-        public void BindInputActions(ClientPredictedTankController predictedController)
+        public void BindInputActions(TankPlayerInput predictedController)
         {
             FindPlayerInput();
 
-            Debug.Log($"{predictedController}");
+            //Debug.Log($"{predictedController}");
             m_inputActions.Player.Move.performed += predictedController.OnMove;
             m_inputActions.Player.Move.canceled += predictedController.OnMove;
             m_inputActions.Player.Look.performed += predictedController.OnAim;
@@ -183,14 +175,13 @@ namespace Tankito
             m_inputActions.Player.Parry.canceled += predictedController.OnParry;
             m_inputActions.Player.Fire.performed += predictedController.OnFire;
             m_inputActions.Player.Fire.canceled += predictedController.OnFire;
-
         }
 
 
         public void SetPlayerName(string name)
         {
             m_playerName = name;
-            Debug.Log("GameManager guarda el nombre:" + m_playerName);
+            //Debug.Log("GameManager guarda el nombre:" + m_playerName);
         }
 
         public string GetPlayerName()
@@ -249,7 +240,7 @@ namespace Tankito
                 }
                 else
                 {
-                    Debug.LogWarning($"No se encontró el NetworkObject para el cliente con ID {targetObject.GetComponent<NetworkObject>().OwnerClientId}");
+                    Debug.LogWarning($"No se encontrï¿½ el NetworkObject para el cliente con ID {targetObject.GetComponent<NetworkObject>().OwnerClientId}");
                 }
             }
         }
