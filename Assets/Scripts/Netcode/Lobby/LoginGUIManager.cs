@@ -56,6 +56,10 @@ namespace Tankito.Netcode
             Run
         }
 
+        private void Awake()
+        {
+            GetComponent<Canvas>().worldCamera = Camera.main;
+        }
         void Start()
         {
             ((UnityTransport)NetworkManager.Singleton.NetworkConfig.NetworkTransport).UseWebSockets = USE_WEB_SOCKETS;
