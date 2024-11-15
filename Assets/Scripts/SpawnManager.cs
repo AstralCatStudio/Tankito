@@ -56,6 +56,14 @@ public class SpawnManager : MonoBehaviour
                 GameManager.Instance.SetObjectPosition(player, _spawnPoints[i].pos);
                 break;
             }
+            else if (_spawnPoints[i].clientId != null)
+            {
+                Debug.Log($"Cliente {_spawnPoints[i].clientId}, ya conectado, se coloca en spawn {i}");
+
+                // Coloca al jugador ya conectado en el punto de spawn
+                GameObject player = NetworkManager.Singleton.ConnectedClients[(ulong)_spawnPoints[i].clientId].PlayerObject.gameObject;
+                GameManager.Instance.SetObjectPositionClientRpc(player, _spawnPoints[i].pos, id);
+            }
         }
     }
 
@@ -67,7 +75,7 @@ public class SpawnManager : MonoBehaviour
         {
             if (_spawnPoints[i].clientId == id)
             {
-                index = i; 
+                index = i;
                 break;
             }
         }
@@ -92,7 +100,7 @@ public class SpawnManager : MonoBehaviour
         {
             for (int i = index; i < _spawnPoints.Count; i++)
             {
-                if(_spawnPoints[i].clientId != null)
+                if (_spawnPoints[i].clientId != null)
                 {
                     GameObject player = NetworkManager.Singleton.ConnectedClients[(ulong)_spawnPoints[i].clientId].PlayerObject.gameObject;
                     GameManager.Instance.SetObjectPosition(player, _spawnPoints[i].pos);

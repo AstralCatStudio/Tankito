@@ -239,7 +239,27 @@ namespace Tankito
                 }
                 else
                 {
-                    Debug.LogWarning($"No se encontr� el NetworkObject para el cliente con ID {targetObject.GetComponent<NetworkObject>().OwnerClientId}");
+                    Debug.LogWarning($"No se encontró el NetworkObject para el cliente con ID {targetObject.GetComponent<NetworkObject>().OwnerClientId}");
+                }
+            }
+        }
+        
+        [ClientRpc]
+        public void SetObjectPositionClientRpc(NetworkObjectReference targetObjectReference, Vector3 newPosition, ulong clientId)
+        {
+            if(NetworkManager.Singleton.LocalClientId == clientId)
+            {
+                if (targetObjectReference.TryGet(out var targetObject))
+                {
+                    if (targetObject != null)
+                    {
+                        targetObject.gameObject.GetComponent<Transform>().position = newPosition;
+                        Debug.Log($"GameObject del jugador {targetObject.GetComponent<NetworkObject>().OwnerClientId} colocado en el punto {newPosition.ToString()}");
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"No se encontró el NetworkObject para el cliente con ID {targetObject.GetComponent<NetworkObject>().OwnerClientId}");
+                    }
                 }
             }
         }

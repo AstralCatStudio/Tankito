@@ -1812,7 +1812,6 @@ GameObject:
   - component: {fileID: 953111505}
   - component: {fileID: 953111503}
   - component: {fileID: 953111502}
-  - component: {fileID: 953111507}
   - component: {fileID: 953111506}
   m_Layer: 0
   m_Name: PlayerInput
@@ -1843,9 +1842,10 @@ MonoBehaviour:
   m_hotspotDeadzone: 100
   m_pressControl: {fileID: 0}
   m_pressControlValue: 1
-  m_releaseControl: {fileID: 953111507}
+  m_releaseControl: {fileID: 0}
   m_releaseControlValue: 1
   debugGUI: 0
+  DEBUG: 0
 --- !u!114 &953111503
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1871,6 +1871,7 @@ MonoBehaviour:
   m_releaseControl: {fileID: 0}
   m_releaseControlValue: 1
   debugGUI: 0
+  DEBUG: 0
 --- !u!4 &953111505
 Transform:
   m_ObjectHideFlags: 0
@@ -2677,6 +2678,7 @@ MonoBehaviour:
   _roundUI: {fileID: 0}
   _countdownTime: 7
   _countdownText: {fileID: 0}
+  _startedGame: 0
   _playerInput: {fileID: 953111501}
   DEBUG: 0
 --- !u!4 &1368221248
