@@ -8,7 +8,7 @@ public class ModifiersController : MonoBehaviour
 {
     public List<Modifier> modifiers;
     public CreateBullet bulletCreator;
-    public ClientPredictedTankController tankController;
+    public TankController tankController;
     private void Start()
     {
         applyModifiers();

@@ -6,5 +6,5 @@ using UnityEngine;
 
 public abstract class ATankModifierEvent : ScriptableObject, IModifierEvent
 {
-    public abstract void StartEvent(ClientPredictedTankController tank);
+    public abstract void StartEvent(TankController tank);
 }

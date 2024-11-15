@@ -61,7 +61,7 @@ namespace Tankito.Mobile
         [SerializeField] private float m_releaseControlValue = 1f;
 
         public bool debugGUI;
-
+        public bool DEBUG = false;
         public override string ToString()
         {
             return $"{base.ToString()}[{m_hotspotPosition})]";
