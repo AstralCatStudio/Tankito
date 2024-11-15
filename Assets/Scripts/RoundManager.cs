@@ -110,7 +110,6 @@ public class RoundManager : NetworkBehaviour
             UpdateRemainingPlayersTextClientRpc(_alivePlayers.Count);
             CheckForWinner();
         }
-        if (DEBUG) Debug.Log("Jugador a�adido. N� jugadores: " + _players.Count);
     }
 
     public void EliminatePlayer(GameObject player)
