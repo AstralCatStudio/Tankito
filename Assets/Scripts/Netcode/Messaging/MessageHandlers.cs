@@ -307,7 +307,7 @@ namespace Tankito.Netcode.Messaging
             ClientSimulationManager.Instance.CheckNewGlobalSnapshot(snapshot);
 
             // TESTING !!!!
-            ClientSimulationManager.Instance.SetSimulation(snapshot);
+            //ClientSimulationManager.Instance.SetSimulation(snapshot);
 
             if (DEBUG_SNAPSHOTS) Debug.Log($"[{SimClock.TickCounter}]Received snapshot[{snapshot.timestamp}] from server.");
         }

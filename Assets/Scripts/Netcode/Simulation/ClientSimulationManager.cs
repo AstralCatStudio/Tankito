@@ -101,7 +101,7 @@ namespace Tankito.Netcode.Simulation
             }
 
             //Resume Simulation Clock
-            SimClock.Instance.StartClock();
+            SimClock.Instance.ResumeClock();
         }
 
         // WIP !!
@@ -126,17 +126,16 @@ namespace Tankito.Netcode.Simulation
 
         public void CheckNewGlobalSnapshot(SimulationSnapshot newAuthSnapshot)
         {
-            Debug.Log($"[{SimClock.TickCounter}]Se recibe snapshot[{newAuthSnapshot.timestamp}] autoritativo");
+            //Debug.Log($"[{SimClock.TickCounter}]Se recibe snapshot[{newAuthSnapshot.timestamp}] autoritativo");
             if (newAuthSnapshot.timestamp <= AuthSnapshot.timestamp) return;
-
             SimulationSnapshot clientSnapshot = m_snapshotBuffer.Where(s => s.timestamp == newAuthSnapshot.timestamp).FirstOrDefault();
 
-            if (clientSnapshot.Equals(default))
+            if (!EqualityComparer<SimulationSnapshot>.Default.Equals(clientSnapshot, default))
             {
-                foreach(var objSnapShot in clientSnapshot.Keys)
+                foreach (var objSnapShot in clientSnapshot.Keys)
                 {
                     if (newAuthSnapshot.ContainsKey(objSnapShot))
-                    {
+                    { 
                         if (CheckForDesync(clientSnapshot[objSnapShot], newAuthSnapshot[objSnapShot]))
                         {
                             Rollback(newAuthSnapshot);
