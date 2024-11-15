@@ -175,6 +175,7 @@ namespace Tankito.Netcode
             NetworkManager.Singleton.StartClient();
 
             SceneLoader.Singleton.LoadGameScene();
+            GameManager.Instance.joinCode = m_joinCode;
         }
 
         async void StartServer()
@@ -184,6 +185,7 @@ namespace Tankito.Netcode
             NetworkManager.Singleton.StartServer();
 
             SceneLoader.Singleton.LoadGameScene();
+            GameManager.Instance.joinCode = m_joinCode;
         }
 
         #region Buttons
