@@ -26,7 +26,7 @@ namespace Tankito.Netcode.Simulation
                                                       //que se guarde el timestamp
         {
             get => m_snapshotBuffer
-                .Where(s => s.status == SnapshotState.Authoritative)
+                .Where(s => s.status == SnapshotStatus.Authoritative)
                 .OrderByDescending(s => s.timestamp)
                 .FirstOrDefault();
         }
@@ -115,6 +115,10 @@ namespace Tankito.Netcode.Simulation
                 {
                     obj.SetSimState(newSimSnapshot[obj]);
                 }
+                else
+                {
+                    Debug.LogException(new NotImplementedException());
+                }
             }
 
             SimClock.Instance.ResumeClock();
@@ -122,21 +126,30 @@ namespace Tankito.Netcode.Simulation
 
         public void CheckNewGlobalSnapshot(SimulationSnapshot newAuthSnapshot)
         {
-            Debug.Log("Se recibe estado autoritativo");
+            Debug.Log($"[{SimClock.TickCounter}]Se recibe snapshot[{newAuthSnapshot.timestamp}] autoritativo");
             if (newAuthSnapshot.timestamp <= AuthSnapshot.timestamp) return;
-            SimulationSnapshot clientSnapShot = m_snapshotBuffer.Where(s => s.timestamp == newAuthSnapshot.timestamp).FirstOrDefault();
-            foreach(var objSnapShot in clientSnapShot.Keys)
+
+            SimulationSnapshot clientSnapshot = m_snapshotBuffer.Where(s => s.timestamp == newAuthSnapshot.timestamp).FirstOrDefault();
+
+            if (clientSnapshot.Equals(default))
             {
-                if (newAuthSnapshot.ContainsKey(objSnapShot))
+                foreach(var objSnapShot in clientSnapshot.Keys)
                 {
-                    if (CheckForDesync(clientSnapShot[objSnapShot], newAuthSnapshot[objSnapShot]))
+                    if (newAuthSnapshot.ContainsKey(objSnapShot))
                     {
-                        Rollback(newAuthSnapshot);
-                        break;
+                        if (CheckForDesync(clientSnapshot[objSnapShot], newAuthSnapshot[objSnapShot]))
+                        {
+                            Rollback(newAuthSnapshot);
+                            break;
+                        }
                     }
                 }
             }
-            newAuthSnapshot.status = SnapshotState.Authoritative;
+            else
+            {
+                SetSimulation(newAuthSnapshot);
+            }
+            newAuthSnapshot.status = SnapshotStatus.Authoritative;
             m_snapshotBuffer.Add(newAuthSnapshot, newAuthSnapshot.timestamp);
         }
 

@@ -9,8 +9,9 @@ using UnityEngine.PlayerLoop;
 
 namespace Tankito.Netcode.Simulation
 {
-    public enum SnapshotState
+    public enum SnapshotStatus
     {
+        Payload,
         /// <summary>
         /// When it's a client prediction of what the Snapshot at any given tick
         /// is going to look like in the server (guess at authoritative snapshot).
@@ -32,7 +33,7 @@ namespace Tankito.Netcode.Simulation
     public struct SimulationSnapshot : INetworkSerializable
     {
         public int timestamp;
-        public SnapshotState status; 
+        public SnapshotStatus status;
         private Dictionary<ASimulationObject, ISimulationState> objectStates; // Se hace de  ISimulationState para poder mantenerlo generico entre cosas distintas, como balas que tan solo tienen un par de variables y los tanques, que tienen mas info
 
         const int MAX_TANKS_IN_LOBBY = 6;
@@ -77,6 +78,8 @@ namespace Tankito.Netcode.Simulation
             }
             else if (serializer.IsReader)
             {
+                objectStates = new();
+                status = SnapshotStatus.Payload;
                 for(int i=0; i<nObjects; i++)
                 {
                     SimulationObjectUpdate simObjUpdate = new();

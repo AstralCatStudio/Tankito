@@ -59,11 +59,15 @@ namespace Tankito.Netcode.Simulation
             switch(simObjType)
             {
                 case SimulationObjectType.Tank:
-                    ((TankSimulationState)state).NetworkSerialize(serializer);
+                    TankSimulationState tankState = serializer.IsWriter ? (TankSimulationState)state : default;
+                    tankState.NetworkSerialize(serializer);
+                    if (serializer.IsReader) state = tankState;
                     break;
 
                 case SimulationObjectType.Bullet:
-                    ((BulletSimulationState)state).NetworkSerialize(serializer);
+                    BulletSimulationState bulletState = serializer.IsWriter ? ((BulletSimulationState)state) : default;
+                    bulletState.NetworkSerialize(serializer);
+                    if (serializer.IsReader) state = bulletState;
                     break;
 
                 default:
