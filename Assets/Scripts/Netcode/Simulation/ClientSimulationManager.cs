@@ -23,12 +23,13 @@ namespace Tankito.Netcode.Simulation
         [SerializeField] private BulletDelta m_bulletSimulationTolerance;
 
         private SimulationSnapshot AuthSnapshot //Por como funciona el rollback, igual esto no hace falta y unicamente podemos necesitar 
-                                                      //que se guarde el timestamp
+                                                //que se guarde el timestamp
         {
-            get => m_snapshotBuffer
-                .Where(s => s.status == SnapshotStatus.Authoritative)
-                .OrderByDescending(s => s.timestamp)
-                .FirstOrDefault();
+            get
+            {
+                var authStates = m_snapshotBuffer.Where(s => s.status == SnapshotStatus.Authoritative);
+                return (authStates.Count() > 0) ? authStates.MaxBy(s => s.timestamp) : default;
+            }
         }
 
         void Start()
@@ -67,17 +68,61 @@ namespace Tankito.Netcode.Simulation
                 m_snapshotBuffer.Add(newSnapshot, newSnapshot.timestamp);
         }
 
+        public void EvaluateForReconciliation(SimulationSnapshot newAuthSnapshot)
+        {
+            Debug.Log($"[{SimClock.TickCounter}]Se recibe snapshot[{newAuthSnapshot.timestamp}] autoritativo");
+            Debug.Log(AuthSnapshot.timestamp + " " + m_snapshotBuffer.Last.timestamp + " " + m_snapshotBuffer.Count);
+            
+            if ((!AuthSnapshot.Equals(default(SimulationSnapshot)) && newAuthSnapshot.timestamp >= AuthSnapshot.timestamp) ||
+                (m_snapshotBuffer.Full() && newAuthSnapshot.timestamp < (m_snapshotBuffer.Last.timestamp - m_snapshotBuffer.Count)))
+            {
+                return;
+            }
+
+            // Jump forward in time to sim state
+            if (newAuthSnapshot.timestamp <= SimClock.TickCounter)
+            {
+                SimClock.Instance.SetClock(newAuthSnapshot.timestamp);
+                SetSimulation(newAuthSnapshot);
+                
+                return;
+            }
+
+            SimulationSnapshot predictedSnapshot = m_snapshotBuffer.Where(s => s.timestamp == newAuthSnapshot.timestamp 
+                && s.status == SnapshotStatus.Predicted).FirstOrDefault();
+
+            if (!predictedSnapshot.Equals(default(SimulationSnapshot)))
+            {
+                foreach (var objSnapShot in predictedSnapshot.Keys)
+                {
+                    if (newAuthSnapshot.ContainsKey(objSnapShot))
+                    {
+                        if (CheckForDesync(predictedSnapshot[objSnapShot], newAuthSnapshot[objSnapShot]))
+                        {
+                            Rollback(newAuthSnapshot);
+                            break;
+                        }
+                    }
+                }
+            }
+            
+            //newAuthSnapshot.status = SnapshotStatus.Authoritative;   DEBE LLEGAR AUTH DESDE SERVER
+            m_snapshotBuffer.Add(newAuthSnapshot, newAuthSnapshot.timestamp);
+        }
+
         public void Rollback(SimulationSnapshot authSnapshot)
         {
             int rollbackCounter = authSnapshot.timestamp;
             
             //Pause Simulation Clock
             SimClock.Instance.StopClock();
+
             Debug.Log("Se inicia reconciliacion");
 
             foreach(var obj in m_simulationObjects.Values)
             {
                 obj.SetSimState(authSnapshot[obj]);
+                
                 // Put Input Components into replay mode
                 if(obj is TankSimulationObject tank)
                 {
@@ -94,10 +139,13 @@ namespace Tankito.Netcode.Simulation
             }
 
             // Set tank's input components back on live input mode
-            foreach(var tank in m_simulationObjects.OfType<TankSimulationObject>())
+            foreach(var obj in m_simulationObjects.Values)
             {
-                var lastReplayTick = tank.StopInputReplay();
-                Debug.Log($"{tank}'s last replayed input was on Tick- {lastReplayTick}");
+                if (obj is  TankSimulationObject tank)
+                {
+                    var lastReplayTick = tank.StopInputReplay();
+                    Debug.Log($"{tank}'s last replayed input was on Tick- {lastReplayTick}");
+                }
             }
 
             //Resume Simulation Clock
@@ -124,36 +172,6 @@ namespace Tankito.Netcode.Simulation
             SimClock.Instance.ResumeClock();
         }
 
-        public void EvaluateForReconciliation(SimulationSnapshot newAuthSnapshot)
-        {
-            Debug.Log($"[{SimClock.TickCounter}]Se recibe snapshot[{newAuthSnapshot.timestamp}] autoritativo");
-            Debug.Log(AuthSnapshot.timestamp + " " + m_snapshotBuffer.Last.timestamp + " " + m_snapshotBuffer.Count);
-            if (m_snapshotBuffer.Count > 0 && newAuthSnapshot.timestamp >= AuthSnapshot.timestamp && (!m_snapshotBuffer.Full() || newAuthSnapshot.timestamp < (m_snapshotBuffer.Last.timestamp - m_snapshotBuffer.Count)))
-            {        
-                SimulationSnapshot predictedSnapshot = m_snapshotBuffer.Where(s => s.timestamp == newAuthSnapshot.timestamp 
-                    && s.status == SnapshotStatus.Predicted).FirstOrDefault();
-                if (!predictedSnapshot.Equals(default(SimulationSnapshot)))
-                {
-                    foreach (var objSnapShot in predictedSnapshot.Keys)
-                    {
-                        if (newAuthSnapshot.ContainsKey(objSnapShot))
-                        {
-                            if (CheckForDesync(predictedSnapshot[objSnapShot], newAuthSnapshot[objSnapShot]))
-                            {
-                                Rollback(newAuthSnapshot);
-                                break;
-                            }
-                        }
-                    }
-                } 
-            }
-            
-            //newAuthSnapshot.status = SnapshotStatus.Authoritative;   DEBE LLEGAR AUTH DESDE SERVER
-            m_snapshotBuffer.Add(newAuthSnapshot, newAuthSnapshot.timestamp);
-        }
-
-        // Bernat: A lo mejor no queremos hacer esto asi y queremos implementar una metrica mas sofisticada para decidir si reconciliar o no,
-        // de momento lo dejo como esta con el bool por simplicidad.
         private bool CheckForDesync(in ISimulationState simStateA,in ISimulationState simStateB)
         {
             IStateDelta delta = SimExtensions.Delta(simStateA, simStateB);
@@ -167,6 +185,8 @@ namespace Tankito.Netcode.Simulation
                 BulletDelta bulletDelta = (BulletDelta)delta;
                 return SimExtensions.CompareDeltas(bulletDelta, m_bulletSimulationTolerance);
             }
+
+            Debug.LogException(new InvalidOperationException("Desync check failed, type mismatch: " + simStateA.GetType() + "-" + simStateB.GetType()));
             return false;
         }
 
