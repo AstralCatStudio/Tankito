@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 namespace Tankito
 {
@@ -96,16 +97,6 @@ namespace Tankito
             }
         }
 
-        public void CheckPasswordAndUsername()
-        {
-            //Hacer comprobaciones del nombre y la contrase�a
-        }
-
-        public void EnterAsGuest()
-        {
-            //Esto activa que el jugador est� como invitado
-        }
-
         private void BgReposition()
         {
             Transform bg;
@@ -121,6 +112,11 @@ namespace Tankito
                 mg.Translate(xUnit * mgParallaxFactor * bgPositions[i].x, yUnit * mgParallaxFactor * bgPositions[i].y, 0);
                 fg.Translate(xUnit * fgParallaxFactor * bgPositions[i].x, yUnit * fgParallaxFactor * bgPositions[i].y, 0);
             }
+        }
+
+        public void UnloadLobby()
+        {
+            SceneManager.UnloadScene("Lobby");
         }
     }
 }
