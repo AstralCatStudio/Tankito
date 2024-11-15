@@ -8,6 +8,6 @@ public class GetJoinCode : MonoBehaviour
 {
     void Start()
     {
-        GetComponent<TextMeshProUGUI>().text = "JOINCODE: " + GameManager.Instance.joinCode;
+        GetComponent<TextMeshProUGUI>().text = "Code: " + GameManager.Instance.joinCode;
     }
 }
