@@ -17,28 +17,7 @@ public class TankData : NetworkBehaviour
     {
         base.OnNetworkSpawn();
 
-        if (IsServer)
-        {
-            RegisterToRoundManager();
-            SetInSpawnPoint();
-            points = 0;
-        }
-    }
-
-    private void RegisterToRoundManager()
-    {
-        RoundManager roundManager = FindObjectOfType<RoundManager>();
-
-        if(roundManager != null )
-        {
-            roundManager.AddPlayer(gameObject);
-        }
-    }
-
-    public void SetInSpawnPoint()
-    {
-        SpawnManager spawnManager = FindObjectOfType<SpawnManager>();
-        GetComponent<Transform>().position = spawnManager.GetSpawnPoint();
+        points = 0;
     }
 
     public void Die()
@@ -55,15 +34,17 @@ public class TankData : NetworkBehaviour
         if (IsServer)
         {
             health.Value -= damage;
-            if(health.Value <= 0 )
+            if (health.Value <= 0)
             {
                 isAlive.Value = false;
                 Die();
             }
         }
     }
+
     public void ResetTank()
     {
+        Debug.Log("Reseting tank");
         health.Value = 2;
         isAlive.Value = true;
     }
