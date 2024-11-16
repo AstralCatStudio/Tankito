@@ -14,5 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   logo: {fileID: 0}
   description: 
-  bulletModifiers: []
-  hullModifiers: []
+  bulletModifiers:
+  - {fileID: 11400000, guid: 8c53da89951d91e41a3c0099e7355789, type: 2}
+  hullModifiers:
+  - {fileID: 11400000, guid: 99e71eebd5d51814c8b61002a5e1b22a, type: 2}

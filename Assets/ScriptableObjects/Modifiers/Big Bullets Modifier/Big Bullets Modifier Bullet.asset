@@ -18,8 +18,8 @@ MonoBehaviour:
   onBounceEvents: []
   onDetonateEvents: []
   bulletStatsModifier:
-    speedMultiplier: 1
-    sizeMultiplier: {x: 1, y: 1}
+    speedMultiplier: 0.75
+    sizeMultiplier: {x: 1.5, y: 1.5}
     accelerationAdded: 0
     BouncesAdded: 0
     lifeTimeAdded: 0
@@ -27,3 +27,4 @@ MonoBehaviour:
     amountAdded: 0
     amountMultiplier: 1
     spreadMultiplier: 1
+    reloadTimeAdded: 0

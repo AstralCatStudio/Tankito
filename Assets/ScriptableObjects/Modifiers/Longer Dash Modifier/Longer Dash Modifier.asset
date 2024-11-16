@@ -12,5 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8cd9a9b75cfb494c8fa78e72de18880, type: 3}
   m_Name: Longer Dash Modifier
   m_EditorClassIdentifier: 
+  logo: {fileID: 0}
+  description: 
   bulletModifiers: []
-  hullModifiers: []
+  hullModifiers:
+  - {fileID: 11400000, guid: ca18a2998950dd54e92edfc772b86d98, type: 2}

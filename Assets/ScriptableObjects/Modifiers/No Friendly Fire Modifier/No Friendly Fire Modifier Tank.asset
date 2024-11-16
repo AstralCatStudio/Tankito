@@ -13,8 +13,11 @@ MonoBehaviour:
   m_Name: No Friendly Fire Modifier Tank
   m_EditorClassIdentifier: 
   hullStatsModifier:
-    speedMultiplier: 0
-    rotationSpeedMultiplier: 0
-    reloadTimeAdded: 0
+    speedMultiplier: 1
+    rotationSpeedMultiplier: 1
     dashCooldownTimeAdded: 0
     extraHealth: 0
+    extraParryTime: 0
+    addParryReloadTime: 0
+    dashSpeedMultiplier: 1
+    dashDistanceMultiplier: 1

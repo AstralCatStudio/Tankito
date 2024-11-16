@@ -12,5 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8cd9a9b75cfb494c8fa78e72de18880, type: 3}
   m_Name: Big Bullets Modifier
   m_EditorClassIdentifier: 
-  bulletModifiers: []
+  logo: {fileID: 0}
+  description: 
+  bulletModifiers:
+  - {fileID: 11400000, guid: 717db5e6b85d79e449d4559047ab70e4, type: 2}
   hullModifiers: []
