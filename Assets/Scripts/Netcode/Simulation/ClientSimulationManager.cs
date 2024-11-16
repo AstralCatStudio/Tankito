@@ -85,7 +85,6 @@ namespace Tankito.Netcode.Simulation
                 SimClock.Instance.SetClock(newAuthSnapshot.timestamp);
                 SetSimulation(newAuthSnapshot);
                 m_snapshotBuffer.Add(newAuthSnapshot, newAuthSnapshot.timestamp);
-
                 return;
             }
 
@@ -117,7 +116,7 @@ namespace Tankito.Netcode.Simulation
             //Pause Simulation Clock
             SimClock.Instance.StopClock();
 
-            Debug.Log("Se inicia reconciliacion");
+            Debug.Log("ROLLING BACK");
 
             foreach(var obj in m_simulationObjects.Values)
             {

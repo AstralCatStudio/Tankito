@@ -89,5 +89,17 @@ namespace Tankito.Netcode.Simulation
                 }
             }
         }
+
+        public override string ToString()
+        {
+            var str = $"[Tick({timestamp})|Status({status})|Count({Count})]";
+
+            foreach(var pair in objectStates)
+            {
+                str += $" ({pair.Key})-{pair.Value} |";
+            }
+
+            return ToString();
+        }
     }
 }
