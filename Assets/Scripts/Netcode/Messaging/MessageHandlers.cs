@@ -305,6 +305,12 @@ namespace Tankito.Netcode.Messaging
             
             SimulationSnapshot snapshot = new SimulationSnapshot();
             snapshotPayload.ReadValue(out snapshot);
+
+            if (DEBUG_SNAPSHOTS)
+            {
+                Debug.Log($"[{SimClock.TickCounter}]Received Snapshot:{snapshot}");
+            }
+
             if (snapshot.status == SnapshotStatus.Authoritative)
             {
                 ClientSimulationManager.Instance.EvaluateForReconciliation(snapshot);

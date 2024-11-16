@@ -70,20 +70,21 @@ namespace Tankito.Netcode.Simulation
 
         public void EvaluateForReconciliation(SimulationSnapshot newAuthSnapshot)
         {
-            Debug.Log($"[{SimClock.TickCounter}]Se recibe snapshot[{newAuthSnapshot.timestamp}] autoritativo");
-            Debug.Log(AuthSnapshot.timestamp + " " + m_snapshotBuffer.Last.timestamp + " " + m_snapshotBuffer.Count);
+            //Debug.Log($"[{SimClock.TickCounter}]Se recibe snapshot[{newAuthSnapshot.timestamp}] autoritativo");
+            //Debug.Log(AuthSnapshot.timestamp + " " + m_snapshotBuffer.Last.timestamp + " " + m_snapshotBuffer.Count);
             
-            if ((!AuthSnapshot.Equals(default(SimulationSnapshot)) && newAuthSnapshot.timestamp >= AuthSnapshot.timestamp) ||
+            if ((!AuthSnapshot.Equals(default(SimulationSnapshot)) && newAuthSnapshot.timestamp <= AuthSnapshot.timestamp) ||
                 (m_snapshotBuffer.Full() && newAuthSnapshot.timestamp < (m_snapshotBuffer.Last.timestamp - m_snapshotBuffer.Count)))
             {
                 return;
             }
 
             // Jump forward in time to sim state
-            if (newAuthSnapshot.timestamp <= SimClock.TickCounter)
+            if (newAuthSnapshot.timestamp >= SimClock.TickCounter)
             {
                 SimClock.Instance.SetClock(newAuthSnapshot.timestamp);
                 SetSimulation(newAuthSnapshot);
+                m_snapshotBuffer.Add(newAuthSnapshot, newAuthSnapshot.timestamp);
                 
                 return;
             }
@@ -117,7 +118,7 @@ namespace Tankito.Netcode.Simulation
             //Pause Simulation Clock
             SimClock.Instance.StopClock();
 
-            Debug.Log("Se inicia reconciliacion");
+            Debug.Log("ROLLING BACK");
 
             foreach(var obj in m_simulationObjects.Values)
             {
