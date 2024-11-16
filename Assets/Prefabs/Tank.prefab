@@ -395,7 +395,7 @@ Rigidbody2D:
   m_UseAutoMass: 0
   m_Mass: 10
   m_LinearDrag: 0
-  m_AngularDrag: 0.05
+  m_AngularDrag: 0
   m_GravityScale: 0
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -405,8 +405,8 @@ Rigidbody2D:
     serializedVersion: 2
     m_Bits: 0
   m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_SleepingMode: 0
+  m_CollisionDetection: 1
   m_Constraints: 0
 --- !u!114 &8824432701014434289
 MonoBehaviour:
@@ -502,6 +502,7 @@ MonoBehaviour:
   inputWhileDash: {x: 0, y: 0}
   playerState: 0
   canDash: 1
+  DEBUG: 0
 --- !u!114 &5903910165241873950
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -518,6 +519,7 @@ MonoBehaviour:
   m_turretAnimator: {fileID: 6117245905817614025}
   m_hullAnimator: {fileID: 5873195794702409541}
   m_turretRB: {fileID: 8342253699622009969}
+  DEBUG: 0
 --- !u!1 &6459951814770460290
 GameObject:
   m_ObjectHideFlags: 0

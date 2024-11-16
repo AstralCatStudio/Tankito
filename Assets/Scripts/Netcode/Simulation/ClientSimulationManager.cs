@@ -22,6 +22,8 @@ namespace Tankito.Netcode.Simulation
         [SerializeField] private TankDelta m_tankSimulationTolerance;
         [SerializeField] private BulletDelta m_bulletSimulationTolerance;
 
+        [SerializeField] private bool DEBUG = false;
+
         private SimulationSnapshot AuthSnapshot //Por como funciona el rollback, igual esto no hace falta y unicamente podemos necesitar 
                                                 //que se guarde el timestamp
         {
@@ -88,7 +90,9 @@ namespace Tankito.Netcode.Simulation
                 m_snapshotBuffer.Add(newAuthSnapshot, newAuthSnapshot.timestamp);
                 return;
             }
-            Debug.Log(m_snapshotBuffer.Get(newAuthSnapshot.timestamp));
+            
+            if (DEBUG) Debug.Log("Evaluating Desync for: "+ m_snapshotBuffer.Get(newAuthSnapshot.timestamp));
+
             SimulationSnapshot predictedSnapshot = m_snapshotBuffer.Where(s => s.timestamp == newAuthSnapshot.timestamp 
                 && s.status == SnapshotStatus.Predicted).FirstOrDefault();
             if (!predictedSnapshot.Equals(default(SimulationSnapshot)))
@@ -144,7 +148,7 @@ namespace Tankito.Netcode.Simulation
                 if (obj is  TankSimulationObject tank)
                 {
                     var lastReplayTick = tank.StopInputReplay();
-                    Debug.Log($"{tank}'s last replayed input was on Tick- {lastReplayTick}");
+                    if (DEBUG) Debug.Log($"{tank}'s last replayed input was on Tick- {lastReplayTick}");
                 }
             }
 
@@ -220,7 +224,7 @@ namespace Tankito.Netcode.Simulation
 
             var deltas = SimExtensions.Delta(pastSnapshot, lastSnapshot);
             
-            Debug.Log("DeltaSnapshot: " + deltas.Select(d => d.ToString()));
+            if (DEBUG) Debug.Log("DeltaSnapshot: " + deltas.Select(d => d.ToString()));
 
             string desyncs = "Desyncs: ";
             foreach(var obj in pastSnapshot.Keys)
