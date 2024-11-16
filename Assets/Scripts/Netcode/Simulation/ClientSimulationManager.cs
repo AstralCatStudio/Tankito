@@ -19,9 +19,19 @@ namespace Tankito.Netcode.Simulation
         /// Relates NetworkClientId(ulong) to a specific <see cref="RemoteTankInput"/>.  
         /// </summary>
         public Dictionary<ulong, EmulatedTankInput> emulatedInputTanks = new Dictionary<ulong,EmulatedTankInput>();
+
         [SerializeField] private TankDelta m_tankSimulationTolerance;
         [SerializeField] private BulletDelta m_bulletSimulationTolerance;
 
+        [SerializeField] private Vector2 posDiffTankDeltaReal = new Vector2(0.1f, 0.1f);
+        [SerializeField] private float hullRotDiffTankDeltaReal = 0.1f;
+        [SerializeField] private Vector2 velDiffTankDeltaReal = new Vector2(0.1f, 0.1f);
+        [SerializeField] private float turrRotDiffTankDeltaReal = 0.1f;
+        [SerializeField] private int actionDiffTankDeltaReal = 100000;
+
+        [SerializeField] private Vector2 posDiffBulletDeltaReal = new Vector2(0.1f, 0.1f);
+        [SerializeField] private float rotDiffBulletDeltaReal = 0.1f;
+        [SerializeField] private Vector2 velDiffBulletDeltaReal = new Vector2(0.1f, 0.1f);
         private SimulationSnapshot AuthSnapshot //Por como funciona el rollback, igual esto no hace falta y unicamente podemos necesitar 
                                                       //que se guarde el timestamp
         {
@@ -38,8 +48,11 @@ namespace Tankito.Netcode.Simulation
                 Debug.LogWarning("ClientSimulationManager is network node that is NOT a CLIENT (is server). this should not happen!");
                 Destroy(this);
             }
-            m_tankSimulationTolerance = new TankDelta(new Vector2(0.1f,0.1f), 0.1f, new Vector2(0.1f,0.1f), 0.1f, 100000);
-            m_bulletSimulationTolerance = new BulletDelta(new Vector2(0.1f,0.1f), 0.1f, new Vector2(0.1f,0.1f));
+#if UNITY_EDITOR
+#else
+            m_tankSimulationTolerance = new TankDelta(posDiffTankDelta, hullRotDiffTankDelta, velDiffTankDelta, turrRotDiffTankDelta, actionDiffTankDelta);
+            m_bulletSimulationTolerance = new BulletDelta(posDiffBulletDelta, rotDiffBulletDelta, velDiffBulletDelta);
+#endif
         }
 
         public override void Simulate()

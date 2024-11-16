@@ -8,8 +8,16 @@ namespace Tankito.Netcode.Simulation
     {
         
     }
-
-    [Serializable]
+#if UNITY_EDITOR
+    [System.Serializable]
+    public struct TankDelta : IStateDelta
+    {
+        public Vector2 posDiff;
+        public float hullRotDiff;
+        public Vector2 velDiff;
+        public float turrRotDiff;
+        public int actionDiff;
+#else
     public readonly struct TankDelta : IStateDelta
     {
         public readonly Vector2 posDiff;
@@ -17,6 +25,8 @@ namespace Tankito.Netcode.Simulation
         public readonly Vector2 velDiff;
         public readonly float turrRotDiff;
         public readonly int actionDiff;
+#endif
+
 
         public TankDelta(Vector2 posDiff, float hullRotDiff, Vector2 velDiff, float turrRotDiff, int actionDiff)
         {
@@ -42,13 +52,20 @@ namespace Tankito.Netcode.Simulation
         }
     }
 
+#if UNITY_EDITOR
     [Serializable]
+    public  struct BulletDelta : IStateDelta
+    {
+        public  Vector2 posDiff;
+        public  float rotDiff;
+        public  Vector2 velDiff;
+#else
     public readonly struct BulletDelta : IStateDelta
     {
         public readonly Vector2 posDiff;
         public readonly float rotDiff;
         public readonly Vector2 velDiff;
-
+#endif
         public BulletDelta(Vector2 posDiff, float rotDiff, Vector2 velDiff)
         {
             this.posDiff = posDiff;
