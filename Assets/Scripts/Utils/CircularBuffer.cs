@@ -84,11 +84,11 @@ namespace Tankito.Utils
         /// <param name="idx"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public T Get(int idx, bool wrapAroundIndex = false)
+        public T Get(int idx)
         {
             T res;
 
-            if (!TryGet(out res, idx, wrapAroundIndex))
+            if (!TryGet(out res, idx))
             {
                 throw new ArgumentOutOfRangeException("Index is out of the bounds of the buffer.");
             }
@@ -96,7 +96,7 @@ namespace Tankito.Utils
             return res;
         }
 
-        public bool TryGet(out T value, int idx, bool wrapAroundIndex = false)
+        public bool TryGet(out T value, int idx, bool wrapAroundIndex = true)
         {
             int i = (wrapAroundIndex) ? Math.Mod(idx, size) : idx;
 

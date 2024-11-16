@@ -93,7 +93,7 @@ namespace Tankito
             else
             { 
                 // Input Replay Mode
-                var replayedInput = m_inputBuffer.Get(m_inputReplayTick, true);
+                var replayedInput = m_inputBuffer.Get(m_inputReplayTick);
                 m_inputReplayTick++;
                 return replayedInput;
             }

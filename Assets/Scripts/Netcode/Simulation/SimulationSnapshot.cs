@@ -96,10 +96,10 @@ namespace Tankito.Netcode.Simulation
 
             foreach(var pair in objectStates)
             {
-                str += $" ({pair.Key})-{pair.Value} |";
+                str += $" ({pair.Key}) |";
             }
 
-            return ToString();
+            return str;
         }
     }
 }

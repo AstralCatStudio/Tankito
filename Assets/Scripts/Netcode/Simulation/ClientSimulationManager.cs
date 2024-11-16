@@ -63,9 +63,10 @@ namespace Tankito.Netcode.Simulation
                 base.Simulate();
                 
             }
-                // Cache Simulation State
-                SimulationSnapshot newSnapshot = CaptureSnapshot();
-                m_snapshotBuffer.Add(newSnapshot, newSnapshot.timestamp);
+            // Cache Simulation State
+            SimulationSnapshot newSnapshot = CaptureSnapshot();
+            newSnapshot.status = SnapshotStatus.Predicted;
+            m_snapshotBuffer.Add(newSnapshot, newSnapshot.timestamp);
         }
 
         public void EvaluateForReconciliation(SimulationSnapshot newAuthSnapshot)
@@ -87,7 +88,7 @@ namespace Tankito.Netcode.Simulation
                 m_snapshotBuffer.Add(newAuthSnapshot, newAuthSnapshot.timestamp);
                 return;
             }
-
+            Debug.Log(m_snapshotBuffer.Get(newAuthSnapshot.timestamp));
             SimulationSnapshot predictedSnapshot = m_snapshotBuffer.Where(s => s.timestamp == newAuthSnapshot.timestamp 
                 && s.status == SnapshotStatus.Predicted).FirstOrDefault();
             if (!predictedSnapshot.Equals(default(SimulationSnapshot)))
@@ -264,7 +265,7 @@ namespace Tankito.Netcode.Simulation
         [ContextMenu("TestRollback")]
         public void TestRollback()
         {
-            SimulationSnapshot testSnapShot = m_snapshotBuffer.Get(SimClock.TickCounter - 50, true);
+            SimulationSnapshot testSnapShot = m_snapshotBuffer.Get(SimClock.TickCounter - 50);
             testSnapShot.timestamp -= 50;
             EvaluateForReconciliation(testSnapShot);
         }
