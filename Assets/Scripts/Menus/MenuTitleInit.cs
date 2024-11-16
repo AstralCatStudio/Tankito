@@ -22,6 +22,10 @@ public class MenuTitleInit : MonoBehaviour
         LeanTween.alpha(ltRect, 0f, outDuration).setEase(LeanTweenType.easeOutSine).setDelay(inDuration);
 
         Invoke("EnableDelayed", inDuration + outDuration);
+
+
+        MusicManager.Instance.SetSong("MENU");
+        MusicManager.Instance.SetPhase(0);
     }
 
     private void EnableDelayed()

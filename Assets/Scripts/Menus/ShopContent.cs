@@ -36,5 +36,7 @@ public class ShopContent : MonoBehaviour
         GameObject contentInstance = Instantiate(contentPrefab, contentParent.transform);
         contentInstance.GetComponent<ShopCharacterButton>().character = character;
         shopContent.Add(contentInstance);
+
+        contentInstance.GetComponent<Button>().onClick.AddListener(() => MusicManager.Instance.PlaySound("aceptar"));
     }
 }

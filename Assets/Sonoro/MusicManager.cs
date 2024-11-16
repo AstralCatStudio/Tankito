@@ -10,6 +10,9 @@ public class MusicManager : Singleton<MusicManager>
     [SerializeField] private AudioClip[] menuClips;
     [SerializeField] private AudioClip[] pveClips;
 
+    [Range(0, 1)] public float volMusic = 1.0f; // Volumen de la música
+    [Range(0, 1)] public float volSounds = 1.0f; // Volumen de los sonidos
+
     private readonly Dictionary<string, AudioClip[]> songs = new();
     private AudioSource audioSourceA;
     private AudioSource audioSourceB;
@@ -27,11 +30,15 @@ public class MusicManager : Singleton<MusicManager>
     private float queuedStartTime = 0f;
 
     private readonly List<AudioSource> soundPool = new();
-    private readonly Dictionary<AudioSource, float> activeSounds = new();
     private const int PoolSize = 10;
 
-    private void Awake()
+    private float lastVolMusic = -1f;
+    private float lastVolSounds = -1f;
+
+    protected override void Awake()
     {
+        base.Awake();
+
         DontDestroyOnLoad(gameObject);
 
         audioSourceA = CreateAudioSource(true);
@@ -47,61 +54,30 @@ public class MusicManager : Singleton<MusicManager>
         InitializeSoundPool();
     }
 
-
-
-
-    private AudioSource CreateAudioSource(bool loop)
+    private void OnValidate()
     {
-        var source = gameObject.AddComponent<AudioSource>();
-        source.loop = loop;
-        return source;
+        volMusic = Mathf.Clamp01(volMusic);
+        volSounds = Mathf.Clamp01(volSounds);
+        UpdateMusicVolume();
+        UpdateSoundVolume();
     }
-
-
-
-
-    private void InitializeSoundPool()
-    {
-        for (int i = 0; i < PoolSize; i++)
-        {
-            var source = CreateAudioSource(false);
-            source.playOnAwake = false;
-            source.enabled = false;
-            soundPool.Add(source);
-        }
-    }
-
-
-
-
-    private AudioSource GetAvailableAudioSource()
-    {
-        foreach (var source in soundPool)
-        {
-            if (!source.isPlaying)
-            {
-                source.enabled = true;
-                return source;
-            }
-        }
-
-        var newSource = CreateAudioSource(false);
-        newSource.playOnAwake = false;
-        soundPool.Add(newSource);
-        return newSource;
-    }
-
-
-
-
 
     private void Update()
     {
-        float currentTime = Time.time;
+        // Detectar cambios en los volúmenes
+        if (!Mathf.Approximately(volMusic, lastVolMusic))
+        {
+            lastVolMusic = volMusic;
+            UpdateMusicVolume();
+        }
 
-        // Eliminar y desactivar fuentes activas que hayan terminado
-        activeSounds.RemoveAll(entry => currentTime >= entry.Value, source => source.StopAndDisable());
+        if (!Mathf.Approximately(volSounds, lastVolSounds))
+        {
+            lastVolSounds = volSounds;
+            UpdateSoundVolume();
+        }
 
+        // Transiciones de música
         if (isTransitioning || isSongTransitioning)
         {
             fadeTimer += Time.deltaTime;
@@ -110,8 +86,8 @@ public class MusicManager : Singleton<MusicManager>
             AudioSource activeSource = isPlayingA ? audioSourceA : audioSourceB;
             AudioSource newSource = isPlayingA ? audioSourceB : audioSourceA;
 
-            activeSource.volume = Mathf.Lerp(1, 0, fadeProgress);
-            newSource.volume = Mathf.Lerp(0, 1, fadeProgress);
+            activeSource.volume = Mathf.Lerp(volMusic, 0, fadeProgress);
+            newSource.volume = Mathf.Lerp(0, volMusic, fadeProgress);
 
             if (fadeProgress >= 1f)
             {
@@ -121,9 +97,60 @@ public class MusicManager : Singleton<MusicManager>
         }
     }
 
+    private void UpdateMusicVolume()
+    {
+        if (audioSourceA != null) audioSourceA.volume = volMusic;
+        if (audioSourceB != null) audioSourceB.volume = volMusic;
+        Debug.Log($"Volumen de música actualizado: {volMusic}");
+    }
 
+    private void UpdateSoundVolume()
+    {
+        foreach (var source in soundPool)
+        {
+            if (!source.isPlaying) continue; // Solo actualizar fuentes activas
+            source.volume = volSounds;
+        }
+        Debug.Log($"Volumen de sonidos actualizado: {volSounds}");
+    }
 
+    private AudioSource CreateAudioSource(bool loop)
+    {
+        var source = gameObject.AddComponent<AudioSource>();
+        source.loop = loop;
+        source.volume = volMusic; // Configurar el volumen inicial
+        return source;
+    }
 
+    private void InitializeSoundPool()
+    {
+        for (int i = 0; i < PoolSize; i++)
+        {
+            var source = CreateAudioSource(false);
+            source.playOnAwake = false;
+            source.volume = volSounds;
+            source.enabled = false;
+            soundPool.Add(source);
+        }
+    }
+
+    private AudioSource GetAvailableAudioSource()
+    {
+        foreach (var source in soundPool)
+        {
+            if (!source.isPlaying)
+            {
+                source.enabled = true;
+                source.volume = volSounds;
+                return source;
+            }
+        }
+
+        var newSource = CreateAudioSource(false);
+        newSource.playOnAwake = false;
+        soundPool.Add(newSource);
+        return newSource;
+    }
 
     private void EndTransition()
     {
@@ -144,9 +171,6 @@ public class MusicManager : Singleton<MusicManager>
         }
     }
 
-
-
-
     public void SetPhase(int phase)
     {
         if (isTransitioning || isSongTransitioning || currentClips == null || phase == currentPhase) return;
@@ -157,10 +181,6 @@ public class MusicManager : Singleton<MusicManager>
             StartTransition(phase, currentTime);
         }
     }
-
-
-
-
 
     public void SetSong(string songID)
     {
@@ -182,10 +202,6 @@ public class MusicManager : Singleton<MusicManager>
         StartSongTransition(0);
     }
 
-
-
-
-
     private void PreloadClips(AudioClip[] clips)
     {
         foreach (var clip in clips)
@@ -196,10 +212,6 @@ public class MusicManager : Singleton<MusicManager>
             }
         }
     }
-
-
-
-
 
     private void StartSongTransition(float startTime)
     {
@@ -214,16 +226,12 @@ public class MusicManager : Singleton<MusicManager>
         newSource.clip = currentClips[0];
         startTime = Mathf.Clamp(startTime, 0, newSource.clip.length);
         newSource.time = startTime;
-        newSource.volume = 0f;
+        newSource.volume = volMusic;
         newSource.Play();
 
         isSongTransitioning = true;
         fadeTimer = 0f;
     }
-
-
-
-
 
     private void StartTransition(int newPhase, float startTime)
     {
@@ -238,17 +246,13 @@ public class MusicManager : Singleton<MusicManager>
         newSource.clip = currentClips[newPhase];
         startTime = Mathf.Min(startTime, newSource.clip.length - 0.1f);
         newSource.time = startTime;
-        newSource.volume = 0f;
+        newSource.volume = volMusic;
         newSource.Play();
 
         isTransitioning = true;
         fadeTimer = 0f;
         currentPhase = newPhase;
     }
-
-
-
-
 
     public void PlaySound(string soundName)
     {
@@ -261,23 +265,15 @@ public class MusicManager : Singleton<MusicManager>
         }
 
         AudioSource audioSource = GetAvailableAudioSource();
+        audioSource.pitch = 1.0f;
         audioSource.clip = clip;
+        audioSource.volume = volSounds;
         audioSource.Play();
-        activeSounds[audioSource] = Time.time + clip.length;
     }
-
-
-
 
     public void PlaySoundPitch(string soundName)
     {
-        AudioClip clip = Resources.Load<AudioClip>($"Sonidos/{soundName}");
-
-        AudioSource audioSource = GetAvailableAudioSource();
-        audioSource.clip = clip;
-        audioSource.pitch = Random.Range(0.9f, 1.1f);
-        audioSource.Play();
-        activeSounds[audioSource] = Time.time + clip.length / Mathf.Abs(audioSource.pitch);
+        PlaySoundPitch(soundName, 0.1f);
     }
 
     public void PlaySoundPitch(string soundName, float pitchVariation)
@@ -299,47 +295,7 @@ public class MusicManager : Singleton<MusicManager>
         float maxPitch = 1f + pitchVariation;
 
         audioSource.pitch = Random.Range(minPitch, maxPitch);
+        audioSource.volume = volSounds;
         audioSource.Play();
-
-        activeSounds[audioSource] = Time.time + clip.length / Mathf.Abs(audioSource.pitch);
-    }
-
-
-
-
-
-}
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-public static class AudioSourceExtensions
-{
-    public static void StopAndDisable(this AudioSource source)
-    {
-        source.Stop();
-        source.enabled = false;
-    }
-}
-
-
-
-
-
-public static class DictionaryExtensions
-{
-    public static void RemoveAll<TKey, TValue>(this Dictionary<TKey, TValue> dict, System.Predicate<KeyValuePair<TKey, TValue>> match, System.Action<TKey> action)
-    {
-        foreach (var item in new List<KeyValuePair<TKey, TValue>>(dict))
-        {
-            if (match(item))
-            {
-                action(item.Key);
-                dict.Remove(item.Key);
-            }
-        }
     }
 }

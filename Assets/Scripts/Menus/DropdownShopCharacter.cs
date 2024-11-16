@@ -41,12 +41,15 @@ public class DropdownShopCharacter : MonoBehaviour
         int price = character.data.price;
         if (character.unlocked)
         {
+            MusicManager.Instance.PlaySound("cancelar");
             ShowMessage("You already own this item.");
         } else if (ClientData.Instance.money < price)
         {
+            MusicManager.Instance.PlaySound("cancelar");
             ShowMessage("You can't afford this item. Buy some vBucks");
         } else
         {
+            MusicManager.Instance.PlaySound("snd_desbloquearpersonaje");
             ClientData.Instance.UnlockCharacter(character);
             ClientData.Instance.ChangeMoney(-price);
             ChangeButtonToOwned();

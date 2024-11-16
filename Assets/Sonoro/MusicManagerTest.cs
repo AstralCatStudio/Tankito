@@ -16,7 +16,7 @@ public class MusicManagerTest : MonoBehaviour
         }
 
         Debug.Log("Asignando la canción PLAYA");
-        MusicManager.Instance.SetSong("PLAYA");
+        MusicManager.Instance.SetSong("PVE");
 
         /*
         MusicManager.Instance.SetPhase(0);
