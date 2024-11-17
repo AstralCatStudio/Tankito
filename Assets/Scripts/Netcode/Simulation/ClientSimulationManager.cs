@@ -100,6 +100,7 @@ namespace Tankito.Netcode.Simulation
             {
                 SimClock.Instance.SetClock(newAuthSnapshot.timestamp);
                 SetSimulation(newAuthSnapshot);
+                Debug.Log("AUTHTIMESTAMP: " + newAuthSnapshot.timestamp + " - LOCALTICK: " + SimClock.TickCounter);
                 m_snapshotBuffer.Add(newAuthSnapshot, newAuthSnapshot.timestamp);
                 return;
             }

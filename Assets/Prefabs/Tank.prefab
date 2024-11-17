@@ -334,7 +334,6 @@ GameObject:
   - component: {fileID: 8520293575514935909}
   - component: {fileID: 8824432701014434289}
   - component: {fileID: 233019374531165043}
-  - component: {fileID: 166466840981824635}
   - component: {fileID: 1979050206698400908}
   - component: {fileID: 258216026692416356}
   - component: {fileID: 5903910165241873950}
@@ -489,7 +488,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_tankRB: {fileID: 8520293575514935909}
-  m_speed: 2.2
+  m_speed: 5
   m_rotationSpeed: 270
   m_turretRB: {fileID: 8342253699622009969}
   m_aimSpeed: 720
@@ -772,6 +771,7 @@ MonoBehaviour:
     rotationSpeed: 0
     bouncesTotal: 1
     lifetimeTotal: 10
+    spawnTickTime: 0
   m_baseBulletProperties:
     scaleMultiplier: {x: 0, y: 0}
     startingPosition: {x: 0, y: 0}
@@ -781,5 +781,8 @@ MonoBehaviour:
     rotationSpeed: 0
     bouncesTotal: 0
     lifetimeTotal: 10
+    spawnTickTime: 0
   interval: 0.2
   modifiers: []
+  BulletDirection: []
+  baseBulletAmount: 0

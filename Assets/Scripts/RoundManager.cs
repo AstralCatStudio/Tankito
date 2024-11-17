@@ -5,6 +5,7 @@ using Unity.Netcode;
 using UnityEngine.UI;
 using TMPro;
 using System.Linq;
+using Tankito.Netcode.Messaging;
 
 public class RoundManager : NetworkBehaviour
 {
@@ -220,6 +221,10 @@ public class RoundManager : NetworkBehaviour
         Debug.Log("Inicio ronda " + _currentRound);
         UpdateRemainingPlayersTextClientRpc(_alivePlayers.Count);
         StartCountdown();
+
+        ClockSignal signal = new ClockSignal();
+        signal.header = ClockSignalHeader.Start;
+        MessageHandlers.Instance.SendClockSignal(signal);
     }
 
     public bool IsGameStarted()
