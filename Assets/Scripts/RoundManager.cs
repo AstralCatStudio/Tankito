@@ -2,8 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
-using UnityEngine.UI;
-using TMPro;
 using System.Linq;
 
 public class RoundManager : NetworkBehaviour
@@ -16,16 +14,13 @@ public class RoundManager : NetworkBehaviour
     public RoundUI _roundUI;
 
     public float _countdownTime = 5f;
-    public TMP_Text _countdownText;
     private float _currentTime;
-    private bool _isCountingDown = false;
 
     private Dictionary<ulong, GameObject> _players = new Dictionary<ulong, GameObject>();
     private Dictionary<ulong, GameObject> _alivePlayers = new Dictionary<ulong, GameObject>();
 
     public bool _startedGame;
     private bool _startedRound;
-
 
     private SpawnManager _spawnManager;
     public GameObject _playerInput;
@@ -49,8 +44,6 @@ public class RoundManager : NetworkBehaviour
         }
 
         _roundUI = FindObjectOfType<RoundUI>();
-
-        _countdownText = GameObject.Find("Countdown").GetComponentInChildren<TMP_Text>();
     }
 
     void Update()
@@ -63,25 +56,6 @@ public class RoundManager : NetworkBehaviour
             }
 
         }
-
-        if (_isCountingDown)
-        {
-            _currentTime -= Time.deltaTime;
-
-            if (_countdownText != null)
-            {
-                string newText = Mathf.Ceil(_currentTime).ToString();
-                SetCountdownTextClientRpc(newText);
-            }
-
-            if (_currentTime <= 0f)
-            {
-                _currentTime = 0f;
-                EndCountdown();
-            }
-
-        }
-
     }
 
     #region PlayerManagement
@@ -94,21 +68,24 @@ public class RoundManager : NetworkBehaviour
             Debug.Log($"Jugador anadido. N� de jugadores: {_players.Count}");
         }
     }
-    
+
     public void RemovePlayer(ulong clientId)
     {
         if (_players.ContainsKey(clientId))
         {
             _players.Remove(clientId);
-            if(_startedGame && _alivePlayers.ContainsKey(clientId))
+            if (_startedGame && _alivePlayers.ContainsKey(clientId))
             {
                 _alivePlayers.Remove(clientId);
             }
 
             Debug.Log($"Jugador desconectado y eliminado. N� de jugadores: {_players.Count}");
 
-            UpdateRemainingPlayersTextClientRpc(_alivePlayers.Count);
-            CheckForWinner();
+            if (_startedRound)
+            {
+                UpdateRemainingPlayersTextClientRpc(_alivePlayers.Count);
+                CheckForWinner();
+            }
         }
     }
 
@@ -170,24 +147,6 @@ public class RoundManager : NetworkBehaviour
             }
         }
     }
-
-    /*
-    [ClientRpc]
-    private void SetObjectPositionClientRpc(NetworkObjectReference targetObjectReference, Vector3 newPosition)
-    {
-        if (targetObjectReference.TryGet(out var targetObject))
-        {
-            if (targetObject != null)
-            {
-                targetObject.gameObject.GetComponent<Transform>().position = newPosition;
-                Debug.Log($"GameObject del jugador {targetObject.GetComponent<NetworkObject>().OwnerClientId} colocado en el punto {newPosition.ToString()}");
-            }
-            else
-            {
-                Debug.LogWarning($"No se encontr� el PlayerObject para el cliente con ID {targetObject.GetComponent<NetworkObject>().OwnerClientId}");
-            }
-        }
-    }*/
 
     [ClientRpc]
     private void EnableTankClientRpc(NetworkObjectReference targetObjectReference)
@@ -268,21 +227,37 @@ public class RoundManager : NetworkBehaviour
 
     private void StartCountdown()
     {
+        _startedGame = true;
         _currentTime = _countdownTime;
-        _isCountingDown = true;
+        StartCountdownClientRpc();
+        CancelInvoke(nameof(UpdateCountdown));
+        InvokeRepeating(nameof(UpdateCountdown), 0f, 1f);
 
         if (DEBUG) Debug.Log("Cuenta atras iniciada");
 
         DisablePlayerInputClientRpc();
     }
 
+    private void UpdateCountdown()
+    {
+        if (_currentTime > 0)
+        {
+            SetCountdownTextClientRpc(_currentTime.ToString());
+            _currentTime--;
+        }
+        else
+        {
+            CancelInvoke(nameof(UpdateCountdown));
+            EndCountdown();
+        }
+    }
+
     private void EndCountdown()
     {
-        _isCountingDown = false;
-
         if (DEBUG) Debug.Log("Fin de cuenta atras");
-        _countdownText.text = "BATTLE!";
+
         SetCountdownTextClientRpc("BATTLE!");
+        Invoke(nameof(EndCountdownClientRpc), 0.7f);
 
         _startedRound = true;
 
@@ -294,12 +269,19 @@ public class RoundManager : NetworkBehaviour
     [ClientRpc]
     private void SetCountdownTextClientRpc(string text)
     {
-        _startedGame = true;
+        _roundUI.SetCountdownText(text);
+    }
 
-        if (_countdownText != null)
-        {
-            _countdownText.text = text;
-        }
+    [ClientRpc]
+    private void StartCountdownClientRpc()
+    {
+        _roundUI.SetActiveCountownText(true);
+    }
+
+    [ClientRpc]
+    private void EndCountdownClientRpc()
+    {
+        _roundUI.SetActiveCountownText(false);
     }
 
     #endregion
@@ -378,6 +360,7 @@ public class RoundManager : NetworkBehaviour
     private void EndRound()
     {
         if (DEBUG) Debug.Log("NETLESS: Fin de ronda");
+        _startedRound = false;
         EndRoundClientRpc();
         DisablePlayerInputClientRpc();
         SetActiveRemainingPlayersClientRpc(false);
@@ -424,7 +407,7 @@ public class RoundManager : NetworkBehaviour
     private void ShowFinalRanking()
     {
         if (DEBUG) Debug.Log("NETLESS: Se muestra el ranking final");
-        _roundUI.SetActiveRankingFinal(true);
+        //_roundUI.SetActiveRankingFinal(true);
         ShowFinalRankingClientRpc();
     }
 
@@ -454,6 +437,7 @@ public class RoundManager : NetworkBehaviour
     private void EndGame()
     {
         if (DEBUG) Debug.Log("NETLESS: Fin de la partida");
+        _startedGame = false;
         EndGameClientRpc();
     }
 
