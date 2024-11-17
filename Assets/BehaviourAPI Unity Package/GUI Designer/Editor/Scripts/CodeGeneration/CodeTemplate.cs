@@ -217,7 +217,7 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor.CodeGenerator
                     if (methodArg != null)
                     {
                         var startStatement = new CodeAssignationStatement();
-                        startStatement.LeftExpression = new CodeMethodReferenceExpression(identifier, "onStarted");
+                        startStatement.LeftExpression = new CodeMethodReferenceExpression(identifier, "action");
                         startStatement.RightExpression = methodArg;
                         statements.Add(startStatement);
                     }
