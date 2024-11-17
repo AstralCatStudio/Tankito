@@ -86,7 +86,7 @@ namespace Tankito
         {
             if (!SceneManager.GetSceneByName("Lobby").IsValid()) throw new InvalidOperationException("You shouldn't be loading the game scene without having loaded the Lobby!");
 
-            SceneManager.LoadScene("Loading");
+            SceneManager.LoadScene("Loading", LoadSceneMode.Additive);
 
             if (DEBUG) Debug.Log("Loading Game...");
 

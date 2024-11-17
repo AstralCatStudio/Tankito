@@ -40,7 +40,9 @@ public class DisconnectHandler : NetworkBehaviour
         NetworkManager.Singleton.Shutdown();
         GameManager.Instance.UnloadScene();
 
-        SceneManager.LoadScene("MainMenu");
+        SceneManager.UnloadSceneAsync("GameInitTest");
+        MenuController.Instance.SetActiveBackgrounds(true);
+        MenuController.Instance.SetActiveInteractions(true);
     }
 
     [ClientRpc]

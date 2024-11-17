@@ -133,6 +133,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2514773}
   - component: {fileID: 2514774}
+  - component: {fileID: 2514775}
   m_Layer: 5
   m_Name: Settings
   m_TagString: Untagged
@@ -183,6 +184,18 @@ MonoBehaviour:
   enableTime: 0.5
   disableTime: 1
   delay: 0.1
+--- !u!225 &2514775
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2514772}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &14269766
 GameObject:
   m_ObjectHideFlags: 0
@@ -3244,6 +3257,7 @@ GameObject:
   m_Component:
   - component: {fileID: 488270787}
   - component: {fileID: 488270788}
+  - component: {fileID: 488270789}
   m_Layer: 5
   m_Name: InitialScreenLogIn
   m_TagString: Untagged
@@ -3291,6 +3305,18 @@ MonoBehaviour:
   enableTime: 0.5
   disableTime: 1
   delay: 0.2
+--- !u!225 &488270789
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 488270786}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &490272717
 GameObject:
   m_ObjectHideFlags: 0
@@ -3301,6 +3327,7 @@ GameObject:
   m_Component:
   - component: {fileID: 490272718}
   - component: {fileID: 490272719}
+  - component: {fileID: 490272720}
   m_Layer: 5
   m_Name: Lobby
   m_TagString: Untagged
@@ -3346,6 +3373,18 @@ MonoBehaviour:
   enableTime: 0.5
   disableTime: 1
   delay: 0.1
+--- !u!225 &490272720
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 490272717}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &508687517
 GameObject:
   m_ObjectHideFlags: 0
@@ -4664,6 +4703,7 @@ GameObject:
   m_Component:
   - component: {fileID: 659229023}
   - component: {fileID: 659229024}
+  - component: {fileID: 659229025}
   m_Layer: 5
   m_Name: MainMenu
   m_TagString: Untagged
@@ -4712,6 +4752,18 @@ MonoBehaviour:
   enableTime: 0.5
   disableTime: 1
   delay: 0.1
+--- !u!225 &659229025
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 659229022}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &668254630
 GameObject:
   m_ObjectHideFlags: 0
@@ -4722,6 +4774,7 @@ GameObject:
   m_Component:
   - component: {fileID: 668254631}
   - component: {fileID: 668254632}
+  - component: {fileID: 668254633}
   m_Layer: 5
   m_Name: Credits
   m_TagString: Untagged
@@ -4773,6 +4826,18 @@ MonoBehaviour:
   enableTime: 0.5
   disableTime: 1
   delay: 0.1
+--- !u!225 &668254633
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 668254630}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &674292882
 GameObject:
   m_ObjectHideFlags: 0
@@ -5080,7 +5145,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 21300000, guid: fb0efa222aa29c44eb5e68553450b640, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -5108,6 +5173,7 @@ GameObject:
   m_Component:
   - component: {fileID: 711418747}
   - component: {fileID: 711418748}
+  - component: {fileID: 711418749}
   m_Layer: 5
   m_Name: Singleplayer
   m_TagString: Untagged
@@ -5153,6 +5219,18 @@ MonoBehaviour:
   enableTime: 0.5
   disableTime: 1
   delay: 0.1
+--- !u!225 &711418749
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 711418746}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &713372928
 GameObject:
   m_ObjectHideFlags: 0
@@ -6416,6 +6494,7 @@ GameObject:
   - component: {fileID: 839094636}
   - component: {fileID: 839094637}
   - component: {fileID: 839094638}
+  - component: {fileID: 839094639}
   m_Layer: 5
   m_Name: CharacterSelection
   m_TagString: Untagged
@@ -6476,6 +6555,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   contentParent: {fileID: 2142665209}
   contentPrefab: {fileID: 8252116669272352229, guid: 246353c9b692aa74aa8b92ebd1094931, type: 3}
+--- !u!225 &839094639
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 839094635}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &844721495
 GameObject:
   m_ObjectHideFlags: 0
@@ -15312,6 +15403,7 @@ GameObject:
   - component: {fileID: 1395563651}
   - component: {fileID: 1395563652}
   - component: {fileID: 1395563653}
+  - component: {fileID: 1395563654}
   m_Layer: 5
   m_Name: Shop
   m_TagString: Untagged
@@ -15373,6 +15465,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   contentParent: {fileID: 92942789}
   contentPrefab: {fileID: 8252116669272352229, guid: df6bcb737e4d03a43bd6ee760d06d2e2, type: 3}
+--- !u!225 &1395563654
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1395563650}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &1399344443
 GameObject:
   m_ObjectHideFlags: 0
@@ -18538,6 +18642,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2028730312}
   - component: {fileID: 2028730313}
+  - component: {fileID: 2028730314}
   m_Layer: 5
   m_Name: PlayMenu
   m_TagString: Untagged
@@ -18587,6 +18692,18 @@ MonoBehaviour:
   enableTime: 0.5
   disableTime: 1
   delay: 0.1
+--- !u!225 &2028730314
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2028730311}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &2031915357
 GameObject:
   m_ObjectHideFlags: 0
@@ -19193,6 +19310,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2106115910}
   - component: {fileID: 2106115911}
+  - component: {fileID: 2106115912}
   m_Layer: 5
   m_Name: LogOut
   m_TagString: Untagged
@@ -19238,6 +19356,18 @@ MonoBehaviour:
   enableTime: 0.5
   disableTime: 1
   delay: 0.1
+--- !u!225 &2106115912
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2106115909}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &2111649097
 GameObject:
   m_ObjectHideFlags: 0

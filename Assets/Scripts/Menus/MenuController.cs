@@ -116,7 +116,18 @@ namespace Tankito
 
         public void UnloadLobby()
         {
-            SceneManager.UnloadScene("Lobby");
+            SceneManager.UnloadSceneAsync("Lobby");
+        }
+
+        public void SetActiveBackgrounds(bool active)
+        {
+            bgMenus[0].transform.parent.gameObject.SetActive(active);
+        }
+
+        public void SetActiveInteractions(bool active)
+        {
+            CanvasGroup canvasGroup = menus[6].GetComponent<CanvasGroup>();
+            canvasGroup.interactable = active;
         }
     }
 }
