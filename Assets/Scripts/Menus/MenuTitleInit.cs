@@ -26,6 +26,10 @@ public class MenuTitleInit : MonoBehaviour
 
         MusicManager.Instance.SetSong("MENU");
         MusicManager.Instance.SetPhase(0);
+
+
+        MusicManager.Instance.PlayBackgroundSound("amb_underwater");
+
     }
 
     private void EnableDelayed()
