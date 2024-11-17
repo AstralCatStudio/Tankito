@@ -45,7 +45,7 @@ namespace Tankito
             // {
             //     m_lastReceivedInput = inputWindow[i - 1];
             // }
-            if (inputWindow.First() < (SimClock.TickCounter - INPUT_CACHE_SIZE) || inputWindow.Last() > SimClock.TickCounter + INPUT_CACHE_SIZE)
+            if ((SimClock.TickCounter > INPUT_CACHE_SIZE && inputWindow.First() < (SimClock.TickCounter - INPUT_CACHE_SIZE)) || inputWindow.Last() > SimClock.TickCounter + INPUT_CACHE_SIZE)
             {
                 if (DEBUG) Debug.Log($"Discarded InputWindow[{inputWindow.First().timestamp}-{inputWindow.Last().timestamp}]");
                 return; // En caso de que el input sea muy viejo no lo guardamos, porque puede machacarnos datos nuevos de prediccion, y viceversa.
@@ -91,7 +91,7 @@ namespace Tankito
                 return m_currentInput;
             }
             else
-            {
+            { 
                 // Input Replay Mode
                 var replayedInput = m_inputBuffer.Get(m_inputReplayTick);
                 m_inputReplayTick++;

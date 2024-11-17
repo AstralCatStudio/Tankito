@@ -88,6 +88,11 @@ namespace Tankito
             m_tickTimer = 0;
         }
 
+        internal void SetClock(int newTick)
+        {
+            m_tickCounter = newTick;
+        }
+
         internal void ThrottleClock(int throttleTicks, int serverTime)
         {
             if (NetworkManager.Singleton.IsServer)
