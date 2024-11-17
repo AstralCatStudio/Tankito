@@ -6,12 +6,10 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class RoundButtons : NetworkBehaviour
+public class ReadyButton : NetworkBehaviour
 {
     [SerializeField] private Button _readyButton;
     [SerializeField] private TMP_Text _readyPlayersText;
-    [SerializeField] private GameObject _notReadyMessage;
-    [SerializeField] private TMP_Text _readyLocalText;
 
     private RoundManager _roundManager;
 
@@ -73,8 +71,6 @@ public class RoundButtons : NetworkBehaviour
         {
             _readyButton.gameObject.SetActive(true);
             _readyButton.onClick.AddListener(OnReadyClicked);
-
-            _readyLocalText.gameObject.SetActive(true);
         }
     }
     public override void OnNetworkSpawn()
@@ -199,7 +195,10 @@ public class RoundButtons : NetworkBehaviour
             {
                 if (status.ClientId == clientId)
                 {
-                    _readyLocalText.text = status.IsReady ? "Ready!" : "Not Ready";
+                    if(_readyButton.GetComponentInChildren<TextMeshProUGUI>().text != null)
+                    {
+                        _readyButton.GetComponentInChildren<TextMeshProUGUI>().text = status.IsReady ? "Ready!" : "Not Ready";
+                    }
                     Debug.Log(status.IsReady ? "Ready!" : "Not Ready");
                     break;
                 }
