@@ -292,7 +292,7 @@ public class RoundManager : NetworkBehaviour
     #endregion
 
     #region PlayerInputManagement
-    private void DisablePlayerInput()
+    public void DisablePlayerInput()
     {
         _playerInput.SetActive(false);
     }

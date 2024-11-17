@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Tankito;
 using TMPro;
 using UnityEngine;
 
@@ -10,6 +11,7 @@ public class RoundUI : MonoBehaviour
     public GameObject PanelRankingFinal;
     public GameObject PanelAlivePlayers;
     public GameObject CountdownText;
+    public GameObject BackButton;
 
     #region Ranking
     public void SetActiveRanking(bool active)
@@ -66,6 +68,22 @@ public class RoundUI : MonoBehaviour
     public void SetCountdownText(string newText)
     {
         CountdownText.GetComponentInChildren<TextMeshProUGUI>().text = newText;
+    }
+
+    #endregion
+
+    #region BackButton
+
+    public void SetActiveBackButton(bool active)
+    {
+        BackButton.SetActive(active);
+    }
+
+    public void Back()
+    {
+        Debug.Log("Pulsaste Back");
+
+        DisconnectHandler.Instance.ExitGame();
     }
 
     #endregion
