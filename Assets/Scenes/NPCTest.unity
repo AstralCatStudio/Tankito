@@ -586,6 +586,7 @@ GameObject:
   - component: {fileID: 740110012}
   - component: {fileID: 740110011}
   - component: {fileID: 740110013}
+  - component: {fileID: 740110014}
   m_Layer: 0
   m_Name: BodyGuard
   m_TagString: Untagged
@@ -767,7 +768,7 @@ MonoBehaviour:
         - 422ee0fc-9622-4019-8d88-6eef23a05261
       - name: Idle-SeguirJugador
         id: c63eda01-f3f6-462f-8b04-2d4c5279e6fc
-        position: {x: 797.6, y: 774.4}
+        position: {x: 793.6, y: 785.60004}
         node:
           rid: 2381865844260470814
         references:
@@ -866,7 +867,7 @@ MonoBehaviour:
         childIds: []
       - name: POP
         id: 271d80cb-ccb5-4b9f-a381-eb773924b437
-        position: {x: 276, y: 1456}
+        position: {x: 294.4, y: 1450.3999}
         node:
           rid: 2381865844260470820
         references:
@@ -1003,6 +1004,27 @@ MonoBehaviour:
       type: {class: StateTransition, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
       data:
         StatusFlags: 0
+--- !u!114 &740110014
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 740110010}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7861a77d7cb5a34b8646b6fb2aceb61, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  jugador: {fileID: 436971098}
+  aliado: {fileID: 867094651}
+  rangoDeteccionJugador: 10
+  rangoDeteccionBala: 5
+  rangoAtaque: 15
+  balasDisponibles: 5
+  velocidadMovimiento: 3
+  velocidadGiro: 5
+  tagBala: Bala
 --- !u!1 &867094649
 GameObject:
   m_ObjectHideFlags: 0
@@ -1447,6 +1469,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8699520707465146519, guid: 98940459a40c94648bd7376af33efb7f, type: 3}
       propertyPath: m_Name
+      value: Bala
+      objectReference: {fileID: 0}
+    - target: {fileID: 8699520707465146519, guid: 98940459a40c94648bd7376af33efb7f, type: 3}
+      propertyPath: m_TagString
       value: Bala
       objectReference: {fileID: 0}
     m_RemovedComponents: []
