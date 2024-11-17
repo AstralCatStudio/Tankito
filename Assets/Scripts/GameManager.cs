@@ -146,6 +146,7 @@ namespace Tankito
             }
 
             m_loadingSceneFlag = true;
+            m_playerInput = null;
         }
 
         public void FindPlayerInput()
