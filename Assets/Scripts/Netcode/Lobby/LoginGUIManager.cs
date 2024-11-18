@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Collections;
 using TMPro;
 using UnityEngine.SceneManagement;
+using Tankito;
 
 namespace Tankito.Netcode
 {
@@ -165,6 +166,11 @@ namespace Tankito.Netcode
             
             SceneLoader.Singleton.LoadGameScene();
             GameManager.Instance.joinCode = m_joinCode;
+
+            MenuController.Instance.UnloadLobby();
+            MenuController.Instance.SetActiveBackgrounds(false);
+            MenuController.Instance.ChangeToMenu(6);
+            MenuController.Instance.SetActiveInteractions(false);
         }
 
         async void StartClient()
@@ -177,6 +183,8 @@ namespace Tankito.Netcode
 
             SceneLoader.Singleton.LoadGameScene();
             GameManager.Instance.joinCode = m_joinCode;
+            MenuController menuController = GameObject.Find("MenuController").GetComponent<MenuController>();
+            menuController.ChangeToMenu(6);
         }
 
         async void StartServer()
@@ -187,6 +195,8 @@ namespace Tankito.Netcode
 
             SceneLoader.Singleton.LoadGameScene();
             GameManager.Instance.joinCode = m_joinCode;
+            MenuController menuController = GameObject.Find("MenuController").GetComponent<MenuController>();
+            menuController.ChangeToMenu(6);
         }
 
         #region Buttons
