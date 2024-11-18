@@ -39,6 +39,7 @@ namespace Tankito
         [SerializeField] private ITankInput m_tankInput;
         [SerializeField] private bool DEBUG = false;
 
+        [SerializeField] private CreateBullet cannon;
         void Start()
         {
             if (m_tankRB == null)
@@ -86,17 +87,39 @@ namespace Tankito
         private void ProcessInput(InputPayload input, float deltaTime)
         {
             if (DEBUG) Debug.Log($"Processing {gameObject} input: {input}");
-            if (input.action != TankAction.Dash) // No puedes hacer esto asi, si vas a tener una variable de can dash la tienes que usar aqui, NO cuando estas RECOGIENDO inputs
+            switch (input.action)
             {
-                MoveTank(input.moveVector, deltaTime);
+                case TankAction.None:
+                    MoveTank(input.moveVector, deltaTime);
+                    break;
+                case TankAction.Dash:
+                    DashTank(input.moveVector, deltaTime);
+                    break;            
+                case TankAction.Parry:
+                    
+                    break;
+                case TankAction.Fire:
+                    FireTank(input.aimVector, deltaTime);
+                    break;
+                default:
+                    MoveTank(input.moveVector, deltaTime);
+                    break;
             }
-            else
-            {
-                DashTank(input.moveVector, deltaTime);
-            }
+            
+            //if (input.action != TankAction.Dash) // No puedes hacer esto asi, si vas a tener una variable de can dash la tienes que usar aqui, NO cuando estas RECOGIENDO inputs
+            //{
+            //    MoveTank(input.moveVector, deltaTime);
+            //}
+            //else
+            //{
+            //    DashTank(input.moveVector, deltaTime);
+            //}
             AimTank(input.aimVector, deltaTime);
         }
-
+        private void FireTank(Vector2 aimVector, float deltaTime)
+        {
+            cannon.Shoot();
+        }
         private void MoveTank(Vector2 movementVector, float deltaTime)
         {
             var targetAngle = Vector2.SignedAngle(m_tankRB.transform.right, movementVector);

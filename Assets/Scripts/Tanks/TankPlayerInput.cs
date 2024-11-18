@@ -3,6 +3,7 @@ using Tankito.Utils;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Windows;
 
 namespace Tankito
 {
@@ -32,6 +33,8 @@ namespace Tankito
         private Rigidbody2D m_turretRB;
         [SerializeField] private bool DEBUG = false;
 
+        private Vector2? mousePosition;
+
         void Awake()
         {
             m_inputCache = new CircularBuffer<InputPayload>(INPUT_CACHE_SIZE);
@@ -54,13 +57,16 @@ namespace Tankito
         /// <returns></returns>
         public InputPayload GetInput()
         {
+            
             InputPayload gotPayload;
             if (m_inputReplayTick == NO_REPLAY)
             {
                 // Live Input Mode
+                Aim();
                 m_currentInput.timestamp = SimClock.TickCounter;
                 m_inputCache.Add(m_currentInput, SimClock.TickCounter);
                 InputWindowBuffer.Instance.AddInputToWindow(m_currentInput);
+                
                 gotPayload = m_currentInput;
             }
             else
@@ -70,7 +76,7 @@ namespace Tankito
                 m_inputReplayTick++;
                 gotPayload = replayedInput;
             }
-
+            
             if (DEBUG)
             {
                 Debug.Log("GetInput:" + m_currentInput);
@@ -126,6 +132,7 @@ namespace Tankito
                 if (DEBUG) Debug.Log("SE RECOGE EL INPUT WHILE DASH");
                 m_tankController.inputWhileDash = ctx.ReadValue<Vector2>(); // Esto no deberia de hacerse asi....
             }
+            
         }
 
         public void OnDash(InputAction.CallbackContext ctx)
@@ -136,7 +143,21 @@ namespace Tankito
                 m_currentInput.action = TankAction.Dash;
             }
         }
-
+        void Aim()
+        {
+            Vector2 lookVector;
+            if (mousePosition != null)
+            {
+                
+                lookVector = (Vector2)mousePosition - (Vector2)Camera.main.WorldToScreenPoint(m_turretRB.position);
+                
+                if (lookVector.sqrMagnitude > 1)
+                {
+                    lookVector.Normalize();
+                }
+                m_currentInput.aimVector = lookVector;
+            }
+        }
         public void OnAim(InputAction.CallbackContext ctx)
         {
             var input = ctx.ReadValue<Vector2>();
@@ -145,19 +166,25 @@ namespace Tankito
             if (ctx.control.path != "/Mouse/position")
             {
                 lookVector = new Vector2(input.x, input.y);
+                mousePosition = null;
+                if (lookVector.sqrMagnitude > 1)
+                {
+                    lookVector.Normalize();
+                }
+                m_currentInput.aimVector = lookVector;
             }
             else
             {
                 // Mouse control fallback/input processing
-                lookVector = input - (Vector2)Camera.main.WorldToScreenPoint(m_turretRB.position);
+                mousePosition = input;
+                Aim();
+                
             }
 
-            if (lookVector.sqrMagnitude > 1)
-            {
-                lookVector.Normalize();
-            }
+            
 
-            m_currentInput.aimVector = lookVector;
+            
+            
         }
 
 

@@ -60,6 +60,7 @@ namespace Tankito
         [ServerRpc]
         void ShootServerRpc(ulong shooterID)
         {
+            Debug.Log("fornite");
             if (timer > interval)
             {
                 Vector2 direction;

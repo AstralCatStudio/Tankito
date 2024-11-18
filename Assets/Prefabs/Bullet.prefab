@@ -130,9 +130,9 @@ MonoBehaviour:
     rotationSpeed: 0
     bouncesTotal: 0
     lifetimeTotal: 2
+    spawnTickTime: 0
   m_shooterID: 0
   m_rb: {fileID: 1230613554501251170}
-  m_explosion: {fileID: 1623344447312403577, guid: 51fbce7026ab63c4a826dc8f24339ab9, type: 3}
 --- !u!50 &1230613554501251170
 Rigidbody2D:
   serializedVersion: 4
@@ -208,5 +208,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_isKinematic: 0
-  m_rigidbody: {fileID: 0}
-  m_bullet: {fileID: 0}
+  m_rigidbody: {fileID: 1230613554501251170}
+  m_bullet: {fileID: 3221416329339783790}
