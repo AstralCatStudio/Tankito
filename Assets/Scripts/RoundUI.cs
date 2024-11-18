@@ -11,7 +11,8 @@ public class RoundUI : MonoBehaviour
     public GameObject PanelRankingFinal;
     public GameObject PanelAlivePlayers;
     public GameObject CountdownText;
-    public GameObject BackButton;
+    public GameObject InitExitButton;
+    public GameObject EndExitButton;
 
     #region Ranking
     public void SetActiveRanking(bool active)
@@ -74,14 +75,19 @@ public class RoundUI : MonoBehaviour
 
     #region BackButton
 
-    public void SetActiveBackButton(bool active)
+    public void SetActiveInitExitButton(bool active)
     {
-        BackButton.SetActive(active);
+        InitExitButton.SetActive(active);
+    }
+    
+    public void SetActiveEndExitButton(bool active)
+    {
+        EndExitButton.SetActive(active);
     }
 
-    public void Back()
+    public void Exit()
     {
-        Debug.Log("Pulsaste Back");
+        Debug.Log("Pulsaste Exit");
 
         DisconnectHandler.Instance.ExitGame();
     }
