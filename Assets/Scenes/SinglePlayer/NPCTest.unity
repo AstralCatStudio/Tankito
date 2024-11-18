@@ -617,6 +617,7 @@ GameObject:
   - component: {fileID: 740110012}
   - component: {fileID: 740110011}
   - component: {fileID: 740110013}
+  - component: {fileID: 740110014}
   m_Layer: 0
   m_Name: BodyGuard
   m_TagString: Untagged
@@ -723,7 +724,7 @@ MonoBehaviour:
         references:
         - fieldName: Action
           value:
-            rid: 2381865844260470922
+            rid: 2381865864147763206
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         parentIds:
@@ -738,7 +739,7 @@ MonoBehaviour:
         references:
         - fieldName: Action
           value:
-            rid: 2381865844260470843
+            rid: -2
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         parentIds:
@@ -750,13 +751,13 @@ MonoBehaviour:
         - ed1555cf-e3ea-452a-8bec-bd5de42b6302
       - name: Apuntar
         id: 19943e36-94f9-4a9c-9ccc-417ca53d074c
-        position: {x: 653.6, y: 1463.2}
+        position: {x: 668.8, y: 1475.2}
         node:
           rid: 2381865844260470810
         references:
         - fieldName: Action
           value:
-            rid: 2381865844260470924
+            rid: -2
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         parentIds:
@@ -773,7 +774,7 @@ MonoBehaviour:
         references:
         - fieldName: Action
           value:
-            rid: 2381865844260470925
+            rid: -2
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         parentIds:
@@ -788,7 +789,7 @@ MonoBehaviour:
         references:
         - fieldName: Action
           value:
-            rid: 2381865844260470923
+            rid: -2
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         parentIds:
@@ -804,7 +805,7 @@ MonoBehaviour:
         references:
         - fieldName: Perception
           value:
-            rid: 2381865864147763202
+            rid: -2
           fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
             Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         - fieldName: Action
@@ -818,7 +819,7 @@ MonoBehaviour:
         - 0c7cac48-8916-451f-a298-51ed29ce3c10
       - name: SeguirJugador-Apuntar
         id: 1690976d-1302-43e9-b290-c4abb9d5a98c
-        position: {x: 669.6, y: 1240.7999}
+        position: {x: 669.6, y: 1212}
         node:
           rid: 2381865844260470816
         references:
@@ -864,7 +865,7 @@ MonoBehaviour:
         references:
         - fieldName: Perception
           value:
-            rid: 2381865844260470938
+            rid: -2
           fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
             Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         - fieldName: Action
@@ -916,7 +917,7 @@ MonoBehaviour:
         childIds: []
       - name: ProtegerAliado-Apuntar
         id: ef7049cb-4898-485e-aaae-9687159d4a99
-        position: {x: 1308, y: 1450.3999}
+        position: {x: 1404.8, y: 1454.3999}
         node:
           rid: 2381865844260470821
         references:
@@ -942,7 +943,7 @@ MonoBehaviour:
         references:
         - fieldName: Perception
           value:
-            rid: 2381865844260470921
+            rid: -2
           fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
             Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         - fieldName: Action
@@ -1034,31 +1035,6 @@ MonoBehaviour:
       type: {class: StateTransition, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
       data:
         StatusFlags: 0
-    - rid: 2381865844260470843
-      type: {class: SeguirJugadorAction, ns: , asm: Assembly-CSharp}
-      data: 
-    - rid: 2381865844260470921
-      type: {class: JugadorDetectado, ns: , asm: Assembly-CSharp}
-      data: 
-    - rid: 2381865844260470922
-      type: {class: Patrullar, ns: , asm: Assembly-CSharp}
-      data:
-        puntosPatrulla:
-        - {fileID: 1363587435}
-        - {fileID: 1366063144}
-        - {fileID: 1095310097}
-        - {fileID: 229794363}
-    - rid: 2381865844260470923
-      type: {class: ProtegerAliado, ns: , asm: Assembly-CSharp}
-      data: 
-    - rid: 2381865844260470924
-      type: {class: Apuntar, ns: , asm: Assembly-CSharp}
-      data: 
-    - rid: 2381865844260470925
-      type: {class: Disparar, ns: , asm: Assembly-CSharp}
-      data:
-        proyectilPrefab: {fileID: 0}
-        puntoDisparo: {fileID: 0}
     - rid: 2381865844260470926
       type: {class: CompoundPerceptionWrapper, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
       data:
@@ -1066,17 +1042,11 @@ MonoBehaviour:
           rid: 2381865844260470927
         subPerceptions:
         - perception:
-            rid: 2381865844260470928
+            rid: -2
         - perception:
-            rid: 2381865844260470929
+            rid: -2
     - rid: 2381865844260470927
       type: {class: AndPerception, ns: BehaviourAPI.Core.Perceptions, asm: BehaviourAPI.Core}
-      data: 
-    - rid: 2381865844260470928
-      type: {class: BalaDetectada, ns: , asm: Assembly-CSharp}
-      data: 
-    - rid: 2381865844260470929
-      type: {class: AliadoEnRango, ns: , asm: Assembly-CSharp}
       data: 
     - rid: 2381865844260470930
       type: {class: CompoundPerceptionWrapper, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
@@ -1085,17 +1055,11 @@ MonoBehaviour:
           rid: 2381865844260470931
         subPerceptions:
         - perception:
-            rid: 2381865844260470932
+            rid: -2
         - perception:
-            rid: 2381865844260470933
+            rid: -2
     - rid: 2381865844260470931
       type: {class: AndPerception, ns: BehaviourAPI.Core.Perceptions, asm: BehaviourAPI.Core}
-      data: 
-    - rid: 2381865844260470932
-      type: {class: JugadorEnRangoDeDisparo, ns: , asm: Assembly-CSharp}
-      data: 
-    - rid: 2381865844260470933
-      type: {class: HayBalas, ns: , asm: Assembly-CSharp}
       data: 
     - rid: 2381865844260470934
       type: {class: CompoundPerceptionWrapper, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
@@ -1104,24 +1068,30 @@ MonoBehaviour:
           rid: 2381865844260470935
         subPerceptions:
         - perception:
-            rid: 2381865844260470936
+            rid: -2
         - perception:
-            rid: 2381865844260470937
+            rid: -2
     - rid: 2381865844260470935
       type: {class: AndPerception, ns: BehaviourAPI.Core.Perceptions, asm: BehaviourAPI.Core}
       data: 
-    - rid: 2381865844260470936
-      type: {class: JugadorEnRangoDeDisparo, ns: , asm: Assembly-CSharp}
-      data: 
-    - rid: 2381865844260470937
-      type: {class: HayBalas, ns: , asm: Assembly-CSharp}
-      data: 
-    - rid: 2381865844260470938
-      type: {class: JugadorApuntado, ns: , asm: Assembly-CSharp}
-      data: 
-    - rid: 2381865864147763202
-      type: {class: JugadorDetectado, ns: , asm: Assembly-CSharp}
-      data: 
+    - rid: 2381865864147763206
+      type: {class: SimpleAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        method:
+          componentName: BodyGuardScript
+          methodName: Patrullar
+--- !u!114 &740110014
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 740110010}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b78df924bf8bee4fa0517da566d913c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &832975257
 GameObject:
   m_ObjectHideFlags: 0
