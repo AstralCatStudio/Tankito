@@ -4,7 +4,6 @@ using System.Linq;
 using Tankito.Netcode.Messaging;
 using Tankito.Utils;
 using Unity.Netcode;
-using UnityEditor.PackageManager.UI;
 using UnityEngine;
 
 namespace Tankito.Netcode.Simulation
