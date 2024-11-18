@@ -9,15 +9,17 @@ using UnityEngine.SceneManagement;
 namespace Tankito
 {
 
-    public enum SceneToLoad{
-        lobby,
-        mainMenu
+    public enum SceneToLoad
+    {
+        mainMenu,
+        lobby
     }
+
     public class SceneLoader : MonoBehaviour
     {
         public static SceneLoader Singleton;
         [SerializeField] private bool DEBUG = false;
-        public SceneToLoad escenaInicial;
+        public SceneToLoad m_startingScene;
         void Awake()
         {
             if (Singleton == null) Singleton = this;
@@ -29,7 +31,7 @@ namespace Tankito
         void Start()
         {
             //LoadMainMenu();
-            loadScene(escenaInicial);
+            loadScene(m_startingScene);
 
 
         }
@@ -38,13 +40,20 @@ namespace Tankito
             switch (scene)
             {
                 case SceneToLoad.lobby:
+                    LoadEmptyCamera();
                     LoadLobby();
-                break;
+                    break;
                 case SceneToLoad.mainMenu:
                     LoadMainMenu();
-                break;
+                    break;
             }
         }
+
+        public void LoadEmptyCamera()
+        {
+            SceneManager.LoadScene("EmptyCamera", LoadSceneMode.Additive);
+        }
+
         public void LoadLobby()
         {
             StartCoroutine("LoadLobbyAsync");
@@ -95,7 +104,7 @@ namespace Tankito
 
             if (DEBUG) Debug.Log("Loading Game...");
 
-            if(NetworkManager.Singleton.IsServer)
+            if (NetworkManager.Singleton.IsServer)
             {
                 yield return NetworkManager.Singleton.SceneManager.LoadScene("GameInitTest", LoadSceneMode.Additive);
             }
