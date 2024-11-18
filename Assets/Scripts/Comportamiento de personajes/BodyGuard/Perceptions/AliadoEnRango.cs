@@ -9,7 +9,7 @@ public class AliadoEnRango : UnityPerception
 {
     private Transform aliado; // Referencia al aliado
     private float rangoDeteccion = 10f; // Rango de detección del aliado
-    private string tagAliado = "Aliado"; // Tag para identificar al aliado
+    private string tagAliado = "NPC"; // Tag para identificar al aliado
 
     protected override void OnSetContext()
     {

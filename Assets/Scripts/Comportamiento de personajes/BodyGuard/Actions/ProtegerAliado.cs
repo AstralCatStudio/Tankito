@@ -14,7 +14,7 @@ public class ProtegerAliado : UnityAction
 
     protected override void OnSetContext()
     {
-        GameObject aliadoObj = GameObject.FindWithTag("Aliado");
+        GameObject aliadoObj = GameObject.FindWithTag("NPC");
         if (aliadoObj != null)
         {
             aliado = aliadoObj.transform;

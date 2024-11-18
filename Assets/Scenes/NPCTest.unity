@@ -756,7 +756,7 @@ MonoBehaviour:
         references:
         - fieldName: Action
           value:
-            rid: -2
+            rid: 2381865844260470924
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         parentIds:
@@ -767,13 +767,13 @@ MonoBehaviour:
         - 271d80cb-ccb5-4b9f-a381-eb773924b437
       - name: Disparar
         id: 1a6c1004-988d-45c7-b64e-e6343cead991
-        position: {x: 661.6, y: 1920.7999}
+        position: {x: 677.6, y: 1937.6}
         node:
           rid: 2381865844260470812
         references:
         - fieldName: Action
           value:
-            rid: -2
+            rid: 2381865844260470925
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         parentIds:
@@ -788,7 +788,7 @@ MonoBehaviour:
         references:
         - fieldName: Action
           value:
-            rid: -2
+            rid: 2381865844260470923
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         parentIds:
@@ -818,13 +818,13 @@ MonoBehaviour:
         - 0c7cac48-8916-451f-a298-51ed29ce3c10
       - name: SeguirJugador-Apuntar
         id: 1690976d-1302-43e9-b290-c4abb9d5a98c
-        position: {x: 654.4, y: 1240}
+        position: {x: 669.6, y: 1240.7999}
         node:
           rid: 2381865844260470816
         references:
         - fieldName: Perception
           value:
-            rid: -2
+            rid: 2381865844260470930
           fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
             Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         - fieldName: Action
@@ -844,7 +844,7 @@ MonoBehaviour:
         references:
         - fieldName: Perception
           value:
-            rid: -2
+            rid: 2381865844260470926
           fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
             Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         - fieldName: Action
@@ -864,7 +864,7 @@ MonoBehaviour:
         references:
         - fieldName: Perception
           value:
-            rid: -2
+            rid: 2381865844260470938
           fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
             Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         - fieldName: Action
@@ -922,7 +922,7 @@ MonoBehaviour:
         references:
         - fieldName: Perception
           value:
-            rid: -2
+            rid: 2381865844260470934
           fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
             Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         - fieldName: Action
@@ -1051,6 +1051,77 @@ MonoBehaviour:
         - {fileID: 1366063144}
         - {fileID: 1095310097}
         - {fileID: 229794363}
+    - rid: 2381865844260470923
+      type: {class: ProtegerAliado, ns: , asm: Assembly-CSharp}
+      data: 
+    - rid: 2381865844260470924
+      type: {class: Apuntar, ns: , asm: Assembly-CSharp}
+      data: 
+    - rid: 2381865844260470925
+      type: {class: Disparar, ns: , asm: Assembly-CSharp}
+      data:
+        proyectilPrefab: {fileID: 0}
+        puntoDisparo: {fileID: 0}
+    - rid: 2381865844260470926
+      type: {class: CompoundPerceptionWrapper, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        compoundPerception:
+          rid: 2381865844260470927
+        subPerceptions:
+        - perception:
+            rid: 2381865844260470928
+        - perception:
+            rid: 2381865844260470929
+    - rid: 2381865844260470927
+      type: {class: AndPerception, ns: BehaviourAPI.Core.Perceptions, asm: BehaviourAPI.Core}
+      data: 
+    - rid: 2381865844260470928
+      type: {class: BalaDetectada, ns: , asm: Assembly-CSharp}
+      data: 
+    - rid: 2381865844260470929
+      type: {class: AliadoEnRango, ns: , asm: Assembly-CSharp}
+      data: 
+    - rid: 2381865844260470930
+      type: {class: CompoundPerceptionWrapper, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        compoundPerception:
+          rid: 2381865844260470931
+        subPerceptions:
+        - perception:
+            rid: 2381865844260470932
+        - perception:
+            rid: 2381865844260470933
+    - rid: 2381865844260470931
+      type: {class: AndPerception, ns: BehaviourAPI.Core.Perceptions, asm: BehaviourAPI.Core}
+      data: 
+    - rid: 2381865844260470932
+      type: {class: JugadorEnRangoDeDisparo, ns: , asm: Assembly-CSharp}
+      data: 
+    - rid: 2381865844260470933
+      type: {class: HayBalas, ns: , asm: Assembly-CSharp}
+      data: 
+    - rid: 2381865844260470934
+      type: {class: CompoundPerceptionWrapper, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        compoundPerception:
+          rid: 2381865844260470935
+        subPerceptions:
+        - perception:
+            rid: 2381865844260470936
+        - perception:
+            rid: 2381865844260470937
+    - rid: 2381865844260470935
+      type: {class: AndPerception, ns: BehaviourAPI.Core.Perceptions, asm: BehaviourAPI.Core}
+      data: 
+    - rid: 2381865844260470936
+      type: {class: JugadorEnRangoDeDisparo, ns: , asm: Assembly-CSharp}
+      data: 
+    - rid: 2381865844260470937
+      type: {class: HayBalas, ns: , asm: Assembly-CSharp}
+      data: 
+    - rid: 2381865844260470938
+      type: {class: JugadorApuntado, ns: , asm: Assembly-CSharp}
+      data: 
 --- !u!1 &832975257
 GameObject:
   m_ObjectHideFlags: 0
