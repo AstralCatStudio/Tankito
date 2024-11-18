@@ -798,13 +798,13 @@ MonoBehaviour:
         - 422ee0fc-9622-4019-8d88-6eef23a05261
       - name: Idle-SeguirJugador
         id: c63eda01-f3f6-462f-8b04-2d4c5279e6fc
-        position: {x: 801.6, y: 777.60004}
+        position: {x: 788, y: 776}
         node:
           rid: 2381865844260470814
         references:
         - fieldName: Perception
           value:
-            rid: 2381865844260470919
+            rid: 2381865864147763202
           fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
             Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         - fieldName: Action
@@ -838,7 +838,7 @@ MonoBehaviour:
         - 19943e36-94f9-4a9c-9ccc-417ca53d074c
       - name: SeguirJugador-ProtegerAliado
         id: cb40080d-0a55-4525-9b5c-6654100e946b
-        position: {x: 1052.8, y: 930.4}
+        position: {x: 1068, y: 948}
         node:
           rid: 2381865844260470817
         references:
@@ -1001,7 +1001,7 @@ MonoBehaviour:
     - rid: 2381865844260470814
       type: {class: StateTransition, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
       data:
-        StatusFlags: 1
+        StatusFlags: -1
     - rid: 2381865844260470816
       type: {class: PushTransition, ns: BehaviourAPI.StateMachines.StackFSMs, asm: BehaviourAPI.StateMachines}
       data:
@@ -1036,9 +1036,6 @@ MonoBehaviour:
         StatusFlags: 0
     - rid: 2381865844260470843
       type: {class: SeguirJugadorAction, ns: , asm: Assembly-CSharp}
-      data: 
-    - rid: 2381865844260470919
-      type: {class: JugadorDetectado, ns: , asm: Assembly-CSharp}
       data: 
     - rid: 2381865844260470921
       type: {class: JugadorDetectado, ns: , asm: Assembly-CSharp}
@@ -1121,6 +1118,9 @@ MonoBehaviour:
       data: 
     - rid: 2381865844260470938
       type: {class: JugadorApuntado, ns: , asm: Assembly-CSharp}
+      data: 
+    - rid: 2381865864147763202
+      type: {class: JugadorDetectado, ns: , asm: Assembly-CSharp}
       data: 
 --- !u!1 &832975257
 GameObject:
