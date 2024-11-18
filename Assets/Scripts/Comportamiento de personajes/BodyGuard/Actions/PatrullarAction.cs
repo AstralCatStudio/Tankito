@@ -27,39 +27,40 @@ public class PatrullarAction : UnityAction
             return;
         }
 
-        Debug.Log("PatrullarAction: Iniciando patrullaje.");
-        indiceActual = 0; // Empezamos desde el primer punto
+        //Debug.Log("PatrullarAction: Iniciando patrullaje.");
+        indiceActual = 0;
     }
 
-    // Lógica principal que se ejecuta cada frame mientras la acción está activa
+
+
     public override Status Update()
     {
         if (puntosPatrulla == null || puntosPatrulla.Length == 0)
         {
-            return Status.Failure; // La acción falla si no hay puntos asignados
+            return Status.Failure; // Sin puntos
         }
 
-        // Obtenemos el punto de patrulla actual
+        // Obtener punto de patrulla actual
         Transform puntoActual = puntosPatrulla[indiceActual];
 
-        // Movemos el NPC hacia el punto actual
+        // Moviendo el NPC hacia el punto actual
         context.Transform.position = Vector3.MoveTowards(
             context.Transform.position,
             puntoActual.position,
             velocidad * Time.deltaTime
         );
 
-        // Si alcanzamos el punto actual, pasamos al siguiente
+        // Si se alcanzara el punto actual, pasamos al siguiente
         if (Vector3.Distance(context.Transform.position, puntoActual.position) < 0.5f)
         {
-            Debug.Log($"PatrullarAction: Punto alcanzado {indiceActual + 1}/{puntosPatrulla.Length}.");
-            indiceActual = (indiceActual + 1) % puntosPatrulla.Length; // Pasamos al siguiente punto de forma cíclica
+            //Debug.Log($"PatrullarAction: Punto alcanzado {indiceActual + 1}/{puntosPatrulla.Length}.");
+            indiceActual = (indiceActual + 1) % puntosPatrulla.Length; // Pasamos al siguiente punto 
         }
 
         return Status.Running; // La acción sigue ejecutándose
     }
 
-    // Lógica al detener la acción
+    // detener la acción
     public override void Stop()
     {
         Debug.Log("PatrullarAction: Patrullaje detenido.");

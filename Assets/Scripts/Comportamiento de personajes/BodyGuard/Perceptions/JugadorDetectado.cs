@@ -8,22 +8,17 @@ using BehaviourAPI.UnityToolkit;
 public class JugadorDetectado : UnityPerception
 {
     private Transform jugador; // Referencia al transform del jugador
-    private float rangoDeteccion = 10f; // Rango de detección del jugador
+    private float rangoDeteccion = 4f; // Rango de detección del jugador
 
     protected override void OnSetContext()
     {
-        GameObject jugadorObj = GameObject.FindWithTag("Player");
-        if (jugadorObj != null)
-        {
-            jugador = jugadorObj.transform;
-            Debug.Log("JugadorDetectado: Jugador encontrado correctamente.");
-        }
-        else
+        jugador = GameObject.FindWithTag("Player")?.transform;
+        if (jugador == null)
         {
             Debug.LogWarning("JugadorDetectado: No se encontró un GameObject con el tag 'Player'.");
         }
 
-        rangoDeteccion = 10f; // Ajustar rango según diseño
+        Debug.Log("ONSETCONTEXT");
     }
 
     public override void Initialize()
@@ -35,11 +30,11 @@ public class JugadorDetectado : UnityPerception
     {
         if (jugador == null)
         {
-            Debug.LogWarning("JugadorDetectado: Jugador es null. ¿Está configurado el tag correctamente?");
+            Debug.LogWarning("JugadorDetectado: Jugador no está definido. ¿Está configurado el tag correctamente?");
             return false;
         }
 
-        // Si el juego es top-down, ignora la altura (eje Y)
+        // Cálculo de distancia ignorando el eje Y (para juegos top-down)
         float distancia = Vector3.Distance(
             new Vector3(context.Transform.position.x, 0, context.Transform.position.z),
             new Vector3(jugador.position.x, 0, jugador.position.z)
