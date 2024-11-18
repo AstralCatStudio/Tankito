@@ -1917,7 +1917,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -149.99988, y: -120.00002}
+  m_AnchoredPosition: {x: -149.99988, y: -120.00003}
   m_SizeDelta: {x: 255, y: 214}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &271174021
@@ -19086,6 +19086,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2028730312}
   - component: {fileID: 2028730313}
+  - component: {fileID: 2028730314}
   m_Layer: 5
   m_Name: PlayMenu
   m_TagString: Untagged
@@ -19136,6 +19137,18 @@ MonoBehaviour:
   enableTime: 0.5
   disableTime: 1
   delay: 0.1
+--- !u!225 &2028730314
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2028730311}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &2031915357
 GameObject:
   m_ObjectHideFlags: 0
