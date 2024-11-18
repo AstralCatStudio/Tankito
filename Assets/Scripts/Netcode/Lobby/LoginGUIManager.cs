@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Collections;
 using TMPro;
 using UnityEngine.SceneManagement;
+using Tankito;
 
 namespace Tankito.Netcode
 {
@@ -102,6 +103,7 @@ namespace Tankito.Netcode
 
             GameObject inputField = GameObject.Instantiate(inputFieldPrefab, transform.GetChild(0));
             joinCodeInputField = inputField.GetComponent<TMP_InputField>();
+            joinCodeInputField.text = "Enter Join Code";
         }
 
         void RegionSelection()

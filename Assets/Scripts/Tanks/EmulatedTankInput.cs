@@ -14,7 +14,8 @@ namespace Tankito
     {
         private const int INPUT_CACHE_SIZE = 256;
         private CircularBuffer<InputPayload> m_inputBuffer = new CircularBuffer<InputPayload>(INPUT_CACHE_SIZE);
-        [SerializeField] private float m_attenuationSeconds = 3;
+        [SerializeField] private float AttenuationSeconds { get => m_attenuationTicks*SimClock.SimDeltaTime;
+                                                            set => m_attenuationTicks = (int)(value/SimClock.SimDeltaTime); }
         [SerializeField] private int m_attenuationTicks;
         private InputPayload m_currentInput;
         //private InputPayload m_lastReceivedInput;
@@ -29,7 +30,7 @@ namespace Tankito
 
         void Awake()
         {
-            m_attenuationTicks = (int)(m_attenuationSeconds/SimClock.SimDeltaTime);
+            m_attenuationTicks = (int)(AttenuationSeconds/SimClock.SimDeltaTime);
         }
 
         public void ReceiveInputWindow(InputPayload[] inputWindow)
@@ -45,9 +46,11 @@ namespace Tankito
             // {
             //     m_lastReceivedInput = inputWindow[i - 1];
             // }
-            if ((SimClock.TickCounter > INPUT_CACHE_SIZE && inputWindow.First() < (SimClock.TickCounter - INPUT_CACHE_SIZE)) || inputWindow.Last() > SimClock.TickCounter + INPUT_CACHE_SIZE)
+            if ((SimClock.TickCounter > INPUT_CACHE_SIZE &&
+                inputWindow.First() < (SimClock.TickCounter - INPUT_CACHE_SIZE)) ||
+                inputWindow.Last() > SimClock.TickCounter + INPUT_CACHE_SIZE)
             {
-                if (DEBUG) Debug.Log($"Discarded InputWindow[{inputWindow.First().timestamp}-{inputWindow.Last().timestamp}]");
+                if (DEBUG) Debug.Log($"[{SimClock.TickCounter}]Discarded InputWindow[{inputWindow.First().timestamp}-{inputWindow.Last().timestamp}]");
                 return; // En caso de que el input sea muy viejo no lo guardamos, porque puede machacarnos datos nuevos de prediccion, y viceversa.
             }
 
@@ -55,52 +58,47 @@ namespace Tankito
             {
                 m_inputBuffer[input.timestamp] = input;
             }
+
+            if (DEBUG)
+            {
+                var emulatedInputClientId = ClientSimulationManager.Instance.emulatedInputTanks.First(compIdPair => compIdPair.Value == this).Key;
+                Debug.Log($"[{SimClock.TickCounter}]EmulatedTankInputBuffer({emulatedInputClientId}): [{m_inputBuffer.MinBy(i => i.timestamp).timestamp}-{m_inputBuffer.MaxBy(i => i.timestamp).timestamp}]");
+            }
         }
 
         public InputPayload GetInput()
         {
-            if (m_inputReplayTick == NO_REPLAY)
-            {
-                InputPayload newInput;
-                bool inputInterpolation;
+            InputPayload newInput;
 
-                if(!m_inputBuffer.TryGet(out newInput, SimClock.TickCounter)) /*&& newInput.emultedPayload == false*/ 
+            if(!m_inputBuffer.TryGet(out newInput, SimClock.TickCounter) && newInput.timestamp != SimClock.TickCounter)
+            {
+                m_currentInput = InterpolateInputAt(SimClock.TickCounter);
+            }
+            else
+            {
+                m_currentInput = newInput;
+            }
+
+            if (DEBUG)
+            {
+                if (ClientSimulationManager.Instance.emulatedInputTanks.ContainsValue(this))
                 {
-                    if(newInput.timestamp != SimClock.TickCounter)
-                    {
-                        m_inputBuffer.Get(SimClock.TickCounter).EmulatedPayload();
-                    }
-                    m_currentInput = InterpolateInputAt(SimClock.TickCounter);
-                    inputInterpolation = true;
+                    var emulatedInputClientId = ClientSimulationManager.Instance.emulatedInputTanks.First(compIdPair => compIdPair.Value == this).Key;
+                    //Debug.Log($"[{SimClock.TickCounter}]GetInput(EmulatedClient[{emulatedInputClientId}]){(inputInterpolation ? " INTERPOLATED" : "")}: {m_currentInput}");
                 }
                 else
                 {
-                    m_currentInput = newInput;
-                    inputInterpolation = false;
+                    throw new InvalidOperationException("EmulatedTankInput component is not bound to a clientId!");
                 }
-
-                if (DEBUG)
-                {
-                    if (ClientSimulationManager.Instance.emulatedInputTanks.ContainsValue(this))
-                    {
-                        var emulatedInputClientId = ClientSimulationManager.Instance.emulatedInputTanks.First(compIdPair => compIdPair.Value == this);
-                        Debug.Log($"[{SimClock.TickCounter}]GetInput(EmulatedClient[{emulatedInputClientId}]){(inputInterpolation ? " INTERPOLATED" : "")}: {m_currentInput}");
-                    }
-                    else
-                    {
-                        throw new InvalidOperationException("EmulatedTankInput component is not bound to a clientId!");
-                    }
-                }
-
-                return m_currentInput;
             }
-            else
-            { 
+
+            if (m_inputReplayTick != NO_REPLAY)
+            {
                 // Input Replay Mode
-                var replayedInput = m_inputBuffer.Get(m_inputReplayTick);
                 m_inputReplayTick++;
-                return replayedInput;
             }
+
+            return m_currentInput;
         }
 
         public InputPayload GetCurrentInput()
@@ -111,8 +109,8 @@ namespace Tankito
         private InputPayload InterpolateInputAt(int tick)
         {
             InputPayload interpInput;
-            var pastInputs = m_inputBuffer.Where(x => x.timestamp <= tick && x.emulatedPayload == false).ToList();
-            var futureInputs = m_inputBuffer.Where( x => x.timestamp >= tick && x.emulatedPayload == false).ToList();
+            var pastInputs = m_inputBuffer.Where(x => (x.timestamp <= tick) /*&& (x.timestamp >= tick-m_attenuationTicks)*/).ToList();
+            var futureInputs = m_inputBuffer.Where( x => (x.timestamp <= tick)/* && (x.timestamp >= tick-m_attenuationTicks)*/).ToList();
             InputPayload prevInput = pastInputs.Count > 0 ? pastInputs.MaxBy(x => x.timestamp) : default(InputPayload);
             InputPayload nextInput = futureInputs.Count > 0 ? futureInputs.MinBy(x => x.timestamp) : default(InputPayload);
 
@@ -122,21 +120,21 @@ namespace Tankito
             if(!havePrevInput && haveNextInput)
             {
                 prevInput.timestamp = nextInput.timestamp - m_attenuationTicks;
-                if (DEBUG) Debug.Log("EmulatedInput - Interpolation mode: Backwards extrapolation");
+                if (DEBUG) Debug.Log($"[{SimClock.TickCounter}]EmulatedInput - Interpolation mode: Backwards extrapolation. From {prevInput} to {nextInput}");
             }
             else if (havePrevInput && !haveNextInput)
             {
                 nextInput.timestamp = prevInput.timestamp + m_attenuationTicks;
-                if (DEBUG) Debug.Log("EmulatedInput - Interpolation mode: Forwards extrapolation");
+                if (DEBUG) Debug.Log($"[{SimClock.TickCounter}]EmulatedInput - Interpolation mode: Forwards extrapolation. From {prevInput} to {nextInput}");
             }
             else if (!havePrevInput && !haveNextInput)
             {
-                if (DEBUG) Debug.Log("EmulatedInput - Interpolation mode: NONE (default value)");
+                if (DEBUG) Debug.Log($"[{SimClock.TickCounter}]EmulatedInput - Interpolation mode: NONE (default value): {default}");
                 return default;
             }
             else
             {
-                if (DEBUG) Debug.Log($"EmulatedInput - Interpolation mode: Full interpolation. From {prevInput} to {nextInput}");
+                if (DEBUG) Debug.Log($"[{SimClock.TickCounter}]EmulatedInput - Interpolation mode: Full interpolation. From {prevInput} to {nextInput}");
             }
 
             interpInput = prevInput;

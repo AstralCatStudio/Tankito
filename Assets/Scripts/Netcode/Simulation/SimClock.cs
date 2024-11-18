@@ -65,7 +65,7 @@ namespace Tankito
 
         internal void StartClock()
         {
-            Debug.Log("Se inica el reloj");
+            //Debug.Log("Se inica el reloj");
             m_tickTimer = 0;
             m_active = true;
             AutoPhysics2DUpdate(false);
@@ -73,7 +73,7 @@ namespace Tankito
 
         internal void StopClock()
         {
-            Debug.Log("Se detiene el reloj");
+            //Debug.Log("Se detiene el reloj");
             m_active = false;
         }
 

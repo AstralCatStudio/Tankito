@@ -38,9 +38,8 @@ public class DisconnectHandler : NetworkBehaviour
     private void Disconnect()
     {
         NetworkManager.Singleton.Shutdown();
-        GameManager.Instance.UnloadScene();
 
-        SceneManager.LoadScene("MainMenu");
+        SceneLoader.Singleton.ReloadMainMenu();
     }
 
     [ClientRpc]
