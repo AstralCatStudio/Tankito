@@ -9,12 +9,24 @@ public class ConveyorPlates : MonoBehaviour
 
     private float screenLeftEdge;
     private float screenRightEdge;
+    private float plateWidth; // Ancho del plano
 
     void Start()
     {
-        // Los bordes
+        // Calcula los bordes de la pantalla
         screenLeftEdge = Camera.main.ViewportToWorldPoint(new Vector3(0, 0, 0)).x;
         screenRightEdge = Camera.main.ViewportToWorldPoint(new Vector3(1, 0, 0)).x;
+
+        // Calcula el ancho del plano basado en el tamaño del SpriteRenderer o del objeto
+        var renderer = GetComponent<SpriteRenderer>();
+        if (renderer != null)
+        {
+            plateWidth = renderer.bounds.size.x;
+        }
+        else
+        {
+            plateWidth = transform.localScale.x; // Alternativa para otros tipos de objetos
+        }
     }
 
     void Update()
@@ -24,18 +36,20 @@ public class ConveyorPlates : MonoBehaviour
         {
             transform.Translate(Vector3.right * move);
 
-            if (transform.position.x >= screenRightEdge + offset)
+            // Reposicionar el plano si sale del borde derecho
+            if (transform.position.x >= screenRightEdge + plateWidth / 2)
             {
-                transform.position = new Vector3(screenLeftEdge - offset, transform.position.y, transform.position.z);
+                transform.position = new Vector3(screenLeftEdge - plateWidth / 2, transform.position.y, transform.position.z);
             }
         }
         else if (movementDirection == Direction.Left)
         {
             transform.Translate(Vector3.left * move);
 
-            if (transform.position.x <= screenLeftEdge - offset)
+            // Reposicionar el plano si sale del borde izquierdo
+            if (transform.position.x <= screenLeftEdge - plateWidth / 2)
             {
-                transform.position = new Vector3(screenRightEdge + offset, transform.position.y, transform.position.z);
+                transform.position = new Vector3(screenRightEdge + plateWidth / 2, transform.position.y, transform.position.z);
             }
         }
     }
