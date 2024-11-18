@@ -49,7 +49,10 @@ namespace Tankito
         
         public void ChangeToMenu(int newMenuIndex)
         {
-            menus[currentMenuIndex].GetComponent<MenuAnimations>().DisablingAnimation();
+            if (menus[currentMenuIndex].activeSelf)
+            {
+                menus[currentMenuIndex].GetComponent<MenuAnimations>().DisablingAnimation();
+            }
             menus[newMenuIndex].gameObject.SetActive(true);
             
             MoveBG(newMenuIndex);
