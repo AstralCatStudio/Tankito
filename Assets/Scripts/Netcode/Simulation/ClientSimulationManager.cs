@@ -98,9 +98,9 @@ namespace Tankito.Netcode.Simulation
             // Jump forward in time to sim state
             if (newAuthSnapshot.timestamp >= SimClock.TickCounter)
             {
+                //Debug.Log("AUTHTIMESTAMP: " + newAuthSnapshot.timestamp + " - LOCALTICK: " + SimClock.TickCounter);
                 SimClock.Instance.SetClock(newAuthSnapshot.timestamp);
                 SetSimulation(newAuthSnapshot);
-                Debug.Log("AUTHTIMESTAMP: " + newAuthSnapshot.timestamp + " - LOCALTICK: " + SimClock.TickCounter);
                 m_snapshotBuffer.Add(newAuthSnapshot, newAuthSnapshot.timestamp);
                 return;
             }

@@ -64,8 +64,12 @@ namespace Tankito
                 InputPayload newInput;
                 bool inputInterpolation;
 
-                if(!m_inputBuffer.TryGet(out newInput, SimClock.TickCounter) && newInput.timestamp != SimClock.TickCounter)
+                if(!m_inputBuffer.TryGet(out newInput, SimClock.TickCounter)) /*&& newInput.emultedPayload == false*/ 
                 {
+                    if(newInput.timestamp != SimClock.TickCounter)
+                    {
+                        m_inputBuffer.Get(SimClock.TickCounter).EmulatedPayload();
+                    }
                     m_currentInput = InterpolateInputAt(SimClock.TickCounter);
                     inputInterpolation = true;
                 }
@@ -107,8 +111,8 @@ namespace Tankito
         private InputPayload InterpolateInputAt(int tick)
         {
             InputPayload interpInput;
-            var pastInputs = m_inputBuffer.Where(x => x.timestamp <= tick).ToList();
-            var futureInputs = m_inputBuffer.Where( x => x.timestamp >= tick).ToList();
+            var pastInputs = m_inputBuffer.Where(x => x.timestamp <= tick && x.emulatedPayload == false).ToList();
+            var futureInputs = m_inputBuffer.Where( x => x.timestamp >= tick && x.emulatedPayload == false).ToList();
             InputPayload prevInput = pastInputs.Count > 0 ? pastInputs.MaxBy(x => x.timestamp) : default(InputPayload);
             InputPayload nextInput = futureInputs.Count > 0 ? futureInputs.MinBy(x => x.timestamp) : default(InputPayload);
 
