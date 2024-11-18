@@ -718,7 +718,7 @@ MonoBehaviour:
       nodes:
       - name: Idle
         id: 4be7a406-fa9d-4229-800c-87bf2755254e
-        position: {x: 661.6, y: 545.60004}
+        position: {x: 679.2, y: 560.8}
         node:
           rid: 2381865844260470808
         references:
@@ -819,13 +819,13 @@ MonoBehaviour:
         - 0c7cac48-8916-451f-a298-51ed29ce3c10
       - name: SeguirJugador-Apuntar
         id: 1690976d-1302-43e9-b290-c4abb9d5a98c
-        position: {x: 669.6, y: 1212}
+        position: {x: 693.6, y: 1236.7999}
         node:
           rid: 2381865844260470816
         references:
         - fieldName: Perception
           value:
-            rid: 2381865844260470930
+            rid: -2
           fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
             Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         - fieldName: Action
@@ -845,7 +845,7 @@ MonoBehaviour:
         references:
         - fieldName: Perception
           value:
-            rid: 2381865844260470926
+            rid: -2
           fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
             Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         - fieldName: Action
@@ -923,7 +923,7 @@ MonoBehaviour:
         references:
         - fieldName: Perception
           value:
-            rid: 2381865844260470934
+            rid: -2
           fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
             Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         - fieldName: Action
@@ -1010,7 +1010,7 @@ MonoBehaviour:
     - rid: 2381865844260470817
       type: {class: StateTransition, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
       data:
-        StatusFlags: 0
+        StatusFlags: -1
     - rid: 2381865844260470818
       type: {class: StateTransition, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
       data:
@@ -1035,50 +1035,11 @@ MonoBehaviour:
       type: {class: StateTransition, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
       data:
         StatusFlags: 0
-    - rid: 2381865844260470926
-      type: {class: CompoundPerceptionWrapper, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
-      data:
-        compoundPerception:
-          rid: 2381865844260470927
-        subPerceptions:
-        - perception:
-            rid: -2
-        - perception:
-            rid: -2
-    - rid: 2381865844260470927
-      type: {class: AndPerception, ns: BehaviourAPI.Core.Perceptions, asm: BehaviourAPI.Core}
-      data: 
-    - rid: 2381865844260470930
-      type: {class: CompoundPerceptionWrapper, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
-      data:
-        compoundPerception:
-          rid: 2381865844260470931
-        subPerceptions:
-        - perception:
-            rid: -2
-        - perception:
-            rid: -2
-    - rid: 2381865844260470931
-      type: {class: AndPerception, ns: BehaviourAPI.Core.Perceptions, asm: BehaviourAPI.Core}
-      data: 
-    - rid: 2381865844260470934
-      type: {class: CompoundPerceptionWrapper, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
-      data:
-        compoundPerception:
-          rid: 2381865844260470935
-        subPerceptions:
-        - perception:
-            rid: -2
-        - perception:
-            rid: -2
-    - rid: 2381865844260470935
-      type: {class: AndPerception, ns: BehaviourAPI.Core.Perceptions, asm: BehaviourAPI.Core}
-      data: 
     - rid: 2381865864147763206
       type: {class: SimpleAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
       data:
         method:
-          componentName: BodyGuardScript
+          componentName: BodyGuardBehaviours
           methodName: Patrullar
 --- !u!114 &740110014
 MonoBehaviour:
