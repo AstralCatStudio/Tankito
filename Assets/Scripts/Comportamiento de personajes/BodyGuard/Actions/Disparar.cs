@@ -24,11 +24,12 @@ public class Disparar : UnityAction
 
     public override Status Update()
     {
+        /*
         if (balasDisponibles <= 0)
         {
             Debug.LogWarning("Disparar: No quedan balas.");
             return Status.Failure;
-        }
+        }*/
 
         if (proyectilPrefab == null || puntoDisparo == null)
         {

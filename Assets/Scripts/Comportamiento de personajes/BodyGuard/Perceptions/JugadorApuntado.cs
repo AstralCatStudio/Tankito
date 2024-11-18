@@ -8,7 +8,7 @@ using BehaviourAPI.UnityToolkit;
 public class JugadorApuntado : UnityPerception
 {
     private Transform jugador; // Referencia al jugador
-    private float toleranciaAngulo = 5f; // Margen de error en grados para considerar que el jugador está apuntado
+    private float toleranciaAngulo = 5f;
 
     protected override void OnSetContext()
     {
@@ -37,10 +37,10 @@ public class JugadorApuntado : UnityPerception
             return false;
         }
 
-        // Calcula la dirección hacia el jugador
+        // Calcular la dirección hacia el jugador
         Vector2 direccionHaciaJugador = (jugador.position - context.Transform.position).normalized;
 
-        // Obtiene la dirección actual del NPC
+        // Obtener la dirección actual del NPC
         Vector2 direccionNPC = context.Transform.right; // En 2D, "right" es la dirección hacia donde apunta el objeto
 
         // Calcula el ángulo entre las dos direcciones
