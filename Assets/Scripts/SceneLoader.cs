@@ -11,7 +11,8 @@ namespace Tankito
 
     public enum SceneToLoad{
         lobby,
-        mainMenu
+        mainMenu,
+        single_player
     }
     public class SceneLoader : MonoBehaviour
     {
@@ -30,21 +31,31 @@ namespace Tankito
         {
             //LoadMainMenu();
             loadScene(escenaInicial);
-
-
         }
+
         void loadScene(SceneToLoad scene)
         {
             switch (scene)
             {
                 case SceneToLoad.lobby:
                     LoadLobby();
-                break;
+                    break;
+
                 case SceneToLoad.mainMenu:
                     LoadMainMenu();
-                break;
+                    break;
+
+                case SceneToLoad.single_player:
+                    LoadSinglePlayerLobby();
+                    break;
             }
         }
+
+        private void LoadSinglePlayerLobby()
+        {
+            StartCoroutine("LoadSinglePlayerLobbyAsync");
+        }
+
         public void LoadLobby()
         {
             StartCoroutine("LoadLobbyAsync");
@@ -58,6 +69,28 @@ namespace Tankito
         public void LoadGameScene()
         {
             StartCoroutine("LoadGameSceneAsync");
+        }
+
+        IEnumerator LoadSinglePlayerLobbyAsync()
+        {
+            SceneManager.LoadScene("Loading", LoadSceneMode.Additive);
+
+            if (DEBUG) Debug.Log("Loading SinglePlayer Lobby...");
+            yield return SceneManager.LoadSceneAsync("SinglePlayer_Lobby", LoadSceneMode.Additive);
+            if (DEBUG) Debug.Log("SinglePlayer Lobby Loaded!");
+
+            SceneManager.UnloadSceneAsync("Loading");
+        }
+
+        IEnumerator LoadSinglePlayerGameAsync()
+        {
+            SceneManager.LoadScene("Loading", LoadSceneMode.Additive);
+
+            if (DEBUG) Debug.Log("Loading Lobby...");
+            throw new NotImplementedException("TODO: load single player game scene");
+            if (DEBUG) Debug.Log("Lobby Loaded!");
+
+            SceneManager.UnloadSceneAsync("Loading");
         }
 
         IEnumerator LoadLobbyAsync()
