@@ -7,6 +7,8 @@ namespace Tankito.Netcode.Simulation
     {
         [SerializeField] private Rigidbody2D m_rigidbody;
         [SerializeField] private ABullet m_bullet;
+        public int SpawnTick { get => m_spawnTick; }
+        private int m_spawnTick;
 
         void Start()
         {
@@ -17,19 +19,34 @@ namespace Tankito.Netcode.Simulation
             }
         }
 
+        public override void OnNetworkSpawn()
+        {
+            base.OnNetworkSpawn();
+            m_spawnTick = SimClock.TickCounter;
+        }
         public override ISimulationState GetSimState()
         {
             return new BulletSimulationState(
                 m_rigidbody.position,
                 m_rigidbody.rotation,
                 m_rigidbody.velocity,
-                m_bullet.LifeTime
+                m_bullet.m_lifetime
             );
         }
 
         public override void SetSimState(in ISimulationState state)
         {
-            throw new NotImplementedException();
+            if (state is BulletSimulationState bulletState)
+            {
+                m_rigidbody.position = bulletState.Position;
+                m_rigidbody.rotation = bulletState.Rotation;
+                m_rigidbody.velocity = bulletState.Velocity;
+                m_bullet.m_lifetime = bulletState.LifeTime;
+            }
+            else
+            {
+                throw new ArgumentException("Invalid state type");
+            }
         }
     }
 }

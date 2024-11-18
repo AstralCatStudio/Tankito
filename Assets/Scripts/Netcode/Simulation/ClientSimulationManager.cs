@@ -140,7 +140,10 @@ namespace Tankito.Netcode.Simulation
             foreach(var obj in m_simulationObjects.Values)
             {
                 obj.SetSimState(authSnapshot[obj]);
-                
+                if(obj is BulletSimulationObject bullet)
+                {
+                    
+                }
                 // Put Input Components into replay mode
                 if(obj is TankSimulationObject tank)
                 {

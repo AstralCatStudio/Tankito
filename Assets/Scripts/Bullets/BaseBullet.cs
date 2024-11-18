@@ -20,12 +20,11 @@ namespace Tankito
 
         private void Update()
         {
+            transform.rotation = Quaternion.LookRotation(new Vector3(0, 0, 1), m_rb.velocity.normalized);
+            m_rb.velocity += (m_properties.acceleration != 0f) ? m_properties.acceleration * m_rb.velocity.normalized : Vector2.zero;
+            m_lifetime += Time.deltaTime;
             if (IsServer)
             {
-                transform.rotation = Quaternion.LookRotation(new Vector3(0, 0, 1), m_rb.velocity.normalized);
-                m_rb.velocity += (m_properties.acceleration != 0f) ? m_properties.acceleration * m_rb.velocity.normalized : Vector2.zero;
-                m_lifetime += Time.deltaTime;
-
                 if (m_lifetime >= m_properties.lifetimeTotal)
                 {
                     Debug.Log($"lifetime: {m_lifetime}/{m_properties.lifetimeTotal}");
@@ -37,12 +36,18 @@ namespace Tankito
 
         public void Detonate()
         {
-            OnDetonate.Invoke(this);
+            
             if (IsServer)
             {
+                OnDetonate.Invoke(this);
                 DetonateClientRpc();
                 var networkObject = gameObject.GetComponent<NetworkObject>();
                 networkObject.Despawn();
+            }
+            else
+            {
+                OnDetonate.Invoke(this);
+                gameObject.SetActive(false);
             }
         }
 
@@ -72,14 +77,14 @@ namespace Tankito
                     break;
 
                 case "Player":
-                    if(collision.gameObject.GetComponent<NetworkObject>().OwnerClientId == m_shooterID && m_lifetime > 0.03f)
-                    {
-                        Detonate();
-                    }
-                    else
+                    if(collision.gameObject.GetComponent<NetworkObject>().OwnerClientId == m_shooterID && m_lifetime < 0.03f)
                     {
                         //Debug.Log("Ignoing firing self collision");
                         //Detonate();
+                    }
+                    else
+                    {
+                        Detonate();
                     }
                     break;
 

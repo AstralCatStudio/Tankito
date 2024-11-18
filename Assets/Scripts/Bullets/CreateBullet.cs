@@ -27,7 +27,7 @@ namespace Tankito
             if (IsServer)
             {
                 applyModifierProperties();
-                SynchronizeBulletPropertiesClientRpc(m_bulletProperties);
+                SynchronizeBulletPropertiesClientRpc();
             }
         }
         public void applyModifierProperties()
@@ -60,7 +60,6 @@ namespace Tankito
         [ServerRpc]
         void ShootServerRpc(ulong shooterID)
         {
-            Debug.Log("fornite");
             if (timer > interval)
             {
                 Vector2 direction;
@@ -91,11 +90,16 @@ namespace Tankito
                 newBullet.GetComponent<BaseBullet>()?.Init();
             }
         }
+        [ClientRpc]
+        void ShootClientRpc()
+        {
+
+        }
 
         [ClientRpc]
-        private void SynchronizeBulletPropertiesClientRpc(BulletProperties properties)
+        private void SynchronizeBulletPropertiesClientRpc()
         {
-            m_bulletProperties = properties;
+            applyModifierProperties();
         }
 
         void Update()

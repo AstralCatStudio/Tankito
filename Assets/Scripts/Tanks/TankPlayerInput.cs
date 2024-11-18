@@ -81,6 +81,7 @@ namespace Tankito
             {
                 Debug.Log("GetInput:" + m_currentInput);
             }
+            m_currentInput.action = TankAction.None;
 
             return gotPayload;
         }
@@ -125,7 +126,6 @@ namespace Tankito
                 if (input.sqrMagnitude > 1) input.Normalize();
 
                 m_currentInput.moveVector = input;
-                m_currentInput.action = TankAction.None;
             }
             else
             {

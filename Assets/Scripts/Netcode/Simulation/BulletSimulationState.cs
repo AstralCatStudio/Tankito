@@ -22,6 +22,7 @@ public struct BulletSimulationState : ISimulationState
     private float rotation;
     private Vector2 velocity;
     private float lifeTime; // In seconds
+    //private int spawnTick;
 
     private BulletTolerance tolerances;
 
@@ -33,6 +34,8 @@ public struct BulletSimulationState : ISimulationState
         this.rotation = rotation;
         this.velocity = velocity;
         this.lifeTime = lifeTime;
+        //this.spawnTick = spawnTick;
+
         tolerances = new BulletTolerance(0, 0, 0);
     }
 
@@ -42,6 +45,7 @@ public struct BulletSimulationState : ISimulationState
         this.rotation = rotation;
         this.velocity = velocity;
         this.lifeTime = lifeTime;
+        //this.spawnTick = spawnTick;
         this.tolerances = tolerances;
     }
 

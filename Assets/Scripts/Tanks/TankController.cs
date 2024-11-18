@@ -96,10 +96,12 @@ namespace Tankito
                     DashTank(input.moveVector, deltaTime);
                     break;            
                 case TankAction.Parry:
-                    
+
+                    MoveTank(input.moveVector, deltaTime);
                     break;
                 case TankAction.Fire:
                     FireTank(input.aimVector, deltaTime);
+                    MoveTank(input.moveVector, deltaTime);
                     break;
                 default:
                     MoveTank(input.moveVector, deltaTime);
