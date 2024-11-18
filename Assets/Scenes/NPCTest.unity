@@ -685,7 +685,7 @@ Transform:
   m_GameObject: {fileID: 740110010}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.23, y: -0.17, z: 0}
+  m_LocalPosition: {x: -7.72, y: -4.56, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -723,7 +723,7 @@ MonoBehaviour:
         references:
         - fieldName: Action
           value:
-            rid: 2381865844260470840
+            rid: 2381865844260470922
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         parentIds:
@@ -1001,7 +1001,7 @@ MonoBehaviour:
     - rid: 2381865844260470814
       type: {class: StateTransition, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
       data:
-        StatusFlags: -1
+        StatusFlags: 1
     - rid: 2381865844260470816
       type: {class: PushTransition, ns: BehaviourAPI.StateMachines.StackFSMs, asm: BehaviourAPI.StateMachines}
       data:
@@ -1034,14 +1034,6 @@ MonoBehaviour:
       type: {class: StateTransition, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
       data:
         StatusFlags: 0
-    - rid: 2381865844260470840
-      type: {class: PatrullarAction, ns: , asm: Assembly-CSharp}
-      data:
-        puntosPatrulla:
-        - {fileID: 1363587435}
-        - {fileID: 1366063144}
-        - {fileID: 1095310097}
-        - {fileID: 229794363}
     - rid: 2381865844260470843
       type: {class: SeguirJugadorAction, ns: , asm: Assembly-CSharp}
       data: 
@@ -1051,6 +1043,14 @@ MonoBehaviour:
     - rid: 2381865844260470921
       type: {class: JugadorDetectado, ns: , asm: Assembly-CSharp}
       data: 
+    - rid: 2381865844260470922
+      type: {class: Patrullar, ns: , asm: Assembly-CSharp}
+      data:
+        puntosPatrulla:
+        - {fileID: 1363587435}
+        - {fileID: 1366063144}
+        - {fileID: 1095310097}
+        - {fileID: 229794363}
 --- !u!1 &832975257
 GameObject:
   m_ObjectHideFlags: 0

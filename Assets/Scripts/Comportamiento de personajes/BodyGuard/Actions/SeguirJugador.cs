@@ -9,6 +9,7 @@ public class SeguirJugadorAction : UnityAction
 {
     private Transform jugador; // Referencia al jugador
     private float velocidad = 3f; // Velocidad de movimiento
+    private float distanciaMinima = 2f; // Distancia mínima que el NPC debe mantener
 
     protected override void OnSetContext()
     {
@@ -42,6 +43,16 @@ public class SeguirJugadorAction : UnityAction
         {
             Debug.LogWarning("SeguirJugadorAction: Jugador no está definido. Terminando acción.");
             return Status.Failure;
+        }
+
+        // Calcula la distancia al jugador
+        float distancia = Vector2.Distance(context.Transform.position, jugador.position);
+
+        // Si está dentro de la distancia mínima, no moverse
+        if (distancia <= distanciaMinima)
+        {
+            Debug.Log($"SeguirJugadorAction: Distancia mínima alcanzada ({distancia} <= {distanciaMinima}). Deteniéndose.");
+            return Status.Running; // Mantener el estado sin moverse
         }
 
         // Mueve hacia el jugador

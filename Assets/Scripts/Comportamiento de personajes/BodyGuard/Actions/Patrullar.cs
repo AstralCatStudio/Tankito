@@ -3,7 +3,7 @@ using BehaviourAPI.Core;
 using BehaviourAPI.UnityToolkit;
 
 [SelectionGroup("BodyGuardActions")]
-public class PatrullarAction : UnityAction
+public class Patrullar : UnityAction
 {
     public Transform[] puntosPatrulla; // Array de puntos de patrulla asignados en el editor
     private int indiceActual = 0;      // Índice del punto de patrullaje actual
