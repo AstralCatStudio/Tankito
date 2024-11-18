@@ -1005,7 +1005,7 @@ MonoBehaviour:
     - rid: 2381865844260470816
       type: {class: PushTransition, ns: BehaviourAPI.StateMachines.StackFSMs, asm: BehaviourAPI.StateMachines}
       data:
-        StatusFlags: 0
+        StatusFlags: 1
     - rid: 2381865844260470817
       type: {class: StateTransition, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
       data:
@@ -1029,7 +1029,7 @@ MonoBehaviour:
     - rid: 2381865844260470831
       type: {class: StateTransition, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
       data:
-        StatusFlags: 0
+        StatusFlags: 6
     - rid: 2381865844260470832
       type: {class: StateTransition, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
       data:
@@ -1169,7 +1169,7 @@ GameObject:
   - component: {fileID: 867094650}
   m_Layer: 7
   m_Name: Aliado
-  m_TagString: Untagged
+  m_TagString: NPC
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
