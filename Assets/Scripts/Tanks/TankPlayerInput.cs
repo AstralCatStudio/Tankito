@@ -130,11 +130,7 @@ namespace Tankito
 
         public void OnDash(InputAction.CallbackContext ctx)
         {
-            if (m_tankController.canDash) // Esto esta mal, se deberia recoger el dash siempre y controlar los efectos que tiene en la logica del controlador
-                        //  Mas que nada porque es que si no no es servidor autoritativo y se pueden hacer trampas.
-            {
-                m_currentInput.action = TankAction.Dash;
-            }
+            m_currentInput.action = TankAction.Dash; 
         }
 
         public void OnAim(InputAction.CallbackContext ctx)

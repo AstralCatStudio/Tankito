@@ -45,7 +45,7 @@ namespace Tankito
             // {
             //     m_lastReceivedInput = inputWindow[i - 1];
             // }
-            if (inputWindow.First() < (SimClock.TickCounter - INPUT_CACHE_SIZE) || inputWindow.Last() > SimClock.TickCounter + INPUT_CACHE_SIZE)
+            if ((SimClock.TickCounter > INPUT_CACHE_SIZE && inputWindow.First() < (SimClock.TickCounter - INPUT_CACHE_SIZE)) || inputWindow.Last() > SimClock.TickCounter + INPUT_CACHE_SIZE)
             {
                 if (DEBUG) Debug.Log($"Discarded InputWindow[{inputWindow.First().timestamp}-{inputWindow.Last().timestamp}]");
                 return; // En caso de que el input sea muy viejo no lo guardamos, porque puede machacarnos datos nuevos de prediccion, y viceversa.
@@ -64,8 +64,12 @@ namespace Tankito
                 InputPayload newInput;
                 bool inputInterpolation;
 
-                if(!m_inputBuffer.TryGet(out newInput, SimClock.TickCounter) && newInput.timestamp != SimClock.TickCounter)
+                if(!m_inputBuffer.TryGet(out newInput, SimClock.TickCounter)) /*&& newInput.emultedPayload == false*/ 
                 {
+                    if(newInput.timestamp != SimClock.TickCounter)
+                    {
+                        m_inputBuffer.Get(SimClock.TickCounter).EmulatedPayload();
+                    }
                     m_currentInput = InterpolateInputAt(SimClock.TickCounter);
                     inputInterpolation = true;
                 }
@@ -91,7 +95,7 @@ namespace Tankito
                 return m_currentInput;
             }
             else
-            {
+            { 
                 // Input Replay Mode
                 var replayedInput = m_inputBuffer.Get(m_inputReplayTick);
                 m_inputReplayTick++;
@@ -107,8 +111,8 @@ namespace Tankito
         private InputPayload InterpolateInputAt(int tick)
         {
             InputPayload interpInput;
-            var pastInputs = m_inputBuffer.Where(x => x.timestamp <= tick).ToList();
-            var futureInputs = m_inputBuffer.Where( x => x.timestamp >= tick).ToList();
+            var pastInputs = m_inputBuffer.Where(x => x.timestamp <= tick && x.emulatedPayload == false).ToList();
+            var futureInputs = m_inputBuffer.Where( x => x.timestamp >= tick && x.emulatedPayload == false).ToList();
             InputPayload prevInput = pastInputs.Count > 0 ? pastInputs.MaxBy(x => x.timestamp) : default(InputPayload);
             InputPayload nextInput = futureInputs.Count > 0 ? futureInputs.MinBy(x => x.timestamp) : default(InputPayload);
 

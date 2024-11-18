@@ -11,7 +11,7 @@ namespace Tankito
 {
     public class SimClock : Singleton<SimClock>
     {
-        const int TICKS_PER_SECOND = 30;
+        const int TICKS_PER_SECOND = 60;
         const float SIM_DELTA_TIME = 1f/TICKS_PER_SECOND;
 
         float m_tickTimer;
@@ -86,6 +86,11 @@ namespace Tankito
         {
             m_tickCounter = 0;
             m_tickTimer = 0;
+        }
+
+        internal void SetClock(int newTick)
+        {
+            m_tickCounter = newTick;
         }
 
         internal void ThrottleClock(int throttleTicks, int serverTime)

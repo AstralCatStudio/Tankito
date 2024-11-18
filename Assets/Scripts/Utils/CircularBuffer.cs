@@ -29,6 +29,7 @@ namespace Tankito.Utils
         private T[] buffer;
         private int size;
         private int count;
+        private int? lastIdx = null;
         
         public CircularBuffer(int capacity)
         {
@@ -36,6 +37,8 @@ namespace Tankito.Utils
             size = capacity;
             count = 0;
         }
+
+        public T Last => lastIdx==null ? default(T) : buffer[(int)lastIdx];
 
         /// <summary>
         /// Gets the number of items in the circular buffer.
@@ -46,6 +49,12 @@ namespace Tankito.Utils
         /// Gets the capacity of the circular buffer.
         /// </summary>
         public int Capacity => size;
+
+        public bool Full()
+        {
+            if(Count == Capacity) return true;
+            else return false;
+        }
 
         /// <summary>
         /// Adds an item to the circular buffer at a specific index (clamped to buffer size).
@@ -61,9 +70,12 @@ namespace Tankito.Utils
             {
                 throw new ArgumentOutOfRangeException("Index is out of the bounds of the buffer.");
             }
-
+            if (buffer[idx].Equals(default(T)) && count < size)
+            {
+                count++;
+            }
             buffer[idx] = item;
-            count = Math.Min(count + 1, size); // Increment count up to the buffer size
+            lastIdx = idx;
         }
 
         /// <summary>
@@ -72,11 +84,11 @@ namespace Tankito.Utils
         /// <param name="idx"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public T Get(int idx, bool wrapAroundIndex = false)
+        public T Get(int idx)
         {
             T res;
 
-            if (!TryGet(out res, idx, wrapAroundIndex))
+            if (!TryGet(out res, idx))
             {
                 throw new ArgumentOutOfRangeException("Index is out of the bounds of the buffer.");
             }
@@ -84,7 +96,7 @@ namespace Tankito.Utils
             return res;
         }
 
-        public bool TryGet(out T value, int idx, bool wrapAroundIndex = false)
+        public bool TryGet(out T value, int idx, bool wrapAroundIndex = true)
         {
             int i = (wrapAroundIndex) ? Math.Mod(idx, size) : idx;
 
@@ -111,6 +123,7 @@ namespace Tankito.Utils
         {
             Array.Clear(buffer, 0, size);
             count = 0;
+            lastIdx = null;
         }
 
         /// <summary>

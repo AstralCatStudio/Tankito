@@ -59,6 +59,7 @@ namespace Tankito.Netcode
         private void Awake()
         {
             GetComponent<Canvas>().worldCamera = Camera.main;
+            m_joinCode = "Enter room code...";
         }
         void Start()
         {
