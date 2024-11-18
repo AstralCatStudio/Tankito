@@ -20,19 +20,10 @@ namespace Tankito.Netcode.Simulation
         /// </summary>
         public Dictionary<ulong, EmulatedTankInput> emulatedInputTanks = new Dictionary<ulong,EmulatedTankInput>();
 
-        [SerializeField] private TankDelta m_tankSimulationTolerance;
-        [SerializeField] private BulletDelta m_bulletSimulationTolerance;
+        [SerializeField] private TankDelta m_tankSimulationTolerance;// = new TankDelta(new Vector2(0.1f,0.1f), 1f, new Vector2(0.1f,0.1f), 1f, 0);
+        [SerializeField] private BulletDelta m_bulletSimulationTolerance;// = new BulletDelta(new Vector2(0.1f,0.1f), 1f, new Vector2(0.1f,0.1f));
 
-        [SerializeField] private Vector2 posDiffTankDeltaReal = new Vector2(0.1f, 0.1f);
-        [SerializeField] private float hullRotDiffTankDeltaReal = 0.1f;
-        [SerializeField] private Vector2 velDiffTankDeltaReal = new Vector2(0.1f, 0.1f);
-        [SerializeField] private float turrRotDiffTankDeltaReal = 0.1f;
-        [SerializeField] private int actionDiffTankDeltaReal = 100000;
-
-        [SerializeField] private Vector2 posDiffBulletDeltaReal = new Vector2(0.1f, 0.1f);
-        [SerializeField] private float rotDiffBulletDeltaReal = 0.1f;
-        [SerializeField] private Vector2 velDiffBulletDeltaReal = new Vector2(0.1f, 0.1f);
-        [SerializeField] private bool DEBUG = false;
+        [SerializeField] private bool DEBUG;// = true;
 
         private SimulationSnapshot AuthSnapshot //Por como funciona el rollback, igual esto no hace falta y unicamente podemos necesitar 
                                                 //que se guarde el timestamp
@@ -51,11 +42,9 @@ namespace Tankito.Netcode.Simulation
                 Debug.LogWarning("ClientSimulationManager is network node that is NOT a CLIENT (is server). this should not happen!");
                 Destroy(this);
             }
-#if UNITY_EDITOR
-#else
-            m_tankSimulationTolerance = new TankDelta(posDiffTankDelta, hullRotDiffTankDelta, velDiffTankDelta, turrRotDiffTankDelta, actionDiffTankDelta);
-            m_bulletSimulationTolerance = new BulletDelta(posDiffBulletDelta, rotDiffBulletDelta, velDiffBulletDelta);
-#endif
+            m_tankSimulationTolerance = new TankDelta(new Vector2(0.1f,0.1f), 1f, new Vector2(0.1f,0.1f), 1f, 0);
+            m_bulletSimulationTolerance = new BulletDelta(new Vector2(0.1f,0.1f), 1f, new Vector2(0.1f,0.1f));
+            DEBUG = true;
         }
 
         public override void Simulate()
@@ -105,7 +94,7 @@ namespace Tankito.Netcode.Simulation
                 return;
             }
             
-            if (DEBUG) Debug.Log("Evaluating Desync for: "+ m_snapshotBuffer.Get(newAuthSnapshot.timestamp));
+            //if (DEBUG) Debug.Log("Evaluating Desync for: "+ m_snapshotBuffer.Get(newAuthSnapshot.timestamp));
 
             SimulationSnapshot predictedSnapshot = m_snapshotBuffer.Where(s => s.timestamp == newAuthSnapshot.timestamp 
                 && s.status == SnapshotStatus.Predicted).FirstOrDefault();
@@ -130,16 +119,21 @@ namespace Tankito.Netcode.Simulation
 
         public void Rollback(SimulationSnapshot authSnapshot)
         {
+            if (DEBUG) Debug.Log($"[{SimClock.TickCounter}]Rolling back to [{authSnapshot.timestamp}]");
+
             int rollbackCounter = authSnapshot.timestamp;
             
             //Pause Simulation Clock
             SimClock.Instance.StopClock();
 
-            Debug.Log("ROLLING BACK");
 
             foreach(var obj in m_simulationObjects.Values)
             {
                 obj.SetSimState(authSnapshot[obj]);
+
+                // We DON'T have to re-simulate the tick which we are getting as auth,
+                // because it's already simulated. So just advance the counter
+                rollbackCounter++;
                 
                 // Put Input Components into replay mode
                 if(obj is TankSimulationObject tank)
@@ -149,7 +143,8 @@ namespace Tankito.Netcode.Simulation
                 // Habra que hacer algo para restaurar objetos que puedieran haber deespawneado y todo eso supongo
             }
             
-            while(rollbackCounter < SimClock.TickCounter)
+            // REDACTED -- UNSURE IF TRUE --> To avoid simulating the last tick twice, it will eventually be simulated when ever the clock ticks
+            while(rollbackCounter < SimClock.TickCounter)//-1)
             {
                 // - Input Replay - DONE => Implicitly consumes inputs from input caches when pulling InputPayloads on Kinematic Functions
                 Simulate();
@@ -162,7 +157,7 @@ namespace Tankito.Netcode.Simulation
                 if (obj is  TankSimulationObject tank)
                 {
                     var lastReplayTick = tank.StopInputReplay();
-                    if (DEBUG) Debug.Log($"{tank}'s last replayed input was on Tick- {lastReplayTick}");
+                    if (DEBUG) Debug.Log($"Tank({tank.NetworkObjectId})'s last replayed input was on Tick- {lastReplayTick}");
                 }
             }
 

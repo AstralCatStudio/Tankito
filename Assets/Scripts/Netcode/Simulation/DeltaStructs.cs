@@ -8,6 +8,7 @@ namespace Tankito.Netcode.Simulation
     {
         
     }
+
 #if UNITY_EDITOR
     [System.Serializable]
     public struct TankDelta : IStateDelta
@@ -54,7 +55,7 @@ namespace Tankito.Netcode.Simulation
 
 #if UNITY_EDITOR
     [Serializable]
-    public  struct BulletDelta : IStateDelta
+    public struct BulletDelta : IStateDelta
     {
         public  Vector2 posDiff;
         public  float rotDiff;

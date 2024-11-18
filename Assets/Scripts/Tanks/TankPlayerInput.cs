@@ -11,7 +11,23 @@ namespace Tankito
     {
         InputPayload GetInput();
         InputPayload GetCurrentInput();
+
+        /// <summary>
+        /// Makes the <see cref="TankPlayerInput.GetInput()" /> method return cached input, starting from the given timestamp.
+        /// </summary>
+        /// <param name="timestamp">The timestamp from which to start replaying the input.</param>
+        /// <remarks>
+        /// This method sets the <see cref="m_inputReplayTick" /> to <see cref="timestamp"/>, indicating that the input replay mode is active.
+        /// When <see cref="TankPlayerInput.GetInput()" /> is called during replay mode, it returns the cached input at the current replay tick.
+        /// The replay tick is incremented with each call to <see cref="TankPlayerInput.GetInput()" /> until it reaches the end of the cached inputs,
+        /// at which point <see cref="StopInputReplay()"/> should be called.
+        /// </remarks>
         void StartInputReplay(int timestamp);
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns> Last replayed input tick.</returns>
         int StopInputReplay();
 
     }
@@ -20,7 +36,7 @@ namespace Tankito
     {
         private const int INPUT_CACHE_SIZE = 256;
         private CircularBuffer<InputPayload> m_inputCache = new CircularBuffer<InputPayload>(INPUT_CACHE_SIZE);
-        private int m_inputReplayTick = NO_REPLAY;
+        [SerializeField] private int m_inputReplayTick = NO_REPLAY;
         private const int NO_REPLAY = -1;
 
         private InputPayload m_currentInput;
@@ -84,25 +100,11 @@ namespace Tankito
             return m_currentInput;
         }
 
-        /// <summary>
-        /// Makes the <see cref="TankPlayerInput.GetInput()" /> method return cached input, starting from the given timestamp.
-        /// </summary>
-        /// <param name="timestamp">The timestamp from which to start replaying the input.</param>
-        /// <remarks>
-        /// This method sets the <see cref="m_inputReplayTick" /> to <see cref="timestamp"/>, indicating that the input replay mode is active.
-        /// When <see cref="TankPlayerInput.GetInput()" /> is called during replay mode, it returns the cached input at the current replay tick.
-        /// The replay tick is incremented with each call to <see cref="TankPlayerInput.GetInput()" /> until it reaches the end of the cached inputs,
-        /// at which point <see cref="StopInputReplay()"/> should be called.
-        /// </remarks>
         public void StartInputReplay(int timestamp)
         {
             m_inputReplayTick = timestamp;
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns> Last replayed input tick.</returns>
+        
         public int StopInputReplay()
         {
             var lastReplayTick = m_inputReplayTick;

@@ -332,8 +332,8 @@ GameObject:
   - component: {fileID: 6924379706836283280}
   - component: {fileID: 8019476000441952616}
   - component: {fileID: 8520293575514935909}
+  - component: {fileID: 9128941343371918506}
   - component: {fileID: 8824432701014434289}
-  - component: {fileID: 233019374531165043}
   - component: {fileID: 1979050206698400908}
   - component: {fileID: 258216026692416356}
   - component: {fileID: 5903910165241873950}
@@ -406,27 +406,10 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 0
-  m_CollisionDetection: 1
+  m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &8824432701014434289
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5904161972637957731}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bdb1e6acf157e54419aec1f3788466b9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  health:
-    m_InternalValue: 2
-  isAlive:
-    m_InternalValue: 1
-  points: 0
---- !u!70 &233019374531165043
-CapsuleCollider2D:
+--- !u!58 &9128941343371918506
+CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -457,9 +440,26 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.18, y: 0}
-  m_Size: {x: 1.3403772, y: 1.0000124}
-  m_Direction: 1
+  m_Offset: {x: -0.2, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.7
+--- !u!114 &8824432701014434289
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5904161972637957731}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bdb1e6acf157e54419aec1f3788466b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health:
+    m_InternalValue: 2
+  isAlive:
+    m_InternalValue: 1
+  points: 0
 --- !u!114 &1979050206698400908
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -515,6 +515,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff19012e515e554cb488adae31a349c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_inputReplayTick: -1
   m_tankController: {fileID: 258216026692416356}
   m_turretAnimator: {fileID: 6117245905817614025}
   m_hullAnimator: {fileID: 5873195794702409541}
