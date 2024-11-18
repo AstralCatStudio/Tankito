@@ -82,6 +82,20 @@ namespace Tankito.Netcode.Messaging
             if (DEBUG_CLOCK) Debug.Log($"Sent clock signal: {signal}");
         }
 
+        private void SendThrottleSignal(ulong clientId)
+        {
+            if (!IsServer) return;
+            int throttleTicks = ServerSimulationManager.Instance.remoteInputTanks[clientId].IdealBufferSize - ServerSimulationManager.Instance.remoteInputTanks[clientId].BufferSize;
+            var throttleSignal = new ClockSignal(ClockSignalHeader.Throttle, throttleTicks, SimClock.TickCounter);
+            var throttleWriter = new FastBufferWriter(FastBufferWriter.GetWriteSize(throttleSignal), Allocator.Temp);
+
+            using (throttleWriter)
+            {
+                throttleWriter.WriteValue(throttleSignal);
+                NetworkManager.CustomMessagingManager.SendNamedMessage(MessageName.ClockSignal, clientId, throttleWriter, NetworkDelivery.Unreliable);
+            }
+        }
+
         private void RecieveClockSignal(ulong serverId, FastBufferReader payload)
         {
             if (IsServer && !IsClient) return;
@@ -175,7 +189,7 @@ namespace Tankito.Netcode.Messaging
                 ServerSimulationManager.Instance.remoteInputTanks[senderId].AddInput(receivedInputWindow.ToArray());
 
                 // Respond with throttling signal
-                int throttleTicks = ServerSimulationManager.Instance.remoteInputTanks[senderId].IdealBufferSize-ServerSimulationManager.Instance.remoteInputTanks[senderId].BufferSize;
+                /*int throttleTicks = ServerSimulationManager.Instance.remoteInputTanks[senderId].IdealBufferSize-ServerSimulationManager.Instance.remoteInputTanks[senderId].BufferSize;
                 var throttleSignal = new ClockSignal(ClockSignalHeader.Throttle, throttleTicks, SimClock.TickCounter);
                 var throttleWriter = new FastBufferWriter(FastBufferWriter.GetWriteSize(throttleSignal), Allocator.Temp);
 
@@ -183,7 +197,7 @@ namespace Tankito.Netcode.Messaging
                 {
                     throttleWriter.WriteValue(throttleSignal);
                     NetworkManager.CustomMessagingManager.SendNamedMessage(MessageName.ClockSignal, senderId, throttleWriter, NetworkDelivery.Unreliable);
-                }
+                }*/
             }
 
             if (DEBUG_INPUT)
@@ -273,6 +287,8 @@ namespace Tankito.Netcode.Messaging
                 return;
             }
 
+            snapshot.status = SnapshotStatus.Authoritative;
+
             var writer = new FastBufferWriter(SimulationSnapshot.MAX_SERIALIZED_SIZE, Allocator.Temp);
             var customMessagingManager = NetworkManager.CustomMessagingManager;
 
@@ -281,6 +297,12 @@ namespace Tankito.Netcode.Messaging
                 writer.WriteValue(snapshot);
                 customMessagingManager.SendNamedMessage(MessageName.SimulationSnapshot, targetClientIds, writer, NetworkDelivery.Unreliable);
             }
+
+            for(int i = 0; i < targetClientIds.Length; i++)
+            {
+                SendThrottleSignal(targetClientIds[i]);
+            }
+            
 
             if (DEBUG_SNAPSHOTS) Debug.Log($"[{SimClock.TickCounter}]Sent snapshot[{snapshot.timestamp}] to ALL clients.");
         }
@@ -302,12 +324,20 @@ namespace Tankito.Netcode.Messaging
             }
             
             SimulationSnapshot snapshot = new SimulationSnapshot();
-            snapshot.Initialize();
             snapshotPayload.ReadValue(out snapshot);
-            ClientSimulationManager.Instance.CheckNewGlobalSnapshot(snapshot);
+
+            if (DEBUG_SNAPSHOTS)
+            {
+                Debug.Log($"[{SimClock.TickCounter}]Received Snapshot:{snapshot}");
+            }
+
+            if (snapshot.status == SnapshotStatus.Authoritative)
+            {
+                ClientSimulationManager.Instance.EvaluateForReconciliation(snapshot);
+            }
 
             // TESTING !!!!
-            ClientSimulationManager.Instance.SetSimulation(snapshot);
+            //ClientSimulationManager.Instance.SetSimulation(snapshot);
 
             if (DEBUG_SNAPSHOTS) Debug.Log($"[{SimClock.TickCounter}]Received snapshot[{snapshot.timestamp}] from server.");
         }

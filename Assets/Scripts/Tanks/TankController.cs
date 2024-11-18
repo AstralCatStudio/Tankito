@@ -78,6 +78,7 @@ namespace Tankito
 
         public void ProcessInput(float deltaTime)
         {
+            
             var input = m_tankInput.GetInput();
             if (DEBUG) Debug.Log($"GetInput called, received input: {input}");
             ProcessInput(input, deltaTime);
@@ -86,13 +87,13 @@ namespace Tankito
         private void ProcessInput(InputPayload input, float deltaTime)
         {
             if (DEBUG) Debug.Log($"Processing {gameObject} input: {input}");
-            if (input.action != TankAction.Dash) // No puedes hacer esto asi, si vas a tener una variable de can dash la tienes que usar aqui, NO cuando estas RECOGIENDO inputs
+            if (input.action == TankAction.Dash && canDash) // No puedes hacer esto asi, si vas a tener una variable de can dash la tienes que usar aqui, NO cuando estas RECOGIENDO inputs
             {
-                MoveTank(input.moveVector, deltaTime);
+                DashTank(input.moveVector, deltaTime);
             }
             else
             {
-                DashTank(input.moveVector, deltaTime);
+                MoveTank(input.moveVector, deltaTime);
             }
             AimTank(input.aimVector, deltaTime);
         }
@@ -129,9 +130,9 @@ namespace Tankito
                 currentAcceleration = accelerationMultiplier;
                 if (currentDashTick == 0)
                 {
+                    Debug.Log("Comienza el dash");
                     playerState = PlayerState.Dashing;
                     inputWhileDash = movementVector; // No entiendo muy bien para que sirve esto, sinceramente
-                    canDash = false;
                 }
             }
             else
@@ -151,12 +152,14 @@ namespace Tankito
             {
                 currentDashTick = 0;
 
+                canDash = false;
                 postDash = true;
                 postDashInput = inputWhileDash;
                 inputWhileDash = Vector2.zero;
 
                 playerState = PlayerState.Moving;
                 StartCoroutine("DashReloading");
+                Debug.Log("Se termina el dash");
                 return;
             }
             currentDashTick++;
