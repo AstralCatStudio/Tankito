@@ -60,6 +60,11 @@ namespace Tankito
             StartCoroutine("LoadGameSceneAsync");
         }
 
+        public void ReloadMainMenu()
+        {
+            StartCoroutine("ReloadMainMenuAsync");
+        }
+
         IEnumerator LoadLobbyAsync()
         {
             SceneManager.LoadScene("Loading", LoadSceneMode.Additive);
@@ -86,12 +91,9 @@ namespace Tankito
         {
             if (!SceneManager.GetSceneByName("Lobby").IsValid()) throw new InvalidOperationException("You shouldn't be loading the game scene without having loaded the Lobby!");
 
-            SceneManager.LoadScene("Loading", LoadSceneMode.Additive);
+            SceneManager.LoadScene("Loading");
 
             if (DEBUG) Debug.Log("Loading Game...");
-
-
-            //SceneManager.LoadSceneAsync("GameInitTest", LoadSceneMode.Additive);
 
             if(NetworkManager.Singleton.IsServer)
             {
@@ -103,6 +105,25 @@ namespace Tankito
             }
 
             if (DEBUG) Debug.Log("Game Loaded!");
+
+            SceneManager.UnloadSceneAsync("Loading");
+        }
+
+        IEnumerator ReloadMainMenuAsync()
+        {
+            if (!SceneManager.GetSceneByName("GameInitTest").IsValid()) throw new InvalidOperationException("You shouldn't be reloading this scene without having loaded the game scene!");
+
+            SceneManager.LoadScene("Loading");
+
+            GameManager.Instance.UnloadScene();
+
+            if (DEBUG) Debug.Log("Loading Main Menu...");
+
+            ClientData.Instance.firstLoad = false;
+
+            yield return SceneManager.LoadSceneAsync("MainMenu", LoadSceneMode.Additive);
+
+            if (DEBUG) Debug.Log("Main Menu Loaded!");
 
             SceneManager.UnloadSceneAsync("Loading");
         }
