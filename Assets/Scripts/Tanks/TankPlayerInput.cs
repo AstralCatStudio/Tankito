@@ -3,6 +3,7 @@ using Tankito.Utils;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using static Tankito.TankController;
 
 namespace Tankito
 {
@@ -47,6 +48,16 @@ namespace Tankito
             m_inputReplayTick = NO_REPLAY;
         }
 
+        private void OnEnable()
+        {
+            m_tankController.OnDashEnd += this.DashEnd;
+        }
+
+        private void OnDisable()
+        {
+            m_tankController.OnDashEnd -= this.DashEnd;
+        }
+
         /// <summary>
         /// Returns <see cref="m_currentInput" />. Unless it is in replay mode (<see cref="m_inputReplayTick"/> == <see cref="NO_REPLAY"/>), this is to enable automatic input replay on rollback.
         /// </summary>
@@ -65,9 +76,10 @@ namespace Tankito
             }
             else
             {
+                m_inputReplayTick++;
                 // Input Replay Mode
                 var replayedInput = m_inputCache.Get(m_inputReplayTick);
-                m_inputReplayTick++;
+                ;
                 gotPayload = replayedInput;
             }
 
@@ -110,22 +122,22 @@ namespace Tankito
             return lastReplayTick;
         }
 
-        public void OnMove(InputAction.CallbackContext ctx)
+        private void DashEnd()
         {
-            if (m_tankController.PlayerState != PlayerState.Dashing)
+            if(m_currentInput.action == TankAction.Dash)
             {
-                var input = ctx.ReadValue<Vector2>();
-
-                if (input.sqrMagnitude > 1) input.Normalize();
-
-                m_currentInput.moveVector = input;
                 m_currentInput.action = TankAction.None;
             }
-            else
-            {
-                if (DEBUG) Debug.Log("SE RECOGE EL INPUT WHILE DASH");
-                m_tankController.inputWhileDash = ctx.ReadValue<Vector2>(); // Esto no deberia de hacerse asi....
-            }
+        }
+
+        public void OnMove(InputAction.CallbackContext ctx)
+        {           
+            var input = ctx.ReadValue<Vector2>();
+
+            if (input.sqrMagnitude > 1) input.Normalize();
+
+            m_currentInput.moveVector = input;
+            m_currentInput.action = TankAction.None;
         }
 
         public void OnDash(InputAction.CallbackContext ctx)

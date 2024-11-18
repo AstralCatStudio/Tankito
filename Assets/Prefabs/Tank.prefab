@@ -493,13 +493,11 @@ MonoBehaviour:
   m_turretRB: {fileID: 8342253699622009969}
   m_aimSpeed: 720
   accelerationMultiplier: 3
-  dashDuration: 0.25
-  fullDashDuration: 0.1
+  dashDuration: 2
+  fullDashDuration: 1
   currentDashTick: 0
-  postDash: 0
   postDashInput: {x: 0, y: 0}
   dashReloadDuration: 1
-  inputWhileDash: {x: 0, y: 0}
   playerState: 0
   canDash: 1
   DEBUG: 0

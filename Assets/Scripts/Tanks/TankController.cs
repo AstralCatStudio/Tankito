@@ -26,10 +26,12 @@ namespace Tankito
         [SerializeField] private float dashDuration = 0.25f;
         [SerializeField] private float fullDashDuration = 0.1f;
         [SerializeField] private float currentDashTick = 0;
-        public bool postDash;
         public Vector2 postDashInput;
         [SerializeField] private float dashReloadDuration = 1;
-        [SerializeField] public Vector2 inputWhileDash;
+        private int currentDashReloadTick = 0;
+        float dashTicks;
+        float fullDashTicks;
+        float reloadDashTicks;
 
         [SerializeField] private PlayerState playerState = PlayerState.Moving;
         public PlayerState PlayerState { get => playerState; }
@@ -38,6 +40,10 @@ namespace Tankito
         public ITankInput TankInputComponent { get => m_tankInput; set { if (m_tankInput==null) m_tankInput = value; else Debug.LogWarning($"TankInputComponent for {this} was already set!");} }
         [SerializeField] private ITankInput m_tankInput;
         [SerializeField] private bool DEBUG = false;
+        private InputPayload dashInput;
+
+        public delegate void DashEnd();
+        public event DashEnd OnDashEnd;
 
         void Start()
         {
@@ -54,6 +60,9 @@ namespace Tankito
             {
                 Debug.LogWarning("Error tank turret reference not set.");
             }
+            dashTicks = dashDuration / SimClock.SimDeltaTime;
+            fullDashTicks = fullDashDuration / SimClock.SimDeltaTime;
+            reloadDashTicks = dashReloadDuration / SimClock.SimDeltaTime;
         }
 
         void OnEnable()
@@ -78,29 +87,29 @@ namespace Tankito
 
         public void ProcessInput(float deltaTime)
         {
-            
             var input = m_tankInput.GetInput();
             if (DEBUG) Debug.Log($"GetInput called, received input: {input}");
+            if(playerState == PlayerState.Dashing)
+            {
+                input.moveVector = dashInput.moveVector;
+               //nput.aimVector = m_lastInput.aimVector;
+                Debug.Log("GetInput:" + input);
+            }
+            
             ProcessInput(input, deltaTime);
+           //_lastInput = input;
         }
         
         private void ProcessInput(InputPayload input, float deltaTime)
         {
             if (DEBUG) Debug.Log($"Processing {gameObject} input: {input}");
-            if (input.action == TankAction.Dash && canDash) // No puedes hacer esto asi, si vas a tener una variable de can dash la tienes que usar aqui, NO cuando estas RECOGIENDO inputs
-            {
-                DashTank(input.moveVector, deltaTime);
-            }
-            else
-            {
-                MoveTank(input.moveVector, deltaTime);
-            }
+            MoveTank(input, deltaTime);
             AimTank(input.aimVector, deltaTime);
         }
 
-        private void MoveTank(Vector2 movementVector, float deltaTime)
+        private void MoveTank(InputPayload input, float deltaTime)
         {
-            var targetAngle = Vector2.SignedAngle(m_tankRB.transform.right, movementVector);
+            var targetAngle = Vector2.SignedAngle(m_tankRB.transform.right, input.moveVector);
             float rotDeg = 0f;
 
             if (Mathf.Abs(targetAngle) >= deltaTime * m_rotationSpeed)
@@ -116,53 +125,59 @@ namespace Tankito
             m_tankRB.MoveRotation(m_tankRB.rotation + rotDeg);
             m_turretRB.MoveRotation(-rotDeg);
 
-            m_tankRB.MovePosition(m_tankRB.position + m_speed * movementVector * deltaTime);
+            float currentAcceleration = 1;
+            if ((input.action == TankAction.Dash && canDash) || playerState == PlayerState.Dashing)
+            {
+                if (currentDashTick < fullDashTicks)
+                {
+                    currentAcceleration = accelerationMultiplier;
+                    if (currentDashTick == 0)
+                    {
+                        Debug.Log("Comienza el dash");
+                        playerState = PlayerState.Dashing;
+                    }
+                }
+                else
+                {
+                    currentAcceleration = Mathf.Lerp(accelerationMultiplier, 1, (currentDashTick - fullDashTicks) / (dashTicks - fullDashTicks)); ;
+                }
+
+                if (currentDashTick >= dashTicks)
+                {
+                    currentDashTick = 0;
+
+                    canDash = false;
+                    OnDashEnd?.Invoke();
+                    playerState = PlayerState.Moving;
+                    Debug.Log("Se termina el dash");
+                }
+                else
+                {
+                    currentDashTick++;
+                }
+            }
+            else if (!canDash)
+            {
+                if(currentDashReloadTick < reloadDashTicks)
+                {
+                    currentDashReloadTick++;
+                }
+                else
+                {
+                    currentDashReloadTick = 0;
+                    canDash = true;
+                }
+            }
+
+            m_tankRB.MovePosition(m_tankRB.position + m_speed * input.moveVector * deltaTime * currentAcceleration);
         }
 
         private void DashTank(Vector2 movementVector, float deltaTime)
         {
-            float dashTicks = dashDuration / deltaTime;
-            float fullDashTicks = fullDashDuration / deltaTime;
-            float currentAcceleration;
+            
 
-            if (currentDashTick < fullDashTicks)
-            {
-                currentAcceleration = accelerationMultiplier;
-                if (currentDashTick == 0)
-                {
-                    Debug.Log("Comienza el dash");
-                    playerState = PlayerState.Dashing;
-                    inputWhileDash = movementVector; // No entiendo muy bien para que sirve esto, sinceramente
-                }
-            }
-            else
-            {
-                currentAcceleration = Mathf.Lerp(accelerationMultiplier, 1, (currentDashTick - fullDashTicks) / (dashTicks - fullDashTicks)); ;
-            }
-            if (movementVector != Vector2.zero)
-            {
-                m_tankRB.MovePosition(m_tankRB.position + movementVector * deltaTime * m_speed * currentAcceleration);
-            }
-            else
-            {
-                m_tankRB.MovePosition(m_tankRB.position + (Vector2)transform.right * deltaTime * m_speed * currentAcceleration);
-            }
-
-            if (currentDashTick >= dashTicks)
-            {
-                currentDashTick = 0;
-
-                canDash = false;
-                postDash = true;
-                postDashInput = inputWhileDash;
-                inputWhileDash = Vector2.zero;
-
-                playerState = PlayerState.Moving;
-                StartCoroutine("DashReloading");
-                Debug.Log("Se termina el dash");
-                return;
-            }
-            currentDashTick++;
+            
+            
         }
         
         IEnumerator DashReloading()
