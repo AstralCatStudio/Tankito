@@ -13,6 +13,7 @@ public class RoundUI : MonoBehaviour
     public GameObject CountdownText;
     public GameObject InitExitButton;
     public GameObject EndExitButton;
+    public GameObject ScenarySelection;
 
     #region Ranking
     public void SetActiveRanking(bool active)
@@ -90,6 +91,15 @@ public class RoundUI : MonoBehaviour
         Debug.Log("Pulsaste Exit");
 
         DisconnectHandler.Instance.ExitGame();
+    }
+
+    #endregion
+
+    #region Scenary
+
+    public void SetActiveScenaryButtons(bool active)
+    {
+        ScenarySelection.SetActive(active);
     }
 
     #endregion

@@ -564,12 +564,12 @@ GameObject:
   - component: {fileID: 239526339}
   - component: {fileID: 239526338}
   m_Layer: 5
-  m_Name: ScenarySelector
+  m_Name: ScenarySelection
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &239526337
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1583,6 +1583,7 @@ MonoBehaviour:
   CountdownText: {fileID: 325967945}
   InitExitButton: {fileID: 1282918640}
   EndExitButton: {fileID: 1402688694}
+  ScenarySelection: {fileID: 239526336}
 --- !u!114 &687075487
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2475,7 +2476,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1030172431}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1573155126}
+        m_TargetAssemblyTypeName: ScenarySelector, Assembly-CSharp
+        m_MethodName: NextScenary
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1030172431
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2917,7 +2930,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1079602511}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1573155126}
+        m_TargetAssemblyTypeName: ScenarySelector, Assembly-CSharp
+        m_MethodName: PreviousScenary
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1079602511
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3879,6 +3904,71 @@ RectTransform:
   m_AnchoredPosition: {x: 636, y: 444}
   m_SizeDelta: {x: 589.74, y: 88.9144}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1573155124
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1573155127}
+  - component: {fileID: 1573155125}
+  - component: {fileID: 1573155126}
+  m_Layer: 0
+  m_Name: ScenarySelector
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1573155125
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1573155124}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 2934393749
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+--- !u!114 &1573155126
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1573155124}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96038cddc686d9d4cac0afdb1cf03cc4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &1573155127
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1573155124}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1603395876
 GameObject:
   m_ObjectHideFlags: 0
@@ -5305,6 +5395,7 @@ SceneRoots:
   - {fileID: 1236088289}
   - {fileID: 799939891}
   - {fileID: 1603395879}
+  - {fileID: 1573155127}
   - {fileID: 9162949092541137716}
   - {fileID: 595735225}
   - {fileID: 1334146259}
