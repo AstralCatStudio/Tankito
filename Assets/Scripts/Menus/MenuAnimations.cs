@@ -80,7 +80,6 @@ public class MenuAnimations : MonoBehaviour
             additiveDelay += delay;
         }
 
-        Debug.Log("pre enabling routine");
         if (enablingInteractable != null)
         {
             StopCoroutine(enablingInteractable);
@@ -102,11 +101,8 @@ public class MenuAnimations : MonoBehaviour
             additiveDelay += delay;
         }
 
-        Debug.Log("A.1");
-
         if (disableCoroutine != null)
         {
-            Debug.Log("A.2");
             StopCoroutine(disableCoroutine);
         }
         disableCoroutine = StartCoroutine(DisablingCoroutine(disableTime));
@@ -120,7 +116,6 @@ public class MenuAnimations : MonoBehaviour
             yield return null;
             t += Time.deltaTime;
         }
-        Debug.Log("desactivao");
         gameObject.SetActive(false);
     }
 
