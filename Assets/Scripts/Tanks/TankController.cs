@@ -93,7 +93,7 @@ namespace Tankito
             {
                 input.moveVector = dashInput.moveVector;
                //nput.aimVector = m_lastInput.aimVector;
-                Debug.Log("GetInput:" + input);
+                if (DEBUG) Debug.Log("GetInput:" + input);
             }
             
             ProcessInput(input, deltaTime);
@@ -133,7 +133,7 @@ namespace Tankito
                     currentAcceleration = accelerationMultiplier;
                     if (currentDashTick == 0)
                     {
-                        Debug.Log("Comienza el dash");
+                        if (DEBUG) Debug.Log("Comienza el dash");
                         playerState = PlayerState.Dashing;
                     }
                 }
@@ -149,7 +149,7 @@ namespace Tankito
                     canDash = false;
                     OnDashEnd?.Invoke();
                     playerState = PlayerState.Moving;
-                    Debug.Log("Se termina el dash");
+                    if (DEBUG) Debug.Log("Se termina el dash");
                 }
                 else
                 {

@@ -142,8 +142,7 @@ namespace Tankito.Netcode.Simulation
                 // Habra que hacer algo para restaurar objetos que puedieran haber deespawneado y todo eso supongo
             }
             
-            // REDACTED -- UNSURE IF TRUE --> To avoid simulating the last tick twice, it will eventually be simulated when ever the clock ticks
-            while(rollbackCounter < SimClock.TickCounter)//-1)
+            while(rollbackCounter < SimClock.TickCounter)
             {
                 // - Input Replay - DONE => Implicitly consumes inputs from input caches when pulling InputPayloads on Kinematic Functions
                 Simulate();
