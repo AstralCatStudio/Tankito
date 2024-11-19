@@ -1291,7 +1291,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e8ab77c6b710874888428f73d704af8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DEBUG: 0
+  m_tankSimulationTolerance:
+    posDiff: {x: 0.1, y: 0.1}
+    hullRotDiff: 1
+    velDiff: {x: 0.1, y: 0.1}
+    turrRotDiff: 1
+    actionDiff: 0
+  m_bulletSimulationTolerance:
+    posDiff: {x: 0.1, y: 0.1}
+    rotDiff: 1
+    velDiff: {x: 0.1, y: 0.1}
+  DEBUG: 1
 --- !u!114 &532498116
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1507,6 +1517,8 @@ MonoBehaviour:
   PanelPowerUps: {fileID: 537488085}
   PanelRankingFinal: {fileID: 648424650}
   PanelAlivePlayers: {fileID: 35023107}
+  CountdownText: {fileID: 0}
+  BackButton: {fileID: 0}
 --- !u!114 &687075487
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2678,7 +2690,6 @@ MonoBehaviour:
   _maxRounds: 3
   _roundUI: {fileID: 0}
   _countdownTime: 7
-  _countdownText: {fileID: 0}
   _startedGame: 0
   _playerInput: {fileID: 953111501}
   DEBUG: 0

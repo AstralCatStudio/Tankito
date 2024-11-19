@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Collections;
 using TMPro;
 using UnityEngine.SceneManagement;
+using Tankito;
 
 namespace Tankito.Netcode
 {

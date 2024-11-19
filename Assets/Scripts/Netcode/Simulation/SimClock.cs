@@ -11,7 +11,7 @@ namespace Tankito
 {
     public class SimClock : Singleton<SimClock>
     {
-        const int TICKS_PER_SECOND = 60;
+        const int TICKS_PER_SECOND = 30;
         const float SIM_DELTA_TIME = 1f/TICKS_PER_SECOND;
 
         float m_tickTimer;
@@ -25,8 +25,7 @@ namespace Tankito
         public static float SimDeltaTime { get => Instance.m_simulationDeltaTime; }
         private float m_simulationDeltaTime;
 
-        const int THROTTLE_COOLDOWN = 0;
-        private int m_throttleCooldown; // In TPS (Ticks Per Second)
+        private int m_throttleInterval = 3; // In TPS (Ticks Per Second)
         private float m_averageThrottleTicks;
         private int m_throttleMessages;
 
@@ -65,7 +64,7 @@ namespace Tankito
 
         internal void StartClock()
         {
-            Debug.Log("Se inica el reloj");
+            //Debug.Log("Se inica el reloj");
             m_tickTimer = 0;
             m_active = true;
             AutoPhysics2DUpdate(false);
@@ -73,7 +72,7 @@ namespace Tankito
 
         internal void StopClock()
         {
-            Debug.Log("Se detiene el reloj");
+            //Debug.Log("Se detiene el reloj");
             m_active = false;
         }
 
@@ -100,9 +99,18 @@ namespace Tankito
                 Debug.LogWarning("SERVER MUSTN'T Throttle");
                 return;
             }
+            
+            m_throttleMessages++;
 
-            float newTPS = TICKS_PER_SECOND+Mathf.Clamp(throttleTicks, -TICKS_PER_SECOND, TICKS_PER_SECOND-1);
-            m_simulationDeltaTime = 1f/newTPS;
+            if (m_throttleMessages >= m_throttleInterval)
+            {
+                m_averageThrottleTicks += throttleTicks/m_throttleMessages;
+
+                float newTPS = TICKS_PER_SECOND+Mathf.Clamp(m_averageThrottleTicks, -TICKS_PER_SECOND, TICKS_PER_SECOND-1);
+                m_simulationDeltaTime = 1f/newTPS;
+                m_throttleMessages = 0;
+                m_averageThrottleTicks = 0;
+            }
 
         }
 

@@ -4,6 +4,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Windows;
+using static Tankito.TankController;
 
 namespace Tankito
 {
@@ -12,7 +13,23 @@ namespace Tankito
     {
         InputPayload GetInput();
         InputPayload GetCurrentInput();
+
+        /// <summary>
+        /// Makes the <see cref="TankPlayerInput.GetInput()" /> method return cached input, starting from the given timestamp.
+        /// </summary>
+        /// <param name="timestamp">The timestamp from which to start replaying the input.</param>
+        /// <remarks>
+        /// This method sets the <see cref="m_inputReplayTick" /> to <see cref="timestamp"/>, indicating that the input replay mode is active.
+        /// When <see cref="TankPlayerInput.GetInput()" /> is called during replay mode, it returns the cached input at the current replay tick.
+        /// The replay tick is incremented with each call to <see cref="TankPlayerInput.GetInput()" /> until it reaches the end of the cached inputs,
+        /// at which point <see cref="StopInputReplay()"/> should be called.
+        /// </remarks>
         void StartInputReplay(int timestamp);
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns> Last replayed input tick.</returns>
         int StopInputReplay();
 
     }
@@ -21,7 +38,7 @@ namespace Tankito
     {
         private const int INPUT_CACHE_SIZE = 256;
         private CircularBuffer<InputPayload> m_inputCache = new CircularBuffer<InputPayload>(INPUT_CACHE_SIZE);
-        private int m_inputReplayTick = NO_REPLAY;
+        [SerializeField] private int m_inputReplayTick = NO_REPLAY;
         private const int NO_REPLAY = -1;
 
         private InputPayload m_currentInput;
@@ -50,6 +67,16 @@ namespace Tankito
             m_inputReplayTick = NO_REPLAY;
         }
 
+        private void OnEnable()
+        {
+            m_tankController.OnDashEnd += this.DashEnd;
+        }
+
+        private void OnDisable()
+        {
+            m_tankController.OnDashEnd -= this.DashEnd;
+        }
+
         /// <summary>
         /// Returns <see cref="m_currentInput" />. Unless it is in replay mode (<see cref="m_inputReplayTick"/> == <see cref="NO_REPLAY"/>), this is to enable automatic input replay on rollback.
         /// </summary>
@@ -71,9 +98,10 @@ namespace Tankito
             }
             else
             {
+                m_inputReplayTick++;
                 // Input Replay Mode
                 var replayedInput = m_inputCache.Get(m_inputReplayTick);
-                m_inputReplayTick++;
+                ;
                 gotPayload = replayedInput;
             }
             
@@ -91,25 +119,11 @@ namespace Tankito
             return m_currentInput;
         }
 
-        /// <summary>
-        /// Makes the <see cref="TankPlayerInput.GetInput()" /> method return cached input, starting from the given timestamp.
-        /// </summary>
-        /// <param name="timestamp">The timestamp from which to start replaying the input.</param>
-        /// <remarks>
-        /// This method sets the <see cref="m_inputReplayTick" /> to <see cref="timestamp"/>, indicating that the input replay mode is active.
-        /// When <see cref="TankPlayerInput.GetInput()" /> is called during replay mode, it returns the cached input at the current replay tick.
-        /// The replay tick is incremented with each call to <see cref="TankPlayerInput.GetInput()" /> until it reaches the end of the cached inputs,
-        /// at which point <see cref="StopInputReplay()"/> should be called.
-        /// </remarks>
         public void StartInputReplay(int timestamp)
         {
             m_inputReplayTick = timestamp;
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns> Last replayed input tick.</returns>
+        
         public int StopInputReplay()
         {
             var lastReplayTick = m_inputReplayTick;
@@ -117,31 +131,27 @@ namespace Tankito
             return lastReplayTick;
         }
 
-        public void OnMove(InputAction.CallbackContext ctx)
+        private void DashEnd()
         {
-            if (m_tankController.PlayerState != PlayerState.Dashing)
+            if(m_currentInput.action == TankAction.Dash)
             {
-                var input = ctx.ReadValue<Vector2>();
-
-                if (input.sqrMagnitude > 1) input.Normalize();
-
-                m_currentInput.moveVector = input;
+                m_currentInput.action = TankAction.None;
             }
-            else
-            {
-                if (DEBUG) Debug.Log("SE RECOGE EL INPUT WHILE DASH");
-                m_tankController.inputWhileDash = ctx.ReadValue<Vector2>(); // Esto no deberia de hacerse asi....
-            }
-            
+        }
+
+        public void OnMove(InputAction.CallbackContext ctx)
+        {           
+            var input = ctx.ReadValue<Vector2>();
+
+            if (input.sqrMagnitude > 1) input.Normalize();
+
+            m_currentInput.moveVector = input;
+            m_currentInput.action = TankAction.None;
         }
 
         public void OnDash(InputAction.CallbackContext ctx)
         {
-            if (m_tankController.canDash) // Esto esta mal, se deberia recoger el dash siempre y controlar los efectos que tiene en la logica del controlador
-                        //  Mas que nada porque es que si no no es servidor autoritativo y se pueden hacer trampas.
-            {
-                m_currentInput.action = TankAction.Dash;
-            }
+            m_currentInput.action = TankAction.Dash; 
         }
         void Aim()
         {

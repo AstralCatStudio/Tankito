@@ -49,7 +49,7 @@ public class ReadyButton : NetworkBehaviour
 
     private void Update()
     {
-        Debug.Log($"Clientes listos en la lista: {CalcReadyCount()} {_readyStatusList.Count}");
+        //Debug.Log($"Clientes listos en la lista: {CalcReadyCount()} {_readyStatusList.Count}");
     }
 
     private void Start()
@@ -59,11 +59,11 @@ public class ReadyButton : NetworkBehaviour
             _roundManager = FindObjectOfType<RoundManager>();
             if (_roundManager == null)
             {
-                Debug.Log("No se encontró Round Manager");
+                Debug.Log("No se encontrï¿½ Round Manager");
             }
             else
             {
-                Debug.Log("Se encontró Round Manager");
+                Debug.Log("Se encontrï¿½ Round Manager");
             }
         }
 
@@ -92,12 +92,12 @@ public class ReadyButton : NetworkBehaviour
 
     public override void OnDestroy()
     {
-        base.OnDestroy();
         if (IsServer)
         {
             NetworkManager.Singleton.OnClientConnectedCallback -= OnClientConnected;
             NetworkManager.Singleton.OnClientDisconnectCallback -= OnClientDisconnected;
         }
+        base.OnDestroy();
     }
 
     #region ClientConnection
