@@ -11,6 +11,7 @@ public class HoverButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     public float time= 0.5f;
     private LTDescr tweenId;
     private Color color;
+    private float hoverColorFactor = 0.9f;
     // Start is called before the first frame update
     void Start()
     {
@@ -19,7 +20,9 @@ public class HoverButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     public void OnPointerEnter(PointerEventData eventData)
     {
         tweenId = LeanTween.scale(gameObject, Vector2.one * scale, time).setEase(LeanTweenType.easeOutElastic);
-        gameObject.GetComponent<Image>().color = color * 0.8f;
+        Color newColor = color * hoverColorFactor;
+        newColor.a = 1f;
+        gameObject.GetComponent<Image>().color = newColor;
         MusicManager.Instance.PlaySound("bip");
     }
 
