@@ -19,7 +19,6 @@ namespace Tankito {
         public float rotationSpeed;
         public int bouncesTotal;
         public float lifetimeTotal;
-        public int spawnTickTime;
 
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
         {
@@ -48,7 +47,7 @@ namespace Tankito {
         protected float m_lifetime = 0; // Life Time counter
         protected Vector2 lastCollisionNormal = Vector2.zero;
         public Action<ABullet> OnSpawn = (ABullet) => { }, OnFly = (ABullet) => { }, OnHit = (ABullet) => { }, OnBounce = (ABullet) => { }, OnDetonate = (ABullet) => { };
-        
+
 
         public override void OnNetworkSpawn()
         {

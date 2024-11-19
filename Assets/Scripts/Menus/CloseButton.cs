@@ -13,8 +13,6 @@ public class CloseButton : MonoBehaviour
         LeanTween.alpha(bg, 0f, duration);
         LeanTween.scale(characterPanel, Vector2.zero, duration).setEase(LeanTweenType.easeInBack);
         Invoke("DestroyDropdown", duration);
-
-        MusicManager.Instance.PlaySound("aceptar");
     }
 
     private void DestroyDropdown()

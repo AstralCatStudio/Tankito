@@ -26,8 +26,6 @@ namespace Tankito
             var moneyPanel = dropdownInstance.transform.GetChild(1).GetComponent<RectTransform>();
             LeanTween.scale(moneyPanel, Vector2.zero, 0f);
             LeanTween.scale(moneyPanel, Vector2.one, duration).setEase(LeanTweenType.easeOutElastic);
-
-            MusicManager.Instance.PlaySound("snd_monedas");
         }
 
         public void UpdateMoney()

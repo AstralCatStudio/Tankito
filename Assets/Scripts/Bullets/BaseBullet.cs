@@ -9,7 +9,6 @@ namespace Tankito
     {
         [SerializeField]
         private Rigidbody2D m_rb;
-
         public override void Init()
         {
             base.Init();
