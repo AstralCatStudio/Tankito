@@ -1,7 +1,9 @@
 name: Build and Publish Project
  
 on:
-  push
+  push:
+    branches:
+      - main
  
 jobs:
   buildForAllSupportedPlatforms:
