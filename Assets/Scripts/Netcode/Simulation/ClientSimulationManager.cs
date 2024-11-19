@@ -42,9 +42,9 @@ namespace Tankito.Netcode.Simulation
                 Debug.LogWarning("ClientSimulationManager is network node that is NOT a CLIENT (is server). this should not happen!");
                 Destroy(this);
             }
-            m_tankSimulationTolerance = new TankDelta(new Vector2(0.1f,0.1f), 1f, new Vector2(0.1f,0.1f), 1f, 0);
+            m_tankSimulationTolerance = new TankDelta(new Vector2(0.1f,0.1f), 3f, new Vector2(0.2f,0.2f), 60f, 0);
             m_bulletSimulationTolerance = new BulletDelta(new Vector2(0.1f,0.1f), 1f, new Vector2(0.1f,0.1f));
-            DEBUG = true;
+            DEBUG = false;
         }
 
         public override void Simulate()
@@ -126,14 +126,14 @@ namespace Tankito.Netcode.Simulation
             //Pause Simulation Clock
             SimClock.Instance.StopClock();
 
+            // We DON'T have to re-simulate the tick which we are getting as auth,
+            // because it's already simulated. So just advance the counter
+            rollbackCounter++;
 
             foreach(var obj in m_simulationObjects.Values)
             {
                 obj.SetSimState(authSnapshot[obj]);
 
-                // We DON'T have to re-simulate the tick which we are getting as auth,
-                // because it's already simulated. So just advance the counter
-                rollbackCounter++;
                 
                 // Put Input Components into replay mode
                 if(obj is TankSimulationObject tank)

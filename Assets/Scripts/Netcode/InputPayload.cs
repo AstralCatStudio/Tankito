@@ -51,10 +51,10 @@ namespace Tankito.Netcode
 
         internal void Interpolate(InputPayload targetInput, int interpolationTick)
         {
-            float factor = Mathf.Clamp01((timestamp - interpolationTick) /(float)targetInput.timestamp);
+            float factor = Mathf.Clamp01((interpolationTick - timestamp) /(float)targetInput.timestamp);
             
-            moveVector = Vector2.Lerp(moveVector, targetInput.moveVector, factor);
-            aimVector = Vector2.Lerp(aimVector, targetInput.aimVector, factor);
+            moveVector = Vector2.Lerp(targetInput.moveVector, moveVector, factor);
+            aimVector = Vector2.Lerp(targetInput.aimVector, aimVector, factor);
             action = (factor == 0) ? action : (factor == 1) ? targetInput.action : TankAction.None;
         }
 

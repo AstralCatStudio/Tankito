@@ -92,12 +92,12 @@ public class ReadyButton : NetworkBehaviour
 
     public override void OnDestroy()
     {
-        base.OnDestroy();
         if (IsServer)
         {
             NetworkManager.Singleton.OnClientConnectedCallback -= OnClientConnected;
             NetworkManager.Singleton.OnClientDisconnectCallback -= OnClientDisconnected;
         }
+        base.OnDestroy();
     }
 
     #region ClientConnection
