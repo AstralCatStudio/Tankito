@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8cd9a9b75cfb494c8fa78e72de18880, type: 3}
+  m_Name: Bounce Bullets Modifier
+  m_EditorClassIdentifier: 
+  logo: {fileID: 0}
+  description: 
+  bulletModifiers:
+  - {fileID: 11400000, guid: 2b79f5885434a294e921af2b21e68e2f, type: 2}
+  hullModifiers: []

@@ -9,9 +9,12 @@ namespace Tankito
     {
         public float speedMultiplier;
         public float rotationSpeedMultiplier;
-        public float reloadTimeAdded;
         public float dashCooldownTimeAdded;
         public int extraHealth;
+        public float extraParryTime;
+        public float addParryReloadTime;
+        public float dashSpeedMultiplier;
+        public float dashDistanceMultiplier;
     }
     [CreateAssetMenu(menuName = "Modificadores/ModificadorTanque", order = 3, fileName = "Nuevo Modificador Tanque")]
     public class HullModifier : ScriptableObject

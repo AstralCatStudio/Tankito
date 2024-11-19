@@ -9,10 +9,15 @@ public class MusicManager : Singleton<MusicManager>
     [SerializeField] private AudioClip[] submarinoClips;
     [SerializeField] private AudioClip[] menuClips;
     [SerializeField] private AudioClip[] pveClips;
+    [SerializeField] private AudioClip[] victoryClips;
+
+    [Range(0, 1)] public float volMusic = 1.0f;
+    [Range(0, 1)] public float volSounds = 1.0f;
 
     private readonly Dictionary<string, AudioClip[]> songs = new();
     private AudioSource audioSourceA;
     private AudioSource audioSourceB;
+    private AudioSource backgroundSoundSource;
     private bool isPlayingA = true;
 
     public AudioClip[] currentClips { get; private set; }
@@ -21,21 +26,27 @@ public class MusicManager : Singleton<MusicManager>
     private float fadeTimer = 0f;
     private bool isTransitioning = false;
     private bool isSongTransitioning = false;
+    private bool isBackgroundTransitioning = false;
 
     private string queuedSongID;
     private int queuedPhase = -1;
     private float queuedStartTime = 0f;
 
     private readonly List<AudioSource> soundPool = new();
-    private readonly Dictionary<AudioSource, float> activeSounds = new();
     private const int PoolSize = 10;
 
-    private void Awake()
+    private float lastVolMusic = -1f;
+    private float lastVolSounds = -1f;
+
+    protected override void Awake()
     {
+        base.Awake();
+
         DontDestroyOnLoad(gameObject);
 
         audioSourceA = CreateAudioSource(true);
         audioSourceB = CreateAudioSource(true);
+        backgroundSoundSource = CreateAudioSource(true);
 
         songs["PLAYA"] = playaClips;
         songs["SUSHI"] = sushiClips;
@@ -43,22 +54,96 @@ public class MusicManager : Singleton<MusicManager>
         songs["SUBMARINO"] = submarinoClips;
         songs["MENU"] = menuClips;
         songs["PVE"] = pveClips;
+        songs["VICTORY"] = victoryClips;
 
         InitializeSoundPool();
     }
 
+    private void OnValidate()
+    {
+        volMusic = Mathf.Clamp01(volMusic);
+        volSounds = Mathf.Clamp01(volSounds);
+        UpdateMusicVolume();
+        UpdateSoundVolume();
+    }
 
+    private void Update()
+    {
+        // Detectar cambios en los volumenes
+        if (!Mathf.Approximately(volMusic, lastVolMusic))
+        {
+            lastVolMusic = volMusic;
+            UpdateMusicVolume();
+        }
 
+        if (!Mathf.Approximately(volSounds, lastVolSounds))
+        {
+            lastVolSounds = volSounds;
+            UpdateSoundVolume();
+        }
+
+        // Transiciones de musica
+        if (isTransitioning || isSongTransitioning)
+        {
+            fadeTimer += Time.deltaTime;
+            float fadeProgress = Mathf.Clamp01(fadeTimer / FadeDuration);
+
+            AudioSource activeSource = isPlayingA ? audioSourceA : audioSourceB;
+            AudioSource newSource = isPlayingA ? audioSourceB : audioSourceA;
+
+            activeSource.volume = Mathf.Lerp(volMusic, 0, fadeProgress);
+            newSource.volume = Mathf.Lerp(0, volMusic, fadeProgress);
+
+            if (fadeProgress >= 1f)
+            {
+                activeSource.Stop();
+                EndTransition();
+            }
+        }
+
+        // Transiciones de background
+        if (isBackgroundTransitioning)
+        {
+            fadeTimer += Time.deltaTime;
+            float fadeProgress = Mathf.Clamp01(fadeTimer / FadeDuration);
+
+            backgroundSoundSource.volume = Mathf.Lerp(0, volSounds, fadeProgress);
+
+            if (fadeProgress >= 1f)
+            {
+                isBackgroundTransitioning = false;
+            }
+        }
+    }
+
+    private void UpdateMusicVolume()
+    {
+        if (audioSourceA != null) audioSourceA.volume = volMusic;
+        if (audioSourceB != null) audioSourceB.volume = volMusic;
+        Debug.Log($"Volumen de música actualizado: {volMusic}");
+    }
+
+    private void UpdateSoundVolume()
+    {
+        foreach (var source in soundPool)
+        {
+            if (!source.isPlaying) continue;
+            source.volume = volSounds;
+        }
+        if (backgroundSoundSource != null)
+        {
+            backgroundSoundSource.volume = volSounds;
+        }
+        Debug.Log($"Volumen de sonidos actualizado: {volSounds}");
+    }
 
     private AudioSource CreateAudioSource(bool loop)
     {
         var source = gameObject.AddComponent<AudioSource>();
         source.loop = loop;
+        source.volume = volMusic;
         return source;
     }
-
-
-
 
     private void InitializeSoundPool()
     {
@@ -66,13 +151,11 @@ public class MusicManager : Singleton<MusicManager>
         {
             var source = CreateAudioSource(false);
             source.playOnAwake = false;
+            source.volume = volSounds;
             source.enabled = false;
             soundPool.Add(source);
         }
     }
-
-
-
 
     private AudioSource GetAvailableAudioSource()
     {
@@ -81,6 +164,7 @@ public class MusicManager : Singleton<MusicManager>
             if (!source.isPlaying)
             {
                 source.enabled = true;
+                source.volume = volSounds;
                 return source;
             }
         }
@@ -90,40 +174,6 @@ public class MusicManager : Singleton<MusicManager>
         soundPool.Add(newSource);
         return newSource;
     }
-
-
-
-
-
-    private void Update()
-    {
-        float currentTime = Time.time;
-
-        // Eliminar y desactivar fuentes activas que hayan terminado
-        activeSounds.RemoveAll(entry => currentTime >= entry.Value, source => source.StopAndDisable());
-
-        if (isTransitioning || isSongTransitioning)
-        {
-            fadeTimer += Time.deltaTime;
-            float fadeProgress = Mathf.Clamp01(fadeTimer / FadeDuration);
-
-            AudioSource activeSource = isPlayingA ? audioSourceA : audioSourceB;
-            AudioSource newSource = isPlayingA ? audioSourceB : audioSourceA;
-
-            activeSource.volume = Mathf.Lerp(1, 0, fadeProgress);
-            newSource.volume = Mathf.Lerp(0, 1, fadeProgress);
-
-            if (fadeProgress >= 1f)
-            {
-                activeSource.Stop();
-                EndTransition();
-            }
-        }
-    }
-
-
-
-
 
     private void EndTransition()
     {
@@ -144,8 +194,41 @@ public class MusicManager : Singleton<MusicManager>
         }
     }
 
+    public void PlayBackgroundSound(string soundName)
+    {
+        AudioClip clip = Resources.Load<AudioClip>($"Sonidos/{soundName}");
 
+        if (clip == null)
+        {
+            Debug.LogError($"El sonido de fondo '{soundName}' no se encontró en la carpeta Resources/Sonidos.");
+            return;
+        }
 
+        if (backgroundSoundSource.isPlaying)
+        {
+            StartBackgroundTransition(clip);
+        }
+        else
+        {
+            backgroundSoundSource.clip = clip;
+            backgroundSoundSource.loop = true;
+            backgroundSoundSource.volume = 0f;
+            backgroundSoundSource.Play();
+            isBackgroundTransitioning = true;
+            fadeTimer = 0f;
+        }
+    }
+
+    private void StartBackgroundTransition(AudioClip newClip)
+    {
+        backgroundSoundSource.Stop();
+        backgroundSoundSource.clip = newClip;
+        backgroundSoundSource.loop = true;
+        backgroundSoundSource.volume = 0f;
+        backgroundSoundSource.Play();
+        isBackgroundTransitioning = true;
+        fadeTimer = 0f;
+    }
 
     public void SetPhase(int phase)
     {
@@ -157,10 +240,6 @@ public class MusicManager : Singleton<MusicManager>
             StartTransition(phase, currentTime);
         }
     }
-
-
-
-
 
     public void SetSong(string songID)
     {
@@ -182,10 +261,6 @@ public class MusicManager : Singleton<MusicManager>
         StartSongTransition(0);
     }
 
-
-
-
-
     private void PreloadClips(AudioClip[] clips)
     {
         foreach (var clip in clips)
@@ -196,10 +271,6 @@ public class MusicManager : Singleton<MusicManager>
             }
         }
     }
-
-
-
-
 
     private void StartSongTransition(float startTime)
     {
@@ -214,16 +285,12 @@ public class MusicManager : Singleton<MusicManager>
         newSource.clip = currentClips[0];
         startTime = Mathf.Clamp(startTime, 0, newSource.clip.length);
         newSource.time = startTime;
-        newSource.volume = 0f;
+        newSource.volume = volMusic;
         newSource.Play();
 
         isSongTransitioning = true;
         fadeTimer = 0f;
     }
-
-
-
-
 
     private void StartTransition(int newPhase, float startTime)
     {
@@ -238,17 +305,13 @@ public class MusicManager : Singleton<MusicManager>
         newSource.clip = currentClips[newPhase];
         startTime = Mathf.Min(startTime, newSource.clip.length - 0.1f);
         newSource.time = startTime;
-        newSource.volume = 0f;
+        newSource.volume = volMusic;
         newSource.Play();
 
         isTransitioning = true;
         fadeTimer = 0f;
         currentPhase = newPhase;
     }
-
-
-
-
 
     public void PlaySound(string soundName)
     {
@@ -261,26 +324,13 @@ public class MusicManager : Singleton<MusicManager>
         }
 
         AudioSource audioSource = GetAvailableAudioSource();
+        audioSource.pitch = 1.0f;
         audioSource.clip = clip;
+        audioSource.volume = volSounds;
         audioSource.Play();
-        activeSounds[audioSource] = Time.time + clip.length;
     }
 
-
-
-
-    public void PlaySoundPitch(string soundName)
-    {
-        AudioClip clip = Resources.Load<AudioClip>($"Sonidos/{soundName}");
-
-        AudioSource audioSource = GetAvailableAudioSource();
-        audioSource.clip = clip;
-        audioSource.pitch = Random.Range(0.9f, 1.1f);
-        audioSource.Play();
-        activeSounds[audioSource] = Time.time + clip.length / Mathf.Abs(audioSource.pitch);
-    }
-
-    public void PlaySoundPitch(string soundName, float pitchVariation)
+    public void PlaySoundPitch(string soundName, float pitchVariation = 0.1f)
     {
         AudioClip clip = Resources.Load<AudioClip>($"Sonidos/{soundName}");
 
@@ -299,47 +349,7 @@ public class MusicManager : Singleton<MusicManager>
         float maxPitch = 1f + pitchVariation;
 
         audioSource.pitch = Random.Range(minPitch, maxPitch);
+        audioSource.volume = volSounds;
         audioSource.Play();
-
-        activeSounds[audioSource] = Time.time + clip.length / Mathf.Abs(audioSource.pitch);
-    }
-
-
-
-
-
-}
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-public static class AudioSourceExtensions
-{
-    public static void StopAndDisable(this AudioSource source)
-    {
-        source.Stop();
-        source.enabled = false;
-    }
-}
-
-
-
-
-
-public static class DictionaryExtensions
-{
-    public static void RemoveAll<TKey, TValue>(this Dictionary<TKey, TValue> dict, System.Predicate<KeyValuePair<TKey, TValue>> match, System.Action<TKey> action)
-    {
-        foreach (var item in new List<KeyValuePair<TKey, TValue>>(dict))
-        {
-            if (match(item))
-            {
-                action(item.Key);
-                dict.Remove(item.Key);
-            }
-        }
     }
 }

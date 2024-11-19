@@ -13,10 +13,12 @@ namespace Tankito
         public int BouncesAdded;
         public float lifeTimeAdded;
         public float boomerangEffect;
-        public float amountAdded;
-        public float amountMultiplier;
+        public int amountAdded;
+        public int amountMultiplier;
         public float spreadMultiplier;
-        public BulletStatsModifier(float speed, Vector2 size, float acceleration, int bounces, float lifetime, float boomerang, float amount, float amountmult, float spread)
+        public float reloadTimeAdded;
+        public List<Vector2> BulletDirections;
+        public BulletStatsModifier(float speed, Vector2 size, float acceleration, int bounces, float lifetime, float boomerang, int amount, int amountmult, float spread, float reload)
         {
             speedMultiplier=speed;
             sizeMultiplier=size;
@@ -27,6 +29,8 @@ namespace Tankito
             amountAdded=amount;
             amountMultiplier=amountmult;
             spreadMultiplier=spread;
+            reloadTimeAdded = reload;
+            BulletDirections = new List<Vector2>();
         }
     }
 
@@ -40,7 +44,7 @@ namespace Tankito
         public List<ABulletModifierEvent> onHitEvents;
         public List<ABulletModifierEvent> onBounceEvents;
         public List<ABulletModifierEvent> onDetonateEvents;
-        public BulletStatsModifier bulletStatsModifier = new BulletStatsModifier(1,Vector2.one,0,0,0,0,0,1,1);
+        public BulletStatsModifier bulletStatsModifier = new BulletStatsModifier(1,Vector2.one,0,0,0,0,0,1,1,0);
         public void ConnectModifier(ABullet newBullet)
         {
             newBullet.OnSpawn += OnSpawn;

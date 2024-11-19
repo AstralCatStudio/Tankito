@@ -36,15 +36,18 @@ public class DropdownSelectionCharacter : MonoBehaviour
         if (character.selected)
         {
             ShowMessage("This character is already selected.");
+            MusicManager.Instance.PlaySound("cancelar");
         } else if (!character.unlocked)
         {
             ShowMessage("You don't have this character yet.");
+            MusicManager.Instance.PlaySound("cancelar");
         } else
         {
             DeselectAll();
             character.selected = true;
             ShowMessage("Selected");
             ChangeButtonToSelected();
+            MusicManager.Instance.PlaySound("snd_desbloquearpersonaje");
         }
     }
     public void DeselectAll()
