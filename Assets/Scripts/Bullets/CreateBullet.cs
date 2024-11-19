@@ -61,6 +61,7 @@ namespace Tankito
         {
             if (timer > interval)
             {
+                /*
                 Vector2 direction;
                 float angle;
                 foreach (var item in BulletDirection)
@@ -73,6 +74,7 @@ namespace Tankito
                         }
                     }
                 }
+                */
                 timer = 0;
                 m_bulletProperties.direction = transform.right;
                 m_bulletProperties.startingPosition = transform.position;
@@ -87,11 +89,13 @@ namespace Tankito
                 }
                 newBullet.GetComponent<NetworkObject>().Spawn();
                 newBullet.GetComponent<BaseBullet>()?.Init();
+                ShootClientRpc(newBullet.GetComponent<NetworkObject>().NetworkObjectId);
             }
         }
         [ClientRpc]
-        void ShootClientRpc()
+        void ShootClientRpc(ulong id)
         {
+            ABullet bullet;
 
         }
 

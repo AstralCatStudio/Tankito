@@ -102,26 +102,7 @@ namespace Tankito
         }
         
         
-            switch (input.action)
-            {
-                case TankAction.None:
-                    MoveTank(input.moveVector, deltaTime);
-                    break;
-                case TankAction.Dash:
-                    DashTank(input.moveVector, deltaTime);
-                    break;            
-                case TankAction.Parry:
-
-                    MoveTank(input.moveVector, deltaTime);
-                    break;
-                case TankAction.Fire:
-                    FireTank(input.aimVector, deltaTime);
-                    MoveTank(input.moveVector, deltaTime);
-                    break;
-                default:
-                    MoveTank(input.moveVector, deltaTime);
-                    break;
-            }
+            
             
             //if (input.action != TankAction.Dash) // No puedes hacer esto asi, si vas a tener una variable de can dash la tienes que usar aqui, NO cuando estas RECOGIENDO inputs
             //{
@@ -131,14 +112,28 @@ namespace Tankito
             //{
             //    DashTank(input.moveVector, deltaTime);
             //}
-            AimTank(input.aimVector, deltaTime);
-        }
         private void FireTank(Vector2 aimVector, float deltaTime)
         {
             cannon.Shoot();
         }
             private void ProcessInput(InputPayload input, float deltaTime)
         {
+            switch (input.action)
+            {
+                case TankAction.None:
+
+                    break;
+                case TankAction.Dash:
+                    break;            
+                case TankAction.Parry:
+
+                    break;
+                case TankAction.Fire:
+                    FireTank(input.aimVector, deltaTime);
+                    break;
+                default:
+                    break;
+            }
             if (DEBUG) Debug.Log($"Processing {gameObject} input: {input}");
             MoveTank(input, deltaTime);
             AimTank(input.aimVector, deltaTime);
