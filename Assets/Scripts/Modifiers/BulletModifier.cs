@@ -45,7 +45,7 @@ namespace Tankito
         public List<ABulletModifierEvent> onBounceEvents;
         public List<ABulletModifierEvent> onDetonateEvents;
         public BulletStatsModifier bulletStatsModifier = new BulletStatsModifier(1,Vector2.one,0,0,0,0,0,1,1,0);
-        public void ConnectModifier(ABullet newBullet)
+        public void BindBulletEvents(ABullet newBullet)
         {
             newBullet.OnSpawn += OnSpawn;
             newBullet.OnFly += OnFly;

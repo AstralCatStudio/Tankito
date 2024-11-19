@@ -13,9 +13,9 @@ namespace Tankito
         public override void Init()
         {
             base.Init();
-            m_bouncesLeft = m_properties.bouncesTotal;
+            m_bouncesLeft = BulletCannonRegistry.Instance[m_shooterID].Properties.bouncesTotal;
             //m_explosion = NetworkManager.Singleton.NetworkConfig.Prefabs.Prefabs[2].Prefab;
-            m_rb.velocity = m_properties.velocity* m_properties.direction;
+            m_rb.velocity = BulletCannonRegistry.Instance[m_shooterID].Properties.velocity * BulletCannonRegistry.Instance[m_shooterID].Properties.direction;
         }
 
         private void Update()
@@ -25,9 +25,17 @@ namespace Tankito
             m_lifetime += Time.deltaTime;
             if (IsServer)
             {
+<<<<<<< Updated upstream
                 if (m_lifetime >= m_properties.lifetimeTotal)
+=======
+                transform.rotation = Quaternion.LookRotation(new Vector3(0, 0, 1), m_rb.velocity.normalized);
+                m_rb.velocity += (BulletCannonRegistry.Instance[m_shooterID].Properties.acceleration != 0f) ? BulletCannonRegistry.Instance[m_shooterID].Properties.acceleration * m_rb.velocity.normalized : Vector2.zero;
+                m_lifetime += Time.deltaTime;
+
+                if (m_lifetime >= BulletCannonRegistry.Instance[m_shooterID].Properties.lifetimeTotal)
+>>>>>>> Stashed changes
                 {
-                    Debug.Log($"lifetime: {m_lifetime}/{m_properties.lifetimeTotal}");
+                    Debug.Log($"lifetime: {m_lifetime}/{BulletCannonRegistry.Instance[m_shooterID].Properties.lifetimeTotal}");
                     Detonate();
                 }
             }

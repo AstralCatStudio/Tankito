@@ -9,8 +9,8 @@ using UnityEngine.UIElements;
 namespace Tankito {
 
     [System.Serializable]
-    public struct BulletProperties : INetworkSerializable{ 
-    
+    public struct BulletProperties
+    {
         public Vector2 scaleMultiplier;
         public Vector2 startingPosition;
         public float velocity;
@@ -32,6 +32,7 @@ namespace Tankito {
             serializer.SerializeValue(ref bouncesTotal);
             serializer.SerializeValue(ref lifetimeTotal);
         }
+
         public override string ToString()
         {
             return $"| scaleMultiplier-{scaleMultiplier} | startingPosition-{startingPosition} | velocity-{velocity} | acceleration-{acceleration} | direction-{direction} | rotationSpeed-{rotationSpeed} | bouncesTotal-{bouncesTotal} | lifetimeTotal-{lifetimeTotal} |";
@@ -40,8 +41,7 @@ namespace Tankito {
     public abstract class ABullet : NetworkBehaviour
     {
         [SerializeField]
-        protected BulletProperties m_properties;
-        protected List<Modifier> m_modifierList = new List<Modifier>();
+        protected BulletProperties m_bulletProperties;
         public ulong m_shooterID;
         protected int m_bouncesLeft = 0;
         public float LifeTime { get => m_lifetime; }
@@ -55,6 +55,7 @@ namespace Tankito {
         {
             //Debug.Log($"{this} properties: {m_properties}");
         }
+        
         public override void OnNetworkDespawn()
         {
             ResetBulletData();
@@ -63,9 +64,9 @@ namespace Tankito {
         private void Awake()
         {
             
-            foreach (var modifier in m_modifierList)
+            foreach (var modifier in Tankito.BulletCannonRegistry.Instance[m_shooterID].Modifiers)
             {
-                //modifier.ConnectModifier(this);
+                modifier.BindBulletEvents(this);
             }
         }
 
@@ -79,18 +80,12 @@ namespace Tankito {
             OnFly.Invoke(this);
         }
 
-        public void SetProperties(BulletProperties newProperties)
-        {
-            m_properties = newProperties;
-        }
-
         protected void ResetBulletData()
         {
-            m_properties = default;
+            BulletCannonRegistry = default;
             m_shooterID = default;
             m_bouncesLeft = 0;
             m_lifetime = 0;
-            m_modifierList.Clear();
             OnSpawn = (ABullet) => {};
             OnFly = (ABullet) => {};
             OnHit = (ABullet) => {};

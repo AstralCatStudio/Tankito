@@ -7,7 +7,7 @@ using UnityEngine;
 public class ModifiersController : MonoBehaviour
 {
     public List<Modifier> modifiers;
-    public CreateBullet bulletCreator;
+    public BulletCannon bulletCreator;
     public TankController tankController;
     private void Start()
     {
@@ -20,11 +20,11 @@ public class ModifiersController : MonoBehaviour
         {
             foreach (BulletModifier bulletModifier in modifier.bulletModifiers)
             {
-                bulletCreator.modifiers.Add(bulletModifier);
+                bulletCreator.m_bulletModifiers.Add(bulletModifier);
             }
         }
-        bulletCreator.applyModifierProperties();
-        //TODO: aplicar también los del tanque
+        bulletCreator.ApplyModifierProperties();
+        //TODO: aplicar tambiï¿½n los del tanque
     }
 
 }

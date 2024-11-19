@@ -7,36 +7,41 @@ using UnityEngine;
 
 namespace Tankito
 {
-    public class CreateBullet : NetworkBehaviour
+    public class BulletCannon : NetworkBehaviour
     {
-        public GameObject bulletPrefab;
+        public GameObject m_bulletPrefab;
         public BulletProperties m_bulletProperties;
-        [SerializeField]
-        public BulletProperties m_baseBulletProperties;
+        private List<BulletModifier> m_bulletModifiers;
+
+        // Esto deberia ser comun para todos los bullets no deberia ser algo de cada disparador
         [SerializeField]
         float interval = 1;
         float timer = 0;
         List<GameObject> bulletsShot = new List<GameObject>();
-        public List<BulletModifier> modifiers;
-        public List<Vector2> BulletDirection;
+        private List<Vector2> BulletDirection;
         public int baseBulletAmount;
         int bulletAmount;
-        int spawnTickTime =0;
+        int spawnTickTime = 0;
+
+        public List<BulletModifier> Modifiers { get => m_bulletModifiers; }
+        public BulletProperties Properties { get => m_bulletProperties; }
+
         private void Start()
         {
             if (IsServer)
             {
-                applyModifierProperties();
-                SynchronizeBulletPropertiesClientRpc();
+                ApplyModifierProperties();
+                SynchronizeBulletPropertiesClientRpc(m_bulletProperties);
             }
         }
-        public void applyModifierProperties()
+
+        public void ApplyModifierProperties()
         {
             BulletDirection.Clear();
             BulletDirection.Add(transform.right);
             bulletAmount = baseBulletAmount;
-            m_bulletProperties = m_baseBulletProperties;
-            foreach (BulletModifier modifier in modifiers)
+            m_bulletProperties = BulletCannonRegistry.Instance.BaseProperties;
+            foreach (BulletModifier modifier in m_bulletModifiers)
             {
                 m_bulletProperties.velocity *= modifier.bulletStatsModifier.speedMultiplier;
                 m_bulletProperties.scaleMultiplier *= modifier.bulletStatsModifier.sizeMultiplier;
@@ -48,33 +53,38 @@ namespace Tankito
                 bulletAmount *= modifier.bulletStatsModifier.amountMultiplier;
             }
         }
+        
         public void Shoot()
         {
             // Probablemente sea razonable añadir un intervalo de buffer de inputs, de modo que si disparas justo antes de que se acabe el cooldown, dispare en cuanto se pueda. - Bernat
             if (IsServer)
             {
-                ShootCreateBullet(OwnerClientId);
+                SpawnBulletClientRpc();
             }
+
+            // Spawn FX and do respective animations
         }
 
-        void ShootCreateBullet(ulong shooterID)
+        [ClientRpc]
+        void SpawnBulletClientRpc()
         {
             if (timer > interval)
             {
-                /*
-                Vector2 direction;
-                float angle;
-                foreach (var item in BulletDirection)
-                {
-                    for (int i = 0; i < bulletAmount; i++)
-                    {
-                        if (bulletAmount % 2 == 0)
-                        {
+                // Bernat: No tengo ni idea de que es esto, lo voy a comentar
+                
+                //Vector2 direction;
+                //float angle;
+                //foreach (var item in BulletDirection)
+                //{
+                //    for (int i = 0; i < bulletAmount; i++)
+                //    {
+                //        if (bulletAmount % 2 == 0)
+                //        {
+//
+                //        }
+                //    }
+                //}
 
-                        }
-                    }
-                }
-                */
                 timer = 0;
                 m_bulletProperties.direction = transform.right;
                 m_bulletProperties.startingPosition = transform.position;
@@ -83,11 +93,10 @@ namespace Tankito
                 newBullet.transform.rotation= Quaternion.LookRotation(new Vector3(0, 0, 1), transform.right);
                 newBullet.GetComponent<ABullet>().SetProperties(m_bulletProperties);
                 newBullet.GetComponent<ABullet>().m_shooterID = shooterID;
-                foreach (BulletModifier bulletModifier in modifiers)
+                foreach (BulletModifier bulletModifier in m_bulletModifiers)
                 {
                     bulletModifier.ConnectModifier(newBullet.GetComponent<ABullet>());
                 }
-                newBullet.GetComponent<NetworkObject>().Spawn();
                 newBullet.GetComponent<BaseBullet>()?.Init();
                 ShootClientRpc(newBullet.GetComponent<NetworkObject>().NetworkObjectId);
             }
@@ -96,13 +105,6 @@ namespace Tankito
         void ShootClientRpc(ulong id)
         {
             ABullet bullet;
-
-        }
-
-        [ClientRpc]
-        private void SynchronizeBulletPropertiesClientRpc()
-        {
-            applyModifierProperties();
         }
 
         void Update()
