@@ -25,15 +25,11 @@ namespace Tankito
             m_lifetime += Time.deltaTime;
             if (IsServer)
             {
-<<<<<<< Updated upstream
-                if (m_lifetime >= m_properties.lifetimeTotal)
-=======
                 transform.rotation = Quaternion.LookRotation(new Vector3(0, 0, 1), m_rb.velocity.normalized);
                 m_rb.velocity += (BulletCannonRegistry.Instance[m_shooterID].Properties.acceleration != 0f) ? BulletCannonRegistry.Instance[m_shooterID].Properties.acceleration * m_rb.velocity.normalized : Vector2.zero;
                 m_lifetime += Time.deltaTime;
 
                 if (m_lifetime >= BulletCannonRegistry.Instance[m_shooterID].Properties.lifetimeTotal)
->>>>>>> Stashed changes
                 {
                     Debug.Log($"lifetime: {m_lifetime}/{BulletCannonRegistry.Instance[m_shooterID].Properties.lifetimeTotal}");
                     Detonate();
