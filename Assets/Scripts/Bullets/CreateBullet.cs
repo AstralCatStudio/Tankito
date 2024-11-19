@@ -51,14 +51,13 @@ namespace Tankito
         public void Shoot()
         {
             // Probablemente sea razonable añadir un intervalo de buffer de inputs, de modo que si disparas justo antes de que se acabe el cooldown, dispare en cuanto se pueda. - Bernat
-            if (IsOwner)
+            if (IsServer)
             {
-                ShootServerRpc(OwnerClientId);
+                ShootCreateBullet(OwnerClientId);
             }
         }
 
-        [ServerRpc]
-        void ShootServerRpc(ulong shooterID)
+        void ShootCreateBullet(ulong shooterID)
         {
             if (timer > interval)
             {
