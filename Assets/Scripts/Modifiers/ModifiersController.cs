@@ -11,16 +11,16 @@ public class ModifiersController : MonoBehaviour
     public TankController tankController;
     private void Start()
     {
-        applyModifiers();
+        ApplyModifiers();
     }
 
-    void applyModifiers()
+    void ApplyModifiers()
     {
         foreach (Modifier modifier in modifiers)
         {
             foreach (BulletModifier bulletModifier in modifier.bulletModifiers)
             {
-                bulletCreator.m_bulletModifiers.Add(bulletModifier);
+                bulletCreator.Modifiers.Add(bulletModifier);
             }
         }
         bulletCreator.ApplyModifierProperties();

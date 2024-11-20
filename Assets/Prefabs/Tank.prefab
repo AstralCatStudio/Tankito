@@ -761,7 +761,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 508e9edf31cb76c4984edc9f6780b17d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletPrefab: {fileID: 4570257745151390860, guid: 85797559142c3c94b8f11faacad78b7f, type: 3}
+  m_bulletPrefab: {fileID: 0}
   m_bulletProperties:
     scaleMultiplier: {x: 0, y: 0}
     startingPosition: {x: 0, y: 0}
@@ -772,17 +772,5 @@ MonoBehaviour:
     bouncesTotal: 1
     lifetimeTotal: 10
     spawnTickTime: 0
-  m_baseBulletProperties:
-    scaleMultiplier: {x: 0, y: 0}
-    startingPosition: {x: 0, y: 0}
-    velocity: 5
-    acceleration: 0
-    direction: {x: 0, y: 0}
-    rotationSpeed: 0
-    bouncesTotal: 0
-    lifetimeTotal: 10
-    spawnTickTime: 0
   interval: 0.2
-  modifiers: []
-  BulletDirection: []
   baseBulletAmount: 0

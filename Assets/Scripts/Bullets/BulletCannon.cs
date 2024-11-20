@@ -7,18 +7,31 @@ using UnityEngine;
 
 namespace Tankito
 {
+    [System.Serializable]
+    public struct BulletProperties
+    {
+        public Vector2 scaleMultiplier;
+        public Vector2 startingPosition;
+        public float velocity;
+        public float acceleration;
+        public Vector2 direction;
+        public float rotationSpeed;
+        public int bouncesTotal;
+        public float lifetimeTotal;
+        public int spawnTickTime;
+        public ulong ownerID;
+    }
     public class BulletCannon : NetworkBehaviour
     {
-        public GameObject m_bulletPrefab;
         public BulletProperties m_bulletProperties;
-        private List<BulletModifier> m_bulletModifiers;
+        private List<BulletModifier> m_bulletModifiers = new List<BulletModifier>();
 
         // Esto deberia ser comun para todos los bullets no deberia ser algo de cada disparador
         [SerializeField]
         float interval = 1;
         float timer = 0;
         List<GameObject> bulletsShot = new List<GameObject>();
-        private List<Vector2> BulletDirection;
+        private List<Vector2> BulletDirection = new List<Vector2>();
         public int baseBulletAmount;
         int bulletAmount;
         int spawnTickTime = 0;
@@ -28,11 +41,9 @@ namespace Tankito
 
         private void Start()
         {
-            if (IsServer)
-            {
-                ApplyModifierProperties();
-                SynchronizeBulletPropertiesClientRpc(m_bulletProperties);
-            }
+            m_bulletProperties.ownerID = OwnerClientId;
+            BulletCannonRegistry.Instance[OwnerClientId] = this;
+            ApplyModifierProperties();
         }
 
         public void ApplyModifierProperties()
@@ -53,58 +64,53 @@ namespace Tankito
                 bulletAmount *= modifier.bulletStatsModifier.amountMultiplier;
             }
         }
-        
-        public void Shoot()
+
+        public void Shoot(Vector2 aimVector)
         {
             // Probablemente sea razonable añadir un intervalo de buffer de inputs, de modo que si disparas justo antes de que se acabe el cooldown, dispare en cuanto se pueda. - Bernat
             if (IsServer)
             {
-                SpawnBulletClientRpc();
+                if (timer > interval)
+                {
+                    timer = 0;
+                    
+                    SpawnBullet(aimVector);
+                    
+                }
             }
 
             // Spawn FX and do respective animations
         }
-
-        [ClientRpc]
-        void SpawnBulletClientRpc()
+        void SpawnBullet(Vector2 aimVector)
         {
-            if (timer > interval)
-            {
-                // Bernat: No tengo ni idea de que es esto, lo voy a comentar
-                
-                //Vector2 direction;
-                //float angle;
-                //foreach (var item in BulletDirection)
-                //{
-                //    for (int i = 0; i < bulletAmount; i++)
-                //    {
-                //        if (bulletAmount % 2 == 0)
-                //        {
-//
-                //        }
-                //    }
-                //}
+            //Vector2 direction;
+            //float angle;
+            //foreach (var item in BulletDirection)
+            //{
+            //    for (int i = 0; i < bulletAmount; i++)
+            //    {
+            //        if (bulletAmount % 2 == 0)
+            //        {
 
-                timer = 0;
-                m_bulletProperties.direction = transform.right;
-                m_bulletProperties.startingPosition = transform.position;
-                m_bulletProperties.spawnTickTime = SimClock.TickCounter;
-                var newBullet = NetworkObjectPool.Singleton.GetNetworkObject(bulletPrefab, transform.position, transform.rotation).gameObject;
-                newBullet.transform.rotation= Quaternion.LookRotation(new Vector3(0, 0, 1), transform.right);
-                newBullet.GetComponent<ABullet>().SetProperties(m_bulletProperties);
-                newBullet.GetComponent<ABullet>().m_shooterID = shooterID;
-                foreach (BulletModifier bulletModifier in m_bulletModifiers)
-                {
-                    bulletModifier.ConnectModifier(newBullet.GetComponent<ABullet>());
-                }
-                newBullet.GetComponent<BaseBullet>()?.Init();
-                ShootClientRpc(newBullet.GetComponent<NetworkObject>().NetworkObjectId);
-            }
+            //        }
+            //    }
+            //}
+            m_bulletProperties.direction = aimVector;
+            m_bulletProperties.startingPosition = transform.position;
+            m_bulletProperties.spawnTickTime = SimClock.TickCounter;
+            SpawnBulletClientRpc(m_bulletProperties.direction, m_bulletProperties.startingPosition, m_bulletProperties.spawnTickTime);
+
+            
+            var newBullet = NetworkObjectPool.Singleton.GetNetworkObject(BulletCannonRegistry.Instance.m_bulletPrefab, transform.position, transform.rotation).gameObject;
+
+            newBullet.GetComponent<NetworkObject>().SpawnWithOwnership(OwnerClientId);
         }
         [ClientRpc]
-        void ShootClientRpc(ulong id)
+        void SpawnBulletClientRpc(Vector2 direction, Vector2 position, int tickCounter)
         {
-            ABullet bullet;
+            m_bulletProperties.direction = direction;
+            m_bulletProperties.startingPosition = position;
+            m_bulletProperties.spawnTickTime = tickCounter;
         }
 
         void Update()
@@ -113,7 +119,7 @@ namespace Tankito
             {
                 timer += Time.deltaTime;
             }
-            
+
         }
     }
 }

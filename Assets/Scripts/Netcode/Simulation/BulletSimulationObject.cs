@@ -6,19 +6,20 @@ namespace Tankito.Netcode.Simulation
     public class BulletSimulationObject : ASimulationObject
     {
         [SerializeField] private Rigidbody2D m_rigidbody;
-        [SerializeField] private ABullet m_bullet;
+        [SerializeField] private BulletController m_bullet;
         public int SpawnTick { get => m_spawnTick; }
         private int m_spawnTick;
 
+        
         void Start()
         {
             if (m_bullet == null)
             {
-                m_bullet = GetComponent<ABullet>();
+                m_bullet = GetComponent<BulletController>();
                 if (m_bullet == null) Debug.LogWarning("BulletSimulationObject could not find associated ABullet component!");
             }
         }
-
+        
         public override void OnNetworkSpawn()
         {
             base.OnNetworkSpawn();
@@ -48,5 +49,6 @@ namespace Tankito.Netcode.Simulation
                 throw new ArgumentException("Invalid state type");
             }
         }
+
     }
 }

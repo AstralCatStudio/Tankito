@@ -5,5 +5,5 @@ using UnityEngine;
 
 public abstract class ABulletModifierEvent : ScriptableObject, IModifierEvent
 {
-    public abstract void StartEvent(ABullet bullet);
+    public abstract void StartEvent(BulletController bullet);
 }

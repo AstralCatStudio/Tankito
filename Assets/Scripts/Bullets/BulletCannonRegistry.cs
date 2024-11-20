@@ -5,7 +5,8 @@ namespace Tankito
 {
     public class BulletCannonRegistry : Singleton<BulletCannonRegistry>
     {
-        
+        [SerializeField]
+        public GameObject m_bulletPrefab;
         [SerializeField]
         private BulletProperties m_baseBulletProperties;
         public BulletProperties BaseProperties { get => m_baseBulletProperties; }

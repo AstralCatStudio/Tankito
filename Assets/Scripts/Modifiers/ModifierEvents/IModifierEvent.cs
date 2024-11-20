@@ -7,7 +7,7 @@ namespace Tankito
 {
     public interface IModifierEvent
     {
-        void StartEvent(ABullet bullet)
+        void StartEvent(BulletController bullet)
         {
 
         }

@@ -3610,6 +3610,62 @@ RectTransform:
   m_AnchoredPosition: {x: 636, y: 444}
   m_SizeDelta: {x: 589.74, y: 88.9144}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1499244912
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1499244914}
+  - component: {fileID: 1499244913}
+  m_Layer: 0
+  m_Name: '@BulletCannonRegistry'
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1499244913
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1499244912}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6548e3f5aa6332242a3281db44e119ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_bulletPrefab: {fileID: 4570257745151390860, guid: 85797559142c3c94b8f11faacad78b7f, type: 3}
+  m_baseBulletProperties:
+    scaleMultiplier: {x: 1, y: 1}
+    startingPosition: {x: 0, y: 0}
+    velocity: 1
+    acceleration: 1
+    direction: {x: 0, y: 0}
+    rotationSpeed: 0
+    bouncesTotal: 0
+    lifetimeTotal: 5
+    spawnTickTime: 0
+    ownerID: 0
+--- !u!4 &1499244914
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1499244912}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 335.786, y: 276.00833, z: -7.4786057}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1603395876
 GameObject:
   m_ObjectHideFlags: 0
@@ -4831,14 +4887,6 @@ MonoBehaviour:
     posDiff: {x: 0, y: 0}
     rotDiff: 0
     velDiff: {x: 0, y: 0}
-  posDiffTankDeltaReal: {x: 0.1, y: 0.1}
-  hullRotDiffTankDeltaReal: 0.1
-  velDiffTankDeltaReal: {x: 0.1, y: 0.1}
-  turrRotDiffTankDeltaReal: 0.1
-  actionDiffTankDeltaReal: 100000
-  posDiffBulletDeltaReal: {x: 0.1, y: 0.1}
-  rotDiffBulletDeltaReal: 0.1
-  velDiffBulletDeltaReal: {x: 0.1, y: 0.1}
   DEBUG: 0
 --- !u!114 &1965550685
 MonoBehaviour:
@@ -5057,3 +5105,4 @@ SceneRoots:
   - {fileID: 987082546}
   - {fileID: 675365043}
   - {fileID: 1076160259}
+  - {fileID: 1499244914}

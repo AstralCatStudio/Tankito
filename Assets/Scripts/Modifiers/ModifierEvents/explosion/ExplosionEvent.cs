@@ -6,7 +6,6 @@ namespace Tankito
     [CreateAssetMenu(menuName = "Modificadores/Eventos/Explosion", order = 1, fileName = "Nuevo evento de explosion")]
     public class ExplosionEvent : ABulletModifierEvent
     {
-        CreateExplosion createExplosion;
         [SerializeField]
         GameObject explosionPrefab;
         [SerializeField]
@@ -17,7 +16,7 @@ namespace Tankito
         float totalLifetime = 1f;
         [SerializeField]
         float timeUntilBig = 0.5f;
-        public override void StartEvent(ABullet bullet)
+        public override void StartEvent(BulletController bullet)
         {
             //createExplosion = bullet.gameObject.GetComponent<CreateExplosion>()? bullet.gameObject.GetComponent<CreateExplosion>():bullet.gameObject.AddComponent<CreateExplosion>();
             //createExplosion.explosionPrefab = explosionPrefab;

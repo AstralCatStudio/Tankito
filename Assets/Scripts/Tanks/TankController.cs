@@ -45,7 +45,7 @@ namespace Tankito
         public delegate void DashEnd();
         public event DashEnd OnDashEnd;
 
-        [SerializeField] private CreateBullet cannon;
+        [SerializeField] private BulletCannon cannon;
         void Start()
         {
             if (m_tankRB == null)
@@ -114,7 +114,7 @@ namespace Tankito
             //}
         private void FireTank(Vector2 aimVector, float deltaTime)
         {
-            cannon.Shoot();
+            cannon.Shoot(aimVector);
         }
             private void ProcessInput(InputPayload input, float deltaTime)
         {
@@ -129,7 +129,9 @@ namespace Tankito
 
                     break;
                 case TankAction.Fire:
+                    
                     FireTank(input.aimVector, deltaTime);
+                    
                     break;
                 default:
                     break;
