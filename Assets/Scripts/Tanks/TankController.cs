@@ -3,7 +3,7 @@ using Tankito.Netcode;
 using Tankito.Netcode.Simulation;
 using UnityEngine;
 
-namespace Tankito
+namespace Tankito   
 {
     public enum PlayerState
     {
