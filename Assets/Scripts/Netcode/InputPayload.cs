@@ -28,14 +28,11 @@ namespace Tankito.Netcode
         public Vector2 moveVector;
         public Vector2 aimVector;
         public TankAction action;
-        public bool emulatedPayload;
 
         public int CompareTo(int other)
         {
             return timestamp-other;
         }
-
-        public void EmulatedPayload (bool value = true){ emulatedPayload = value;  }
 
         //public static readonly InputPayload INVALID_INPUT = new InputPayload { timestamp = -1, moveVector = Vector2.zero, aimVector = Vector2.zero, action = TankAction.None };
 

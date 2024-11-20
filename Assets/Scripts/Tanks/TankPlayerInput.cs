@@ -95,7 +95,6 @@ namespace Tankito
                 m_inputReplayTick++;
                 // Input Replay Mode
                 var replayedInput = m_inputCache.Get(m_inputReplayTick);
-                ;
                 gotPayload = replayedInput;
             }
 

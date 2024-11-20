@@ -475,6 +475,7 @@ MonoBehaviour:
   m_isKinematic: 1
   m_tankRB: {fileID: 8520293575514935909}
   m_turretRB: {fileID: 8342253699622009969}
+  m_controller: {fileID: 258216026692416356}
 --- !u!114 &258216026692416356
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -493,14 +494,12 @@ MonoBehaviour:
   m_turretRB: {fileID: 8342253699622009969}
   m_aimSpeed: 1080
   accelerationMultiplier: 3
-  dashDuration: 2
-  fullDashDuration: 1
-  currentDashTick: 0
-  postDashInput: {x: 0, y: 0}
+  dashDuration: 0.5
+  fullDashDuration: 0.2
   dashReloadDuration: 1
+  stateInitTick: 0
   playerState: 0
-  canDash: 1
-  DEBUG: 0
+  DEBUG: 1
 --- !u!114 &5903910165241873950
 MonoBehaviour:
   m_ObjectHideFlags: 0
