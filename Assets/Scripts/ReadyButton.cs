@@ -79,7 +79,7 @@ public class ReadyButton : NetworkBehaviour
         _readyStatusList.OnListChanged += OnReadyCountChanged;
         if (IsServer)
         {
-            Debug.Log("Entro en network spawn");
+            //Debug.Log("Entro en network spawn");
             NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
             NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnected;
 

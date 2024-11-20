@@ -125,4 +125,44 @@ public class SpawnManager : MonoBehaviour
             }
         }
     }
+
+    private void ReleaseAllSpawnPoints()
+    {
+        Debug.Log("Vaciando todos los spawns");
+
+        for (int i = 0; i < _spawnPoints.Count; i++)
+        {
+            _spawnPoints[i] = (_spawnPoints[i].pos, null);
+        }
+    }
+
+    public void RecalculateSpawnPoints()
+    {
+        Debug.Log("Has cambiado de escenario, recalculando spawn points...");
+
+        ReleaseAllSpawnPoints();
+
+        for (int i = 0; i < NetworkManager.Singleton.ConnectedClients.Count; i++)
+        {
+            Debug.LogWarning($"Recolocando al cliente {i}");
+            for (int j = 0; j < _spawnPoints.Count; j++)
+            {
+                if (_spawnPoints[j].clientId == null)
+                {
+                    Debug.Log($"Cliente {NetworkManager.Singleton.ConnectedClients[(ulong)i]} se coloca en spawn {j}");
+
+                    var newTupla = (_spawnPoints[j].pos, NetworkManager.Singleton.ConnectedClients[(ulong)i].ClientId);
+                    _spawnPoints[j] = newTupla;
+
+                    GameObject player = NetworkManager.Singleton.ConnectedClients[(ulong)i].PlayerObject.gameObject;
+                    GameManager.Instance.SetObjectPosition(player, _spawnPoints[j].pos);
+                    break;
+                }
+                else
+                {
+                    Debug.LogWarning($"El spawn {j} esta ocupado");
+                }
+            }
+        }
+    }
 }
