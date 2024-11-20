@@ -11,7 +11,6 @@ namespace Tankito.Netcode
 {
     public class RemoteTankInput : MonoBehaviour, ITankInput
     {
-        //private OrderQueueSyncronize<InputPayload> queue = new OrderQueueSyncronize<InputPayload>(N_IDEAL_INPUT); // Bro no va
         private SortedSet<InputPayload> m_inputBuffer = new SortedSet<InputPayload>(new ByTimestamp());
         private InputPayload m_replayInput;
 

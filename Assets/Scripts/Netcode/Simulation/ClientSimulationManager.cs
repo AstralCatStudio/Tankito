@@ -12,14 +12,12 @@ namespace Tankito.Netcode.Simulation
     {
         //GlobalSimulationSnapshot m_authSnapshot;
         const int SNAPSHOT_BUFFER_SIZE = 256;
-        const int AUTH_SNAPSHOT_JITTER_BUFFER_SIZE = 1;
         CircularBuffer<SimulationSnapshot> m_snapshotBuffer = new CircularBuffer<SimulationSnapshot>(SNAPSHOT_BUFFER_SIZE);
 
         /// <summary>
         /// Relates NetworkClientId(ulong) to a specific <see cref="RemoteTankInput"/>.  
         /// </summary>
         public Dictionary<ulong, EmulatedTankInput> emulatedInputTanks = new Dictionary<ulong,EmulatedTankInput>();
-        public SnapshotAccumulator authSnapshotJitterBuffer = new SnapshotAccumulator(AUTH_SNAPSHOT_JITTER_BUFFER_SIZE);
 
         [SerializeField] private TankDelta m_tankSimulationTolerance;// = new TankDelta(new Vector2(0.1f,0.1f), 1f, new Vector2(0.1f,0.1f), 1f, 0);
         [SerializeField] private BulletDelta m_bulletSimulationTolerance;// = new BulletDelta(new Vector2(0.1f,0.1f), 1f, new Vector2(0.1f,0.1f));
@@ -72,13 +70,6 @@ namespace Tankito.Netcode.Simulation
             SimulationSnapshot newSnapshot = CaptureSnapshot();
             newSnapshot.status = SnapshotStatus.Predicted;
             m_snapshotBuffer.Add(newSnapshot, newSnapshot.timestamp);
-
-            // Reconciliate to Latest Auth State
-            SimulationSnapshot authSnapshot;
-            if (authSnapshotJitterBuffer.GetSnapshot(out authSnapshot))
-            {
-                EvaluateForReconciliation(authSnapshot);
-            }
         }
 
         public void EvaluateForReconciliation(SimulationSnapshot newAuthSnapshot)
@@ -95,7 +86,7 @@ namespace Tankito.Netcode.Simulation
             // Jump forward in time to sim state
             if (newAuthSnapshot.timestamp >= SimClock.TickCounter)
             {
-                Debug.Log("AUTHTIMESTAMP: " + newAuthSnapshot.timestamp + " - LOCALTICK: " + SimClock.TickCounter);
+                Debug.Log($"[{SimClock.TickCounter}]Jumping forward to future state[{newAuthSnapshot.timestamp}]");
                 SimClock.Instance.SetClock(newAuthSnapshot.timestamp);
                 SetSimulation(newAuthSnapshot);
                 m_snapshotBuffer.Add(newAuthSnapshot, newAuthSnapshot.timestamp);
@@ -294,22 +285,6 @@ namespace Tankito.Netcode.Simulation
         public void TestInputWindowMessaging()
         {
             MessageHandlers.Instance.SendInputWindowToServer(InputWindowBuffer.Instance.inputWindow);
-        }
-
-        [ContextMenu("Increase Jitter Buffer Size")]
-        public void IncreaseJitterBufferSize()
-        {
-            int bufferTicks = authSnapshotJitterBuffer.BufferSize+1;
-            authSnapshotJitterBuffer.SetBufferSize(bufferTicks);
-            Debug.Log($"Set Jitter Buffer to : {bufferTicks}ticks");
-        }
-
-        [ContextMenu("Decrease Jitter Buffer Size")]
-        public void DecreaseJitterBufferSize()
-        {
-            int bufferTicks = authSnapshotJitterBuffer.BufferSize-1;
-            authSnapshotJitterBuffer.SetBufferSize(bufferTicks);
-            Debug.Log($"Set Jitter Buffer to : {bufferTicks}ticks");
         }
 
         #endregion

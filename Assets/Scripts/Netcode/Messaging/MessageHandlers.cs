@@ -36,6 +36,7 @@ namespace Tankito.Netcode.Messaging
             {
                 Destroy(this);
             }
+
         }
 
         /// <summary>
@@ -337,7 +338,7 @@ namespace Tankito.Netcode.Messaging
 
             if (snapshot.status == SnapshotStatus.Authoritative)
             {
-                ClientSimulationManager.Instance.authSnapshotJitterBuffer.AddSnapshot(snapshot);
+                SnapshotJitterBuffer.Instance.AddSnapshot(snapshot);
             }
 
             // TESTING !!!!

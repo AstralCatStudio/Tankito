@@ -6,12 +6,13 @@ using Unity.Netcode;
 using Tankito.Netcode.Simulation;
 using System;
 using NUnit.Framework;
+using UnityEditor;
 
 namespace Tankito
 {
     public class SimClock : Singleton<SimClock>
     {
-        const int TICKS_PER_SECOND = 60;
+        const int TICKS_PER_SECOND = 30;
         const float SIM_DELTA_TIME = 1f/TICKS_PER_SECOND;
 
         float m_tickTimer;
