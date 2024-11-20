@@ -10,7 +10,8 @@ namespace Tankito
     {
         Moving,
         Dashing,
-        Parrying
+        Parrying,
+        Firing
     }
 
     public class TankController : MonoBehaviour
@@ -47,7 +48,7 @@ namespace Tankito
 
         public PlayerState PlayerState { get => playerState; set => playerState = value; }
         public int StateInitTick { get => stateInitTick; set => stateInitTick = value; }
-        private bool CanDash { get => CheckCanDash() && playerState != PlayerState.Parrying; }
+        private bool CanDash { get => CheckCanDash() && playerState != PlayerState.Parrying && playerState != PlayerState.Firing; }
 
         void Start()
         {
