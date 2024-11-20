@@ -53,8 +53,7 @@ namespace Tankito.Netcode
             {
                 m_inputBuffer.Remove(m_inputBuffer.First());
                 m_replayInput = input;
-            }
-            
+            }            
             return m_replayInput;
         }
         

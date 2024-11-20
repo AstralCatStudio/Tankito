@@ -93,14 +93,7 @@ namespace Tankito
         public void ProcessInput(float deltaTime)
         {
             var input = m_tankInput.GetInput();
-            //if (DEBUG) Debug.Log($"GetInput called, received input: {input}");
-            if (DEBUG)
-            {
-                if(playerState == PlayerState.Dashing)
-                {
-                    Debug.Log($"GetInput called, received input: {input}");
-                }
-            }
+            if (DEBUG) Debug.Log($"GetInput called, received input: {input}");
             ProcessInput(input, deltaTime);
         }
         
