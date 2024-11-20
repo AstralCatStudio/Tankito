@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 namespace Tankito.Netcode.Simulation
@@ -7,7 +9,8 @@ namespace Tankito.Netcode.Simulation
     {
         [SerializeField] private Rigidbody2D m_tankRB;
         [SerializeField] private Rigidbody2D m_turretRB;
-        [SerializeField] private ITankInput m_inputComponent;
+        [SerializeField] private bool m_isNPC = false;
+        private ITankInput m_inputComponent;
 
         public void StartInputReplay(int timestamp) { m_inputComponent.StartInputReplay(timestamp); }
         public int StopInputReplay() { return m_inputComponent.StopInputReplay(); }
@@ -60,7 +63,7 @@ namespace Tankito.Netcode.Simulation
                 ClientSimulationManager.Instance.emulatedInputTanks[OwnerClientId] = (EmulatedTankInput)m_inputComponent;
             }
 
-            GetComponent<TankController>().BindInputSource(m_inputComponent);
+            if (!m_isNPC) GetComponent<TankController>().BindInputSource(m_inputComponent);
         }
 
         public override void OnNetworkDespawn()

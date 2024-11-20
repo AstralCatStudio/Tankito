@@ -52,6 +52,11 @@ namespace Tankito
 
         private void LoadSinglePlayerLobby()
         {
+            StartCoroutine("LoadSinglePlayerLobbyAsync");
+        }
+
+        internal void LoadSinglePlayerGameScene()
+        {
             StartCoroutine("LoadSinglePlayerGameSceneAsync");
         }
 
@@ -70,23 +75,30 @@ namespace Tankito
             StartCoroutine("LoadGameSceneAsync");
         }
 
-        IEnumerator LoadSinglePlayerGameSceneAsync()
+        IEnumerator LoadSinglePlayerLobbyAsync()
         {
             SceneManager.LoadScene("Loading", LoadSceneMode.Additive);
 
             if (DEBUG) Debug.Log("Loading SinglePlayer Lobby...");
             yield return SceneManager.LoadSceneAsync("SinglePlayer_Lobby", LoadSceneMode.Additive);
             if (DEBUG) Debug.Log("SinglePlayer Lobby Loaded!");
+            
+        }
 
+        IEnumerator LoadSinglePlayerGameSceneAsync()
+        {
+            yield return SceneManager.UnloadSceneAsync("SinglePlayer_Lobby");
+            if (DEBUG) Debug.Log("SinglePlayer Lobby Unloaded (finished spinning up server)!");
+            
             if (DEBUG) Debug.Log("Loading SinglePlayer GameScene...");
-                if(NetworkManager.Singleton.IsServer)
-                {
-                    yield return NetworkManager.Singleton.SceneManager.LoadScene("SinglePlayerGame", LoadSceneMode.Additive);
-                }
-                else
-                {
-                    SceneManager.LoadScene("SinglePlayer_Game", LoadSceneMode.Additive);
-                }
+            if(NetworkManager.Singleton.IsServer)
+            {
+                yield return NetworkManager.Singleton.SceneManager.LoadScene("SinglePlayer_Game", LoadSceneMode.Additive);
+            }
+            else
+            {
+                throw new InvalidOperationException("Should be spinning up the local server for single player");
+            }
             if (DEBUG) Debug.Log("SinplePlayer Game Scene Loaded!");
 
             SceneManager.UnloadSceneAsync("Loading");
@@ -138,7 +150,6 @@ namespace Tankito
 
             SceneManager.UnloadSceneAsync("Loading");
         }
-
     }
 
 }

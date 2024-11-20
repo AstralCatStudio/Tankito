@@ -46,9 +46,9 @@ namespace Tankito.PVE
         {
             if (m_navMeshAgent == null)
             {
-                m_navMeshAgent = gameObject.AddComponent<NavMeshAgent>();
+                m_navMeshAgent = GetComponent<NavMeshAgent>();
             }
-            
+
             m_navMeshAgent.enabled = false;
             m_stepQueued = false;
         }

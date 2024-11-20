@@ -113,19 +113,20 @@ namespace Tankito.PVE
         ////////////////////////////////////////////////////////////////////////////////
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////// DETECT
-        public RaycastHit2D[] Detect(string targetTag, float rango, ContactFilter2D collisionFilter)
+        public RaycastHit2D[] Detect(string targetTag, float range, ContactFilter2D collisionFilter)
         {
             List<RaycastHit2D> collided = new List<RaycastHit2D>();
             Physics2D.CircleCast(m_npcTankController.Position, m_detectRange, Vector2.zero, collisionFilter, collided);
 
             RaycastHit2D[] collidedMatches = collided.Where(c => c.collider.CompareTag(targetTag)).OrderBy(c => c.distance).ToArray();
 
-            Debug.Log("DEBUG COLLIDED MATCHES:");
+            var debugLog = $"Detect - Matches for [tag:{targetTag} | range:{range} | contactFilter: {collisionFilter}]:";
             foreach(var i in collidedMatches)
             {
-                Debug.Log(i.collider.tag + ": " + i.distance);
+                debugLog += $"{i.collider.tag}: distance({i.distance})" + (i != collidedMatches.Last() ? ", " : "");
             }
-
+            Debug.Log(debugLog);
+            
             return collidedMatches;
         }
         #endregion

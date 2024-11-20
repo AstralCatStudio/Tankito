@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using Tankito.Netcode;
+using Tankito.Netcode.Messaging;
 using Tankito.Utils;
 using Unity.Netcode;
 using UnityEngine;
@@ -27,6 +29,7 @@ namespace Tankito
 
         public string joinCode;
         public static GameManager Instance { get; private set; }
+        public bool singlePlayerGame = false;
 
         void Awake()
         {
@@ -51,6 +54,27 @@ namespace Tankito
             m_networkManager.OnServerStarted += OnServerStarted;
             m_networkManager.OnClientConnectedCallback += OnClientConnected;
             m_networkManager.OnClientDisconnectCallback += OnClientDisconnect;
+
+            m_networkManager.ConnectionApprovalCallback = ApprovalCheck;
+        }
+
+        private void ApprovalCheck(NetworkManager.ConnectionApprovalRequest request, NetworkManager.ConnectionApprovalResponse response)
+        {
+            if (IsServer)
+            {
+                if (!NetworkManager.Singleton.ConnectedClientsIds.Contains(request.ClientNetworkId))
+                {
+                    if (NetworkManager.Singleton.ConnectedClientsIds.Count >= 4)
+                    {
+                        response.Approved = false;
+                        response.Reason = "Server is full (MaxClients = 4)";
+                    }
+                    else
+                    {
+                        response.Approved = true;
+                    }
+                }
+            }
         }
 
         public override void OnNetworkSpawn()
@@ -104,8 +128,18 @@ namespace Tankito
                 SpawnManager spawnManager = FindObjectOfType<SpawnManager>();
                 spawnManager.SetPlayerInSpawn(clientId);
 
-                RoundManager roundManager = FindObjectOfType<RoundManager>();
-                roundManager.AddPlayer(newPlayer.gameObject);
+                if (!singlePlayerGame)
+                {
+                    RoundManager roundManager = FindObjectOfType<RoundManager>();
+                    roundManager.AddPlayer(newPlayer.gameObject);
+                }
+                else
+                {
+                    // AutoStart sim clock upon scene loading
+                    ClockSignal signal = new ClockSignal();
+                    signal.header = ClockSignalHeader.Start;
+                    MessageHandlers.Instance.SendClockSignal(signal);
+                }
 
                 // IMPORTANTE: Se propaga la nueva posicion a los clientes (SUJETO A CAMBIOS)
                 //NetworkObjectReference networkObjectReference = new NetworkObjectReference(newPlayer);
