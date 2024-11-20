@@ -26,7 +26,7 @@ namespace Tankito
         public static float SimDeltaTime { get => Instance.m_simulationDeltaTime; }
         private float m_simulationDeltaTime;
 
-        private int m_throttleInterval = 3; // In TPS (Ticks Per Second)
+        private int m_throttleInterval = 1;
         private float m_averageThrottleTicks;
         private int m_throttleMessages;
 
@@ -107,7 +107,10 @@ namespace Tankito
             {
                 m_averageThrottleTicks += throttleTicks/m_throttleMessages;
 
-                float newTPS = TICKS_PER_SECOND+Mathf.Clamp(m_averageThrottleTicks, -TICKS_PER_SECOND, TICKS_PER_SECOND-1);
+                float newTPS = TICKS_PER_SECOND+Mathf.Clamp(m_averageThrottleTicks, 1-TICKS_PER_SECOND, TICKS_PER_SECOND);
+
+                if (DEBUG) Debug.Log($"Throttling({m_averageThrottleTicks}) at: {newTPS}");
+
                 m_simulationDeltaTime = 1f/newTPS;
                 m_throttleMessages = 0;
                 m_averageThrottleTicks = 0;
