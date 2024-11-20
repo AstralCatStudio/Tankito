@@ -9,6 +9,7 @@ namespace Tankito.Netcode.Simulation
     {
         private SimulationSnapshot m_latestSnapshot;
         private int m_bufferedTicks;
+        public int BufferSize { get => m_ticksToBuffer; }
         private int m_ticksToBuffer;
         
         public SnapshotAccumulator(int ticksToBuffer)
@@ -26,7 +27,6 @@ namespace Tankito.Netcode.Simulation
             if (newSnapshot.timestamp > m_latestSnapshot.timestamp)
             {
                 m_latestSnapshot = newSnapshot;
-                m_bufferedTicks = 0;
                 return true;
             }
             else
@@ -39,7 +39,7 @@ namespace Tankito.Netcode.Simulation
         {
             m_bufferedTicks++;
 
-            if (m_bufferedTicks > m_ticksToBuffer)
+            if (m_bufferedTicks > m_ticksToBuffer && !m_latestSnapshot.Equals(default))
             {
                 m_bufferedTicks = 0;
                 snapshot = m_latestSnapshot;
