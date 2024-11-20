@@ -7,6 +7,9 @@ using UnityEngine.UI;
 public class CharacterData : ScriptableObject
 {
     public Sprite sprite;
+    public Sprite tankHead;
+    public Sprite tankBody;
+    public Animation[] animations;
     public string characterName;
     [TextArea(5,10)]
     public string description;
