@@ -40,8 +40,6 @@ public class CharacterSelectionButton : MonoBehaviour
         LeanTween.scale(characterPanel, Vector2.zero, 0f);
         LeanTween.scale(characterPanel, Vector2.one, duration).setEase(LeanTweenType.easeOutElastic);
 
-
-
         MusicManager.Instance.PlaySound("aceptar");
     }
 

@@ -43,14 +43,15 @@ public class DropdownSelectionCharacter : MonoBehaviour
             MusicManager.Instance.PlaySound("cancelar");
         } else
         {
-            DeselectAll();
-            character.selected = true;
+            DeselectAllButtons();
+            ClientData.Instance.SelectCharacter(character);
             ShowMessage("Selected");
             ChangeButtonToSelected();
+
             MusicManager.Instance.PlaySound("snd_desbloquearpersonaje");
         }
     }
-    public void DeselectAll()
+    public void DeselectAllButtons()
     {
         foreach (var c in ClientData.Instance.characters)
         {
@@ -81,12 +82,12 @@ public class DropdownSelectionCharacter : MonoBehaviour
         LeanTween.cancelAll();
 
         LeanTween.alpha(messageRect, 1f, 0f);
-        LeanTween.value(messageText.gameObject, updateAlphaCallback, alphaZero, alphaOne, 0f);
+        LeanTween.value(messageText.gameObject, UpdateAlphaCallback, alphaZero, alphaOne, 0f);
 
         LeanTween.scale(messageRect, Vector2.one, openMessageDuration).setEase(LeanTweenType.easeOutElastic);
 
         LeanTween.alpha(messageRect, 0f, closeMessageDuration);
-        LeanTween.value(messageText.gameObject, updateAlphaCallback, alphaOne, alphaZero, closeMessageDuration);
+        LeanTween.value(messageText.gameObject, UpdateAlphaCallback, alphaOne, alphaZero, closeMessageDuration);
 
         if (disableCoroutine != null)
         {
@@ -95,9 +96,14 @@ public class DropdownSelectionCharacter : MonoBehaviour
         disableCoroutine = StartCoroutine(DisableMessage());
     }
 
-    private void updateAlphaCallback(Color val, object child)
+    private void UpdateAlphaCallback(Color val, object child)
     {
         messageText.GetComponent<TextMeshProUGUI>().color = val;
+    }
+
+    private void UpdateSkin()
+    {
+        
     }
 
     private IEnumerator DisableMessage()
