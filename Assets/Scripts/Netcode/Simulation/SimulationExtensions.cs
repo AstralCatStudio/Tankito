@@ -93,11 +93,15 @@ namespace Tankito.Netcode.Simulation
 
         private static bool CompareTankStateDeltas(in TankDelta a, in TankDelta b)
         {
-            return  a.posDiff.sqrMagnitude > b.posDiff.sqrMagnitude ||
+            bool deltaComparison = a.posDiff.sqrMagnitude > b.posDiff.sqrMagnitude ||
                     Mathf.Abs(a.hullRotDiff) > Mathf.Abs(b.hullRotDiff) ||
                     a.velDiff.sqrMagnitude > b.velDiff.sqrMagnitude ||
                     Mathf.Abs(a.turrRotDiff) > Mathf.Abs(b.turrRotDiff) ||
                     a.actionDiff > b.actionDiff;
+
+            Debug.Log($"A:{a} >? B:{b}");
+
+            return  deltaComparison;
         }
 
         private static bool CompareBulletStateDeltas(in BulletDelta a, in BulletDelta b)

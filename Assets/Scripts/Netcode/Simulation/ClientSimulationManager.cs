@@ -105,6 +105,12 @@ namespace Tankito.Netcode.Simulation
                     {
                         if (CheckForDesync(predictedSnapshot[objSnapShot], newAuthSnapshot[objSnapShot]))
                         {
+                            if (DEBUG)
+                            {
+                                Debug.Log($"[{SimClock.TickCounter}]Rolling back to [{newAuthSnapshot.timestamp}]"+
+                                $"\nBecause {objSnapShot.NetworkObjectId} dind't meet the delta Thresholds");
+                            }
+                            
                             Rollback(newAuthSnapshot);
                             break;
                         }
@@ -118,7 +124,6 @@ namespace Tankito.Netcode.Simulation
 
         public void Rollback(SimulationSnapshot authSnapshot)
         {
-            /*if (DEBUG)*/ Debug.Log($"[{SimClock.TickCounter}]Rolling back to [{authSnapshot.timestamp}]");
 
             int rollbackCounter = authSnapshot.timestamp;
             
@@ -155,7 +160,7 @@ namespace Tankito.Netcode.Simulation
                 if (obj is  TankSimulationObject tank)
                 {
                     var lastReplayTick = tank.StopInputReplay();
-                    if (DEBUG) Debug.Log($"Tank({tank.NetworkObjectId})'s last replayed input was on Tick- {lastReplayTick}");
+                    //if (DEBUG) Debug.Log($"Tank({tank.NetworkObjectId})'s last replayed input was on Tick- {lastReplayTick}");
                 }
             }
 

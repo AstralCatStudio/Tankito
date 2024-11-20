@@ -7,7 +7,7 @@ namespace Tankito.Netcode.Simulation
 {
     public class SnapshotJitterBuffer : Singleton<SnapshotJitterBuffer>
     {
-        const double AUTH_SNAPSHOT_JITTER_BUFFER_SIZE = 0.1;
+        const double AUTH_SNAPSHOT_JITTER_BUFFER_SIZE = 0.036;
 
         private int m_bufferCount;
         private SimulationSnapshot m_latestSnapshot;
