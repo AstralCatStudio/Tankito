@@ -142,25 +142,25 @@ public class SpawnManager : MonoBehaviour
 
         ReleaseAllSpawnPoints();
 
-        for (int i = 0; i < NetworkManager.Singleton.ConnectedClients.Count; i++)
+        foreach (var client in NetworkManager.Singleton.ConnectedClients.Values)
         {
-            Debug.Log($"Recolocando al cliente {i}");
-            for (int j = 0; j < _spawnPoints.Count; j++)
+            Debug.Log($"Recolocando al cliente {client.ClientId}");
+            for (int i = 0; i < _spawnPoints.Count; i++)
             {
-                if (_spawnPoints[j].clientId == null)
+                if (_spawnPoints[i].clientId == null)
                 {
-                    Debug.Log($"Cliente {NetworkManager.Singleton.ConnectedClients[(ulong)i]} se coloca en spawn {j}");
+                    Debug.Log($"Cliente {client.ClientId} se coloca en spawn {i}");
 
-                    var newTupla = (_spawnPoints[j].pos, NetworkManager.Singleton.ConnectedClients[(ulong)i].ClientId);
-                    _spawnPoints[j] = newTupla;
+                    var newTupla = (_spawnPoints[i].pos, client.ClientId);
+                    _spawnPoints[i] = newTupla;
 
-                    GameObject player = NetworkManager.Singleton.ConnectedClients[(ulong)i].PlayerObject.gameObject;
-                    GameManager.Instance.SetObjectPosition(player, _spawnPoints[j].pos);
+                    GameObject player = client.PlayerObject.gameObject;
+                    GameManager.Instance.SetObjectPosition(player, _spawnPoints[i].pos);
                     break;
                 }
                 else
                 {
-                    Debug.Log($"El spawn {j} esta ocupado");
+                    Debug.Log($"El spawn {i} esta ocupado");
                 }
             }
         }

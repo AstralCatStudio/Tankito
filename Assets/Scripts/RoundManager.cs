@@ -176,6 +176,7 @@ public class RoundManager : NetworkBehaviour
         {
             SetActiveInitBackButtonClientRpc(false);
             _roundUI.SetActiveScenarySelection(false);
+            _spawnManager = GameObject.Find("SpawnManager").GetComponent<SpawnManager>();
         }
         else if(_currentRound > 1)
         {
