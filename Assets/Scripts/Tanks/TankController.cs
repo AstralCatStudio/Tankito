@@ -45,7 +45,7 @@ namespace Tankito
         public delegate void DashEnd();
         public event DashEnd OnDashEnd;
 
-        [SerializeField] private CreateBullet cannon;
+        [SerializeField] private BulletCannon cannon;
         void Start()
         {
             if (m_tankRB == null)
@@ -71,7 +71,6 @@ namespace Tankito
             // Subscribe to SimulationObject Kinematics
             var tankSimObj = GetComponent<TankSimulationObject>();
             tankSimObj.OnComputeKinematics += ProcessInput;
-            tankSimObj.IsKinematic = true;
         }
 
         void OnDisable()

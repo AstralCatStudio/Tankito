@@ -6,10 +6,6 @@ namespace Tankito.Netcode.Simulation
 {
     public abstract class ASimulationObject : NetworkBehaviour, INetworkSerializable
     {
-        public bool IsKinematic {get => m_isKinematic; set => m_isKinematic = value; }
-        [SerializeField]
-        private bool m_isKinematic;
-
         // Define a delegate for the kinematics computation
         public delegate void KinematicFunction(float deltaTime);
 

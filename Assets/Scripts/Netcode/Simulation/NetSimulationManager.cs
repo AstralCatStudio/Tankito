@@ -51,7 +51,7 @@ namespace Tankito.Netcode.Simulation
         /// </summary>
         public virtual void Simulate()
         {
-            foreach (var obj in m_simulationObjects.Values.Where(obj => obj.IsKinematic))
+            foreach (var obj in m_simulationObjects.Values)
             {
                 obj.ComputeKinematics(SimClock.SimDeltaTime);
                 //Debug.Log($"ComputedKinematics for: {obj}");

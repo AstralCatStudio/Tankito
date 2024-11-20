@@ -5,7 +5,6 @@ namespace Tankito
 {
     public class BulletCannonRegistry : Singleton<BulletCannonRegistry>
     {
-        
         [SerializeField]
         private BulletProperties m_baseBulletProperties;
         public BulletProperties BaseProperties { get => m_baseBulletProperties; }
@@ -16,7 +15,5 @@ namespace Tankito
             get => m_cannons[clientId];
             set => m_cannons[clientId] = value;
         }
-
-
     }
 }
