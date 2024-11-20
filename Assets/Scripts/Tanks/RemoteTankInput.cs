@@ -15,7 +15,7 @@ namespace Tankito.Netcode
         private SortedSet<InputPayload> m_inputBuffer = new SortedSet<InputPayload>(new ByTimestamp());
         private InputPayload m_replayInput;
 
-        private const int N_IDEAL_INPUT = 5;
+        private const int N_IDEAL_INPUT = 10;
         public int IdealBufferSize { get => N_IDEAL_INPUT; }
         public int BufferSize { get => m_inputBuffer.Count; }
 
