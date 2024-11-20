@@ -52,7 +52,7 @@ namespace Tankito
 
         private void LoadSinglePlayerLobby()
         {
-            StartCoroutine("LoadSinglePlayerLobbyAsync");
+            StartCoroutine("LoadSinglePlayerGameSceneAsync");
         }
 
         public void LoadLobby()
@@ -70,7 +70,7 @@ namespace Tankito
             StartCoroutine("LoadGameSceneAsync");
         }
 
-        IEnumerator LoadSinglePlayerLobbyAsync()
+        IEnumerator LoadSinglePlayerGameSceneAsync()
         {
             SceneManager.LoadScene("Loading", LoadSceneMode.Additive);
 
@@ -78,16 +78,16 @@ namespace Tankito
             yield return SceneManager.LoadSceneAsync("SinglePlayer_Lobby", LoadSceneMode.Additive);
             if (DEBUG) Debug.Log("SinglePlayer Lobby Loaded!");
 
-            SceneManager.UnloadSceneAsync("Loading");
-        }
-
-        IEnumerator LoadSinglePlayerGameAsync()
-        {
-            SceneManager.LoadScene("Loading", LoadSceneMode.Additive);
-
-            if (DEBUG) Debug.Log("Loading Lobby...");
-            throw new NotImplementedException("TODO: load single player game scene");
-            if (DEBUG) Debug.Log("Lobby Loaded!");
+            if (DEBUG) Debug.Log("Loading SinglePlayer GameScene...");
+                if(NetworkManager.Singleton.IsServer)
+                {
+                    yield return NetworkManager.Singleton.SceneManager.LoadScene("SinglePlayerGame", LoadSceneMode.Additive);
+                }
+                else
+                {
+                    SceneManager.LoadScene("SinglePlayer_Game", LoadSceneMode.Additive);
+                }
+            if (DEBUG) Debug.Log("SinplePlayer Game Scene Loaded!");
 
             SceneManager.UnloadSceneAsync("Loading");
         }
