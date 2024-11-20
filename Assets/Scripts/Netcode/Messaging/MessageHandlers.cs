@@ -124,6 +124,7 @@ namespace Tankito.Netcode.Messaging
                 case ClockSignalHeader.Throttle:
                     if (IsClient && !IsServer)
                     {
+                        if (DEBUG_CLOCK) Debug.Log("Attempting to throttle the local client simulation clock.");
                         SimClock.Instance.ThrottleClock(signal.throttleTicks, signal.serverTime);
                     }
                     break;
