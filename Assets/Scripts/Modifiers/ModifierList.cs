@@ -8,7 +8,7 @@ namespace Tankito
     public class ModifierList : ScriptableObject
     {
         //para acceder a la lista y solo tener que mandar por network el indice en vez de el modificador entero
-        //en teoría solo habría uno de estos en todo el proyecto
+        //en teorï¿½a solo habrï¿½a uno de estos en todo el proyecto
         public List<Modifier> modifiers = new List<Modifier>();
     }
 }

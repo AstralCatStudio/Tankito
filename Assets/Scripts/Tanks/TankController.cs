@@ -71,7 +71,6 @@ namespace Tankito
             // Subscribe to SimulationObject Kinematics
             var tankSimObj = GetComponent<TankSimulationObject>();
             tankSimObj.OnComputeKinematics += ProcessInput;
-            tankSimObj.IsKinematic = true;
         }
 
         void OnDisable()

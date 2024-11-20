@@ -13,7 +13,7 @@ namespace Tankito
 
         public void Start()
         {
-            InitializePool(m_bulletPrefab, m_prewarmCount);   
+            InitializePool(m_bulletPrefab, m_prewarmCount);
         }
 
         public void InitializePool(GameObject bulletPrefab, int prewarmCount)

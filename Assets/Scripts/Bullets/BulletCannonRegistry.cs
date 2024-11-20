@@ -17,7 +17,5 @@ namespace Tankito
             get => m_cannons[clientId];
             set => m_cannons[clientId] = value;
         }
-
-
     }
 }
