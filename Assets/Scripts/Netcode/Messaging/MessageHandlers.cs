@@ -333,7 +333,7 @@ namespace Tankito.Netcode.Messaging
 
             if (snapshot.status == SnapshotStatus.Authoritative)
             {
-                ClientSimulationManager.Instance.EvaluateForReconciliation(snapshot);
+                ClientSimulationManager.Instance.authSnapshotJitterBuffer.AddSnapshot(snapshot);
             }
 
             // TESTING !!!!
