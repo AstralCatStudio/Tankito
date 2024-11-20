@@ -4,6 +4,7 @@ using System.Linq;
 using Tankito;
 using Tankito.Netcode;
 using Tankito.Utils;
+using Unity.Services.Matchmaker.Models;
 using UnityEngine;
 
 namespace Tankito.Netcode
@@ -14,18 +15,14 @@ namespace Tankito.Netcode
         private SortedSet<InputPayload> m_inputBuffer = new SortedSet<InputPayload>(new ByTimestamp());
         private InputPayload m_replayInput;
 
-        private const int N_IDEAL_INPUT = 15;
+        private const int N_IDEAL_INPUT = 5;
         public int IdealBufferSize { get => N_IDEAL_INPUT; }
         public int BufferSize { get => m_inputBuffer.Count; }
 
         public void AddInput(InputPayload[] newInputWindow)
         {
-            if (newInputWindow[0].timestamp < SimClock.TickCounter) // Stale Input, don't add
-            {
-                return;
-            }
-
-            m_inputBuffer.UnionWith(newInputWindow);
+            // Add only new ticks' inputs.
+            m_inputBuffer.UnionWith(newInputWindow.Where(i => i.timestamp > SimClock.TickCounter));
 
             RemoveStaleInput();
         }
