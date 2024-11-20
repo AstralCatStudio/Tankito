@@ -28,7 +28,8 @@ public class ScenarySelector : NetworkBehaviour
             RoundUI roundUI = GameObject.FindObjectOfType<RoundUI>();
             if (roundUI != null)
             {
-                roundUI.SetActiveScenaryButtons(true);
+                roundUI.SetActiveScenarySelection(true);
+                roundUI.SetScenaryText(_scenaries[_currentScenaryIndex.Value].name);
             }
             else
             {
@@ -68,6 +69,7 @@ public class ScenarySelector : NetworkBehaviour
         if (newIndex >= 0 && newIndex < _scenaries.Count)
         {
             _scenaries[newIndex].SetActive(true);
+            UpdateScenaryText(_scenaries[newIndex].name);
         }
 
         if (IsServer)
@@ -112,5 +114,21 @@ public class ScenarySelector : NetworkBehaviour
             _scenaries[i].SetActive(i == index);
         }
         Debug.Log($"Activado escenario de index {index}: {_scenaries[index].name}");
+    }
+
+    private void UpdateScenaryText(string text)
+    {
+        if(IsServer)
+        {
+            RoundUI roundUI = GameObject.FindObjectOfType<RoundUI>();
+            if (roundUI != null)
+            {
+                roundUI.SetScenaryText(text);
+            }
+            else
+            {
+                Debug.LogWarning("ScenarySelector: RoundUI no se encontró");
+            }
+        }
     }
 }

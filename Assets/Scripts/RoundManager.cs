@@ -175,6 +175,7 @@ public class RoundManager : NetworkBehaviour
         if(_currentRound == 1)
         {
             SetActiveInitBackButtonClientRpc(false);
+            _roundUI.SetActiveScenarySelection(false);
         }
         else if(_currentRound > 1)
         {
@@ -471,7 +472,7 @@ public class RoundManager : NetworkBehaviour
     {
         if (_currentRound == _maxRounds)
         {
-            _ranking = "Ranking Final: ";
+            _ranking = "Final Ranking: ";
         }
         else
         {
@@ -482,7 +483,7 @@ public class RoundManager : NetworkBehaviour
 
         for (int i = 0; i < sortedPlayers.Count; i++)
         {
-            _ranking += $"\n{i + 1}. Jugador {sortedPlayers[i].GetComponent<NetworkObject>().OwnerClientId}:  {sortedPlayers[i].GetComponent<TankData>().points} puntos";
+            _ranking += $"\n{i + 1}. Player {sortedPlayers[i].GetComponent<NetworkObject>().OwnerClientId}:  {sortedPlayers[i].GetComponent<TankData>().points} points";
         }
     }
 }

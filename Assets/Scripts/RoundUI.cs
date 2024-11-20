@@ -80,7 +80,7 @@ public class RoundUI : MonoBehaviour
     {
         InitExitButton.SetActive(active);
     }
-    
+
     public void SetActiveEndExitButton(bool active)
     {
         EndExitButton.SetActive(active);
@@ -97,9 +97,14 @@ public class RoundUI : MonoBehaviour
 
     #region Scenary
 
-    public void SetActiveScenaryButtons(bool active)
+    public void SetActiveScenarySelection(bool active)
     {
         ScenarySelection.SetActive(active);
+    }
+
+    public void SetScenaryText(string newText)
+    {
+        ScenarySelection.GetComponentInChildren<TextMeshProUGUI>().text = newText;
     }
 
     #endregion

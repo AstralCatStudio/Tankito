@@ -144,7 +144,7 @@ public class SpawnManager : MonoBehaviour
 
         for (int i = 0; i < NetworkManager.Singleton.ConnectedClients.Count; i++)
         {
-            Debug.LogWarning($"Recolocando al cliente {i}");
+            Debug.Log($"Recolocando al cliente {i}");
             for (int j = 0; j < _spawnPoints.Count; j++)
             {
                 if (_spawnPoints[j].clientId == null)
@@ -160,7 +160,7 @@ public class SpawnManager : MonoBehaviour
                 }
                 else
                 {
-                    Debug.LogWarning($"El spawn {j} esta ocupado");
+                    Debug.Log($"El spawn {j} esta ocupado");
                 }
             }
         }
