@@ -7,8 +7,9 @@ namespace Tankito.Netcode.Simulation
 {
     public class SnapshotJitterBuffer : Singleton<SnapshotJitterBuffer>
     {
-        const float AUTH_SNAPSHOT_JITTER_BUFFER_SIZE = 0.15f;
+        const double AUTH_SNAPSHOT_JITTER_BUFFER_SIZE = 0.03;
 
+        private int m_bufferCount;
         private SimulationSnapshot m_latestSnapshot;
         private double m_bufferedTime;
         private double m_timeToBuffer;
@@ -49,6 +50,7 @@ namespace Tankito.Netcode.Simulation
         {
             if (!newSnapshot.Equals(default) && newSnapshot.timestamp > m_latestSnapshot.timestamp)
             {
+                m_bufferCount++;
                 m_latestSnapshot = newSnapshot;
                 return true;
             }
@@ -60,10 +62,11 @@ namespace Tankito.Netcode.Simulation
 
         public bool GetSnapshot(out SimulationSnapshot snapshot)
         {
-            if (m_bufferedTime >= m_timeToBuffer && !m_latestSnapshot.Equals(default))
+            if (m_bufferCount > 0 && m_bufferedTime >= m_timeToBuffer)
             {
                 snapshot = m_latestSnapshot;
                 m_latestSnapshot = default;
+                m_bufferCount = 0;
                 return true;
             }
             else
