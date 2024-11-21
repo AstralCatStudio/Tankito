@@ -81,18 +81,6 @@ namespace Tankito.Netcode.Simulation
             {
                 ServerSimulationManager.Instance.remoteInputTanks.Remove(NetworkObjectId);
             }
-
-            if (IsLocalPlayer)
-            {
-                if (m_inputComponent is TankPlayerInput localTankInput)
-                {
-                    GameManager.Instance.UnbindInputActions(localTankInput);
-                }
-                else
-                {
-                    throw new InvalidOperationException($"Can't unbind inpunt actions because input component is not {typeof(TankPlayerInput)}");
-                }
-            }
         }
 
         public override ISimulationState GetSimState()
