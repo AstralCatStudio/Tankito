@@ -26,6 +26,12 @@ namespace Tankito.Netcode
         public static int SIM_TICK_RATE { get => Instance.Sim_Tick_Rate; }
         private static double SIM_DELTA_TIME { get => 1.0/Instance.Sim_Tick_Rate; }
 
+        protected override void Awake()
+        {
+            base.Awake();
+            DontDestroyOnLoad(gameObject);
+        }
+        
         void Update()
         {
             if (DEBUG)
