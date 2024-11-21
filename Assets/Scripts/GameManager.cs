@@ -7,6 +7,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using Tankito.Netcode.Messaging;
 
 namespace Tankito
 {
@@ -112,9 +113,18 @@ namespace Tankito
                 //SetObjectPositionClientRpc(newPlayer, newPlayer.GetComponent<Transform>().position);
                 // Ahora se maneja directamente en el spawn manager llamando a la funcion SetObjectPosition del GameManager
             }
+
+            if (clientId != NetworkManager.Singleton.LocalClientId) return;
+
+            Debug.Log("Registering in Message Handler");
+
+            NetworkManager.Singleton.CustomMessagingManager.RegisterNamedMessageHandler(MessageName.ClockSignal, MessageHandlers.Instance.ReceiveClockSignal);
+            NetworkManager.Singleton.CustomMessagingManager.RegisterNamedMessageHandler(MessageName.InputWindow, MessageHandlers.Instance.ReceiveInputWindow);
+            NetworkManager.Singleton.CustomMessagingManager.RegisterNamedMessageHandler(MessageName.RelayInputWindow, MessageHandlers.Instance.ReceiveRelayedInputWindow);
+            NetworkManager.Singleton.CustomMessagingManager.RegisterNamedMessageHandler(MessageName.SimulationSnapshot, MessageHandlers.Instance.ReceiveSimulationSnapshot);
         }
 
-        private void OnClientDisconnect(ulong obj)
+        private void OnClientDisconnect(ulong clientId)
         {
             //Debug.LogException(new NotImplementedException());
 
@@ -122,10 +132,10 @@ namespace Tankito
             if (IsServer)
             {
                 SpawnManager spawnManager = FindObjectOfType<SpawnManager>();
-                spawnManager.FreeSpawnPoint(obj);
+                spawnManager.FreeSpawnPoint(clientId);
 
                 RoundManager roundManager = FindObjectOfType<RoundManager>();
-                roundManager.RemovePlayer(obj);
+                roundManager.RemovePlayer(clientId);
             }
         }
 
@@ -149,7 +159,6 @@ namespace Tankito
 
         public void FindPlayerInput()
         {
-            Debug.LogWarning("FIND PLAYER INPUT");
             m_playerInput = GameObject.FindObjectOfType<PlayerInput>(true);
             if (m_playerInput == null)
             {
@@ -157,7 +166,7 @@ namespace Tankito
             }
             else
             {
-                Debug.LogWarning("Player input encontrado");
+                //Debug.Log("Player input encontrado");
             }
             m_inputActions = new TankitoInputActions();
             m_playerInput.actions = m_inputActions.asset;

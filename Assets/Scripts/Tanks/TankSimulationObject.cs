@@ -43,7 +43,7 @@ namespace Tankito.Netcode.Simulation
             if (IsLocalPlayer)
             {
                 m_inputComponent = playerInput;
-                Debug.LogWarning("BINDEO");
+                
                 GameManager.Instance.BindInputActions(playerInput);
             }
             else if (IsServer)
