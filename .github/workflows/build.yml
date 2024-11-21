@@ -1,4 +1,5 @@
-          name: Build and Publish Project
+          @ -1,65 +0,0 @@
+name: Build and Publish Project
  
 on:
   push:
@@ -56,15 +57,7 @@ jobs:
           sudo mv butler/butler /usr/local/bin/butler
           butler -V
  
-- name: Extract version from Unity project
-        id: extract_version
-        run: |
-          version=$(grep -oP 'bundleVersion: \K.*' ProjectSettings/ProjectSettings.asset | tr -d '\r')
-          echo "version=$version" >> $GITHUB_ENV
-
       - name: Push build to itch.io
-        run: |
-          butler push build/WebGL "$ITCHIO_USERNAME/$ITCHIO_GAMEID:web" --userversion "$VERSION"
         env:
           BUTLER_API_KEY: ${{ secrets.BUTLER_CREDENTIALS }}
           ITCHIO_USERNAME: ${{ secrets.ITCHIO_USERNAME }}
