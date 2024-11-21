@@ -60,7 +60,7 @@ public class DisconnectHandler : NetworkBehaviour
             if (playerObject != null)
             {
                 playerObject.Despawn(true);
-                Debug.LogWarning($"Jugador con ClientID {clientId} ha sido despaweado.");
+                Debug.Log($"Jugador con ClientID {clientId} ha sido despaweado.");
             }
             else
             {
@@ -75,6 +75,8 @@ public class DisconnectHandler : NetworkBehaviour
 
     private void Disconnect()
     {
+        SimClock.Instance.StopClock();
+
         NetworkManager.Singleton.Shutdown();
 
         SceneLoader.Singleton.ReloadMainMenu();

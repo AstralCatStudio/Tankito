@@ -36,23 +36,29 @@ namespace Tankito.Netcode.Messaging
             {
                 Destroy(this);
             }
+
+            NetworkManager.OnClientConnectedCallback += OnConnectedToServer;
+            NetworkManager.OnClientDisconnectCallback += OnDisconnectedToServer;
         }
 
         /// <summary>
         /// For most cases, you want to register once your NetworkBehaviour's
         /// NetworkObject (typically in-scene placed) is spawned.
         /// </summary>
-        public override void OnNetworkSpawn()
+        public void OnConnectedToServer(ulong clientId)
         {
-            // Both the server-host and client(s) register the custom named message.
+            if (clientId != NetworkManager.LocalClientId) return;
+
             NetworkManager.CustomMessagingManager.RegisterNamedMessageHandler(MessageName.ClockSignal, RecieveClockSignal);
             NetworkManager.CustomMessagingManager.RegisterNamedMessageHandler(MessageName.InputWindow, ReceiveInputWindow);
             NetworkManager.CustomMessagingManager.RegisterNamedMessageHandler(MessageName.RelayInputWindow, ReceiveRelayedInputWindow);
             NetworkManager.CustomMessagingManager.RegisterNamedMessageHandler(MessageName.SimulationSnapshot, ReceiveSimulationSnapshot);
         }
 
-        public override void OnNetworkDespawn()
+        public void OnDisconnectedToServer(ulong clientId)
         {
+            if (clientId != NetworkManager.LocalClientId) return;
+
             // De-register when the associated NetworkObject is despawned.
             NetworkManager.CustomMessagingManager.UnregisterNamedMessageHandler(MessageName.ClockSignal);
             NetworkManager.CustomMessagingManager.UnregisterNamedMessageHandler(MessageName.InputWindow);
