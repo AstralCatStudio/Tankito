@@ -395,7 +395,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 22e5306c6ba4d7246a2a80f028a490ca, type: 2}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4055,7 +4055,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 22e5306c6ba4d7246a2a80f028a490ca, type: 2}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5010,7 +5010,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 22e5306c6ba4d7246a2a80f028a490ca, type: 2}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5378,7 +5378,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 22e5306c6ba4d7246a2a80f028a490ca, type: 2}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -6038,9 +6038,9 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
-  - {fileID: 691865790}
   - {fileID: 1988532680}
   - {fileID: 635563002}
+  - {fileID: 691865790}
   m_Father: {fileID: 642562860}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &748109956
@@ -10774,7 +10774,7 @@ ParticleSystem:
     startSpeed:
       serializedVersion: 2
       minMaxState: 2
-      scalar: 30
+      scalar: 50
       minScalar: 4
       maxCurve:
         serializedVersion: 2
@@ -10782,26 +10782,26 @@ ParticleSystem:
         - serializedVersion: 3
           time: 0
           value: 1
-          inSlope: -0.108000375
-          outSlope: -0.108000375
+          inSlope: -0.4481148
+          outSlope: -0.4481148
           tangentMode: 34
           weightedMode: 0
           inWeight: 0
           outWeight: 0.33333334
         - serializedVersion: 3
-          time: 0.49711812
-          value: 0.94631106
-          inSlope: -0.454376
-          outSlope: -0.454376
+          time: 0.5330646
+          value: 0.76112586
+          inSlope: -0.52636164
+          outSlope: -0.52636164
           tangentMode: 34
           weightedMode: 0
           inWeight: 0.33333334
           outWeight: 0.33333334
         - serializedVersion: 3
           time: 1
-          value: 0.54362756
-          inSlope: -0.8007516
-          outSlope: -0.8007516
+          value: 0.47881275
+          inSlope: -0.6046085
+          outSlope: -0.6046085
           tangentMode: 34
           weightedMode: 0
           inWeight: 0.33333334
@@ -10814,27 +10814,27 @@ ParticleSystem:
         m_Curve:
         - serializedVersion: 3
           time: 0
-          value: 0.91946626
-          inSlope: -0.50907886
-          outSlope: -0.50907886
+          value: 0.90094775
+          inSlope: -0.6474502
+          outSlope: -0.6474502
           tangentMode: 34
           weightedMode: 0
           inWeight: 0
           outWeight: 0.33333334
         - serializedVersion: 3
-          time: 0.50096595
-          value: 0.6644351
-          inSlope: -0.53696555
-          outSlope: -0.53696555
+          time: 0.53691244
+          value: 0.5533237
+          inSlope: -0.5780873
+          outSlope: -0.5780873
           tangentMode: 34
           weightedMode: 0
           inWeight: 0.33333334
           outWeight: 0.33333334
         - serializedVersion: 3
           time: 1
-          value: 0.3825546
-          inSlope: -0.56485224
-          outSlope: -0.56485224
+          value: 0.31773978
+          inSlope: -0.50872433
+          outSlope: -0.50872433
           tangentMode: 34
           weightedMode: 0
           inWeight: 0.33333334
@@ -10910,14 +10910,14 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 2
-      scalar: 6
+      scalar: 9
       minScalar: 1
       maxCurve:
         serializedVersion: 2
         m_Curve:
         - serializedVersion: 3
           time: 0
-          value: 0.67113495
+          value: 0.5276165
           inSlope: 0
           outSlope: 0
           tangentMode: 0
@@ -10925,8 +10925,8 @@ ParticleSystem:
           inWeight: 0.33333334
           outWeight: 0.33333334
         - serializedVersion: 3
-          time: 0.502886
-          value: 1
+          time: 0.5155978
+          value: 0.9675926
           inSlope: 0
           outSlope: 0
           tangentMode: 0
@@ -10935,7 +10935,7 @@ ParticleSystem:
           outWeight: 0.33333334
         - serializedVersion: 3
           time: 1
-          value: 0.4093933
+          value: 0.3214377
           inSlope: 0
           outSlope: 0
           tangentMode: 0
@@ -10950,7 +10950,7 @@ ParticleSystem:
         m_Curve:
         - serializedVersion: 3
           time: 0
-          value: 0.44965363
+          value: 0.33854255
           inSlope: 0
           outSlope: 0
           tangentMode: 0
@@ -10958,8 +10958,8 @@ ParticleSystem:
           inWeight: 0.33333334
           outWeight: 0.33333334
         - serializedVersion: 3
-          time: 0.50096345
-          value: 0.5838926
+          time: 0.51367533
+          value: 0.5514852
           inSlope: 0
           outSlope: 0
           tangentMode: 0
@@ -10968,7 +10968,7 @@ ParticleSystem:
           outWeight: 0.33333334
         - serializedVersion: 3
           time: 1
-          value: 0.1409356
+          value: 0.103898555
           inSlope: 0
           outSlope: 0
           tangentMode: 0
@@ -11245,7 +11245,7 @@ ParticleSystem:
         m_RotationOrder: 4
     randomizeRotationDirection: 0
     gravitySource: 1
-    maxNumParticles: 2000
+    maxNumParticles: 1000
     customEmitterVelocity: {x: 0, y: 0, z: 0}
     size3D: 0
     rotation3D: 0
@@ -11511,14 +11511,14 @@ ParticleSystem:
     rateOverTime:
       serializedVersion: 2
       minMaxState: 2
-      scalar: 500
+      scalar: 150
       minScalar: 10
       maxCurve:
         serializedVersion: 2
         m_Curve:
         - serializedVersion: 3
           time: 0
-          value: 0.6040274
+          value: 0.9790274
           inSlope: 0
           outSlope: 0
           tangentMode: 0
@@ -11526,17 +11526,17 @@ ParticleSystem:
           inWeight: 0
           outWeight: 0
         - serializedVersion: 3
-          time: 0.5009676
-          value: 1
-          inSlope: 0
-          outSlope: 0
+          time: 0.49672568
+          value: 0.8876742
+          inSlope: -0.45547757
+          outSlope: -0.45547757
           tangentMode: 0
           weightedMode: 0
           inWeight: 0.33333334
-          outWeight: 0.33333334
+          outWeight: 0.44060713
         - serializedVersion: 3
           time: 1
-          value: 0.3020225
+          value: 0.2742515
           inSlope: 0
           outSlope: 0
           tangentMode: 0
@@ -11551,7 +11551,7 @@ ParticleSystem:
         m_Curve:
         - serializedVersion: 3
           time: 0
-          value: 0.30201602
+          value: 0.8992382
           inSlope: 0
           outSlope: 0
           tangentMode: 0
@@ -11559,14 +11559,14 @@ ParticleSystem:
           inWeight: 0.33333334
           outWeight: 0.33333334
         - serializedVersion: 3
-          time: 0.5028944
-          value: 0.90603894
-          inSlope: 0
-          outSlope: 0
+          time: 0.49865246
+          value: 0.76130575
+          inSlope: -0.52514315
+          outSlope: -0.52514315
           tangentMode: 0
           weightedMode: 0
           inWeight: 0.33333334
-          outWeight: 0.33333334
+          outWeight: 0.41333234
         - serializedVersion: 3
           time: 1
           value: 0.13423064
@@ -19900,8 +19900,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: eb4d32488b1e2e84a9786db2f6c6b7ff, type: 2}
   - {fileID: 11400000, guid: 93a601d17bccb2f42b924075f41a592f, type: 2}
   - {fileID: 11400000, guid: 9b352c424ad0c5d448c42ed32cabad08, type: 2}
+  selectionSkinButton: {fileID: 1222133430}
   money: 0
-  skin: 0
   numShopContent: 4
   username: 
   accountT: 0
@@ -20703,54 +20703,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1395563651}
     m_Modifications:
-    - target: {fileID: 798307263852279288, guid: 940b4ac862e2fcd428c018775c9e20db, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 798307263852279288, guid: 940b4ac862e2fcd428c018775c9e20db, type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 798307263852279288, guid: 940b4ac862e2fcd428c018775c9e20db, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 121.05
-      objectReference: {fileID: 0}
-    - target: {fileID: 798307263852279288, guid: 940b4ac862e2fcd428c018775c9e20db, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -75
-      objectReference: {fileID: 0}
     - target: {fileID: 3535238723715075842, guid: 940b4ac862e2fcd428c018775c9e20db, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 3535238723715075842, guid: 940b4ac862e2fcd428c018775c9e20db, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
-      value: 5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3535238723715075842, guid: 940b4ac862e2fcd428c018775c9e20db, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
       objectReference: {fileID: 654723784}
-    - target: {fileID: 3535238723715075842, guid: 940b4ac862e2fcd428c018775c9e20db, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 3535238723715075842, guid: 940b4ac862e2fcd428c018775c9e20db, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
-      value: PlaySoundPitch
-      objectReference: {fileID: 0}
-    - target: {fileID: 3535238723715075842, guid: 940b4ac862e2fcd428c018775c9e20db, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
-      value: MusicManager, Assembly-CSharp
-      objectReference: {fileID: 0}
-    - target: {fileID: 3535238723715075842, guid: 940b4ac862e2fcd428c018775c9e20db, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_StringArgument
-      value: snd_monedas
-      objectReference: {fileID: 0}
-    - target: {fileID: 3535238723715075842, guid: 940b4ac862e2fcd428c018775c9e20db, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
-      objectReference: {fileID: 0}
     - target: {fileID: 6053820334666476282, guid: 940b4ac862e2fcd428c018775c9e20db, type: 3}
       propertyPath: m_Pivot.x
       value: 1
@@ -20830,22 +20790,6 @@ PrefabInstance:
     - target: {fileID: 6053820334666476282, guid: 940b4ac862e2fcd428c018775c9e20db, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6813648712173945157, guid: 940b4ac862e2fcd428c018775c9e20db, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6813648712173945157, guid: 940b4ac862e2fcd428c018775c9e20db, type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6813648712173945157, guid: 940b4ac862e2fcd428c018775c9e20db, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 328.55002
-      objectReference: {fileID: 0}
-    - target: {fileID: 6813648712173945157, guid: 940b4ac862e2fcd428c018775c9e20db, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -75
       objectReference: {fileID: 0}
     - target: {fileID: 8452730859993536133, guid: 940b4ac862e2fcd428c018775c9e20db, type: 3}
       propertyPath: m_Name

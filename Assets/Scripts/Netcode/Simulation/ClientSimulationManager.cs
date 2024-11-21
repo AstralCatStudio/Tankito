@@ -86,7 +86,7 @@ namespace Tankito.Netcode.Simulation
             // Jump forward in time to sim state
             if (newAuthSnapshot.timestamp >= SimClock.TickCounter)
             {
-                //Debug.Log("AUTHTIMESTAMP: " + newAuthSnapshot.timestamp + " - LOCALTICK: " + SimClock.TickCounter);
+                Debug.Log($"[{SimClock.TickCounter}]Jumping forward to future state[{newAuthSnapshot.timestamp}]");
                 SimClock.Instance.SetClock(newAuthSnapshot.timestamp);
                 SetSimulation(newAuthSnapshot);
                 m_snapshotBuffer.Add(newAuthSnapshot, newAuthSnapshot.timestamp);
@@ -105,6 +105,12 @@ namespace Tankito.Netcode.Simulation
                     {
                         if (CheckForDesync(predictedSnapshot[objSnapShot], newAuthSnapshot[objSnapShot]))
                         {
+                            if (DEBUG)
+                            {
+                                Debug.Log($"[{SimClock.TickCounter}]Rolling back to [{newAuthSnapshot.timestamp}]"+
+                                $"\nBecause {objSnapShot.NetworkObjectId} dind't meet the delta Thresholds");
+                            }
+                            
                             Rollback(newAuthSnapshot);
                             break;
                         }
@@ -118,7 +124,6 @@ namespace Tankito.Netcode.Simulation
 
         public void Rollback(SimulationSnapshot authSnapshot)
         {
-            if (DEBUG) Debug.Log($"[{SimClock.TickCounter}]Rolling back to [{authSnapshot.timestamp}]");
 
             int rollbackCounter = authSnapshot.timestamp;
             
@@ -155,7 +160,7 @@ namespace Tankito.Netcode.Simulation
                 if (obj is  TankSimulationObject tank)
                 {
                     var lastReplayTick = tank.StopInputReplay();
-                    if (DEBUG) Debug.Log($"Tank({tank.NetworkObjectId})'s last replayed input was on Tick- {lastReplayTick}");
+                    //if (DEBUG) Debug.Log($"Tank({tank.NetworkObjectId})'s last replayed input was on Tick- {lastReplayTick}");
                 }
             }
 
@@ -210,13 +215,13 @@ namespace Tankito.Netcode.Simulation
             m_simulationObjects[1].SetSimState(stateToCopy);
         }
 
-        [ContextMenu("StateComparison")]
+        /*[ContextMenu("StateComparison")]
         public void StateComparison()
         {
             TankSimulationState tankA = new TankSimulationState(Vector2.right, 90, Vector2.zero, 0, TankAction.None);
             TankSimulationState tankB = new TankSimulationState(Vector2.right*0.9f, 90, Vector2.zero, 0, TankAction.Fire);
             Debug.Log(SimExtensions.Delta(tankA, tankB));
-        }
+        }*/
 
         [ContextMenu("StateComparison")]
         public void SnapshotComparison()

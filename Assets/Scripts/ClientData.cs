@@ -4,19 +4,22 @@ using System.Collections.Generic;
 using Tankito;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class ClientData : Singleton<ClientData>
 {
     [SerializeField]
     private CharacterData[] charactersData;
     public List<Character> characters = new List<Character>();
+    //Assets to update when a skin is selected
+    [SerializeField] private Image selectionSkinButton;
+
     public enum accountType
     {
         guest,
         logged
     }
     public int money;  //Moneda del juego (escamas)
-    public int skin;   //skin que tenga el jugador puesta. Actualmente es un int pero habrá que hacer que sea una clase o algun tipo para referenciar a la skin
     public int numShopContent;
     public string username;
     public accountType accountT;   //Tipo de la cuenta al iniciar sesión
@@ -40,10 +43,9 @@ public class ClientData : Singleton<ClientData>
     {
         money = 0;
         accountT = 0;
-        skin = 0;
         username = "guest";
-        characters[0].unlocked = true;  // characters[0] -> fish
-        characters[0].selected = true;
+        characters[0].unlocked = true;  //characters[0] -> fish
+        SelectCharacter(characters[0]);
     }
 
     private void InitCharactersData()
@@ -88,5 +90,23 @@ public class ClientData : Singleton<ClientData>
     {
         character.unlocked = true;
         onCharacterPurchased?.Invoke();
+    }
+
+    public void SelectCharacter(Character character)
+    {
+        foreach (var c in characters)
+        {
+            c.selected = false;
+        }
+        character.selected = true;
+        selectionSkinButton.sprite = character.data.sprite;
+    }
+    public Character GetCharacterSelected()
+    {
+        foreach (var c in characters)
+        {
+            if (c.selected) return c;
+        }
+        return characters[0];
     }
 }

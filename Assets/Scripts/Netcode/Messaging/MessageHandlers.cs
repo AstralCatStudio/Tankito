@@ -36,6 +36,7 @@ namespace Tankito.Netcode.Messaging
             {
                 Destroy(this);
             }
+
         }
 
         /// <summary>
@@ -85,6 +86,7 @@ namespace Tankito.Netcode.Messaging
         private void SendThrottleSignal(ulong clientId)
         {
             if (!IsServer) return;
+            
             int throttleTicks = ServerSimulationManager.Instance.remoteInputTanks[clientId].IdealBufferSize - ServerSimulationManager.Instance.remoteInputTanks[clientId].BufferSize;
             var throttleSignal = new ClockSignal(ClockSignalHeader.Throttle, throttleTicks, SimClock.TickCounter);
             var throttleWriter = new FastBufferWriter(FastBufferWriter.GetWriteSize(throttleSignal), Allocator.Temp);
@@ -120,7 +122,11 @@ namespace Tankito.Netcode.Messaging
                     break;
 
                 case ClockSignalHeader.Throttle:
-                    SimClock.Instance.ThrottleClock(signal.throttleTicks, signal.serverTime);
+                    if (IsClient && !IsServer)
+                    {
+                        if (DEBUG_CLOCK) Debug.Log("Attempting to throttle the local client simulation clock.");
+                        SimClock.Instance.ThrottleClock(signal.throttleTicks, signal.serverTime);
+                    }
                     break;
 
                 default:
@@ -333,7 +339,7 @@ namespace Tankito.Netcode.Messaging
 
             if (snapshot.status == SnapshotStatus.Authoritative)
             {
-                ClientSimulationManager.Instance.EvaluateForReconciliation(snapshot);
+                SnapshotJitterBuffer.Instance.AddSnapshot(snapshot);
             }
 
             // TESTING !!!!
