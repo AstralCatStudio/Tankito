@@ -43,6 +43,7 @@ namespace Tankito.Netcode.Simulation
             if (IsLocalPlayer)
             {
                 m_inputComponent = playerInput;
+                Debug.LogWarning("BINDEO");
                 GameManager.Instance.BindInputActions(playerInput);
             }
             else if (IsServer)
@@ -70,6 +71,18 @@ namespace Tankito.Netcode.Simulation
             if (IsServer)
             {
                 ServerSimulationManager.Instance.remoteInputTanks.Remove(NetworkObjectId);
+            }
+
+            if (IsLocalPlayer)
+            {
+                if (m_inputComponent is TankPlayerInput localTankInput)
+                {
+                    GameManager.Instance.UnbindInputActions(localTankInput);
+                }
+                else
+                {
+                    throw new InvalidOperationException($"Can't unbind inpunt actions because input component is not {typeof(TankPlayerInput)}");
+                }
             }
         }
 
