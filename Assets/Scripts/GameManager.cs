@@ -149,7 +149,7 @@ namespace Tankito
 
         public void FindPlayerInput()
         {
-            m_playerInput = GameObject.FindObjectOfType<PlayerInput>();
+            m_playerInput = GameObject.FindObjectOfType<PlayerInput>(true);
             m_inputActions = new TankitoInputActions();
             m_playerInput.actions = m_inputActions.asset;
         }
