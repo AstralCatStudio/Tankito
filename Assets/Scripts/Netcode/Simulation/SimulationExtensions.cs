@@ -99,7 +99,7 @@ namespace Tankito.Netcode.Simulation
                     Mathf.Abs(a.turrRotDiff) > Mathf.Abs(b.turrRotDiff) ||
                     a.actionDiff > b.actionDiff;
 
-            Debug.Log($"A:{a} >? B:{b}");
+            //Debug.Log($"A:{a} >? B:{b}");
 
             return  deltaComparison;
         }
