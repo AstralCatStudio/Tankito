@@ -7,12 +7,12 @@ namespace Tankito.Netcode.Simulation
 {
     public class SnapshotJitterBuffer : Singleton<SnapshotJitterBuffer>
     {
-        const double AUTH_SNAPSHOT_JITTER_BUFFER_SIZE = 0.036;
+        //const double AUTH_SNAPSHOT_JITTER_BUFFER_SIZE = 0.036;
 
         private int m_bufferCount;
         private SimulationSnapshot m_latestSnapshot;
         private double m_bufferedTime;
-        private double m_timeToBuffer;
+        private double m_timeToBuffer { get => Parameters.SNAPSHOT_JITTER_BUFFER_TIME; }
 
         public double BufferTime { get => m_timeToBuffer; }
 
@@ -26,7 +26,7 @@ namespace Tankito.Netcode.Simulation
             
             base.Awake();
 
-            m_timeToBuffer = AUTH_SNAPSHOT_JITTER_BUFFER_SIZE;
+            //m_timeToBuffer = AUTH_SNAPSHOT_JITTER_BUFFER_SIZE;
             m_latestSnapshot = default;
         }
 
@@ -41,10 +41,12 @@ namespace Tankito.Netcode.Simulation
             }
         }
 
+        /*
         public void SetBufferTime(double seconds)
         {
             m_timeToBuffer = seconds;
         }
+        */
 
         public bool AddSnapshot(SimulationSnapshot newSnapshot)
         {
@@ -76,6 +78,7 @@ namespace Tankito.Netcode.Simulation
             }
         }
 
+        /*
         #if UNITY_EDITOR
 
         [ContextMenu("Increase Jitter Buffer Size")]
@@ -96,5 +99,6 @@ namespace Tankito.Netcode.Simulation
         }
 
         #endif
+        */
     }
 }

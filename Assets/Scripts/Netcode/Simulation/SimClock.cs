@@ -12,19 +12,17 @@ namespace Tankito
 {
     public class SimClock : Singleton<SimClock>
     {
-        const int TICKS_PER_SECOND = 40;
-        const float SIM_DELTA_TIME = 1f/TICKS_PER_SECOND;
+        const int SIM_TICK_RATE = 40;
+        const float SIM_DELTA_TIME = 1f/SIM_TICK_RATE;
 
-        float m_tickTimer;
-        [SerializeField]
-        private int m_tickCounter;
+        double m_tickTimer;
+        [SerializeField] private int m_tickCounter;
         public static int TickCounter { get => Instance.m_tickCounter; }
-        [SerializeField]
-        private bool m_active;
+        [SerializeField] private bool m_active;
 
         public bool Active { get => m_active; }
-        public static float SimDeltaTime { get => Instance.m_simulationDeltaTime; }
-        private float m_simulationDeltaTime;
+        public static float SimDeltaTime { get => (float)Instance.m_tickDeltaTime; }
+        private double m_tickDeltaTime;
 
         private int m_throttleInterval = 1;
         private float m_averageThrottleTicks;
@@ -45,7 +43,7 @@ namespace Tankito
             m_tickTimer = 0;
             m_tickCounter = 0;
             m_active = false;
-            m_simulationDeltaTime = SIM_DELTA_TIME;
+            m_tickDeltaTime = SIM_DELTA_TIME;
         }
 
 
@@ -55,9 +53,9 @@ namespace Tankito
             if (!m_active) return;
 
             m_tickTimer += Time.deltaTime;
-            if (m_tickTimer >= m_simulationDeltaTime)
+            if (m_tickTimer >= m_tickDeltaTime)
             {
-                m_tickTimer -= m_simulationDeltaTime;
+                m_tickTimer -= m_tickDeltaTime;
                 m_tickCounter++;
                 OnTick?.Invoke();
             }
@@ -107,11 +105,11 @@ namespace Tankito
             {
                 m_averageThrottleTicks += throttleTicks/m_throttleMessages;
 
-                float newTPS = TICKS_PER_SECOND+Mathf.Clamp(m_averageThrottleTicks, 1-TICKS_PER_SECOND, TICKS_PER_SECOND);
+                float newTPS = SIM_TICK_RATE+Mathf.Clamp(m_averageThrottleTicks, 1-SIM_TICK_RATE, SIM_TICK_RATE);
 
                 if (DEBUG) Debug.Log($"Throttling({m_averageThrottleTicks}) at: {newTPS}");
 
-                m_simulationDeltaTime = 1f/newTPS;
+                m_tickDeltaTime = 1f/newTPS;
                 m_throttleMessages = 0;
                 m_averageThrottleTicks = 0;
             }

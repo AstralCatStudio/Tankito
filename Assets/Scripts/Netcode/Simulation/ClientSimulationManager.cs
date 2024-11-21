@@ -11,8 +11,8 @@ namespace Tankito.Netcode.Simulation
     public class ClientSimulationManager : NetSimulationManager<ClientSimulationManager>
     {
         //GlobalSimulationSnapshot m_authSnapshot;
-        const int SNAPSHOT_BUFFER_SIZE = 256;
-        CircularBuffer<SimulationSnapshot> m_snapshotBuffer = new CircularBuffer<SimulationSnapshot>(SNAPSHOT_BUFFER_SIZE);
+        int SNAPSHOT_BUFFER_SIZE { get => Parameters.CLIENT_INPUT_WINDOW_SIZE; }//= 256; // UNREALISTIC AND OVERKILL NUMBER
+        CircularBuffer<SimulationSnapshot> m_snapshotBuffer;// = new CircularBuffer<SimulationSnapshot>(SNAPSHOT_BUFFER_SIZE);
 
         /// <summary>
         /// Relates NetworkClientId(ulong) to a specific <see cref="RemoteTankInput"/>.  
@@ -24,15 +24,18 @@ namespace Tankito.Netcode.Simulation
 
         [SerializeField] private bool DEBUG;// = true;
 
-        private SimulationSnapshot AuthSnapshot //Por como funciona el rollback, igual esto no hace falta y unicamente podemos necesitar 
-                                                //que se guarde el timestamp
-        {
-            get
-            {
-                var authStates = m_snapshotBuffer.Where(s => s.status == SnapshotStatus.Authoritative);
-                return (authStates.Count() > 0) ? authStates.MaxBy(s => s.timestamp) : default;
-            }
-        }
+        const int NO_SNAPSHOT = -1;
+        private int m_lastAuthSnapshotTimestamp;//Por como funciona el rollback, igual esto no hace falta y unicamente podemos necesitar 
+                                                //que se guarde el timestamp. EDIT: Vale, en efecto, lo estoy cambiando para desligar
+                                                //el tamaño del snapshot buffer de nuestra capacidad de recordar el último AuthSnapshot
+                                                //recibido (o al menos su timestamp que es realmente lo único que nos interesa).
+        //{
+        //    get
+        //    {
+        //        var authStates = m_snapshotBuffer.Where(s => s.status == SnapshotStatus.Authoritative);
+        //        return (authStates.Count() > 0) ? authStates.MaxBy(s => s.timestamp) : default;
+        //    }
+        //}
 
         void Start()
         {
@@ -44,6 +47,9 @@ namespace Tankito.Netcode.Simulation
             m_tankSimulationTolerance = new TankDelta(new Vector2(0.1f,0.1f), 3f, new Vector2(0.2f,0.2f), 60f, 0);
             m_bulletSimulationTolerance = new BulletDelta(new Vector2(0.1f,0.1f), 1f, new Vector2(0.1f,0.1f));
             DEBUG = false;
+
+            m_snapshotBuffer = new CircularBuffer<SimulationSnapshot>(SNAPSHOT_BUFFER_SIZE);
+            m_lastAuthSnapshotTimestamp = NO_SNAPSHOT;
         }
 
         public override void Simulate()
@@ -77,7 +83,7 @@ namespace Tankito.Netcode.Simulation
             /*Debug.Log($"[{SimClock.TickCounter}]Se recibe snapshot[{newAuthSnapshot.timestamp}] autoritativo");
             Debug.Log(AuthSnapshot.timestamp + " " + m_snapshotBuffer.Last.timestamp + " " + m_snapshotBuffer.Count);*/
             
-            if ((!AuthSnapshot.Equals(default(SimulationSnapshot)) && newAuthSnapshot.timestamp <= AuthSnapshot.timestamp) ||
+            if ((m_lastAuthSnapshotTimestamp != NO_SNAPSHOT && newAuthSnapshot.timestamp <= m_lastAuthSnapshotTimestamp) ||
                 (m_snapshotBuffer.Full() && newAuthSnapshot.timestamp < (m_snapshotBuffer.Last.timestamp - m_snapshotBuffer.Count)))
             {
                 return;

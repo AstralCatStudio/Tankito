@@ -14,8 +14,8 @@ namespace Tankito.Netcode
         private SortedSet<InputPayload> m_inputBuffer = new SortedSet<InputPayload>(new ByTimestamp());
         private InputPayload m_replayInput;
 
-        [SerializeField] private /*const*/ int N_IDEAL_INPUT = 10;
-        public int IdealBufferSize { get => N_IDEAL_INPUT; }
+        //const int N_IDEAL_INPUT = 10;
+        public int IdealBufferSize { get => Parameters.SERVER_IDEAL_INPUT_BUFFER_SIZE; }
         public int BufferSize { get => m_inputBuffer.Count; }
 
         public void AddInput(InputPayload[] newInputWindow)
