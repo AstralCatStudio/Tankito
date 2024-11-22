@@ -18,7 +18,7 @@ namespace Tankito.Netcode
         public static double SNAPSHOT_JITTER_BUFFER_TIME { get => Instance.Client_Jitter_Buffer_Time; }
 
         private int S_Buffer_Size { get => (int)(Worst_Case_Latency/SIM_DELTA_TIME) + 1; }
-        private int C_Buffer_Size { get => (int)(Worst_Case_Latency*2/SIM_DELTA_TIME) + 1; }
+        private int C_Buffer_Size { get => (int)(Worst_Case_Latency*3/SIM_DELTA_TIME) + 1; }
         
 
         [SerializeField] double Median_Latency = 0.16;
