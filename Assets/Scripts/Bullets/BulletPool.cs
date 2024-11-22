@@ -1,3 +1,4 @@
+using System;
 using Tankito.Netcode.Simulation;
 using UnityEngine;
 using UnityEngine.Pool;
@@ -48,13 +49,23 @@ namespace Tankito
             m_pool = new ObjectPool<GameObject>(CreateFunc, ActionOnGet, ActionOnRelease, ActionOnDestroy, defaultCapacity: prewarmCount);
         }
 
-        public BulletSimulationObject Get(Vector2 position, float rotation)
+
+        public BulletSimulationObject Get(Vector2 position, Vector2 rotation, ulong ownerId, int tick, int spawnN)
+        {   
+            float rotationDeg = Mathf.Atan2(rotation.x, rotation.y);
+
+            return Get(position, rotationDeg, ownerId, tick, spawnN);
+        }
+
+        public BulletSimulationObject Get(Vector2 position, float rotation, ulong ownerId, int tick, int spawnN)
         {   
             var gameObj = m_pool.Get();
             var objRB = gameObj.GetComponent<Rigidbody2D>();
             objRB.position = position;
             objRB.rotation = rotation;
             var bullet = objRB.GetComponent<BulletSimulationObject>();
+
+            bullet.GenerateSimObjId(ownerId, tick, spawnN);
             
             return bullet;
         }

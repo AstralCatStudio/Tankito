@@ -21,12 +21,9 @@ namespace Tankito.Netcode.Simulation
             }
         }
         
-        public void OnEnable()
+        public void AddToSim()
         {
-            m_spawnTick = SimClock.TickCounter;
-            GenerateSimObjId(OwnerClientId, m_spawnTick, );
             base.OnNetworkSpawn();
-            
         }
 
         public void OnDisable()

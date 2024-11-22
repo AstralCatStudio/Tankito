@@ -80,24 +80,11 @@ namespace Tankito
                 if (timer >= interval)
                 {
                     timer = 0;
-                    ShootBullet(aimVector);
+                    ShootBullet(, aimVector);
                 }
         }
 
-        /*void SpawnSimulatedBullet(Vector2 aimVector)
-        {
-            m_bulletProperties.direction = aimVector;
-            m_bulletProperties.startingPosition = transform.position;
-            m_bulletProperties.spawnTickTime = SimClock.TickCounter;
-            var newBullet = NetworkObjectPool.Singleton.GetNetworkObject(BulletCannonRegistry.Instance.m_bulletPrefab, transform.position, transform.rotation).gameObject;
-
-            newBullet.SetActive(true);
-            newBullet.GetComponent<BulletController>().SimulatedNetworkSpawn(OwnerClientId);
-            Debug.Log("encolada la bala " + newBullet.GetComponent<NetworkObject>().NetworkObjectId);
-            simulatedBullets.Enqueue(newBullet);
-        }*/
-
-        void ShootBullet(Vector2 aimVector)
+        void ShootBullet(Vector2 position, Vector2 direction, int spawnN)
         {
             //Vector2 direction;
             //float angle;
@@ -111,33 +98,13 @@ namespace Tankito
             //        }
             //    }
             //}
-            m_bulletProperties.direction = aimVector;
+            m_bulletProperties.direction = direction;
             m_bulletProperties.startingPosition = transform.position;
             m_bulletProperties.spawnTickTime = SimClock.TickCounter;
-            //SpawnBulletClientRpc(m_bulletProperties.direction, m_bulletProperties.startingPosition, m_bulletProperties.spawnTickTime);
-
             
-            var newBullet = BulletPool.Instance.Get(transform.position, transform.parent.parent.GetComponent<Rigidbody2D>().rotation).gameObject;
-
-            //newBullet.GetComponent<NetworkObject>().SpawnWithOwnership(OwnerClientId);
+            var newBullet = BulletPool.Instance.Get(position, direction, OwnerClientId, SimClock.TickCounter, spawnN);
+            newBullet.AddToSim();
         }
-
-        /*[ClientRpc]
-        void SpawnBulletClientRpc(Vector2 direction, Vector2 position, int tickCounter)
-        {
-            if(IsOwner && !IsServer)
-            {
-                GameObject bala = simulatedBullets.Dequeue();
-                Debug.Log("desencolada la bala " + bala.GetComponent<NetworkObject>().NetworkObjectId);
-                bala.GetComponent<SpriteRenderer>().color = Color.red;
-                bala.SetActive(false);
-                bala.GetComponent<BulletController>().OnNetworkDespawn();
-                
-            }
-            m_bulletProperties.direction = direction;
-            m_bulletProperties.startingPosition = position;
-            m_bulletProperties.spawnTickTime = tickCounter;
-        }*/
 
         void Update()
         {            
