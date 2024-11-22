@@ -11,7 +11,7 @@ using UnityEditor.PackageManager;
 namespace Tankito {
 
     
-    public class BulletController : NetworkBehaviour
+    public class BulletController : MonoBehaviour
     {
         ulong ownerId = 0;
         bool simulated = false;
@@ -27,47 +27,9 @@ namespace Tankito {
         }
         
         private void OnEnable()
-        {
-            
+        {           
             GetComponent<BulletSimulationObject>().OnComputeKinematics += MoveBullet;
-        }
-        private void OnDisable()
-        {
-            GetComponent<BulletSimulationObject>().OnComputeKinematics -= MoveBullet;
-        }
-        private void Update()
-        {
-            transform.rotation = Quaternion.LookRotation(new Vector3(0, 0, 1), m_rb.velocity.normalized);
-        }
-        void MoveBullet(float deltaTime)
-        {
-            
-            m_rb.velocity += (BulletCannonRegistry.Instance[ownerId].Properties.acceleration != 0f) ? BulletCannonRegistry.Instance[ownerId].Properties.acceleration * m_rb.velocity.normalized : Vector2.zero;
-            m_lifetime += Time.deltaTime;
-            OnFly.Invoke(this);
-            if (IsServer)
-            {
-                if (m_lifetime >= BulletCannonRegistry.Instance[ownerId].Properties.lifetimeTotal)
-                {
-                    Debug.Log($"lifetime: {m_lifetime}/{BulletCannonRegistry.Instance[ownerId].Properties.lifetimeTotal}");
-                    Detonate();
-                }
-            }
-        }
 
-        public void SimulatedNetworkSpawn(ulong ownerID)
-        {
-            ownerId = ownerID;
-            simulated = true;
-            OnNetworkSpawn();
-        }
-
-        public override void OnNetworkSpawn()
-        {
-            if (!simulated)
-            {
-                ownerId = OwnerClientId;
-            }
             transform.position = BulletCannonRegistry.Instance[ownerId].transform.position;
             m_bouncesLeft = BulletCannonRegistry.Instance[ownerId].Properties.bouncesTotal;
             m_rb.velocity = BulletCannonRegistry.Instance[ownerId].Properties.velocity * BulletCannonRegistry.Instance[ownerId].Properties.direction.normalized;
@@ -76,16 +38,34 @@ namespace Tankito {
             {
                 modifier.BindBulletEvents(this);
             }
-            
+
 
             OnSpawn.Invoke(this);
         }
-        
-        public override void OnNetworkDespawn()
+
+        private void OnDisable()
         {
-            simulated = false;
-            ResetBulletData();
+            GetComponent<BulletSimulationObject>().OnComputeKinematics -= MoveBullet;
             
+            ResetBulletData();
+        }
+
+        private void Update()
+        {
+            transform.rotation = Quaternion.LookRotation(new Vector3(0, 0, 1), m_rb.velocity.normalized);
+        }
+
+        void MoveBullet(float deltaTime)
+        {
+            
+            m_rb.velocity += (BulletCannonRegistry.Instance[ownerId].Properties.acceleration != 0f) ? BulletCannonRegistry.Instance[ownerId].Properties.acceleration * m_rb.velocity.normalized : Vector2.zero;
+            m_lifetime += Time.deltaTime;
+            OnFly.Invoke(this);
+            if (m_lifetime >= BulletCannonRegistry.Instance[ownerId].Properties.lifetimeTotal)
+            {
+                Debug.Log($"lifetime: {m_lifetime}/{BulletCannonRegistry.Instance[ownerId].Properties.lifetimeTotal}");
+                Detonate();
+            }
         }
 
         protected void ResetBulletData()
@@ -102,26 +82,12 @@ namespace Tankito {
         public void Detonate()
         {
             OnDetonate.Invoke(this);
-            if (IsServer)
+            if (NetworkManager.Singleton.IsServer)
             {
-                var networkObject = gameObject.GetComponent<NetworkObject>();
-                networkObject.Despawn();
+                BulletSimulationObject bulletSimulation = GetComponent<BulletSimulationObject>();
+                BulletPool.Instance.Release(bulletSimulation);
             }
-            else
-            {
-                OnDetonate.Invoke(this);
-                gameObject.SetActive(false);
-                if (simulated)
-                {
-                    simulated = false;
-                    if (BulletCannonRegistry.Instance[ownerId].simulatedBullets.Count > 0)
-                    {
-                        BulletCannonRegistry.Instance[ownerId].simulatedBullets.Dequeue();
-                    }
-                    
-                }
-            }
-        }
+        }   
 
         private void OnCollisionEnter2D(Collision2D collision)
         {

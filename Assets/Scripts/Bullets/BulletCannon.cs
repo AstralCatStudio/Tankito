@@ -117,9 +117,9 @@ namespace Tankito
             //SpawnBulletClientRpc(m_bulletProperties.direction, m_bulletProperties.startingPosition, m_bulletProperties.spawnTickTime);
 
             
-            var newBullet = BulletPool.Instance.Get(BulletCannonRegistry.Instance.m_bulletPrefab, transform.position, transform.rotation).gameObject;
+            var newBullet = BulletPool.Instance.Get(transform.position, transform.parent.parent.GetComponent<Rigidbody2D>().rotation).gameObject;
 
-            newBullet.GetComponent<NetworkObject>().SpawnWithOwnership(OwnerClientId);
+            //newBullet.GetComponent<NetworkObject>().SpawnWithOwnership(OwnerClientId);
         }
 
         /*[ClientRpc]

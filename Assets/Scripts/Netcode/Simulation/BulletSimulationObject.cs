@@ -1,4 +1,5 @@
 using System;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace Tankito.Netcode.Simulation
@@ -20,12 +21,19 @@ namespace Tankito.Netcode.Simulation
             }
         }
         
-        public override void OnNetworkSpawn()
+        public void OnEnable()
         {
-            base.OnNetworkSpawn();
             m_spawnTick = SimClock.TickCounter;
+            GenerateSimObjId(OwnerClientId, m_spawnTick, );
+            base.OnNetworkSpawn();
+            
         }
-        
+
+        public void OnDisable()
+        {
+            base.OnNetworkDespawn();
+        }
+
         public override ISimulationState GetSimState()
         {
             return new BulletSimulationState(
@@ -56,6 +64,7 @@ namespace Tankito.Netcode.Simulation
                 throw new ArgumentException("Invalid state type");
             }
         }
+
 
     }
 }
