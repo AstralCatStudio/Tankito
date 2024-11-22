@@ -1,3 +1,4 @@
+using Tankito.Netcode.Simulation;
 using UnityEngine;
 using UnityEngine.Pool;
 
@@ -45,6 +46,22 @@ namespace Tankito
             }
 
             m_pool = new ObjectPool<GameObject>(CreateFunc, ActionOnGet, ActionOnRelease, ActionOnDestroy, defaultCapacity: prewarmCount);
+        }
+
+        public BulletSimulationObject Get(Vector2 position, float rotation)
+        {   
+            var gameObj = m_pool.Get();
+            var objRB = gameObj.GetComponent<Rigidbody2D>();
+            objRB.position = position;
+            objRB.rotation = rotation;
+            var bullet = objRB.GetComponent<BulletSimulationObject>();
+            
+            return bullet;
+        }
+
+        public void Release(BulletSimulationObject bullet)
+        {
+            m_pool.Release(bullet.gameObject);
         }
     }
 }
