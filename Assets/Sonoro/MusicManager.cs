@@ -409,4 +409,49 @@ public class MusicManager : MonoBehaviour
         }
     }
 
+    public void MenuChange(int newMenuIndex)
+    {
+        // Diccionario para mapear índices con fases y sonidos
+        var menuMappings = new Dictionary<int, (int phase, string sound)>
+    {
+        { 0, (0, "amb_underwater") }, // InitialScreenLogIn
+        { 1, (0, "amb_underwater") }, // MainMenu
+        { 2, (1, "amb_underwater") }, // Settings
+        { 3, (0, "amb_underwater") }, // Credits
+        { 4, (0, "amb_underwater") }, // LogOut
+        { 5, (2, "amb_underwater") }, // Shop
+        { 6, (1, "amb_beach") },      // PlayMenu
+        { 7, (1, "amb_beach") },      // Lobby
+        { 8, (1, "amb_beach") },      // CharacterSelection
+        { 9, (3, "amb_underwater") }  // Singleplayer
+    };
+
+        // Verifica si el índice tiene una acción definida
+        if (menuMappings.TryGetValue(newMenuIndex, out var action))
+        {
+            SetPhase(action.phase);              // Cambia la fase
+            if (!IsBackgroundSoundPlaying(action.sound))
+            {
+                PlayBackgroundSound(action.sound); // Reproduce el sonido solo si no está ya sonando
+            }
+        }
+        else
+        {
+            Debug.LogWarning($"El índice {newMenuIndex} no tiene acciones definidas.");
+        }
+    }
+
+    private bool IsBackgroundSoundPlaying(string soundName)
+    {
+        // Asegúrate de que el AudioSource no sea nulo y esté reproduciendo algo
+        if (backgroundSoundSource != null && backgroundSoundSource.isPlaying)
+        {
+            // Compara el nombre del clip actual con el sonido solicitado
+            return backgroundSoundSource.clip != null && backgroundSoundSource.clip.name == soundName;
+        }
+
+        return false; // No está sonando nada o el AudioSource no está configurado
+    }
+
+
 }

@@ -57,6 +57,8 @@ namespace Tankito
             
             MoveBG(newMenuIndex);
             currentMenuIndex = newMenuIndex;
+
+            MusicManager.Instance.MenuChange(newMenuIndex);
         }
 
         public void SceneLoaderCallback(string functionIdx)
