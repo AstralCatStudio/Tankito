@@ -330,6 +330,12 @@ public class MusicManager : Singleton<MusicManager>
         audioSource.Play();
     }
 
+    public void PlaySoundPitch(string soundName)
+    {
+        PlaySoundPitch(soundName, 0.15f);
+    }
+
+
     public void PlaySoundPitch(string soundName, float pitchVariation = 0.1f)
     {
         AudioClip clip = Resources.Load<AudioClip>($"Sonidos/{soundName}");
@@ -352,4 +358,46 @@ public class MusicManager : Singleton<MusicManager>
         audioSource.volume = volSounds;
         audioSource.Play();
     }
+
+
+    public void MuteSong()
+    {
+        if (isPlayingA && audioSourceA.isPlaying)
+        {
+            audioSourceA.Pause();
+        }
+        else if (!isPlayingA && audioSourceB.isPlaying)
+        {
+            audioSourceB.Pause();
+        }
+    }
+
+    public void ResumeSong()
+    {
+        if (isPlayingA && audioSourceA.clip != null)
+        {
+            audioSourceA.UnPause();
+        }
+        else if (!isPlayingA && audioSourceB.clip != null)
+        {
+            audioSourceB.UnPause();
+        }
+    }
+
+    public void MuteBackground()
+    {
+        if (backgroundSoundSource.isPlaying)
+        {
+            backgroundSoundSource.Pause();
+        }
+    }
+
+    public void ResumeBackground()
+    {
+        if (backgroundSoundSource.clip != null)
+        {
+            backgroundSoundSource.UnPause();
+        }
+    }
+
 }

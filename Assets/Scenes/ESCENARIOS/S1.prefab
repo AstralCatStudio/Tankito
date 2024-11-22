@@ -100,7 +100,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementDirection: 1
-  speed: 2
+  speed: 1.2
   offset: 1
 --- !u!95 &6059505944283545531
 Animator:
@@ -605,7 +605,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementDirection: 1
-  speed: 2
+  speed: 1.2
   offset: 1
 --- !u!95 &7584244112303690332
 Animator:
@@ -776,7 +776,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementDirection: 0
-  speed: 2
+  speed: 1.2
   offset: 1
 --- !u!95 &4580472524156005672
 Animator:
@@ -981,7 +981,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementDirection: 1
-  speed: 2
+  speed: 1.2
   offset: 1.56
 --- !u!1 &1004228760877206348
 GameObject:
@@ -1081,7 +1081,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementDirection: 0
-  speed: 2
+  speed: 1.2
   offset: 1.56
 --- !u!1 &1022383978469394674
 GameObject:
@@ -1563,7 +1563,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementDirection: 0
-  speed: 2
+  speed: 1.2
   offset: 1.56
 --- !u!1 &1257745604896255213
 GameObject:
@@ -1748,7 +1748,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementDirection: 1
-  speed: 2
+  speed: 1.2
   offset: 1
 --- !u!95 &6043021322020946100
 Animator:
@@ -2122,7 +2122,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementDirection: 1
-  speed: 2
+  speed: 1.2
   offset: 1.56
 --- !u!1 &1913163458395924011
 GameObject:
@@ -2280,7 +2280,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: b50448da76261554081de76555a3c313, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -2510,7 +2510,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementDirection: 1
-  speed: 2
+  speed: 1.2
   offset: 1.56
 --- !u!1 &2291614694731505227
 GameObject:
@@ -2694,7 +2694,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementDirection: 0
-  speed: 2
+  speed: 1.2
   offset: 1.56
 --- !u!1 &2376472438548952282
 GameObject:
@@ -3575,7 +3575,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementDirection: 0
-  speed: 2
+  speed: 1.2
   offset: 1
 --- !u!95 &1703956289154176328
 Animator:
@@ -3696,7 +3696,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementDirection: 1
-  speed: 2
+  speed: 1.2
   offset: 1.56
 --- !u!1 &3013792847259985520
 GameObject:
@@ -3880,7 +3880,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementDirection: 0
-  speed: 2
+  speed: 1.2
   offset: 1.56
 --- !u!1 &3214318803156511646
 GameObject:
@@ -3954,7 +3954,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: a91e6d5d51094de438fa563bcbbd7748, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -4237,7 +4237,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: d8021e24bcec88246996c5af05730f61, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -4433,7 +4433,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementDirection: 0
-  speed: 2
+  speed: 1.2
   offset: 1
 --- !u!95 &6336353996866473806
 Animator:
@@ -4638,7 +4638,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementDirection: 0
-  speed: 2
+  speed: 1.2
   offset: 1.56
 --- !u!1 &3646437391667020387
 GameObject:
@@ -5542,7 +5542,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementDirection: 0
-  speed: 2
+  speed: 1.2
   offset: 1
 --- !u!95 &2249233665231858468
 Animator:
@@ -5749,7 +5749,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementDirection: 1
-  speed: 2
+  speed: 1.2
   offset: 1
 --- !u!95 &7290040145102115000
 Animator:
@@ -5870,7 +5870,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementDirection: 1
-  speed: 2
+  speed: 1.2
   offset: 1.56
 --- !u!1 &4892553003078602728
 GameObject:
@@ -6054,7 +6054,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementDirection: 1
-  speed: 2
+  speed: 1.2
   offset: 1.56
 --- !u!1 &5140702393381078103
 GameObject:
@@ -6154,7 +6154,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementDirection: 0
-  speed: 2
+  speed: 1.2
   offset: 1.56
 --- !u!1 &5156817016035084467
 GameObject:
@@ -6501,7 +6501,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementDirection: 1
-  speed: 2
+  speed: 1.2
   offset: 1
 --- !u!95 &9192011943441969498
 Animator:
@@ -6622,7 +6622,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementDirection: 1
-  speed: 2
+  speed: 1.2
   offset: 1.56
 --- !u!1 &5993887964908383069
 GameObject:
@@ -6914,7 +6914,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementDirection: 0
-  speed: 2
+  speed: 1.2
   offset: 1
 --- !u!95 &4068513445960181509
 Animator:
@@ -7035,7 +7035,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementDirection: 0
-  speed: 2
+  speed: 1.2
   offset: 1.56
 --- !u!1 &6536970486819801086
 GameObject:
@@ -7219,7 +7219,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementDirection: 1
-  speed: 2
+  speed: 1.2
   offset: 1.56
 --- !u!1 &6915519392546736437
 GameObject:
@@ -7617,7 +7617,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementDirection: 1
-  speed: 2
+  speed: 1.2
   offset: 1.56
 --- !u!1 &7154398073844805185
 GameObject:
@@ -7691,7 +7691,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: b5dbd2c083ffd9e4fa7c5a7ce9d005e4, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -7803,7 +7803,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementDirection: 1
-  speed: 2
+  speed: 1.2
   offset: 1
 --- !u!95 &2818967328184052729
 Animator:
@@ -8428,7 +8428,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementDirection: 0
-  speed: 2
+  speed: 1.2
   offset: 1.56
 --- !u!1 &7785895886521782608
 GameObject:
@@ -8561,7 +8561,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementDirection: 1
-  speed: 2
+  speed: 1.2
   offset: 1
 --- !u!95 &422559897770475909
 Animator:
@@ -8930,7 +8930,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: a3b6e9f28f5f6394f943e6a18ced8fb1, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -9205,7 +9205,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementDirection: 0
-  speed: 2
+  speed: 1.2
   offset: 1.56
 --- !u!1 &9007890012412581173
 GameObject:
@@ -9307,7 +9307,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementDirection: 0
-  speed: 2
+  speed: 1.2
   offset: 1
 --- !u!95 &5061873025157259663
 Animator:
@@ -9545,7 +9545,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementDirection: 0
-  speed: 2
+  speed: 1.2
   offset: 1
 --- !u!95 &3791165746984713994
 Animator:
