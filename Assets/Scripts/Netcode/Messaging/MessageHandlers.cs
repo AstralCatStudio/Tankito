@@ -94,7 +94,7 @@ namespace Tankito.Netcode.Messaging
         {
             if (!IsServer) return;
             
-            int throttleTicks = ServerSimulationManager.Instance.remoteInputTanks[clientId].IdealBufferSize - ServerSimulationManager.Instance.remoteInputTanks[clientId].BufferSize;
+            int throttleTicks = ServerSimulationManager.Instance.remoteInputTanks[clientId].IdealBufferSize - ServerSimulationManager.Instance.remoteInputTanks[clientId].NextInputsBufferRange;
             var throttleSignal = new ClockSignal(ClockSignalHeader.Throttle, throttleTicks);//, SimClock.TickCounter);
             
             ulong[] target = new ulong[] {clientId};

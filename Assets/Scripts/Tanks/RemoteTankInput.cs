@@ -16,7 +16,7 @@ namespace Tankito.Netcode
 
         //const int N_IDEAL_INPUT = 10;
         public int IdealBufferSize { get => Parameters.SERVER_IDEAL_INPUT_BUFFER_SIZE; }
-        public int BufferSize { get => m_inputBuffer.Count; }
+        public int NextInputsBufferRange { get => m_inputBuffer.TakeWhile(i => i.timestamp <= (SimClock.TickCounter + 1 + IdealBufferSize)).Count(); }
 
         public void AddInput(InputPayload[] newInputWindow)
         {
