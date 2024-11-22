@@ -17,7 +17,7 @@ namespace Tankito.Netcode
 
         //const int N_IDEAL_INPUT = 10;
         public int IdealBufferSize { get => Parameters.SERVER_IDEAL_INPUT_BUFFER_SIZE; }
-        public int NextInputsBufferRange { get => (SimClock.TickCounter + IdealBufferSize) - m_inputBuffer.Last().timestamp; }
+        public int Last { get =>  (!m_inputBuffer.Last().Equals(default)) ? m_inputBuffer.Last().timestamp : 0; }
 
         public void AddInput(InputPayload[] newInputWindow)
         {
@@ -32,9 +32,9 @@ namespace Tankito.Netcode
                 foreach(var i in m_inputBuffer)
                 {
                     if (i.timestamp == SimClock.TickCounter)
-                        debug += i.timestamp + "| ";
+                        debug += i.timestamp + " | ";
                     else if (i.timestamp == (SimClock.TickCounter + IdealBufferSize))
-                        debug += i.timestamp + "| ";
+                        debug += i.timestamp + " | ";
                     else if (!i.Equals(m_inputBuffer.Last()))
                         debug += i.timestamp + ", ";
                     else
