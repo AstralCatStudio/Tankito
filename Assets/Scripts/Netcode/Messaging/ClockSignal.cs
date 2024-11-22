@@ -17,7 +17,6 @@ namespace Tankito.Netcode.Messaging
     {
         public ClockSignalHeader header;
         public int signalTicks;
-        //public int serverTime; // BERNAT: Creo que probablemente no haga falta esto??
 
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
         {
@@ -25,15 +24,13 @@ namespace Tankito.Netcode.Messaging
             if (header == ClockSignalHeader.Throttle || header == ClockSignalHeader.Sync) // Conditional Serialization
             {
                 serializer.SerializeValue(ref signalTicks);
-                //serializer.SerializeValue(ref serverTime);
             }
         }
 
-        public ClockSignal(ClockSignalHeader header, int signalTicks)//, int serverTime)
+        public ClockSignal(ClockSignalHeader header, int signalTicks)
         {
             this.header = header;
             this.signalTicks = signalTicks;
-            //this.serverTime = serverTime;
         }
 
         public override string ToString()

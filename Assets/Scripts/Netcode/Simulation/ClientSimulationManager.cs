@@ -10,19 +10,18 @@ namespace Tankito.Netcode.Simulation
 {
     public class ClientSimulationManager : NetSimulationManager<ClientSimulationManager>
     {
-        //GlobalSimulationSnapshot m_authSnapshot;
-        int SNAPSHOT_BUFFER_SIZE { get => Parameters.CLIENT_INPUT_WINDOW_SIZE; }//= 256; // UNREALISTIC AND OVERKILL NUMBER
-        CircularBuffer<SimulationSnapshot> m_snapshotBuffer;// = new CircularBuffer<SimulationSnapshot>(SNAPSHOT_BUFFER_SIZE);
+        int SNAPSHOT_BUFFER_SIZE { get => Parameters.CLIENT_INPUT_WINDOW_SIZE; }
+        CircularBuffer<SimulationSnapshot> m_snapshotBuffer;
 
         /// <summary>
-        /// Relates NetworkClientId(ulong) to a specific <see cref="RemoteTankInput"/>.  
+        /// Relates NetworkClientId(ulong) to a specific <see cref="EmulatedTankInput"/>.  
         /// </summary>
         public Dictionary<ulong, EmulatedTankInput> emulatedInputTanks = new Dictionary<ulong,EmulatedTankInput>();
 
-        [SerializeField] private TankDelta m_tankSimulationTolerance;// = new TankDelta(new Vector2(0.1f,0.1f), 1f, new Vector2(0.1f,0.1f), 1f, 0);
-        [SerializeField] private BulletDelta m_bulletSimulationTolerance;// = new BulletDelta(new Vector2(0.1f,0.1f), 1f, new Vector2(0.1f,0.1f));
+        [SerializeField] private TankDelta m_tankSimulationTolerance;
+        [SerializeField] private BulletDelta m_bulletSimulationTolerance;
 
-        [SerializeField] private bool DEBUG;// = true;
+        [SerializeField] private bool DEBUG;
 
         const int NO_SNAPSHOT = -1;
         private int m_lastAuthSnapshotTimestamp;//Por como funciona el rollback, igual esto no hace falta y unicamente podemos necesitar 
@@ -80,29 +79,34 @@ namespace Tankito.Netcode.Simulation
 
         public void EvaluateForReconciliation(SimulationSnapshot newAuthSnapshot)
         {
-            /*Debug.Log($"[{SimClock.TickCounter}]Se recibe snapshot[{newAuthSnapshot.timestamp}] autoritativo");
-            Debug.Log(AuthSnapshot.timestamp + " " + m_snapshotBuffer.Last.timestamp + " " + m_snapshotBuffer.Count);*/
-            
-            if ((m_lastAuthSnapshotTimestamp != NO_SNAPSHOT && newAuthSnapshot.timestamp <= m_lastAuthSnapshotTimestamp) ||
-                (m_snapshotBuffer.Full() && newAuthSnapshot.timestamp < (m_snapshotBuffer.Last.timestamp - m_snapshotBuffer.Count)))
+            if ((newAuthSnapshot.timestamp <= m_lastAuthSnapshotTimestamp) ||
+                (newAuthSnapshot.timestamp < m_snapshotBuffer.Last.timestamp))
             {
+                if (DEBUG) Debug.Log($"NOT Reconciling with snapshot[{newAuthSnapshot.timestamp}] (Too OLD)."+
+                                    $"Oldest predicted snapshot[{m_snapshotBuffer.Last}]."+
+                                    $"Newest auth snapshot[{m_lastAuthSnapshotTimestamp}]."+
+                                    $"Snapshot Buff Size: {m_snapshotBuffer.Capacity}");
                 return;
             }
+
+            m_lastAuthSnapshotTimestamp = newAuthSnapshot.timestamp;
 
             // Jump forward in time to sim state
             if (newAuthSnapshot.timestamp >= SimClock.TickCounter)
             {
                 if (DEBUG) Debug.Log($"[{SimClock.TickCounter}]Jumping forward to future state[{newAuthSnapshot.timestamp}]");
+
                 SimClock.Instance.SetClock(newAuthSnapshot.timestamp);
                 SetSimulation(newAuthSnapshot);
                 m_snapshotBuffer.Add(newAuthSnapshot, newAuthSnapshot.timestamp);
                 return;
             }
             
-            //if (DEBUG) Debug.Log("Evaluating Desync for: "+ m_snapshotBuffer.Get(newAuthSnapshot.timestamp));
+            if (DEBUG) Debug.Log("Evaluating Desync for: "+ m_snapshotBuffer.Get(newAuthSnapshot.timestamp));
 
             SimulationSnapshot predictedSnapshot = m_snapshotBuffer.Where(s => s.timestamp == newAuthSnapshot.timestamp 
                 && s.status == SnapshotStatus.Predicted).FirstOrDefault();
+
             if (!predictedSnapshot.Equals(default(SimulationSnapshot)))
             {
                 foreach (var objSnapShot in predictedSnapshot.Keys)

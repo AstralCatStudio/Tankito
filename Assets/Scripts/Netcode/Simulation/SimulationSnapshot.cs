@@ -5,23 +5,18 @@ namespace Tankito.Netcode.Simulation
 {
     public enum SnapshotStatus
     {
-        Payload = 0,
         /// <summary>
         /// When it's a client prediction of what the Snapshot at any given tick
         /// is going to look like in the server (guess at authoritative snapshot).
         /// </summary>
         Predicted = 1,
+
         /// <summary>
         /// When the snapshot has been certified against the server's simulation.
         /// This happens when we receive server snapshots and we confirm our predictions were correct,
         /// or when we replace a miss prediction with an Authoritative snapshot. 
         /// </summary>
-        Authoritative = 2,
-        /// <summary>
-        /// When the snapshot has been checked as authoritative, but the server has also been notified
-        /// that we acknowledge the reception of said authoritative snapshot. 
-        /// </summary>
-        Acknowledged = 3
+        Authoritative = 2
     }
 
     public struct SimulationSnapshot : INetworkSerializable

@@ -131,7 +131,7 @@ namespace Tankito.Netcode.Messaging
                 case ClockSignalHeader.Throttle:
                     if (IsClient && !IsServer)
                     {
-                        //if (DEBUG_CLOCK) Debug.Log("Attempting to throttle the local client simulation clock.");
+                        if (DEBUG_CLOCK) Debug.Log("Attempting to throttle the local client simulation clock.");
                         SimClock.Instance.ThrottleClock(signal.signalTicks);
                     }
                     break;
@@ -143,8 +143,6 @@ namespace Tankito.Netcode.Messaging
                         int latencyTicks = (int)(Parameters.CURRENT_LATENCY * 2/Parameters.SIM_DELTA_TIME);
                         Debug.Log($"[{SimClock.TickCounter}]Latency Ticks: {latencyTicks}ticks ({(int)(2*Parameters.CURRENT_LATENCY * 1000)}ms(RTT) @{(int)(Parameters.SIM_DELTA_TIME * 1000)}ms(dT))");
                         SimClock.Instance.SetClock(signal.signalTicks + latencyTicks);
-
-                        //Debug.Break();
 
                     }
                     break;
@@ -359,7 +357,14 @@ namespace Tankito.Netcode.Messaging
 
             if (snapshot.status == SnapshotStatus.Authoritative)
             {
-                SnapshotJitterBuffer.Instance.AddSnapshot(snapshot);
+                if (SnapshotJitterBuffer.Instance.AddSnapshot(snapshot))
+                {
+                    if (DEBUG_SNAPSHOTS) Debug.Log($"Snapshot [{snapshot.timestamp}] added to JitterBuffer");
+                }
+                else
+                {
+                    if (DEBUG_SNAPSHOTS) Debug.Log($"Snapshot [{snapshot.timestamp}] rejected. JitterBuffer contains snapshot[{SnapshotJitterBuffer.Instance.SnapshotTimestamp}]");
+                }
             }
 
             // TESTING !!!!
