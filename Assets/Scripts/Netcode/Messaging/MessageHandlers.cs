@@ -61,7 +61,7 @@ namespace Tankito.Netcode.Messaging
             NetworkManager.CustomMessagingManager.UnregisterNamedMessageHandler(MessageName.SimulationSnapshot);
         }
 
-        public void SendClockSignal(ClockSignal signal)
+        public void SendClockSignal(ClockSignal signal, NetworkDelivery delivery = NetworkDelivery.ReliableSequenced)
         {
             if (!IsServer)
             {
@@ -76,7 +76,7 @@ namespace Tankito.Netcode.Messaging
             using (writer)
             {
                 writer.WriteValue(signal);
-                customMessagingManager.SendNamedMessageToAll(MessageName.ClockSignal, writer, NetworkDelivery.ReliableSequenced);
+                customMessagingManager.SendNamedMessageToAll(MessageName.ClockSignal, writer, delivery);
             }
 
             if (IsServer && !IsClient) SimClock.Instance.StartClock();
@@ -88,14 +88,21 @@ namespace Tankito.Netcode.Messaging
             if (!IsServer) return;
             
             int throttleTicks = ServerSimulationManager.Instance.remoteInputTanks[clientId].IdealBufferSize - ServerSimulationManager.Instance.remoteInputTanks[clientId].BufferSize;
-            var throttleSignal = new ClockSignal(ClockSignalHeader.Throttle, throttleTicks, SimClock.TickCounter);
-            var throttleWriter = new FastBufferWriter(FastBufferWriter.GetWriteSize(throttleSignal), Allocator.Temp);
+            var throttleSignal = new ClockSignal(ClockSignalHeader.Throttle, throttleTicks);//, SimClock.TickCounter);
+            
+            SendClockSignal(throttleSignal, NetworkDelivery.Unreliable);
+        }
 
-            using (throttleWriter)
-            {
-                throttleWriter.WriteValue(throttleSignal);
-                NetworkManager.CustomMessagingManager.SendNamedMessage(MessageName.ClockSignal, clientId, throttleWriter, NetworkDelivery.Unreliable);
-            }
+        public void SendSynchronizationSignal()
+        {
+            if (!IsServer) return;
+
+            int syncTick = SimClock.TickCounter + Parameters.SERVER_IDEAL_INPUT_BUFFER_SIZE + 1;
+            var syncSignal = new ClockSignal(ClockSignalHeader.Sync, syncTick);
+
+            SendClockSignal(syncSignal, NetworkDelivery.ReliableSequenced);
+
+            //            Debug.Break();
         }
 
         private void RecieveClockSignal(ulong serverId, FastBufferReader payload)
@@ -124,8 +131,21 @@ namespace Tankito.Netcode.Messaging
                 case ClockSignalHeader.Throttle:
                     if (IsClient && !IsServer)
                     {
-                        if (DEBUG_CLOCK) Debug.Log("Attempting to throttle the local client simulation clock.");
-                        SimClock.Instance.ThrottleClock(signal.throttleTicks, signal.serverTime);
+                        //if (DEBUG_CLOCK) Debug.Log("Attempting to throttle the local client simulation clock.");
+                        SimClock.Instance.ThrottleClock(signal.signalTicks);
+                    }
+                    break;
+                
+                case ClockSignalHeader.Sync:
+                    if (IsClient && !IsServer)
+                    {
+                        if (DEBUG_CLOCK) Debug.Log("Attempting to Synchronize the local client simulation clock.");
+                        int latencyTicks = (int)(Parameters.CURRENT_LATENCY * 2/Parameters.SIM_DELTA_TIME);
+                        Debug.Log($"[{SimClock.TickCounter}]Latency Ticks: {latencyTicks}ticks ({(int)(2*Parameters.CURRENT_LATENCY * 1000)}ms(RTT) @{(int)(Parameters.SIM_DELTA_TIME * 1000)}ms(dT))");
+                        SimClock.Instance.SetClock(signal.signalTicks + latencyTicks);
+
+                        //Debug.Break();
+
                     }
                     break;
 

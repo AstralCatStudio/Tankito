@@ -184,6 +184,7 @@ public class RoundManager : NetworkBehaviour
         ClockSignal signal = new ClockSignal();
         signal.header = ClockSignalHeader.Start;
         MessageHandlers.Instance.SendClockSignal(signal);
+        MessageHandlers.Instance.SendSynchronizationSignal();
     }
 
     public bool IsGameStarted()

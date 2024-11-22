@@ -1,4 +1,4 @@
-using System.Collections;
+ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Tankito.Netcode;
@@ -89,7 +89,7 @@ namespace Tankito
             m_tickCounter = newTick;
         }
 
-        internal void ThrottleClock(int throttleTicks, int serverTime)
+        internal void ThrottleClock(int throttleTicks)
         {
             if (NetworkManager.Singleton.IsServer)
             {
@@ -103,7 +103,7 @@ namespace Tankito
             {
                 m_averageThrottleTicks += throttleTicks/m_throttleMessages;
 
-                float newTPS = (float)Parameters.SIM_DELTA_TIME + Mathf.Clamp(m_averageThrottleTicks, 1-(float)Parameters.SIM_DELTA_TIME, (float)Parameters.SIM_DELTA_TIME);
+                float newTPS = Parameters.SIM_TICK_RATE + Mathf.Clamp(m_averageThrottleTicks, 1-Parameters.SIM_TICK_RATE, Parameters.SIM_TICK_RATE);
 
                 if (DEBUG) Debug.Log($"Throttling({m_averageThrottleTicks}) at: {newTPS}");
 
@@ -113,7 +113,6 @@ namespace Tankito
             }
 
         }
-
         
         public void AutoPhysics2DUpdate(bool auto)
         {
