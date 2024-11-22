@@ -1,10 +1,40 @@
 using System;
+using System.Runtime.InteropServices;
+using System.Security.Cryptography;
+using Unity.Collections;
 using UnityEngine;
 
 namespace Tankito.Netcode.Simulation
 {
     public static class SimExtensions
     {
+
+        public static unsafe ulong HashSimObj(ulong ownerId, int spawnTick, int spawnN)
+        {
+            // Allocate unmanaged memory for the input data
+            byte* dataPtr = (byte*)Marshal.AllocHGlobal(sizeof(ulong) + 2 * sizeof(int));
+
+            try
+            {
+                // Copy data into unmanaged memory
+                *(ulong*)dataPtr = ownerId;
+                *(int*)(dataPtr + sizeof(ulong)) = spawnTick;
+                *(int*)(dataPtr + sizeof(ulong) + sizeof(int)) = spawnN;
+
+                // Compute the hash using the pointer and length of the data
+                var hashResult = xxHash3.Hash64(dataPtr, sizeof(ulong) + 2 * sizeof(int));
+
+                // Return the 64-bit hash result
+                return hashResult.x;  // Assuming x represents the 64-bit hash value
+            }
+            finally
+            {
+                // Free the unmanaged memory after use
+                Marshal.FreeHGlobal((IntPtr)dataPtr);
+            }
+        }
+
+
         public static IStateDelta[] Delta(in SimulationSnapshot snapA, in SimulationSnapshot snapB)
         {
             IStateDelta[] snapshotDeltas = new IStateDelta[Math.Max(snapA.Count, snapB.Count)];

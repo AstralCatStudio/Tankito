@@ -6,11 +6,25 @@ namespace Tankito.Netcode.Simulation
 {
     public abstract class ASimulationObject : NetworkBehaviour, INetworkSerializable
     {
+        public ulong SimObjId => m_simObjId;
+        [SerializeField] // <-- FOR DEBUG ONLY (don't modify, just observe)
+        private ulong m_simObjId;
+        
         // Define a delegate for the kinematics computation
         public delegate void KinematicFunction(float deltaTime);
 
         // Define an event based on the delegate
         public event KinematicFunction OnComputeKinematics;
+
+        public void GenerateSimObjId(int genN)
+        {
+            m_simObjId = SimExtensions.HashSimObj(OwnerClientId, SimClock.TickCounter, genN);
+        }
+
+        public void GenerateSimObjId(int tick, int genN)
+        {
+            m_simObjId = SimExtensions.HashSimObj(OwnerClientId, tick, genN);
+        }
 
         public override void OnNetworkSpawn() // Should work and be called for pooled objects too!
         {

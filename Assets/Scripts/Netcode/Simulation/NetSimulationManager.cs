@@ -9,7 +9,7 @@ namespace Tankito.Netcode.Simulation
     public abstract class NetSimulationManager<T> : Singleton<T> where T : Component
     {
         /// <summary>
-        /// Key -> Associated NetworkObjectId
+        /// Key -> Associated SimulationObjectId
         /// Value -> ASimulationObject component
         /// </summary>
         protected Dictionary<ulong, ASimulationObject> m_simulationObjects;
@@ -28,7 +28,8 @@ namespace Tankito.Netcode.Simulation
 
         public virtual void AddToSim(ASimulationObject obj)
         {
-            m_simulationObjects.Add(obj.NetworkObjectId, obj);
+            if (obj.SimObjId == default) Debug.LogWarning($"[{SimClock.TickCounter}]SimObjId has not been initialized!!!");
+            m_simulationObjects.Add(obj.SimObjId, obj);
         }
  
         public virtual void RemoveFromSim(ASimulationObject obj)

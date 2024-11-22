@@ -25,6 +25,7 @@ namespace Tankito.Netcode.Simulation
             base.OnNetworkSpawn();
             m_spawnTick = SimClock.TickCounter;
         }
+        
         public override ISimulationState GetSimState()
         {
             return new BulletSimulationState(
