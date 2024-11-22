@@ -170,10 +170,19 @@ public class RoundManager : NetworkBehaviour
 
     public void InitializeRound()
     {
-        _roundUI.SetActivePowerUps(false);
-        DisablePowerUpsClientRpc();
-
         _currentRound++;
+
+        if(_currentRound == 1)
+        {
+            SetActiveInitBackButtonClientRpc(false);
+            _roundUI.SetActiveScenarySelection(false);
+            _spawnManager = GameObject.Find("SpawnManager").GetComponent<SpawnManager>();
+        }
+        else if(_currentRound > 1)
+        {
+            //_roundUI.SetActivePowerUps(false);
+            DisablePowerUpsClientRpc();
+        }
 
         ResetPlayers();
 
@@ -220,6 +229,12 @@ public class RoundManager : NetworkBehaviour
     private void SetActiveRemainingPlayersClientRpc(bool active)
     {
         _roundUI.SetRemainingPlayersActive(active);
+    }
+
+    [ClientRpc]
+    private void SetActiveInitBackButtonClientRpc(bool active)
+    {
+        _roundUI.SetActiveInitExitButton(active);
     }
 
     [ClientRpc]
@@ -451,6 +466,7 @@ public class RoundManager : NetworkBehaviour
     private void EndGameClientRpc()
     {
         if (DEBUG) Debug.Log("NETCODE: Final de partida en todos");
+        _roundUI.SetActiveEndExitButton(true);
     }
     #endregion
 
@@ -458,7 +474,7 @@ public class RoundManager : NetworkBehaviour
     {
         if (_currentRound == _maxRounds)
         {
-            _ranking = "Ranking Final: ";
+            _ranking = "Final Ranking: ";
         }
         else
         {
@@ -469,7 +485,7 @@ public class RoundManager : NetworkBehaviour
 
         for (int i = 0; i < sortedPlayers.Count; i++)
         {
-            _ranking += $"\n{i + 1}. Jugador {sortedPlayers[i].GetComponent<NetworkObject>().OwnerClientId}:  {sortedPlayers[i].GetComponent<TankData>().points} puntos";
+            _ranking += $"\n{i + 1}. Player {sortedPlayers[i].GetComponent<NetworkObject>().OwnerClientId}:  {sortedPlayers[i].GetComponent<TankData>().points} points";
         }
     }
 }

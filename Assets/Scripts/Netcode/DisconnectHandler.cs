@@ -4,6 +4,7 @@ using Tankito;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Tankito.Netcode.Messaging;
 
 public class DisconnectHandler : NetworkBehaviour
 {
@@ -37,9 +38,23 @@ public class DisconnectHandler : NetworkBehaviour
 
     private void Disconnect()
     {
+        SimClock.Instance.StopClock();
+
+        UnregisterMessageHandler();
+
         NetworkManager.Singleton.Shutdown();
 
         SceneLoader.Singleton.ReloadMainMenu();
+    }
+
+    private void UnregisterMessageHandler()
+    {
+        Debug.Log("Unregistering in Message Handler");
+        // De-register when the associated NetworkObject is despawned.
+        NetworkManager.Singleton.CustomMessagingManager.UnregisterNamedMessageHandler(MessageName.ClockSignal);
+        NetworkManager.Singleton.CustomMessagingManager.UnregisterNamedMessageHandler(MessageName.InputWindow);
+        NetworkManager.Singleton.CustomMessagingManager.UnregisterNamedMessageHandler(MessageName.RelayInputWindow);
+        NetworkManager.Singleton.CustomMessagingManager.UnregisterNamedMessageHandler(MessageName.SimulationSnapshot);
     }
 
     [ClientRpc]

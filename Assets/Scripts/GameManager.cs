@@ -7,6 +7,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using Tankito.Netcode.Messaging;
 
 namespace Tankito
 {
@@ -73,7 +74,7 @@ namespace Tankito
         private void OnClientConnected(ulong clientId)
         {
             //Debug.Log("GameManager CLIENT CONNECTED called.");
-            
+
             if (m_loadingSceneFlag)
             {
                 //Debug.Log("loadingScene");
@@ -112,11 +113,18 @@ namespace Tankito
                 //SetObjectPositionClientRpc(newPlayer, newPlayer.GetComponent<Transform>().position);
                 // Ahora se maneja directamente en el spawn manager llamando a la funcion SetObjectPosition del GameManager
             }
-            FindPlayerInput();
-            // BindInputActions(); Bound by the player input script itself on network spawn.
+
+            if (clientId != NetworkManager.Singleton.LocalClientId) return;
+
+            Debug.Log("Registering in Message Handler");
+
+            NetworkManager.Singleton.CustomMessagingManager.RegisterNamedMessageHandler(MessageName.ClockSignal, MessageHandlers.Instance.ReceiveClockSignal);
+            NetworkManager.Singleton.CustomMessagingManager.RegisterNamedMessageHandler(MessageName.InputWindow, MessageHandlers.Instance.ReceiveInputWindow);
+            NetworkManager.Singleton.CustomMessagingManager.RegisterNamedMessageHandler(MessageName.RelayInputWindow, MessageHandlers.Instance.ReceiveRelayedInputWindow);
+            NetworkManager.Singleton.CustomMessagingManager.RegisterNamedMessageHandler(MessageName.SimulationSnapshot, MessageHandlers.Instance.ReceiveSimulationSnapshot);
         }
 
-        private void OnClientDisconnect(ulong obj)
+        private void OnClientDisconnect(ulong clientId)
         {
             //Debug.LogException(new NotImplementedException());
 
@@ -124,10 +132,10 @@ namespace Tankito
             if (IsServer)
             {
                 SpawnManager spawnManager = FindObjectOfType<SpawnManager>();
-                spawnManager.FreeSpawnPoint(obj);
+                spawnManager.FreeSpawnPoint(clientId);
 
                 RoundManager roundManager = FindObjectOfType<RoundManager>();
-                roundManager.RemovePlayer(obj);
+                roundManager.RemovePlayer(clientId);
             }
         }
 
@@ -151,30 +159,47 @@ namespace Tankito
 
         public void FindPlayerInput()
         {
+            m_playerInput = GameObject.FindObjectOfType<PlayerInput>(true);
             if (m_playerInput == null)
-                m_playerInput = GameObject.FindObjectOfType<PlayerInput>();
-
-            if (m_inputActions == null)
-                m_inputActions = new TankitoInputActions();
-
+            {
+                Debug.LogWarning("Player input nulo");
+            }
+            else
+            {
+                //Debug.Log("Player input encontrado");
+            }
+            m_inputActions = new TankitoInputActions();
             m_playerInput.actions = m_inputActions.asset;
         }
 
-        public void BindInputActions(TankPlayerInput predictedController)
+        public void BindInputActions(TankPlayerInput localTankInput)
         {
             FindPlayerInput();
 
-            //Debug.Log($"{predictedController}");
-            m_inputActions.Player.Move.performed += predictedController.OnMove;
-            m_inputActions.Player.Move.canceled += predictedController.OnMove;
-            m_inputActions.Player.Look.performed += predictedController.OnAim;
-            m_inputActions.Player.Look.canceled += predictedController.OnAim;
-            m_inputActions.Player.Dash.performed += predictedController.OnDash;
+            m_inputActions.Player.Move.performed += localTankInput.OnMove;
+            m_inputActions.Player.Move.canceled += localTankInput.OnMove;
+            m_inputActions.Player.Look.performed += localTankInput.OnAim;
+            m_inputActions.Player.Look.canceled += localTankInput.OnAim;
+            m_inputActions.Player.Dash.performed += localTankInput.OnDash;
             //m_inputActions.Player.Dash.canceled += predictedController.OnDash;
-            m_inputActions.Player.Parry.performed += predictedController.OnParry;
-            m_inputActions.Player.Parry.canceled += predictedController.OnParry;
-            m_inputActions.Player.Fire.performed += predictedController.OnFire;
-            m_inputActions.Player.Fire.canceled += predictedController.OnFire;
+            m_inputActions.Player.Parry.performed += localTankInput.OnParry;
+            m_inputActions.Player.Parry.canceled += localTankInput.OnParry;
+            m_inputActions.Player.Fire.performed += localTankInput.OnFire;
+            m_inputActions.Player.Fire.canceled += localTankInput.OnFire;
+        }
+
+        public void UnbindInputActions(TankPlayerInput localTankInput)
+        {
+            m_inputActions.Player.Move.performed -= localTankInput.OnMove;
+            m_inputActions.Player.Move.canceled -= localTankInput.OnMove;
+            m_inputActions.Player.Look.performed -= localTankInput.OnAim;
+            m_inputActions.Player.Look.canceled -= localTankInput.OnAim;
+            m_inputActions.Player.Dash.performed -= localTankInput.OnDash;
+            //m_inputActions.Player.Dash.canceled -= predictedController.OnDash;
+            m_inputActions.Player.Parry.performed -= localTankInput.OnParry;
+            m_inputActions.Player.Parry.canceled -= localTankInput.OnParry;
+            m_inputActions.Player.Fire.performed -= localTankInput.OnFire;
+            m_inputActions.Player.Fire.canceled -= localTankInput.OnFire;
         }
 
 
@@ -244,11 +269,11 @@ namespace Tankito
                 }
             }
         }
-        
+
         [ClientRpc]
         public void SetObjectPositionClientRpc(NetworkObjectReference targetObjectReference, Vector3 newPosition, ulong clientId)
         {
-            if(NetworkManager.Singleton.LocalClientId == clientId)
+            if (NetworkManager.Singleton.LocalClientId == clientId)
             {
                 if (targetObjectReference.TryGet(out var targetObject))
                 {
