@@ -13,8 +13,8 @@ namespace Tankito {
     
     public class BulletController : NetworkBehaviour
     {
-        ulong ownerId =0;
-        bool simulated =false;
+        ulong ownerId = 0;
+        bool simulated = false;
         public int m_bouncesLeft = 0;
         public float LifeTime { get => m_lifetime; }
         public float m_lifetime = 0; // Life Time counter
@@ -54,12 +54,14 @@ namespace Tankito {
                 }
             }
         }
-        public void simulatedNetworkSpawn(ulong ownerID)
+
+        public void SimulatedNetworkSpawn(ulong ownerID)
         {
             ownerId = ownerID;
             simulated = true;
             OnNetworkSpawn();
         }
+
         public override void OnNetworkSpawn()
         {
             if (!simulated)
@@ -96,6 +98,7 @@ namespace Tankito {
             OnBounce = (ABullet) => {};
             OnDetonate = (ABullet) => {};
         }
+
         public void Detonate()
         {
             OnDetonate.Invoke(this);

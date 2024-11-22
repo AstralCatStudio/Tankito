@@ -109,11 +109,13 @@ namespace Tankito
             //{
             //    DashTank(input.moveVector, deltaTime);
             //}
+        
         private void FireTank(Vector2 aimVector, float deltaTime)
         {
             cannon.Shoot(aimVector);
         }
-            private void ProcessInput(InputPayload input, float deltaTime)
+        
+        private void ProcessInput(InputPayload input, float deltaTime)
         {
             
             if (DEBUG) Debug.Log($"Processing {gameObject} input: {input}");

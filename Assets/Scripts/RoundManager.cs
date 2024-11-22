@@ -27,6 +27,23 @@ public class RoundManager : NetworkBehaviour
     public GameObject _playerInput;
     [SerializeField] private bool DEBUG = false;
 
+    public delegate void RoundStart(int nRound);
+    public event RoundStart OnRoundStart;
+
+    public static RoundManager Instance { get; private set; }
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(this);
+        }
+    }
+
     void Start()
     {
         _startedGame = false;
@@ -184,6 +201,8 @@ public class RoundManager : NetworkBehaviour
         ClockSignal signal = new ClockSignal();
         signal.header = ClockSignalHeader.Start;
         MessageHandlers.Instance.SendClockSignal(signal);
+
+        OnRoundStart?.Invoke(_currentRound);
     }
 
     public bool IsGameStarted()

@@ -21,6 +21,7 @@ namespace Tankito
         public int spawnTickTime;
         public ulong ownerID;
     }
+
     public class BulletCannon : NetworkBehaviour
     {
         public BulletProperties m_bulletProperties;
@@ -35,18 +36,27 @@ namespace Tankito
         public int baseBulletAmount;
         int bulletAmount;
         int spawnTickTime = 0;
-        public Queue<GameObject> simulatedBullets = new Queue<GameObject>();
+        //public Queue<GameObject> simulatedBullets = new Queue<GameObject>();
         public List<BulletModifier> Modifiers { get => m_bulletModifiers; }
         public BulletProperties Properties { get => m_bulletProperties; }
 
+        private void OnEnable()
+        {
+            RoundManager.Instance.OnRoundStart += ApplyModifierProperties;
+        }
+
+        private void OnDisable()
+        {
+            RoundManager.Instance.OnRoundStart -= ApplyModifierProperties;
+        }
+
         private void Start()
         {
-            m_bulletProperties.ownerID = OwnerClientId;
             BulletCannonRegistry.Instance[OwnerClientId] = this;
             ApplyModifierProperties();
         }
 
-        public void ApplyModifierProperties()
+        public void ApplyModifierProperties(int nRound = 0)
         {
             BulletDirection.Clear();
             BulletDirection.Add(transform.right);
@@ -67,29 +77,14 @@ namespace Tankito
 
         public void Shoot(Vector2 aimVector)
         {
-            // Probablemente sea razonable añadir un intervalo de buffer de inputs, de modo que si disparas justo antes de que se acabe el cooldown, dispare en cuanto se pueda. - Bernat
-            if (IsServer)
-            {
-                if (timer > interval)
+                if (timer >= interval)
                 {
                     timer = 0;
-                    SpawnBullet(aimVector);
-                    
+                    ShootBullet(aimVector);
                 }
-            }
-            else
-            {
-                if (timer > interval && IsOwner)
-                {
-                    timer = 0;
-                    SpawnSimulatedBullet(aimVector);
-
-                }
-            }
-
-            // Spawn FX and do respective animations
         }
-        void SpawnSimulatedBullet(Vector2 aimVector)
+
+        /*void SpawnSimulatedBullet(Vector2 aimVector)
         {
             m_bulletProperties.direction = aimVector;
             m_bulletProperties.startingPosition = transform.position;
@@ -97,11 +92,12 @@ namespace Tankito
             var newBullet = NetworkObjectPool.Singleton.GetNetworkObject(BulletCannonRegistry.Instance.m_bulletPrefab, transform.position, transform.rotation).gameObject;
 
             newBullet.SetActive(true);
-            newBullet.GetComponent<BulletController>().simulatedNetworkSpawn(OwnerClientId);
+            newBullet.GetComponent<BulletController>().SimulatedNetworkSpawn(OwnerClientId);
             Debug.Log("encolada la bala " + newBullet.GetComponent<NetworkObject>().NetworkObjectId);
             simulatedBullets.Enqueue(newBullet);
-        }
-        void SpawnBullet(Vector2 aimVector)
+        }*/
+
+        void ShootBullet(Vector2 aimVector)
         {
             //Vector2 direction;
             //float angle;
@@ -118,14 +114,15 @@ namespace Tankito
             m_bulletProperties.direction = aimVector;
             m_bulletProperties.startingPosition = transform.position;
             m_bulletProperties.spawnTickTime = SimClock.TickCounter;
-            SpawnBulletClientRpc(m_bulletProperties.direction, m_bulletProperties.startingPosition, m_bulletProperties.spawnTickTime);
+            //SpawnBulletClientRpc(m_bulletProperties.direction, m_bulletProperties.startingPosition, m_bulletProperties.spawnTickTime);
 
             
-            var newBullet = NetworkObjectPool.Singleton.GetNetworkObject(BulletCannonRegistry.Instance.m_bulletPrefab, transform.position, transform.rotation).gameObject;
+            var newBullet = BulletPool.Instance.Get(BulletCannonRegistry.Instance.m_bulletPrefab, transform.position, transform.rotation).gameObject;
 
             newBullet.GetComponent<NetworkObject>().SpawnWithOwnership(OwnerClientId);
         }
-        [ClientRpc]
+
+        /*[ClientRpc]
         void SpawnBulletClientRpc(Vector2 direction, Vector2 position, int tickCounter)
         {
             if(IsOwner && !IsServer)
@@ -140,14 +137,11 @@ namespace Tankito
             m_bulletProperties.direction = direction;
             m_bulletProperties.startingPosition = position;
             m_bulletProperties.spawnTickTime = tickCounter;
-        }
+        }*/
 
         void Update()
-        {
-            
+        {            
                 timer += Time.deltaTime;
-            
-
         }
     }
 }
