@@ -16,12 +16,7 @@ namespace Tankito.Netcode.Simulation
         // Define an event based on the delegate
         public event KinematicFunction OnComputeKinematics;
 
-        public void GenerateSimObjId(int genN)
-        {
-            m_simObjId = SimExtensions.HashSimObj(OwnerClientId, SimClock.TickCounter, genN);
-        }
-
-        public void GenerateSimObjId(int tick, int genN)
+        public void GenerateSimObjId(ulong ownerId, int tick, int genN)
         {
             m_simObjId = SimExtensions.HashSimObj(OwnerClientId, tick, genN);
         }

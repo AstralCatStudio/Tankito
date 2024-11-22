@@ -14,9 +14,9 @@ namespace Tankito.Netcode.Simulation
         /// </summary>
         protected Dictionary<ulong, ASimulationObject> m_simulationObjects;
 
-        public ASimulationObject GetSimObj(ulong netObjId)
+        public ASimulationObject GetSimObj(ulong simObjId)
         {
-            return m_simulationObjects[netObjId];
+            return m_simulationObjects[simObjId];
         }
         
 

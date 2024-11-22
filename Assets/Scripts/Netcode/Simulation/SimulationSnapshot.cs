@@ -85,7 +85,7 @@ namespace Tankito.Netcode.Simulation
                 {
                     SimulationObjectUpdate simObjUpdate = new();
                     simObjUpdate.NetworkSerialize(serializer);
-                    objectStates.Add(ClientSimulationManager.Instance.GetSimObj(simObjUpdate.netObjectId), simObjUpdate.state);
+                    objectStates.Add(ClientSimulationManager.Instance.GetSimObj(simObjUpdate.simObjId), simObjUpdate.state);
                 }
             }
         }

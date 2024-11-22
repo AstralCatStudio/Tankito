@@ -41,6 +41,11 @@ namespace Tankito.Netcode.Simulation
 
         public override void OnNetworkSpawn()
         {
+            if (SimObjId == default)
+            {
+                GenerateSimObjId(OwnerClientId, -1,0);
+            }
+
             base.OnNetworkSpawn();
             
             var playerInput = gameObject.GetComponent<TankPlayerInput>();

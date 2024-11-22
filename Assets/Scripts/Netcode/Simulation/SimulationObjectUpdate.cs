@@ -12,27 +12,27 @@ namespace Tankito.Netcode.Simulation
 
     public struct SimulationObjectUpdate : INetworkSerializable
     {
-        public ulong netObjectId;
+        public ulong simObjId;
         public SimulationObjectType simObjType;
         public ISimulationState state;
 
         public SimulationObjectUpdate(ASimulationObject simObj, ISimulationState newState)
         {
-            netObjectId = simObj.NetworkObjectId;
+            simObjId = simObj.SimObjId;
             simObjType = GetType(simObj);
             this.state = newState;
         }
 
-        public SimulationObjectUpdate(ulong netObjectId, ISimulationState state)
+        public SimulationObjectUpdate(ulong simObjId, ISimulationState state)
         {
-            this.netObjectId = netObjectId;
+            this.simObjId = simObjId;
             simObjType = SimulationObjectType.NULL;
             this.state = state;
         }
 
-        public SimulationObjectUpdate(ulong netObjectId, SimulationObjectType simObjType, ISimulationState state)
+        public SimulationObjectUpdate(ulong simObjId, SimulationObjectType simObjType, ISimulationState state)
         {
-            this.netObjectId = netObjectId;
+            this.simObjId = simObjId;
             this.simObjType = simObjType;
             this.state = state;
         }
@@ -54,7 +54,7 @@ namespace Tankito.Netcode.Simulation
 
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
         {
-            serializer.SerializeValue(ref netObjectId);
+            serializer.SerializeValue(ref simObjId);
             serializer.SerializeValue(ref simObjType);
             switch(simObjType)
             {

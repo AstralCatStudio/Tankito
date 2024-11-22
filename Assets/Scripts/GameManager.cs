@@ -99,7 +99,6 @@ namespace Tankito
                 // IMPORTANTE: Siempre instanciar objetos con la sobrecarga de parentesco para asegurar la escena en la que residen
                 // (evitando su destruccion no intencionada al cargarse sobre escenas aditivas que se descargan posteriormente eg. LA PANTALLA DE CARGA)
                 var newPlayer = Instantiate(m_playerPrefab, GameInstanceParent.Instance.transform).GetComponent<NetworkObject>();
-                newPlayer.GetComponent<ASimulationObject>().GenerateSimObjId(-1,0); // Se genera su SimObjId como si perteneciera al tick "-1".
                 newPlayer.SpawnAsPlayerObject(clientId);
 
                 // Primeras llamadas a round manager y spawn manager

@@ -9,6 +9,7 @@ namespace Tankito.Netcode.Simulation
     public static class SimExtensions
     {
 
+        
         public static unsafe ulong HashSimObj(ulong ownerId, int spawnTick, int spawnN)
         {
             // Allocate unmanaged memory for the input data
@@ -33,7 +34,6 @@ namespace Tankito.Netcode.Simulation
                 Marshal.FreeHGlobal((IntPtr)dataPtr);
             }
         }
-
 
         public static IStateDelta[] Delta(in SimulationSnapshot snapA, in SimulationSnapshot snapB)
         {
