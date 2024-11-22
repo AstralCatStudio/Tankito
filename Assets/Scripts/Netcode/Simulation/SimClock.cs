@@ -12,6 +12,8 @@ namespace Tankito
 {
     public class SimClock : Singleton<SimClock>
     {
+        public static float SimDeltaTime { get => (float)Parameters.SIM_DELTA_TIME; }
+
         double m_tickDeltaTime;
         double m_tickTimer;
         [SerializeField] private int m_tickCounter;
