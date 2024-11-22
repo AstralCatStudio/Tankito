@@ -97,7 +97,7 @@ namespace Tankito
             var newBullet = NetworkObjectPool.Singleton.GetNetworkObject(BulletCannonRegistry.Instance.m_bulletPrefab, transform.position, transform.rotation).gameObject;
 
             newBullet.SetActive(true);
-            newBullet.GetComponent<BulletController>().simulatedNetworkSpawn(OwnerClientId);
+            newBullet.GetComponent<BulletController>().SimulatedNetworkSpawn(OwnerClientId);
             Debug.Log("encolada la bala " + newBullet.GetComponent<NetworkObject>().NetworkObjectId);
             simulatedBullets.Enqueue(newBullet);
         }
