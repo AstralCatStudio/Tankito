@@ -61,7 +61,7 @@ namespace Tankito.Netcode.Messaging
             NetworkManager.CustomMessagingManager.UnregisterNamedMessageHandler(MessageName.SimulationSnapshot);
         }
 
-        public void SendClockSignal(ClockSignal signal, NetworkDelivery delivery = NetworkDelivery.ReliableSequenced)
+        public void SendClockSignal(ClockSignal signal, NetworkDelivery delivery = NetworkDelivery.ReliableSequenced, ulong[] recipients = null)
         {
             if (!IsServer)
             {
@@ -76,7 +76,14 @@ namespace Tankito.Netcode.Messaging
             using (writer)
             {
                 writer.WriteValue(signal);
-                customMessagingManager.SendNamedMessageToAll(MessageName.ClockSignal, writer, delivery);
+                if (recipients == null)
+                {
+                    customMessagingManager.SendNamedMessageToAll(MessageName.ClockSignal, writer, delivery);
+                }
+                else
+                {
+                    customMessagingManager.SendNamedMessage(MessageName.ClockSignal, recipients, writer, delivery);
+                }
             }
 
             if (IsServer && !IsClient) SimClock.Instance.StartClock();
@@ -90,7 +97,8 @@ namespace Tankito.Netcode.Messaging
             int throttleTicks = ServerSimulationManager.Instance.remoteInputTanks[clientId].IdealBufferSize - ServerSimulationManager.Instance.remoteInputTanks[clientId].BufferSize;
             var throttleSignal = new ClockSignal(ClockSignalHeader.Throttle, throttleTicks);//, SimClock.TickCounter);
             
-            SendClockSignal(throttleSignal, NetworkDelivery.Unreliable);
+            ulong[] target = new ulong[] {clientId};
+            SendClockSignal(throttleSignal, NetworkDelivery.Unreliable, target);
         }
 
         public void SendSynchronizationSignal()
