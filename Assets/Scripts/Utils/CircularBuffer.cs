@@ -38,7 +38,7 @@ namespace Tankito.Utils
             count = 0;
         }
 
-        public T First => lastAddedIdx == null ? default(T) : buffer[(int)lastAddedIdx-count];
+        public T First => lastAddedIdx == null ? default(T) : this[(int)lastAddedIdx-(count-1)];
 
         /// <summary>
         /// Gets the number of items in the circular buffer.
