@@ -12,19 +12,19 @@ namespace Tankito.Netcode
         /// </summary>
         public static int SNAPSHOT_BUFFER_SIZE { get => Instance.C_Buffer_Size; }
         public static int CLIENT_INPUT_WINDOW_SIZE { get => SERVER_IDEAL_INPUT_BUFFER_SIZE; }
-        public static int SERVER_IDEAL_INPUT_BUFFER_SIZE { get => (int)(Instance.Worst_Case_Delay/SIM_DELTA_TIME + SIM_DELTA_TIME); }
+        public static int SERVER_IDEAL_INPUT_BUFFER_SIZE { get => (int)(Instance.Worst_Case_Latency/SIM_DELTA_TIME + SIM_DELTA_TIME); }
         public static double SNAPSHOT_JITTER_BUFFER_TIME { get => 0.02; }
 
-        private int C_Buffer_Size { get => (int)(Worst_Case_Delay/SIM_DELTA_TIME); }
+        private int C_Buffer_Size { get => (int)(Worst_Case_Latency/SIM_DELTA_TIME); }
         
 
-        [SerializeField] double Median_Delay = 60;
-        [SerializeField] double Worst_Case_Delay = 300;
+        [SerializeField] double Median_Latency = 0.060;
+        [SerializeField] double Worst_Case_Latency = 0.300;
 
         [SerializeField] int Sim_Tick_Rate = 30;
         [SerializeField] bool DEBUG = false;
         public static int SIM_TICK_RATE { get => Instance.Sim_Tick_Rate; }
-        private static double SIM_DELTA_TIME { get => 1.0/Instance.Sim_Tick_Rate; }
+        public static double SIM_DELTA_TIME { get => 1.0/Instance.Sim_Tick_Rate; }
 
         protected override void Awake()
         {

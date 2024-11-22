@@ -12,17 +12,13 @@ namespace Tankito
 {
     public class SimClock : Singleton<SimClock>
     {
-        const int SIM_TICK_RATE = 40;
-        const float SIM_DELTA_TIME = 1f/SIM_TICK_RATE;
-
+        double m_tickDeltaTime;
         double m_tickTimer;
         [SerializeField] private int m_tickCounter;
         public static int TickCounter { get => Instance.m_tickCounter; }
         [SerializeField] private bool m_active;
 
         public bool Active { get => m_active; }
-        public static float SimDeltaTime { get => (float)Instance.m_tickDeltaTime; }
-        private double m_tickDeltaTime;
 
         private int m_throttleInterval = 1;
         private float m_averageThrottleTicks;
@@ -43,7 +39,7 @@ namespace Tankito
             m_tickTimer = 0;
             m_tickCounter = 0;
             m_active = false;
-            m_tickDeltaTime = SIM_DELTA_TIME;
+            m_tickDeltaTime = Parameters.SIM_DELTA_TIME;
         }
 
 
@@ -105,7 +101,7 @@ namespace Tankito
             {
                 m_averageThrottleTicks += throttleTicks/m_throttleMessages;
 
-                float newTPS = SIM_TICK_RATE+Mathf.Clamp(m_averageThrottleTicks, 1-SIM_TICK_RATE, SIM_TICK_RATE);
+                float newTPS = (float)Parameters.SIM_DELTA_TIME + Mathf.Clamp(m_averageThrottleTicks, 1-(float)Parameters.SIM_DELTA_TIME, (float)Parameters.SIM_DELTA_TIME);
 
                 if (DEBUG) Debug.Log($"Throttling({m_averageThrottleTicks}) at: {newTPS}");
 

@@ -152,9 +152,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18d1c73e433ddb14a87a6125ba978f0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Median_Delay: 60
-  Worst_Case_Delay: 300
+  Median_Delay: 0.06
+  Worst_Case_Delay: 0.3
   Sim_Tick_Rate: 30
+  DEBUG: 0
 --- !u!4 &524099866
 Transform:
   m_ObjectHideFlags: 0
