@@ -73,7 +73,7 @@ namespace Tankito.Netcode.Messaging
 
         private void SendThrottleSignal(ulong clientId)
         {
-            if (!IsServer) return;
+            if (!NetworkManager.Singleton.IsServer) return;
             
             int throttleTicks = (SimClock.TickCounter + Parameters.SERVER_IDEAL_INPUT_BUFFER_SIZE - 1) - ServerSimulationManager.Instance.remoteInputTanks[clientId].Last;
             var throttleSignal = new ClockSignal(ClockSignalHeader.Throttle, throttleTicks);//, SimClock.TickCounter);
@@ -84,7 +84,7 @@ namespace Tankito.Netcode.Messaging
 
         public void SendSynchronizationSignal()
         {
-            if (!IsServer) return;
+            if (!NetworkManager.Singleton.IsServer) return;
 
             int syncTick = SimClock.TickCounter + Parameters.SERVER_IDEAL_INPUT_BUFFER_SIZE + 1;
             var syncSignal = new ClockSignal(ClockSignalHeader.Sync, syncTick);
@@ -118,7 +118,7 @@ namespace Tankito.Netcode.Messaging
                     break;
 
                 case ClockSignalHeader.Throttle:
-                    if (IsClient && !IsServer)
+                    if (NetworkManager.Singleton.IsClient && !NetworkManager.Singleton.IsServer)
                     {
                         if (DEBUG_CLOCK) Debug.Log("Attempting to throttle the local client simulation clock.");
                         SimClock.Instance.ThrottleClock(signal.signalTicks);
@@ -126,7 +126,7 @@ namespace Tankito.Netcode.Messaging
                     break;
                 
                 case ClockSignalHeader.Sync:
-                    if (IsClient && !IsServer)
+                    if (NetworkManager.Singleton.IsClient && !NetworkManager.Singleton.IsServer)
                     {
                         if (DEBUG_CLOCK) Debug.Log("Attempting to Synchronize the local client simulation clock.");
                         int latencyTicks = (int)(Parameters.CURRENT_LATENCY * 2/Parameters.SIM_DELTA_TIME);
