@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class MusicManager : Singleton<MusicManager>
+public class MusicManager : MonoBehaviour
 {
     [SerializeField] private AudioClip[] playaClips;
     [SerializeField] private AudioClip[] sushiClips;
@@ -38,9 +38,18 @@ public class MusicManager : Singleton<MusicManager>
     private float lastVolMusic = -1f;
     private float lastVolSounds = -1f;
 
-    protected override void Awake()
+    public static MusicManager Instance;
+
+    protected void Awake()
     {
-        base.Awake();
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
 
         DontDestroyOnLoad(gameObject);
 
