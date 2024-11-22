@@ -80,10 +80,10 @@ namespace Tankito.Netcode.Simulation
         public void EvaluateForReconciliation(SimulationSnapshot newAuthSnapshot)
         {
             if ((newAuthSnapshot.timestamp <= m_lastAuthSnapshotTimestamp) ||
-                (newAuthSnapshot.timestamp < m_snapshotBuffer.Last.timestamp))
+                (newAuthSnapshot.timestamp < m_snapshotBuffer.First.timestamp))
             {
                 if (DEBUG) Debug.Log($"NOT Reconciling with snapshot[{newAuthSnapshot.timestamp}] (Too OLD)."+
-                                    $"Oldest predicted snapshot[{m_snapshotBuffer.Last}]."+
+                                    $"Oldest predicted snapshot[{m_snapshotBuffer.First}]."+
                                     $"Newest auth snapshot[{m_lastAuthSnapshotTimestamp}]."+
                                     $"Snapshot Buff Size: {m_snapshotBuffer.Capacity}");
                 return;

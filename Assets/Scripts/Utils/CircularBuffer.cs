@@ -29,7 +29,7 @@ namespace Tankito.Utils
         private T[] buffer;
         private int size;
         private int count;
-        private int? lastIdx = null;
+        private int? lastAddedIdx = null;
         
         public CircularBuffer(int capacity)
         {
@@ -38,7 +38,7 @@ namespace Tankito.Utils
             count = 0;
         }
 
-        public T Last => lastIdx==null ? default(T) : buffer[(int)lastIdx];
+        public T First => lastAddedIdx == null ? default(T) : buffer[(int)lastAddedIdx-count];
 
         /// <summary>
         /// Gets the number of items in the circular buffer.
@@ -75,7 +75,7 @@ namespace Tankito.Utils
                 count++;
             }
             buffer[idx] = item;
-            lastIdx = idx;
+            lastAddedIdx = idx;
         }
 
         /// <summary>
@@ -123,7 +123,7 @@ namespace Tankito.Utils
         {
             Array.Clear(buffer, 0, size);
             count = 0;
-            lastIdx = null;
+            lastAddedIdx = null;
         }
 
         /// <summary>
