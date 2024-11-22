@@ -13,7 +13,9 @@ namespace Tankito {
     
     public class BulletController : NetworkBehaviour
     {
-        protected int m_bouncesLeft = 0;
+        ulong ownerId =0;
+        bool simulated =false;
+        public int m_bouncesLeft = 0;
         public float LifeTime { get => m_lifetime; }
         public float m_lifetime = 0; // Life Time counter
         protected Vector2 lastCollisionNormal = Vector2.zero;
@@ -23,6 +25,7 @@ namespace Tankito {
         {
             m_rb = GetComponent<Rigidbody2D>();
         }
+        
         private void OnEnable()
         {
             
@@ -32,36 +35,55 @@ namespace Tankito {
         {
             GetComponent<BulletSimulationObject>().OnComputeKinematics -= MoveBullet;
         }
-        void MoveBullet(float deltaTime)
+        private void Update()
         {
             transform.rotation = Quaternion.LookRotation(new Vector3(0, 0, 1), m_rb.velocity.normalized);
-            m_rb.velocity += (BulletCannonRegistry.Instance[OwnerClientId].Properties.acceleration != 0f) ? BulletCannonRegistry.Instance[OwnerClientId].Properties.acceleration * m_rb.velocity.normalized : Vector2.zero;
+        }
+        void MoveBullet(float deltaTime)
+        {
+            
+            m_rb.velocity += (BulletCannonRegistry.Instance[ownerId].Properties.acceleration != 0f) ? BulletCannonRegistry.Instance[ownerId].Properties.acceleration * m_rb.velocity.normalized : Vector2.zero;
             m_lifetime += Time.deltaTime;
             OnFly.Invoke(this);
             if (IsServer)
             {
-                if (m_lifetime >= BulletCannonRegistry.Instance[OwnerClientId].Properties.lifetimeTotal)
+                if (m_lifetime >= BulletCannonRegistry.Instance[ownerId].Properties.lifetimeTotal)
                 {
-                    Debug.Log($"lifetime: {m_lifetime}/{BulletCannonRegistry.Instance[OwnerClientId].Properties.lifetimeTotal}");
+                    Debug.Log($"lifetime: {m_lifetime}/{BulletCannonRegistry.Instance[ownerId].Properties.lifetimeTotal}");
                     Detonate();
                 }
             }
         }
+        public void simulatedNetworkSpawn(ulong ownerID)
+        {
+            ownerId = ownerID;
+            simulated = true;
+            OnNetworkSpawn();
+        }
         public override void OnNetworkSpawn()
         {
-            m_bouncesLeft = BulletCannonRegistry.Instance[OwnerClientId].Properties.bouncesTotal;
-            m_rb.velocity = BulletCannonRegistry.Instance[OwnerClientId].Properties.velocity * BulletCannonRegistry.Instance[OwnerClientId].Properties.direction.normalized;
-            transform.position = BulletCannonRegistry.Instance[OwnerClientId].transform.position;
-            foreach (var modifier in Tankito.BulletCannonRegistry.Instance[OwnerClientId].Modifiers)
+            if (!simulated)
+            {
+                ownerId = OwnerClientId;
+            }
+            transform.position = BulletCannonRegistry.Instance[ownerId].transform.position;
+            m_bouncesLeft = BulletCannonRegistry.Instance[ownerId].Properties.bouncesTotal;
+            m_rb.velocity = BulletCannonRegistry.Instance[ownerId].Properties.velocity * BulletCannonRegistry.Instance[ownerId].Properties.direction.normalized;
+            transform.rotation = Quaternion.LookRotation(new Vector3(0, 0, 1), m_rb.velocity.normalized);
+            foreach (var modifier in Tankito.BulletCannonRegistry.Instance[ownerId].Modifiers)
             {
                 modifier.BindBulletEvents(this);
             }
+            
+
             OnSpawn.Invoke(this);
         }
         
         public override void OnNetworkDespawn()
         {
+            simulated = false;
             ResetBulletData();
+            
         }
 
         protected void ResetBulletData()
@@ -85,7 +107,16 @@ namespace Tankito {
             else
             {
                 OnDetonate.Invoke(this);
-                m_rb.velocity = Vector2.zero;
+                gameObject.SetActive(false);
+                if (simulated)
+                {
+                    simulated = false;
+                    if (BulletCannonRegistry.Instance[ownerId].simulatedBullets.Count > 0)
+                    {
+                        BulletCannonRegistry.Instance[ownerId].simulatedBullets.Dequeue();
+                    }
+                    
+                }
             }
         }
 
@@ -109,7 +140,7 @@ namespace Tankito {
                     break;
 
                 case "Player":
-                    if (collision.gameObject.GetComponent<NetworkObject>().OwnerClientId == OwnerClientId && m_lifetime < 0.03f)
+                    if (collision.gameObject.GetComponent<NetworkObject>().OwnerClientId == ownerId && m_lifetime < 0.03f)
                     {
                         //Debug.Log("Ignoing firing self collision");
                         //Detonate();

@@ -51,9 +51,10 @@ namespace Tankito.Netcode.Simulation
         /// </summary>
         public virtual void Simulate()
         {
-            foreach (var obj in m_simulationObjects.Values)
+            List<ASimulationObject> simulationObjectsSnapshot = m_simulationObjects.Values.ToList<ASimulationObject>();
+            foreach (var obj in simulationObjectsSnapshot)
             {
-                obj.ComputeKinematics(SimClock.SimDeltaTime);
+                obj?.ComputeKinematics(SimClock.SimDeltaTime);
                 //Debug.Log($"ComputedKinematics for: {obj}");
             }
 

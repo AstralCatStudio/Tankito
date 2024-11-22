@@ -14,14 +14,11 @@ namespace Tankito
         private void Update()
         {
             timer += Time.deltaTime;
-            if (NetworkManager.Singleton.IsServer)
-            {
                 if (timer >= timeUntilDead)
                 {
                     //GetComponent<NetworkObject>().Despawn();
                     Destroy(gameObject);
                 }
-            }
             
             
             if (timer <= timeUntilBig)

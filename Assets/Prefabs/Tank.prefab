@@ -209,6 +209,7 @@ GameObject:
   - component: {fileID: 1979050206698400908}
   - component: {fileID: 258216026692416356}
   - component: {fileID: 5903910165241873950}
+  - component: {fileID: 8799390587279230347}
   m_Layer: 0
   m_Name: Tank
   m_TagString: Player
@@ -344,7 +345,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a651c3c3c8b279e4f81772302254b6dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_isKinematic: 1
   m_tankRB: {fileID: 8520293575514935909}
   m_turretRB: {fileID: 8342253699622009969}
   m_controller: {fileID: 258216026692416356}
@@ -391,6 +391,22 @@ MonoBehaviour:
   m_hullAnimator: {fileID: 5873195794702409541}
   m_turretRB: {fileID: 8342253699622009969}
   DEBUG: 0
+--- !u!114 &8799390587279230347
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5904161972637957731}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f3fe6949ed78184f8a55d21f67e9bc3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  modifiers:
+  - {fileID: 11400000, guid: ea21ca02f7b67da4a953781fdb2aa96c, type: 2}
+  bulletCreator: {fileID: 792954130975718086}
+  tankController: {fileID: 258216026692416356}
 --- !u!1 &6459951814770460290
 GameObject:
   m_ObjectHideFlags: 0
@@ -579,7 +595,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 508e9edf31cb76c4984edc9f6780b17d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_bulletPrefab: {fileID: 0}
   m_bulletProperties:
     scaleMultiplier: {x: 0, y: 0}
     startingPosition: {x: 0, y: 0}
@@ -590,5 +605,6 @@ MonoBehaviour:
     bouncesTotal: 1
     lifetimeTotal: 10
     spawnTickTime: 0
-  interval: 0.2
+    ownerID: 0
+  interval: 0.5
   baseBulletAmount: 0

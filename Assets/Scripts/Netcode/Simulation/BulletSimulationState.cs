@@ -16,19 +16,23 @@ namespace Tankito.Netcode.Simulation
         public Vector2 Velocity { get => velocity; }
         public float LifeTime { get => lifeTime; }
 
+        public int BouncesLeft { get => bouncesLeft; }
+
         private Vector2 position;
         private float rotation;
         private Vector2 velocity;
         private float lifeTime; // In seconds
+        private int bouncesLeft;
 
         public const int MAX_SERIALIZED_SIZE = sizeof(float)*2 + sizeof(float)*2*2;
 
-        public BulletSimulationState(Vector2 position, float rotation, Vector2 velocity, float lifeTime)
+        public BulletSimulationState(Vector2 position, float rotation, Vector2 velocity, float lifeTime, int bouncesLeft)
         {
             this.position = position;
             this.rotation = rotation;
             this.velocity = velocity;
             this.lifeTime = lifeTime;
+            this.bouncesLeft = bouncesLeft;
         }
 
         internal void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter

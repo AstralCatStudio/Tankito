@@ -31,18 +31,24 @@ namespace Tankito.Netcode.Simulation
                 m_rigidbody.position,
                 m_rigidbody.rotation,
                 m_rigidbody.velocity,
-                m_bullet.m_lifetime
+                m_bullet.m_lifetime,
+                m_bullet.m_bouncesLeft
             );
         }
 
         public override void SetSimState(in ISimulationState state)
         {
+            if(!gameObject.activeSelf)
+            {
+                gameObject.SetActive(true);
+            }
             if (state is BulletSimulationState bulletState)
             {
                 m_rigidbody.position = bulletState.Position;
                 m_rigidbody.rotation = bulletState.Rotation;
                 m_rigidbody.velocity = bulletState.Velocity;
                 m_bullet.m_lifetime = bulletState.LifeTime;
+                m_bullet.m_bouncesLeft = bulletState.BouncesLeft;
             }
             else
             {

@@ -157,7 +157,7 @@ namespace Tankito.Netcode.Simulation
             // Set tank's input components back on live input mode
             foreach(var obj in m_simulationObjects.Values)
             {
-                if (obj is  TankSimulationObject tank)
+                if (obj!= null && obj is  TankSimulationObject tank)
                 {
                     var lastReplayTick = tank.StopInputReplay();
                     //if (DEBUG) Debug.Log($"Tank({tank.NetworkObjectId})'s last replayed input was on Tick- {lastReplayTick}");

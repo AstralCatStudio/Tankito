@@ -35,7 +35,7 @@ namespace Tankito
         public int baseBulletAmount;
         int bulletAmount;
         int spawnTickTime = 0;
-
+        public Queue<GameObject> simulatedBullets = new Queue<GameObject>();
         public List<BulletModifier> Modifiers { get => m_bulletModifiers; }
         public BulletProperties Properties { get => m_bulletProperties; }
 
@@ -73,13 +73,33 @@ namespace Tankito
                 if (timer > interval)
                 {
                     timer = 0;
-                    
                     SpawnBullet(aimVector);
                     
                 }
             }
+            else
+            {
+                if (timer > interval && IsOwner)
+                {
+                    timer = 0;
+                    SpawnSimulatedBullet(aimVector);
+
+                }
+            }
 
             // Spawn FX and do respective animations
+        }
+        void SpawnSimulatedBullet(Vector2 aimVector)
+        {
+            m_bulletProperties.direction = aimVector;
+            m_bulletProperties.startingPosition = transform.position;
+            m_bulletProperties.spawnTickTime = SimClock.TickCounter;
+            var newBullet = NetworkObjectPool.Singleton.GetNetworkObject(BulletCannonRegistry.Instance.m_bulletPrefab, transform.position, transform.rotation).gameObject;
+
+            newBullet.SetActive(true);
+            newBullet.GetComponent<BulletController>().simulatedNetworkSpawn(OwnerClientId);
+            Debug.Log("encolada la bala " + newBullet.GetComponent<NetworkObject>().NetworkObjectId);
+            simulatedBullets.Enqueue(newBullet);
         }
         void SpawnBullet(Vector2 aimVector)
         {
@@ -108,6 +128,15 @@ namespace Tankito
         [ClientRpc]
         void SpawnBulletClientRpc(Vector2 direction, Vector2 position, int tickCounter)
         {
+            if(IsOwner && !IsServer)
+            {
+                GameObject bala = simulatedBullets.Dequeue();
+                Debug.Log("desencolada la bala " + bala.GetComponent<NetworkObject>().NetworkObjectId);
+                bala.GetComponent<SpriteRenderer>().color = Color.red;
+                bala.SetActive(false);
+                bala.GetComponent<BulletController>().OnNetworkDespawn();
+                
+            }
             m_bulletProperties.direction = direction;
             m_bulletProperties.startingPosition = position;
             m_bulletProperties.spawnTickTime = tickCounter;
@@ -115,10 +144,9 @@ namespace Tankito
 
         void Update()
         {
-            if (IsServer)
-            {
+            
                 timer += Time.deltaTime;
-            }
+            
 
         }
     }
