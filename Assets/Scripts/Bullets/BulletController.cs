@@ -36,7 +36,7 @@ namespace Tankito {
         {           
             GetComponent<BulletSimulationObject>().OnComputeKinematics += MoveBullet;
 
-            transform.position = BulletCannonRegistry.Instance[OwnerId].transform.position;
+            transform.position = BulletCannonRegistry.Instance[OwnerId].Properties.startingPosition;
             m_bouncesLeft = BulletCannonRegistry.Instance[OwnerId].Properties.bouncesTotal;
             m_rb.velocity = BulletCannonRegistry.Instance[OwnerId].Properties.velocity * BulletCannonRegistry.Instance[OwnerId].Properties.direction.normalized;
             transform.rotation = Quaternion.LookRotation(new Vector3(0, 0, 1), m_rb.velocity.normalized);
@@ -62,7 +62,10 @@ namespace Tankito {
 
         void MoveBullet(float deltaTime)
         {
-            
+            if (m_lifetime >= selfCollisionTreshold)
+            {
+                gameObject.layer = 0;
+            }
             m_rb.velocity += (BulletCannonRegistry.Instance[OwnerId].Properties.acceleration != 0f) ? BulletCannonRegistry.Instance[OwnerId].Properties.acceleration * m_rb.velocity.normalized : Vector2.zero;
             m_lifetime += Time.deltaTime;
             OnFly.Invoke(this);
