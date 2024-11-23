@@ -26,6 +26,11 @@ namespace Tankito.Netcode.Simulation
             base.OnNetworkSpawn();
         }
 
+        public void RemoveFromSim()
+        {
+            base.OnNetworkDespawn();
+        }
+
         public void OnDisable()
         {
 

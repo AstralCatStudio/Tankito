@@ -27,6 +27,11 @@ namespace Tankito {
             m_rb = GetComponent<Rigidbody2D>();
         }
         
+        public void SetOwner(ulong ownerId)
+        {
+            this.OwnerId = ownerId;
+        }
+
         public void InitializeProperties(bool triggerOnSpawnEvents = true)
         {           
             GetComponent<BulletSimulationObject>().OnComputeKinematics += MoveBullet;
@@ -40,8 +45,7 @@ namespace Tankito {
                 modifier.BindBulletEvents(this);
             }
 
-
-            if (triggerOnSpawnEvents) OnSpawn.Invoke(this);
+            if (triggerOnSpawnEvents) OnSpawn?.Invoke(this);
         }
 
         private void OnDisable()
@@ -54,7 +58,6 @@ namespace Tankito {
         private void Update()
         {
             transform.rotation = Quaternion.LookRotation(new Vector3(0, 0, 1), m_rb.velocity.normalized);
-            MoveBullet(Time.deltaTime);//borrar
         }
 
         void MoveBullet(float deltaTime)
@@ -84,11 +87,12 @@ namespace Tankito {
         public void Detonate()
         {
             OnDetonate.Invoke(this);
-            if (NetworkManager.Singleton.IsServer)
-            {
+        //    if (NetworkManager.Singleton.IsServer)
+        //    {
                 BulletSimulationObject bulletSimObj = GetComponent<BulletSimulationObject>();
                 BulletPool.Instance.Release(bulletSimObj);
-            }
+            bulletSimObj.RemoveFromSim();
+        //    }
         }   
 
         private void OnCollisionEnter2D(Collision2D collision)
