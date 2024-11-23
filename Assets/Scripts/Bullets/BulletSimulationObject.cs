@@ -13,7 +13,8 @@ namespace Tankito.Netcode.Simulation
         private ulong m_ownerId;
         public ulong OwnerId => m_ownerId;
 
-        
+        public override SimulationObjectType SimObjType => SimulationObjectType.Bullet;
+
         void Start()
         {
             if (m_bullet == null)
@@ -22,28 +23,16 @@ namespace Tankito.Netcode.Simulation
                 if (m_bullet == null) Debug.LogWarning("BulletSimulationObject could not find associated ABullet component!");
             }
         }
-
+        
         public void SetOwner(ulong ownerId)
         {
             m_ownerId = ownerId;
         }
-        
-        public void AddToSim()
-        {
-            base.OnNetworkSpawn();
-        }
 
-        public void RemoveFromSim()
-        {
-            base.OnNetworkDespawn();
-            BulletPool.Instance.Release(this);
-        }
-
-        public void OnDisable()
-        {
-
-        }
-
+        /// <summary>
+        /// Automatically removes the simulation object from the local <see cref="Simulation.NetSimulationManager.Instance"/>.
+        /// And also releases the bullet to the local <see cref="BulletPool.Instance"/> 
+        /// </summary>
         public override void OnNetworkDespawn()
         {
             base.OnNetworkDespawn();

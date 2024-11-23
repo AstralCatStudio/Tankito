@@ -72,6 +72,7 @@ namespace Tankito
             bulletObj.SetSimObjId(simObjId);
             bulletObj.SetOwner(ownerId);
             bulletObj.GetComponent<BulletController>().InitializeProperties(false);
+            bulletObj.OnNetworkSpawn();
 
             return bulletObj;
         }

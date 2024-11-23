@@ -34,28 +34,34 @@ namespace Tankito.Netcode.Simulation
     {
         public int timestamp;
         public SnapshotStatus status;
-        private Dictionary<ASimulationObject, ISimulationState> objectStates; // Se hace de  ISimulationState para poder mantenerlo generico entre cosas distintas, como balas que tan solo tienen un par de variables y los tanques, que tienen mas info
+        private Dictionary<ulong, (SimulationObjectType type, ISimulationState state)> objectStates;
 
         const int MAX_TANKS_IN_LOBBY = 6;
         const int MAX_PROJECTILES_IN_LOBBY = 60;
         public const int MAX_SERIALIZED_SIZE = TankSimulationState.MAX_SERIALIZED_SIZE*MAX_TANKS_IN_LOBBY + BulletSimulationState.MAX_SERIALIZED_SIZE*MAX_PROJECTILES_IN_LOBBY;
 
-        public IEnumerable<ASimulationObject> Keys { get => objectStates.Keys; }
-        public IEnumerable<ISimulationState> Values { get => objectStates.Values; }
+        public IEnumerable<ulong> IDs { get => objectStates.Keys; }
+        public IEnumerable<(SimulationObjectType type, ISimulationState state)> States { get => objectStates.Values; }
         public int Count { get => objectStates.Count; }
 
         public void Initialize()
         {
-            objectStates = new Dictionary<ASimulationObject, ISimulationState>();
+            objectStates = new Dictionary<ulong, (SimulationObjectType type, ISimulationState state)>();
         }
 
-        public ISimulationState this[ASimulationObject obj]
+        public (SimulationObjectType type, ISimulationState state) this[ASimulationObject obj]
+        {
+            get => objectStates[obj.SimObjId];
+            set => objectStates[obj.SimObjId] = value;
+        }
+
+        public (SimulationObjectType type, ISimulationState state) this[ulong obj]
         {
             get => objectStates[obj];
             set => objectStates[obj] = value;
         }
-        internal bool ContainsKey(ASimulationObject obj) { return objectStates.ContainsKey(obj); }
-        internal bool ContainsValue(ISimulationState state) { return objectStates.ContainsValue(state); }
+
+        internal bool ContainsId(ulong obj) { return objectStates.ContainsKey(obj); }
 
 
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
@@ -80,41 +86,13 @@ namespace Tankito.Netcode.Simulation
             }
             else if (serializer.IsReader)
             {
-                Debug.Log("nObjects es " + nObjects);
                 objectStates = new();
                 for(int i=0; i < nObjects; i++)
                 {
                     SimulationObjectUpdate simObjUpdate = new();
                     simObjUpdate.NetworkSerialize(serializer);
 
-                    if (!ClientSimulationManager.Instance.HasSimObj(simObjUpdate.simObjId))
-                    {
-                        Debug.Log("No hay balas");
-                        // QUEREMOS RETRASAR EL SPAWN HASTA Q SE REQUIERA POR EL SIM MANAGER.
-                        if (simObjUpdate.simObjType == SimulationObjectType.Bullet)
-                        {
-                            // Si es su 1er tick de vida, dejamos que intente el propio rollback instanciar la bala
-                            if (((BulletSimulationState)simObjUpdate.state).LifeTime >= SimClock.SimDeltaTime*2)
-                            {
-                                BulletSimulationObject placeholderBullet = BulletPool.Instance.Get(simObjUpdate.simObjId, ((BulletSimulationState)simObjUpdate.state).OwnerId);
-                                objectStates.Add(placeholderBullet, simObjUpdate.state);
-                                placeholderBullet.gameObject.SetActive(false);
-                            }
-                            else
-                            {
-                                Debug.Log($"[{SimClock.TickCounter}]Handing spawning attempt over to reconciliation (remote client input replay) because {simObjUpdate.simObjId}'s lifetime is lower than 2 ticks (it was spawned on tick[{timestamp}])");
-                            }
-                        }
-                        else
-                        {
-                            throw new InvalidOperationException($"Pero que cojones estas intentando hacer? (sim doesn't contain {simObjUpdate.simObjId})");
-                        }
-                    }
-                    else
-                    {
-                        objectStates.Add(ClientSimulationManager.Instance.GetSimObj(simObjUpdate.simObjId), simObjUpdate.state);
-                    }
-
+                    objectStates.Add(simObjUpdate.ID, (simObjUpdate.type, simObjUpdate.state));
                 }
             }
         }

@@ -90,7 +90,7 @@ namespace Tankito
                     for (int j = 0; j < m_bulletAmount; j++)
                     {
                         float angle = newAngle + (-m_shootSpreadAngle/2 + m_shootSpreadAngle/(m_bulletAmount+1)*(j+1))*Mathf.Deg2Rad;
-                        Debug.Log("bala "+(j+1) + ": angulo " + angle);
+                        Debug.Log("bala " + (j+1) + ": angulo " + angle);
                         Vector2 direction = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
                         ShootBullet((Vector2)transform.parent.parent.parent.position + m_shootRadius * direction, direction, spawnN);
                         spawnN++;
@@ -106,7 +106,6 @@ namespace Tankito
             m_bulletProperties.startingPosition = position;
             m_bulletProperties.spawnTickTime = SimClock.TickCounter;
             var newBullet = BulletPool.Instance.Get(position, direction, OwnerClientId, SimClock.TickCounter, spawnN);
-            newBullet.AddToSim();
         }
 
         void Update()

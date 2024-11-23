@@ -7,6 +7,7 @@ namespace Tankito.Netcode.Simulation
     public abstract class ASimulationObject : NetworkBehaviour
     {
         public ulong SimObjId => m_simObjId;
+        public abstract SimulationObjectType SimObjType { get; }
 
         [SerializeField] // <-- FOR DEBUG ONLY (don't modify, just observe)
         private ulong m_simObjId;
@@ -24,7 +25,10 @@ namespace Tankito.Netcode.Simulation
             m_simObjId = SimExtensions.HashSimObj(ownerId, tick, genN);
         }
 
-        public override void OnNetworkSpawn() // Should work and be called for pooled objects too!
+        /// <summary>
+        /// Automatically adds the simulation object from the local <see cref="Simulation.NetSimulationManager"/>.
+        /// </summary>
+        public override void OnNetworkSpawn()
         {
             if(NetworkManager.Singleton.IsServer)
             {
@@ -37,7 +41,10 @@ namespace Tankito.Netcode.Simulation
             //}
         }
 
-        public override void OnNetworkDespawn() // Should work and be called for pooled objects too!
+        /// <summary>
+        /// Automatically removes the simulation object from the local <see cref="Simulation.NetSimulationManager"/>.
+        /// </summary>
+        public override void OnNetworkDespawn()
         {
             if(NetworkManager.Singleton.IsServer)
             {

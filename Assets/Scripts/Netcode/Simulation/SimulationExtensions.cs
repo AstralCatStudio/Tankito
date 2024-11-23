@@ -40,15 +40,15 @@ namespace Tankito.Netcode.Simulation
             IStateDelta[] snapshotDeltas = new IStateDelta[Math.Max(snapA.Count, snapB.Count)];
             int i = 0;
 
-            foreach(var obj in snapA.Keys)
+            foreach(var obj in snapA.IDs)
             {
-                if (snapB.ContainsKey(obj))
+                if (snapB.ContainsId(obj))
                 {
-                    snapshotDeltas[i] = Delta(snapA[obj], snapB[obj]);
+                    snapshotDeltas[i] = Delta(snapA[obj].state, snapB[obj].state);
                 }
                 else
                 {
-                    snapshotDeltas[i] = Delta(snapA[obj]);
+                    snapshotDeltas[i] = Delta(snapA[obj].state);
                 }
             }
 

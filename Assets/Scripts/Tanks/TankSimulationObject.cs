@@ -9,10 +9,10 @@ namespace Tankito.Netcode.Simulation
         [SerializeField] private Rigidbody2D m_turretRB;
         [SerializeField] private ITankInput m_inputComponent;
         [SerializeField] private TankController m_controller;
-
         public void StartInputReplay(int timestamp) { m_inputComponent.StartInputReplay(timestamp); }
         public int StopInputReplay() { return m_inputComponent.StopInputReplay(); }
-
+        public override SimulationObjectType SimObjType => SimulationObjectType.Tank;
+        
         void Start()
         {
             if (m_tankRB == null)

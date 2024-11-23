@@ -14,29 +14,21 @@ namespace Tankito.Netcode.Simulation
         /// Value -> ASimulationObject component
         /// </summary>
         protected Dictionary<ulong, ASimulationObject> m_simulationObjects;
-        protected HashSet<ulong> m_removeFromSimQueue;
 
         public virtual ASimulationObject GetSimObj(ulong simObjId)
         {
             return m_simulationObjects[simObjId];
         }
 
-        public bool HasSimObj(ulong simObjId)
+        public bool ContainsSimObj(ulong simObjId)
         {
             return m_simulationObjects.ContainsKey(simObjId);
-        }
-
-        public void QueueForRemoval(ulong simObjId)
-        {
-            m_removeFromSimQueue.Add(simObjId);
-        }
-        
+        }        
 
         protected override void Awake()
         {
             base.Awake();
             m_simulationObjects = new Dictionary<ulong, ASimulationObject>();
-            m_removeFromSimQueue = new HashSet<ulong>();
         }
 
         public virtual void AddToSim(ASimulationObject obj)
@@ -71,20 +63,6 @@ namespace Tankito.Netcode.Simulation
                 obj?.ComputeKinematics(SimClock.SimDeltaTime);
             }
 
-            foreach(var delId in m_removeFromSimQueue)
-            {
-                var obj = m_simulationObjects[delId];
-                if (obj is BulletSimulationObject bullet)
-                {
-                    bullet.RemoveFromSim();
-                }
-                else
-                {
-                    throw new NotImplementedException();
-                }
-            }
-            m_removeFromSimQueue.Clear();
-
             Physics2D.Simulate(SimClock.SimDeltaTime);
         }
 
@@ -97,7 +75,7 @@ namespace Tankito.Netcode.Simulation
             //Debug.Log(m_simulationObjects.Values.Count);
             foreach(var simObj in m_simulationObjects.Values)
             {
-                newSnapshot[simObj] = simObj.GetSimState();
+                newSnapshot[simObj] = (simObj.SimObjType, simObj.GetSimState());
             }
             
             return newSnapshot;
