@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Tankito
 {
-    public enum ModifierName
+    public enum ModifierName //IMPORTANTE: si se añaden modificadores añadirlos a este enum con el index en la lista de modificadores
     {
         Test=0,
         Shotgun=1,
@@ -35,6 +35,36 @@ namespace Tankito
             return GetModifier(modifierID).GetSprite();
         }
         public string GetModifierDescription(ModifierName modifierID)
+        {
+            return GetModifier(modifierID).GetDescription();
+        }
+        public Modifier GetRandomModifier()
+        {
+            int randomModifier = Random.Range(0, modifierList.modifiers.Count);
+            return GetModifier(randomModifier);
+        }
+        public List<Modifier> GetRandomModifiers(int number)
+        {
+            List<Modifier> modifiersUsed = new List<Modifier>();
+            for (int i = 0; i < number; i++)
+            {
+
+            }
+            return modifiersUsed;
+        }
+
+
+
+        //llamadas alternativas con int por si acaso
+        public Modifier GetModifier(int modifierID)
+        {
+            return modifierList.GetModifier(modifierID);
+        }
+        public Sprite GetModifierIcon(int modifierID)
+        {
+            return GetModifier(modifierID).GetSprite();
+        }
+        public string GetModifierDescription(int modifierID)
         {
             return GetModifier(modifierID).GetDescription();
         }
