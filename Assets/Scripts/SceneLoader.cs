@@ -92,6 +92,8 @@ namespace Tankito
             yield return SceneManager.LoadSceneAsync("MainMenu", LoadSceneMode.Additive);
             if (DEBUG) Debug.Log("Main Menu Loaded!");
 
+            ClientData.Instance.InitSelectCharacter();
+
             SceneManager.UnloadSceneAsync("Loading");
         }
 
@@ -132,6 +134,8 @@ namespace Tankito
             yield return SceneManager.LoadSceneAsync("MainMenu", LoadSceneMode.Additive);
 
             if (DEBUG) Debug.Log("Main Menu Loaded!");
+
+            ClientData.Instance.InitSelectCharacter();
 
             SceneManager.UnloadSceneAsync("Loading");
         }
