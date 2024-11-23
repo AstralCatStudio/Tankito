@@ -12,4 +12,9 @@ public class InputFieldUsername : MonoBehaviour
         string username = GetComponent<TMP_InputField>().text.ToString();
         ClientData.Instance.ChangeUsername(username);
     }
+
+    public void KeyPress()
+    {
+        MusicManager.Instance.PlaySound("bip");
+    }
 }
