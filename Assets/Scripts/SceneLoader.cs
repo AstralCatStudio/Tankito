@@ -8,15 +8,17 @@ using UnityEngine.SceneManagement;
 namespace Tankito
 {
 
-    public enum SceneToLoad{
-        lobby,
-        mainMenu
+    public enum SceneToLoad
+    {
+        mainMenu,
+        lobby
     }
+
     public class SceneLoader : MonoBehaviour
     {
         public static SceneLoader Singleton;
         [SerializeField] private bool DEBUG = false;
-        public SceneToLoad escenaInicial;
+        public SceneToLoad m_startingScene;
         void Awake()
         {
             if (Singleton == null) Singleton = this;
@@ -28,7 +30,7 @@ namespace Tankito
         void Start()
         {
             //LoadMainMenu();
-            loadScene(escenaInicial);
+            loadScene(m_startingScene);
 
 
         }
@@ -37,13 +39,20 @@ namespace Tankito
             switch (scene)
             {
                 case SceneToLoad.lobby:
+                    LoadEmptyCamera();
                     LoadLobby();
-                break;
+                    break;
                 case SceneToLoad.mainMenu:
                     LoadMainMenu();
-                break;
+                    break;
             }
         }
+
+        public void LoadEmptyCamera()
+        {
+            SceneManager.LoadScene("EmptyCamera", LoadSceneMode.Additive);
+        }
+
         public void LoadLobby()
         {
             StartCoroutine("LoadLobbyAsync");
@@ -57,6 +66,11 @@ namespace Tankito
         public void LoadGameScene()
         {
             StartCoroutine("LoadGameSceneAsync");
+        }
+
+        public void ReloadMainMenu()
+        {
+            StartCoroutine("ReloadMainMenuAsync");
         }
 
         IEnumerator LoadLobbyAsync()
@@ -89,10 +103,7 @@ namespace Tankito
 
             if (DEBUG) Debug.Log("Loading Game...");
 
-
-            //SceneManager.LoadSceneAsync("GameInitTest", LoadSceneMode.Additive);
-
-            if(NetworkManager.Singleton.IsServer)
+            if (NetworkManager.Singleton.IsServer)
             {
                 yield return NetworkManager.Singleton.SceneManager.LoadScene("GameInitTest", LoadSceneMode.Additive);
             }
@@ -102,6 +113,25 @@ namespace Tankito
             }
 
             if (DEBUG) Debug.Log("Game Loaded!");
+
+            SceneManager.UnloadSceneAsync("Loading");
+        }
+
+        IEnumerator ReloadMainMenuAsync()
+        {
+            if (!SceneManager.GetSceneByName("GameInitTest").IsValid()) throw new InvalidOperationException("You shouldn't be reloading this scene without having loaded the game scene!");
+
+            SceneManager.LoadScene("Loading");
+
+            GameManager.Instance.UnloadScene();
+
+            if (DEBUG) Debug.Log("Loading Main Menu...");
+
+            ClientData.Instance.firstLoad = false;
+
+            yield return SceneManager.LoadSceneAsync("MainMenu", LoadSceneMode.Additive);
+
+            if (DEBUG) Debug.Log("Main Menu Loaded!");
 
             SceneManager.UnloadSceneAsync("Loading");
         }

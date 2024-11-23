@@ -25,12 +25,18 @@ public class ClientData : Singleton<ClientData>
     public accountType accountT;   //Tipo de la cuenta al iniciar sesión
     public event Action onMoneyChanged, onUsernameChanged, onCharacterPurchased;
 
+    public bool firstLoad = true;
+
     // Start is called before the first frame update
     void Start()
     {
         InitCharactersData();
         InitClientData();
         ChooseCharactersInShop();
+
+        firstLoad = true;
+
+        DontDestroyOnLoad(gameObject);
     }
 
     private void InitClientData()

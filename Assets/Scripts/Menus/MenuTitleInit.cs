@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Tankito;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -21,12 +22,17 @@ public class MenuTitleInit : MonoBehaviour
         //FadeOut
         LeanTween.alpha(ltRect, 0f, outDuration).setEase(LeanTweenType.easeOutSine).setDelay(inDuration);
 
-        Invoke("EnableDelayed", inDuration + outDuration);
-
+        if (ClientData.Instance.firstLoad)
+        {
+            Invoke("EnableDelayed", inDuration + outDuration);
+        }
+        else
+        {
+            Invoke("EnablePlayMenu", inDuration + outDuration);
+        }
 
         MusicManager.Instance.SetSong("MENU");
         MusicManager.Instance.SetPhase(0);
-
 
         MusicManager.Instance.PlayBackgroundSound("amb_underwater");
 
@@ -35,5 +41,10 @@ public class MenuTitleInit : MonoBehaviour
     private void EnableDelayed()
     {
         firstMenu.SetActive(true);
+    }
+
+    private void EnablePlayMenu()
+    {
+        MenuController.Instance.ChangeToMenu(6);
     }
 }

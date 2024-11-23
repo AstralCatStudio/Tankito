@@ -8,6 +8,7 @@ namespace Tankito.Netcode.Simulation
         [SerializeField] private Rigidbody2D m_tankRB;
         [SerializeField] private Rigidbody2D m_turretRB;
         [SerializeField] private ITankInput m_inputComponent;
+        [SerializeField] private TankController m_controller;
 
         public void StartInputReplay(int timestamp) { m_inputComponent.StartInputReplay(timestamp); }
         public int StopInputReplay() { return m_inputComponent.StopInputReplay(); }
@@ -22,11 +23,20 @@ namespace Tankito.Netcode.Simulation
                     Debug.Log("Error tank Rigibody2D reference not set.");
                 }
             }
+            if(m_controller == null)
+            {
+                m_controller = GetComponent<TankController>();
+                if (m_tankRB == null)
+                {
+                    Debug.Log("Error tank controller reference not set.");
+                }
+            }
 
             if (m_turretRB == null)
             {
                 Debug.Log("Error tank turret reference not set.");
             }
+
         }
 
         public override void OnNetworkSpawn()
@@ -43,6 +53,7 @@ namespace Tankito.Netcode.Simulation
             if (IsLocalPlayer)
             {
                 m_inputComponent = playerInput;
+                
                 GameManager.Instance.BindInputActions(playerInput);
             }
             else if (IsServer)
@@ -71,18 +82,43 @@ namespace Tankito.Netcode.Simulation
             {
                 ServerSimulationManager.Instance.remoteInputTanks.Remove(NetworkObjectId);
             }
+
+            if (IsLocalPlayer)
+            {
+                if (m_inputComponent is TankPlayerInput localTankInput)
+                {
+                    GameManager.Instance.UnbindInputActions(localTankInput);
+                }
+                else
+                {
+                    throw new InvalidOperationException($"Can't unbind inpunt actions because input component is not {typeof(TankPlayerInput)}");
+                }
+            }
         }
 
         public override ISimulationState GetSimState()
         {
+            PlayerState playerState = m_controller.PlayerState;
+            int stateInitTick;
+            if(playerState == PlayerState.Moving)
+            {
+                stateInitTick = 0;
+            }
+            else
+            {
+                stateInitTick = m_controller.StateInitTick;
+            }
+
             return new TankSimulationState
             (
                 m_tankRB.position,
                 m_tankRB.rotation,
                 m_tankRB.velocity,
                 m_turretRB.rotation,
-                m_inputComponent.GetCurrentInput().action
-            ); ; 
+                m_inputComponent.GetCurrentInput().action,
+                playerState,
+                stateInitTick
+            );
         }
 
         public override void SetSimState(in ISimulationState state)
@@ -93,6 +129,8 @@ namespace Tankito.Netcode.Simulation
                 m_tankRB.rotation = tankState.HullRotation;
                 m_turretRB.rotation = tankState.TurretRotation;
                 m_tankRB.velocity = tankState.Velocity;
+                m_controller.PlayerState = tankState.PlayerState;
+                m_controller.StateInitTick = tankState.StateInitTick;
             }
             else
             {

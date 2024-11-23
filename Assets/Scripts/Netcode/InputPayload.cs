@@ -28,14 +28,11 @@ namespace Tankito.Netcode
         public Vector2 moveVector;
         public Vector2 aimVector;
         public TankAction action;
-        public bool emulatedPayload;
 
         public int CompareTo(int other)
         {
             return timestamp-other;
         }
-
-        public void EmulatedPayload (bool value = true){ emulatedPayload = value;  }
 
         //public static readonly InputPayload INVALID_INPUT = new InputPayload { timestamp = -1, moveVector = Vector2.zero, aimVector = Vector2.zero, action = TankAction.None };
 
@@ -51,10 +48,10 @@ namespace Tankito.Netcode
 
         internal void Interpolate(InputPayload targetInput, int interpolationTick)
         {
-            float factor = Mathf.Clamp01((timestamp - interpolationTick) /(float)targetInput.timestamp);
+            float factor = Mathf.Clamp01((interpolationTick - timestamp) /(float)targetInput.timestamp);
             
-            moveVector = Vector2.Lerp(moveVector, targetInput.moveVector, factor);
-            aimVector = Vector2.Lerp(aimVector, targetInput.aimVector, factor);
+            moveVector = Vector2.Lerp(targetInput.moveVector, moveVector, factor);
+            aimVector = Vector2.Lerp(targetInput.aimVector, aimVector, factor);
             action = (factor == 0) ? action : (factor == 1) ? targetInput.action : TankAction.None;
         }
 
