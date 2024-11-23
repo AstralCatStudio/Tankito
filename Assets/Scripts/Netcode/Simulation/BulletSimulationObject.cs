@@ -28,8 +28,15 @@ namespace Tankito.Netcode.Simulation
 
         public void OnDisable()
         {
-            base.OnNetworkDespawn();
+            OnNetworkDespawn();
         }
+
+        public override void OnNetworkDespawn()
+        {
+            base.OnNetworkDespawn();
+            BulletPool.Instance.Release(this);
+        }
+
 
         public override ISimulationState GetSimState()
         {

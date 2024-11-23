@@ -136,7 +136,10 @@ namespace Tankito.Netcode.Simulation
 
             foreach(var obj in m_simulationObjects.Values)
             {
-                obj.SetSimState(authSnapshot[obj]);
+                if (authSnapshot.ContainsKey(obj))
+                    obj.SetSimState(authSnapshot[obj]);
+                else
+                    obj.OnNetworkDespawn();
 
                 
                 // Put Input Components into replay mode

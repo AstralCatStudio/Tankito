@@ -53,10 +53,10 @@ MonoBehaviour:
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 0
   ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 1
+  SceneMigrationSynchronization: 0
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
-  AutoObjectParentSync: 1
+  AutoObjectParentSync: 0
 --- !u!212 &6545025246547745674
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -183,7 +183,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19fefaffd400da64a8fbfea59e386813, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_isKinematic: 0
+  m_simObjId: 0
   m_rigidbody: {fileID: 1230613554501251170}
   m_bullet: {fileID: 402144271898706436}
 --- !u!114 &402144271898706436
@@ -198,4 +198,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2dc7cd1e447068743a5841977211a1d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_bouncesLeft: 0
   m_lifetime: 0

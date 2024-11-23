@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Tankito.Netcode.Simulation;
 using UnityEngine;
 using UnityEngine.Pool;
@@ -10,9 +11,10 @@ namespace Tankito
     {
         [SerializeField] private GameObject m_bulletPrefab;
         [SerializeField] private int m_prewarmCount;
-        private ObjectPool<GameObject> m_pool;
+        private ObjectPool<BulletSimulationObject> m_pool;
         private bool DEBUG;
 
+        [ContextMenu("InitializePool")]
         public void Start()
         {
             InitializePool(m_bulletPrefab, m_prewarmCount);
@@ -20,33 +22,47 @@ namespace Tankito
 
         public void InitializePool(GameObject bulletPrefab, int prewarmCount)
         {
-            GameObject CreateFunc()
+            BulletSimulationObject CreateFunc()
             {
                 // We parent the spawned prefab to our transform, to make sure that it isn't loaded onto another scene (because of additive scene loading);
-                var no = Instantiate(bulletPrefab, transform).GetComponent<GameObject>();
-                if (DEBUG) Debug.Log($"CreateFunc called on {bulletPrefab}, instantiated {no}");
-                return no;
+                var bullet = Instantiate(bulletPrefab, transform).GetComponent<BulletSimulationObject>();
+                if (DEBUG) Debug.Log($"CreateFunc called on {bulletPrefab}, instantiated {bullet}");
+                return bullet;
             }
 
-            void ActionOnGet(GameObject bulletObject)
+            void ActionOnGet(BulletSimulationObject bulletObject)
             {
                 if (DEBUG) Debug.Log($"ActionOnGet called on {bulletObject}");
-                bulletObject.SetActive(true);
+                bulletObject.gameObject.SetActive(true);
             }
 
-            void ActionOnRelease(GameObject bulletObject)
+            void ActionOnRelease(BulletSimulationObject bulletObject)
             {
                 if (DEBUG) Debug.Log($"ActionOnRelease called on {bulletObject}");
-                bulletObject.SetActive(false);
+                bulletObject.gameObject.SetActive(false);
             }
 
-            void ActionOnDestroy(GameObject bulletObject)
+            void ActionOnDestroy(BulletSimulationObject bulletObject)
             {
                 if (DEBUG) Debug.Log($"ActionOnDestroy called on {bulletObject}");
                 Destroy(bulletObject.gameObject);
             }
 
-            m_pool = new ObjectPool<GameObject>(CreateFunc, ActionOnGet, ActionOnRelease, ActionOnDestroy, defaultCapacity: prewarmCount);
+            // Create the pool
+            m_pool = new ObjectPool<BulletSimulationObject>(CreateFunc, ActionOnGet, ActionOnRelease, ActionOnDestroy, defaultCapacity: prewarmCount);
+            
+            // Populate the pool
+            var prewarmBullets = new List<BulletSimulationObject>();
+            for (var i = 0; i < prewarmCount; i++)
+            {
+                var gotInstance = m_pool.Get();
+                prewarmBullets.Add(gotInstance);
+            }
+
+            foreach (var bulletObject in prewarmBullets)
+            {
+                m_pool.Release(bulletObject);
+            }
         }
 
 
@@ -59,20 +75,23 @@ namespace Tankito
 
         public BulletSimulationObject Get(Vector2 position, float rotation, ulong ownerId, int tick, int spawnN)
         {   
-            var gameObj = m_pool.Get();
-            var objRB = gameObj.GetComponent<Rigidbody2D>();
+            Debug.Log($"[{SimClock.TickCounter}]Get called!");
+            
+            var bulletObj = m_pool.Get();
+            var objRB = bulletObj.GetComponent<Rigidbody2D>();
             objRB.position = position;
             objRB.rotation = rotation;
-            var bullet = objRB.GetComponent<BulletSimulationObject>();
 
-            bullet.GenerateSimObjId(ownerId, tick, spawnN);
+            bulletObj.GenerateSimObjId(ownerId, tick, spawnN);
+            bulletObj.GetComponent<BulletController>().InitializeProperties();
             
-            return bullet;
+            return bulletObj;
         }
 
         public void Release(BulletSimulationObject bullet)
         {
-            m_pool.Release(bullet.gameObject);
+            Debug.Log($"[{SimClock.TickCounter}]Release called on {bullet.SimObjId}!");
+            m_pool.Release(bullet);
         }
     }
 }

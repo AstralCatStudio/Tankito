@@ -80,7 +80,7 @@ namespace Tankito
                 if (timer >= interval)
                 {
                     timer = 0;
-                    ShootBullet(, aimVector);
+                    //ShootBullet(, aimVector);
                 }
         }
 
@@ -109,6 +109,12 @@ namespace Tankito
         void Update()
         {            
                 timer += Time.deltaTime;
+        }
+
+        [ContextMenu("TestSpawning")]
+        void TestSpawning()
+        {
+            ShootBullet(Vector2.zero, Vector2.zero, 0);
         }
     }
 }
