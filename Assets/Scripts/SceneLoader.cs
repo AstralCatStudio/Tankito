@@ -101,6 +101,8 @@ namespace Tankito
         {
             if (!SceneManager.GetSceneByName("Lobby").IsValid()) throw new InvalidOperationException("You shouldn't be loading the game scene without having loaded the Lobby!");
 
+            ClientData.Instance.UnsubscribeButtons();
+
             SceneManager.LoadScene("Loading");
 
             if (DEBUG) Debug.Log("Loading Game...");

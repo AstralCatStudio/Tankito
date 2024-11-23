@@ -139,7 +139,7 @@ public class MusicManager : MonoBehaviour
     {
         if (audioSourceA != null) audioSourceA.volume = volMusic;
         if (audioSourceB != null) audioSourceB.volume = volMusic;
-        Debug.Log($"Volumen de música actualizado: {volMusic}");
+        //Debug.Log($"Volumen de música actualizado: {volMusic}");
     }
 
     private void UpdateSoundVolume()
@@ -153,7 +153,7 @@ public class MusicManager : MonoBehaviour
         {
             backgroundSoundSource.volume = volSounds;
         }
-        Debug.Log($"Volumen de sonidos actualizado: {volSounds}");
+        //Debug.Log($"Volumen de sonidos actualizado: {volSounds}");
     }
 
     private AudioSource CreateAudioSource(bool loop)
@@ -482,7 +482,7 @@ public class MusicManager : MonoBehaviour
         // Usar el preset personalizado para ajustar parámetros manualmente
         reverbZone.reverbPreset = AudioReverbPreset.User;
 
-        Debug.Log("PHASE: " + phase);
+        //Debug.Log("PHASE: " + phase);
 
         // Configuración según la fase
         switch (phase)

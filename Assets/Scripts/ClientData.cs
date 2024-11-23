@@ -148,4 +148,18 @@ public class ClientData : Singleton<ClientData>
         }
         return characters[0];
     }
+
+    public void UnsubscribeButtons()
+    {
+        ShopContent shop = GameObject.FindObjectOfType<ShopContent>(true);
+
+        if (shop!=null)
+        {
+            shop.UnsubscribeButtons();
+        }
+        else
+        {
+            Debug.LogWarning("Tienda no encontrada");
+        }
+    }
 }
