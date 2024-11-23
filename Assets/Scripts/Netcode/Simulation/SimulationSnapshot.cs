@@ -93,9 +93,17 @@ namespace Tankito.Netcode.Simulation
                         // QUEREMOS RETRASAR EL SPAWN HASTA Q SE REQUIERA POR EL SIM MANAGER.
                         if (simObjUpdate.simObjType == SimulationObjectType.Bullet)
                         {
-                            BulletSimulationObject placeholderBullet = BulletPool.Instance.Get(simObjUpdate.simObjId, ((BulletSimulationState)simObjUpdate.state).OwnerId);
-                            objectStates.Add(placeholderBullet, simObjUpdate.state);
-                            placeholderBullet.gameObject.SetActive(false);
+                            // Si es su 1er tick de vida, dejamos que intente el propio rollback instanciar la bala
+                            if (((BulletSimulationState)simObjUpdate.state).LifeTime >= SimClock.SimDeltaTime*2)
+                            {
+                                BulletSimulationObject placeholderBullet = BulletPool.Instance.Get(simObjUpdate.simObjId, ((BulletSimulationState)simObjUpdate.state).OwnerId);
+                                objectStates.Add(placeholderBullet, simObjUpdate.state);
+                                placeholderBullet.gameObject.SetActive(false);
+                            }
+                            else
+                            {
+                                Debug.Log($"[{SimClock.TickCounter}]Handing spawning attempt over to reconciliation (remote client input replay) because {simObjUpdate.simObjId}'s lifetime is lower than 2 ticks (it was spawned on tick[{timestamp}])");
+                            }
                         }
                         else
                         {

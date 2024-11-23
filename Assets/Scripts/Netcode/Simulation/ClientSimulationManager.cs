@@ -102,13 +102,13 @@ namespace Tankito.Netcode.Simulation
                 bool missingObjects = false;
                 foreach(var snapshotObj in newAuthSnapshot.Keys)
                 {
-                    if (DEBUG) Debug.Log($"[{SimClock.TickCounter}]: {snapshotObj}");
+                    //if (DEBUG) Debug.Log($"[{SimClock.TickCounter}]: {snapshotObj}");
                     if (!predictedSnapshot.Keys.Contains(snapshotObj))
                     {
-                        missingObjects = true;
                         // Significa que el objeto no estaba spawneado en nuestra prediccion
                         if(snapshotObj is BulletSimulationObject bullet)
                         {
+                            missingObjects = true;
                             if(snapshotObj.gameObject.activeSelf == false)
                             {
                                 snapshotObj.gameObject.SetActive(true);

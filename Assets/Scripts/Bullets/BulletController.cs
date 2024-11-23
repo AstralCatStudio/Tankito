@@ -63,7 +63,7 @@ namespace Tankito {
                 gameObject.layer = 0;
             }
             m_rb.velocity += (BulletCannonRegistry.Instance[m_simObj.OwnerId].Properties.acceleration != 0f) ? BulletCannonRegistry.Instance[m_simObj.OwnerId].Properties.acceleration * m_rb.velocity.normalized : Vector2.zero;
-            m_lifetime += Time.deltaTime;
+            m_lifetime += deltaTime;
             OnFly.Invoke(this);
             if (m_lifetime >= BulletCannonRegistry.Instance[m_simObj.OwnerId].Properties.lifetimeTotal)
             {
