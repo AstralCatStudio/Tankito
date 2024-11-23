@@ -18,9 +18,10 @@ namespace Tankito.Netcode.Simulation
         public event KinematicFunction OnComputeKinematics;
 
         public void SetSimObjId(ulong simObjId) { m_simObjId = simObjId; }
+
         public void GenerateSimObjId(ulong ownerId, int tick, int genN)
         {
-            m_simObjId = SimExtensions.HashSimObj(OwnerClientId, tick, genN);
+            m_simObjId = SimExtensions.HashSimObj(ownerId, tick, genN);
         }
 
         public override void OnNetworkSpawn() // Should work and be called for pooled objects too!
@@ -31,7 +32,7 @@ namespace Tankito.Netcode.Simulation
             }
             //else  // Este else no lo queremos porque necesitamos que un host sea capaz de recoger el input del jugador,
             // de lo cual se encarga ClientSimulationManager
-            //{
+            //{y
             ClientSimulationManager.Instance.AddToSim(this);
             //}
         }

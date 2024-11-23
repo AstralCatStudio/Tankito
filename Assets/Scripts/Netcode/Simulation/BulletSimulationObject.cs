@@ -10,6 +10,8 @@ namespace Tankito.Netcode.Simulation
         [SerializeField] private BulletController m_bullet;
         public int SpawnTick { get => m_spawnTick; }
         private int m_spawnTick;
+        private int m_ownerId;
+        public int OnwerId => m_ownerId;
 
         
         void Start()
@@ -51,7 +53,8 @@ namespace Tankito.Netcode.Simulation
                 m_rigidbody.velocity,
                 m_bullet.m_lifetime,
                 m_bullet.m_bouncesLeft,
-                SimObjId
+                SimObjId,
+                OwnerClientId
             );
         }
 
