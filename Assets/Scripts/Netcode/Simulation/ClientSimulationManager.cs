@@ -112,13 +112,13 @@ namespace Tankito.Netcode.Simulation
                     if (!predictedSnapshot.ContainsId(authObjId))
                     {
                         // Auth Obj NOT in Snapshot
-                        if (predictedSnapshot[authObjId].type == SimulationObjectType.Bullet)
+                        if (newAuthSnapshot[authObjId].type == SimulationObjectType.Bullet)
                         {
                             // Si es su 1er tick de vida, dejamos que intente el propio rollback instanciar la bala
-                            if (((BulletSimulationState)predictedSnapshot[authObjId].state).LifeTime >= SimClock.SimDeltaTime*2)
+                            if (((BulletSimulationState)newAuthSnapshot[authObjId].state).LifeTime >= SimClock.SimDeltaTime*2)
                             {
                                 missingObjects = true;
-                                var ownerId =  ((BulletSimulationState)predictedSnapshot[authObjId].state).OwnerId;
+                                var ownerId =  ((BulletSimulationState)newAuthSnapshot[authObjId].state).OwnerId;
                                 BulletPool.Instance.Get(authObjId, ownerId);
                                 if (DEBUG) Debug.Log($"[{SimClock.TickCounter}]reconBullet successfully added to sim? => " + m_simulationObjects.ContainsKey(authObjId));
                             }
