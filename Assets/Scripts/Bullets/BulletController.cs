@@ -90,12 +90,12 @@ namespace Tankito {
         public void Detonate()
         {
             OnDetonate.Invoke(this);
-        //    if (NetworkManager.Singleton.IsServer)
-        //    {
+            if (NetworkManager.Singleton.IsServer)
+            {
                 BulletSimulationObject bulletSimObj = GetComponent<BulletSimulationObject>();
+                bulletSimObj.RemoveFromSim();
                 BulletPool.Instance.Release(bulletSimObj);
-            bulletSimObj.RemoveFromSim();
-        //    }
+            }
         }   
 
         private void OnCollisionEnter2D(Collision2D collision)

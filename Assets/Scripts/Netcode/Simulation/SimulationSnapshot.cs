@@ -80,7 +80,6 @@ namespace Tankito.Netcode.Simulation
             }
             else if (serializer.IsReader)
             {
-                Debug.Log("nObjects es " + nObjects);
                 objectStates = new();
                 for(int i=0; i < nObjects; i++)
                 {
@@ -89,7 +88,6 @@ namespace Tankito.Netcode.Simulation
 
                     if (!ClientSimulationManager.Instance.HasSimObj(simObjUpdate.simObjId))
                     {
-                        Debug.Log("No hay balas");
                         // QUEREMOS RETRASAR EL SPAWN HASTA Q SE REQUIERA POR EL SIM MANAGER.
                         if (simObjUpdate.simObjType == SimulationObjectType.Bullet)
                         {

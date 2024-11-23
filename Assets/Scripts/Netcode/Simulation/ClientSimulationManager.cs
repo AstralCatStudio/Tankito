@@ -109,10 +109,11 @@ namespace Tankito.Netcode.Simulation
                         // Significa que el objeto no estaba spawneado en nuestra prediccion
                         if(snapshotObj is BulletSimulationObject bullet)
                         {
-                            if(snapshotObj.gameObject.activeSelf == false)
+                            if(bullet.gameObject.activeSelf == false)
                             {
-                                snapshotObj.gameObject.SetActive(true);
-                                snapshotObj.GetComponent<BulletController>().InitializeProperties();
+                                bullet.gameObject.SetActive(true);
+                                bullet.GetComponent<BulletController>().InitializeProperties();
+                                bullet.AddToSim();
                                 if (DEBUG) Debug.Log($"[{SimClock.TickCounter}]reconBullet successfully added to sim? => " + m_simulationObjects.ContainsValue(snapshotObj));
                             }
                             else
@@ -142,11 +143,11 @@ namespace Tankito.Netcode.Simulation
                     {
                         if (CheckForDesync(predictedSnapshot[objSnapShot], newAuthSnapshot[objSnapShot]))
                         {
-                            if (DEBUG)
+                            /*if (DEBUG)
                             {
                                 Debug.Log($"[{SimClock.TickCounter}]Rolling back to [{newAuthSnapshot.timestamp}]"+
                                 $"\nBecause {objSnapShot.NetworkObjectId} dind't meet the delta Thresholds");
-                            }
+                            }*/
                             
                             Rollback(newAuthSnapshot);
                             break;
