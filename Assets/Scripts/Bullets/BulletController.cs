@@ -26,7 +26,7 @@ namespace Tankito {
             m_rb = GetComponent<Rigidbody2D>();
         }
         
-        public void InitializeProperties()
+        public void InitializeProperties(bool triggerOnSpawnEvents = true)
         {           
             GetComponent<BulletSimulationObject>().OnComputeKinematics += MoveBullet;
 
@@ -40,7 +40,7 @@ namespace Tankito {
             }
 
 
-            OnSpawn.Invoke(this);
+            if (triggerOnSpawnEvents) OnSpawn.Invoke(this);
         }
 
         private void OnDisable()

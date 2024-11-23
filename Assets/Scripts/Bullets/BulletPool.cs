@@ -65,6 +65,15 @@ namespace Tankito
             }
         }
 
+        // Esto se llama para spawnear balas en medio de la simulacion
+        public BulletSimulationObject Get(ulong simObjId)
+        {
+            var bulletObj = m_pool.Get();
+            bulletObj.SetSimObjId(simObjId);
+            bulletObj.GetComponent<BulletController>().InitializeProperties(false);
+
+            return bulletObj;
+        }
 
         public BulletSimulationObject Get(Vector2 position, Vector2 rotation, ulong ownerId, int tick, int spawnN)
         {   

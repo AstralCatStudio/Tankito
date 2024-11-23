@@ -14,9 +14,14 @@ namespace Tankito.Netcode.Simulation
         /// </summary>
         protected Dictionary<ulong, ASimulationObject> m_simulationObjects;
 
-        public ASimulationObject GetSimObj(ulong simObjId)
+        public virtual ASimulationObject GetSimObj(ulong simObjId)
         {
             return m_simulationObjects[simObjId];
+        }
+
+        public bool HasSimObj(ulong simObjId)
+        {
+            return m_simulationObjects.ContainsKey(simObjId);
         }
         
 

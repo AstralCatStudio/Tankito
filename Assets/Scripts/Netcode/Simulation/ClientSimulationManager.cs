@@ -92,13 +92,40 @@ namespace Tankito.Netcode.Simulation
                 m_snapshotBuffer.Add(newAuthSnapshot, newAuthSnapshot.timestamp);
                 return;
             }
-            
-            //if (DEBUG) Debug.Log("Evaluating Desync for: "+ m_snapshotBuffer.Get(newAuthSnapshot.timestamp));
 
+
+            if (DEBUG) Debug.Log("Evaluating Desync for: "+ m_snapshotBuffer.Get(newAuthSnapshot.timestamp));
             SimulationSnapshot predictedSnapshot = m_snapshotBuffer.Where(s => s.timestamp == newAuthSnapshot.timestamp 
                 && s.status == SnapshotStatus.Predicted).FirstOrDefault();
             if (!predictedSnapshot.Equals(default(SimulationSnapshot)))
             {
+                bool missingObjects = false;
+                foreach(var snapshotObj in newAuthSnapshot.Keys)
+                {
+                    if (!predictedSnapshot.Keys.Contains(snapshotObj))
+                    {
+                        missingObjects = true;
+                        // Significa que el objeto no estaba spawneado en nuestra prediccion
+                        if(snapshotObj is BulletSimulationObject bullet)
+                        {
+                            var reconBullet = BulletPool.Instance.Get(bullet.SimObjId);
+                            reconBullet.AddToSim();
+                            if (DEBUG) Debug.Log($"[{SimClock.TickCounter}]reconBullet successfully added to sim? => " + m_simulationObjects.ContainsValue(reconBullet));
+                        }
+                        else
+                        {
+                            throw new InvalidOperationException(" Que cohone hase ermano!??");
+                        }
+                    }
+                }
+
+                if (missingObjects)
+                {
+                    Rollback(newAuthSnapshot);
+                    m_snapshotBuffer.Add(newAuthSnapshot, newAuthSnapshot.timestamp);
+                    return;
+                }
+
                 foreach (var objSnapShot in predictedSnapshot.Keys)
                 {
                     if (newAuthSnapshot.ContainsKey(objSnapShot))
@@ -122,6 +149,12 @@ namespace Tankito.Netcode.Simulation
             m_snapshotBuffer.Add(newAuthSnapshot, newAuthSnapshot.timestamp);
         }
 
+        // public override ASimulationObject GetSimObj(ulong simObjId)
+        // {
+        //     throw new NotImplementedException("TODO: manejar cuando no tenemos un cierto objeto en la simulacion");
+        //     return base.GetSimObj(simObjId);
+        // }
+
         public void Rollback(SimulationSnapshot authSnapshot)
         {
 
@@ -133,14 +166,17 @@ namespace Tankito.Netcode.Simulation
             // We DON'T have to re-simulate the tick which we are getting as auth,
             // because it's already simulated. So just advance the counter
             rollbackCounter++;
-
+            
             foreach(var obj in m_simulationObjects.Values)
             {
                 if (authSnapshot.ContainsKey(obj))
+                {
                     obj.SetSimState(authSnapshot[obj]);
+                }
                 else
+                {
                     obj.OnNetworkDespawn();
-
+                }
                 
                 // Put Input Components into replay mode
                 if(obj is TankSimulationObject tank)

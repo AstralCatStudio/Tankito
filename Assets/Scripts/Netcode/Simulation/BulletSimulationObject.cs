@@ -28,7 +28,7 @@ namespace Tankito.Netcode.Simulation
 
         public void OnDisable()
         {
-            OnNetworkDespawn();
+
         }
 
         public override void OnNetworkDespawn()
@@ -45,7 +45,8 @@ namespace Tankito.Netcode.Simulation
                 m_rigidbody.rotation,
                 m_rigidbody.velocity,
                 m_bullet.m_lifetime,
-                m_bullet.m_bouncesLeft
+                m_bullet.m_bouncesLeft,
+                SimObjId
             );
         }
 

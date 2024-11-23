@@ -81,11 +81,30 @@ namespace Tankito.Netcode.Simulation
             else if (serializer.IsReader)
             {
                 objectStates = new();
-                for(int i=0; i<nObjects; i++)
+                for(int i=0; i < nObjects; i++)
                 {
                     SimulationObjectUpdate simObjUpdate = new();
                     simObjUpdate.NetworkSerialize(serializer);
-                    objectStates.Add(ClientSimulationManager.Instance.GetSimObj(simObjUpdate.simObjId), simObjUpdate.state);
+
+                    if (!ClientSimulationManager.Instance.HasSimObj(simObjUpdate.simObjId))
+                    {
+                        // QUEREMOS RETRASAR EL SPAWN HASTA Q SE REQUIERA POR EL SIM MANAGER.
+                        if (simObjUpdate.simObjType == SimulationObjectType.Bullet)
+                        {
+                            BulletSimulationObject placeholderBullet = new();
+                            placeholderBullet.SetSimObjId(simObjUpdate.simObjId);
+                            objectStates.Add(placeholderBullet, simObjUpdate.state);
+                        }
+                        else
+                        {
+                            throw new InvalidOperationException($"Pero que cojones estas intentando hacer? (sim doesn't contain {simObjUpdate.simObjId})");
+                        }
+                    }
+                    else
+                    {
+                        objectStates.Add(ClientSimulationManager.Instance.GetSimObj(simObjUpdate.simObjId), simObjUpdate.state);
+                    }
+
                 }
             }
         }

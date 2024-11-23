@@ -7,6 +7,7 @@ namespace Tankito.Netcode.Simulation
     public abstract class ASimulationObject : NetworkBehaviour, INetworkSerializable
     {
         public ulong SimObjId => m_simObjId;
+
         [SerializeField] // <-- FOR DEBUG ONLY (don't modify, just observe)
         private ulong m_simObjId;
         
@@ -16,6 +17,7 @@ namespace Tankito.Netcode.Simulation
         // Define an event based on the delegate
         public event KinematicFunction OnComputeKinematics;
 
+        public void SetSimObjId(ulong simObjId) { m_simObjId = simObjId; }
         public void GenerateSimObjId(ulong ownerId, int tick, int genN)
         {
             m_simObjId = SimExtensions.HashSimObj(OwnerClientId, tick, genN);
