@@ -87,9 +87,11 @@ namespace Tankito
         public BulletSimulationObject Get(Vector2 position, float rotation, ulong ownerId, int tick, int spawnN)
         {   
             Debug.Log($"[{SimClock.TickCounter}]Get called!");
-            
+
+
             var bulletObj = m_pool.Get();
             var objRB = bulletObj.GetComponent<Rigidbody2D>();
+            bulletObj.GenerateSimObjId(ownerId, tick, spawnN);
             objRB.position = position;
             objRB.rotation = rotation;
 

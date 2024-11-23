@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Tankito.Netcode;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace Tankito
 {
@@ -87,12 +88,13 @@ namespace Tankito
                 for (int i = 0; i < BulletDirections.Count; i++)
                 {
                     float newAngle = Mathf.Atan2(BulletDirections[i].y, BulletDirections[i].x)+ baseAngle;
+                    Vector2 newAimVector = new Vector2(Mathf.Cos(newAngle), Mathf.Sin(newAngle));
                     for (int j = 0; j < m_bulletAmount; j++)
                     {
                         float angle = newAngle + (-m_shootSpreadAngle/2 + m_shootSpreadAngle/(m_bulletAmount+1)*(j+1))*Mathf.Deg2Rad;
                         Debug.Log("bala " + (j+1) + ": angulo " + angle);
                         Vector2 direction = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
-                        ShootBullet((Vector2)transform.parent.parent.parent.position + m_shootRadius * direction, direction, spawnN);
+                        ShootBullet((Vector2)transform.parent.parent.parent.position + m_shootRadius * newAimVector, direction, spawnN);
                         spawnN++;
                     }
                 }
