@@ -61,7 +61,7 @@ namespace Tankito
         public void ApplyModifierProperties(int nRound = 0)
         {
             BulletDirections.Clear();
-            BulletDirections.Add(new Vector2(0,1)) ;
+            BulletDirections.Add(new Vector2(1,0)) ;
             m_bulletAmount = baseBulletAmount;
             m_bulletProperties = BulletCannonRegistry.Instance.BaseProperties;
             foreach (BulletModifier modifier in m_bulletModifiers)
@@ -88,10 +88,10 @@ namespace Tankito
                     float newAngle = Mathf.Atan2(BulletDirections[i].y, BulletDirections[i].x)+ baseAngle;
                     for (int j = 0; j < m_bulletAmount; j++)
                     {
-                        float angle = newAngle - (m_shootSpreadAngle / 2 + (m_shootSpreadAngle / (m_bulletAmount + 1)) * (j+1))*Mathf.Deg2Rad;
+                        float angle = newAngle + (-m_shootSpreadAngle/2 + m_shootSpreadAngle/(m_bulletAmount+1)*(j+1))*Mathf.Deg2Rad;
                         Debug.Log("bala "+(j+1) + ": angulo " + angle);
                         Vector2 direction = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
-                        ShootBullet(m_shootRadius* direction, direction, j*i);
+                        ShootBullet((Vector2)transform.parent.parent.parent.position + m_shootRadius * direction, direction, j*i);
                     }
                 }
             }
@@ -101,11 +101,10 @@ namespace Tankito
         {
             
             m_bulletProperties.direction = direction;
-            m_bulletProperties.startingPosition = transform.position;
+            m_bulletProperties.startingPosition = position;
             m_bulletProperties.spawnTickTime = SimClock.TickCounter;
-            Instantiate<GameObject>(BulletCannonRegistry.Instance.m_bulletPrefab);
-            //var newBullet = BulletPool.Instance.Get(position, direction, OwnerClientId, SimClock.TickCounter, spawnN);
-            //newBullet.AddToSim();
+            var newBullet = BulletPool.Instance.Get(position, direction, OwnerClientId, SimClock.TickCounter, spawnN);
+            newBullet.AddToSim();
         }
 
         void Update()
