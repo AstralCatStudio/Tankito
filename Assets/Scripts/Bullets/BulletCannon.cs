@@ -108,7 +108,10 @@ namespace Tankito
             m_bulletProperties.startingPosition = position;
             m_bulletProperties.spawnTickTime = SimClock.TickCounter;
             var newBullet = BulletPool.Instance.Get(position, direction, OwnerClientId, SimClock.TickCounter, spawnN);
-            newBullet.AddToSim();
+            if (newBullet != null)
+            {
+                newBullet.AddToSim();
+            }
         }
 
         void Update()

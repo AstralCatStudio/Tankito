@@ -34,12 +34,17 @@ namespace Tankito.Netcode.Simulation
         public virtual void AddToSim(ASimulationObject obj)
         {
             if (obj.SimObjId == default) Debug.LogWarning($"[{SimClock.TickCounter}]SimObjId has not been initialized!!!");
-            m_simulationObjects.Add(obj.SimObjId, obj);
+            m_simulationObjects.TryAdd(obj.SimObjId, obj);
         }
  
         public virtual void RemoveFromSim(ASimulationObject obj)
         {
             m_simulationObjects.Remove(obj.SimObjId);
+        }
+
+        public bool ContainsKey(ulong hash)
+        {
+            return m_simulationObjects.ContainsKey(hash);
         }
 
         private void OnEnable()
