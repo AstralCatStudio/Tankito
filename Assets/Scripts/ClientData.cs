@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Tankito;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class ClientData : Singleton<ClientData>
@@ -45,7 +46,45 @@ public class ClientData : Singleton<ClientData>
         accountT = 0;
         username = "guest";
         characters[0].unlocked = true;  //characters[0] -> fish
-        SelectCharacter(characters[0]);
+    }
+
+    public void InitSelectCharacter()
+    {
+        Scene loadedScene = SceneManager.GetSceneByName("MainMenu");
+        if (loadedScene.IsValid() && loadedScene.isLoaded)
+        {
+            foreach (GameObject rootObject in loadedScene.GetRootGameObjects())
+            {
+                //Debug.Log(rootObject.name);
+                if(rootObject.name == "Canvas")
+                {
+                    //Debug.Log("Canvas encontrado");
+
+                    Transform btCharacterSelection = rootObject.transform.Find("PlayMenu/BT_CharacterSelection");
+
+                    if(btCharacterSelection != null)
+                    {
+                        //Debug.Log("Encontrado");
+                        selectionSkinButton = btCharacterSelection.GetComponent<Image>();
+                        if(firstLoad)
+                        {
+                            SelectCharacter(characters[0]);
+                        }
+                        else
+                        {
+                            SelectCharacter(GetCharacterSelected());
+                        }
+                        
+                    }
+                    else
+                    {
+                        Debug.LogWarning("Selección de personaje no encontrada");
+                    }
+
+                    return;
+                }
+            }
+        }
     }
 
     private void InitCharactersData()
@@ -71,7 +110,7 @@ public class ClientData : Singleton<ClientData>
                 characterPicked.inShop = true;
                 i++;
             }
-        }        
+        }
     }
     public void ChangeMoney(int moneyAdded)
     {
