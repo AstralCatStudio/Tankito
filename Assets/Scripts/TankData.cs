@@ -2,12 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
+using System;
+using Tankito;
 
 public class TankData : NetworkBehaviour
 {
     public delegate void TankDestroyedHandler(GameObject tank);
     public static event TankDestroyedHandler OnTankDestroyed;
-
+    public Action<TankData> OnDamaged = (TankData) => { };
     public NetworkVariable<int> health = new NetworkVariable<int>(2);
     public NetworkVariable<bool> isAlive = new NetworkVariable<bool>(true);
 
@@ -31,9 +33,11 @@ public class TankData : NetworkBehaviour
 
     public void TakeDamage(int damage)
     {
+        OnDamaged(this);
         if (IsServer)
         {
             health.Value -= damage;
+            
             if (health.Value <= 0)
             {
                 isAlive.Value = false;
