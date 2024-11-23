@@ -25,20 +25,20 @@ namespace Tankito.Netcode.Simulation
 
         public override void OnNetworkSpawn() // Should work and be called for pooled objects too!
         {
-            if(IsServer)
+            if(NetworkManager.Singleton.IsServer)
             {
                 ServerSimulationManager.Instance.AddToSim(this);
             }
             //else  // Este else no lo queremos porque necesitamos que un host sea capaz de recoger el input del jugador,
-                    // de lo cual se encarga ClientSimulationManager
+            // de lo cual se encarga ClientSimulationManager
             //{
-                ClientSimulationManager.Instance.AddToSim(this);
+            ClientSimulationManager.Instance.AddToSim(this);
             //}
         }
 
         public override void OnNetworkDespawn() // Should work and be called for pooled objects too!
         {
-            if(IsServer)
+            if(NetworkManager.Singleton.IsServer)
             {
                 ServerSimulationManager.Instance.RemoveFromSim(this);
             }

@@ -39,7 +39,7 @@ namespace Tankito.Netcode.Simulation
  
         public virtual void RemoveFromSim(ASimulationObject obj)
         {
-            m_simulationObjects.Remove(obj.NetworkObjectId);
+            m_simulationObjects.Remove(obj.SimObjId);
         }
 
         private void OnEnable()
@@ -72,7 +72,8 @@ namespace Tankito.Netcode.Simulation
             var newSnapshot = new SimulationSnapshot();
             newSnapshot.Initialize();
             newSnapshot.timestamp = SimClock.TickCounter;
-            
+
+            Debug.Log(m_simulationObjects.Values.Count);
             foreach(var simObj in m_simulationObjects.Values)
             {
                 newSnapshot[simObj] = simObj.GetSimState();

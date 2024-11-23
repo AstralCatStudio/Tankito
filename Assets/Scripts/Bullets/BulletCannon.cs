@@ -81,6 +81,7 @@ namespace Tankito
         {
             if (timer >= interval)
             {
+                int spawnN = 0;
                 timer = 0;
                 float baseAngle = Mathf.Atan2(aimVector.y, aimVector.x) ;
                 for (int i = 0; i < BulletDirections.Count; i++)
@@ -91,7 +92,8 @@ namespace Tankito
                         float angle = newAngle + (-m_shootSpreadAngle/2 + m_shootSpreadAngle/(m_bulletAmount+1)*(j+1))*Mathf.Deg2Rad;
                         Debug.Log("bala "+(j+1) + ": angulo " + angle);
                         Vector2 direction = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
-                        ShootBullet((Vector2)transform.parent.parent.parent.position + m_shootRadius * direction, direction, j*i);
+                        ShootBullet((Vector2)transform.parent.parent.parent.position + m_shootRadius * direction, direction, spawnN);
+                        spawnN++;
                     }
                 }
             }

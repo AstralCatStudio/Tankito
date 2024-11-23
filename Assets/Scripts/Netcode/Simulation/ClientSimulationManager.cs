@@ -102,6 +102,7 @@ namespace Tankito.Netcode.Simulation
                 bool missingObjects = false;
                 foreach(var snapshotObj in newAuthSnapshot.Keys)
                 {
+                    if (DEBUG) Debug.Log($"[{SimClock.TickCounter}]: {snapshotObj}");
                     if (!predictedSnapshot.Keys.Contains(snapshotObj))
                     {
                         missingObjects = true;
