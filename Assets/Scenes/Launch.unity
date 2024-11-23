@@ -318,6 +318,110 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1875872586
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1875872589}
+  - component: {fileID: 1875872588}
+  - component: {fileID: 1875872587}
+  m_Layer: 0
+  m_Name: '@MusicManager'
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!167 &1875872587
+AudioReverbZone:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1875872586}
+  m_Enabled: 1
+  m_MinDistance: 10
+  m_MaxDistance: 15
+  m_ReverbPreset: 3
+  m_Room: -1000
+  m_RoomHF: -454
+  m_DecayTime: 0.4
+  m_DecayHFRatio: 0.83
+  m_Reflections: -1646
+  m_ReflectionsDelay: 0.002
+  m_Reverb: 53
+  m_ReverbDelay: 0.003
+  m_HFReference: 5000
+  m_Diffusion: 100
+  m_Density: 100
+  m_LFReference: 250
+  m_RoomLF: 0
+--- !u!114 &1875872588
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1875872586}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b3f8fdf8d5f896438b6b62495c29e77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playaClips:
+  - {fileID: 8300000, guid: fb31831f466111b489d80873e30cb84b, type: 3}
+  - {fileID: 8300000, guid: 7ee740ab5fa72ee4a85957f3291d85d8, type: 3}
+  - {fileID: 8300000, guid: d101f3ed6b86edb45ae6143cd63ebd07, type: 3}
+  - {fileID: 8300000, guid: 09ff32a26a62d1b49a3448bffa7cf8e0, type: 3}
+  - {fileID: 8300000, guid: f674afca3875ebd42bc8cef16de47656, type: 3}
+  - {fileID: 8300000, guid: 8b5ad46ecb43f7b4f996b8623ed69a7d, type: 3}
+  sushiClips:
+  - {fileID: 8300000, guid: 7ec43f7c95608d044a5bb5a747590217, type: 3}
+  - {fileID: 8300000, guid: f0826ea465106cb4d8b8ea0b04eba1e6, type: 3}
+  - {fileID: 8300000, guid: b0af69e481655cf498592a1888e793ea, type: 3}
+  - {fileID: 8300000, guid: 7c6acb5348ba0e34fa37f51c4ab3adf8, type: 3}
+  - {fileID: 8300000, guid: 0168ef34e8f6b344389991e42bd87ce3, type: 3}
+  - {fileID: 8300000, guid: 2a7c2334d1e0b4d4c94307c78737e72d, type: 3}
+  barcoClips:
+  - {fileID: 8300000, guid: 9db5235aeec9c2a45a28b36566d79475, type: 3}
+  - {fileID: 8300000, guid: c12c888a531a0ed448844f4b3599b3ed, type: 3}
+  - {fileID: 8300000, guid: 029e0f63c404e2a4c814171b62879747, type: 3}
+  - {fileID: 8300000, guid: c8300fb0ed40046429bb60f9b1ed03a7, type: 3}
+  - {fileID: 8300000, guid: 860ebdc42620eae4b804a02a64735fb1, type: 3}
+  - {fileID: 8300000, guid: 673c5728e39a2fd4d931a7ad96dabdaf, type: 3}
+  submarinoClips: []
+  menuClips:
+  - {fileID: 8300000, guid: de4942f3f9affa04fa01772bdffc7cc0, type: 3}
+  - {fileID: 8300000, guid: 9fe62b55c3b7ca543ba32c6741a359ef, type: 3}
+  - {fileID: 8300000, guid: 5355109852470054ab311c96e343309b, type: 3}
+  - {fileID: 8300000, guid: 373cdd40daff6584f9c7c1309e66b76a, type: 3}
+  pveClips:
+  - {fileID: 8300000, guid: 0945bf29328853e49b7be3603ab1e6e5, type: 3}
+  - {fileID: 8300000, guid: b215b8b86426dca48bac831629fd1c70, type: 3}
+  victoryClips:
+  - {fileID: 8300000, guid: b4c80f1e2e4dab34b9e6bdfe60ccdb62, type: 3}
+  - {fileID: 8300000, guid: 3b235d3344bdad647a1c46286e579547, type: 3}
+  volMusic: 0.3
+  volSounds: 0.5
+--- !u!4 &1875872589
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1875872586}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.00023338944, y: -0.250026, z: -0.21315669}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2079099562
 GameObject:
   m_ObjectHideFlags: 0
@@ -454,3 +558,4 @@ SceneRoots:
   - {fileID: 1609486872}
   - {fileID: 524099866}
   - {fileID: 2080690944}
+  - {fileID: 1875872589}

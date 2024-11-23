@@ -2271,6 +2271,18 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 361886778}
         m_TargetAssemblyTypeName: Tankito.MenuController, Assembly-CSharp
+        m_MethodName: ChangeToMenu
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 7
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 361886778}
+        m_TargetAssemblyTypeName: Tankito.MenuController, Assembly-CSharp
         m_MethodName: SceneLoaderCallback
         m_Mode: 5
         m_Arguments:
@@ -19374,66 +19386,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!1 &2080690942
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2080690944}
-  - component: {fileID: 2080690943}
-  m_Layer: 0
-  m_Name: ClientData
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &2080690943
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2080690942}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 20d3fbb732a2f164bbecaa8da175f4e4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  charactersData:
-  - {fileID: 11400000, guid: 0b6ada904ec6eb14d82d4a4c44b53e79, type: 2}
-  - {fileID: 11400000, guid: d33a0754b8403624fbeb3d3c7c7b0fb2, type: 2}
-  - {fileID: 11400000, guid: de14ffae7f31b1d489216fc521737fb0, type: 2}
-  - {fileID: 11400000, guid: d093e3e13d2536f4492bfed44d120e04, type: 2}
-  - {fileID: 11400000, guid: 3fb8d9371f2b5244d8b3c77a096231b1, type: 2}
-  - {fileID: 11400000, guid: 456e2b20cd32d4a4eb73dc652545930f, type: 2}
-  - {fileID: 11400000, guid: eb4d32488b1e2e84a9786db2f6c6b7ff, type: 2}
-  - {fileID: 11400000, guid: 93a601d17bccb2f42b924075f41a592f, type: 2}
-  - {fileID: 11400000, guid: 9b352c424ad0c5d448c42ed32cabad08, type: 2}
-  selectionSkinButton: {fileID: 1222133430}
-  money: 0
-  numShopContent: 4
-  username: 
-  accountT: 0
-  firstLoad: 1
---- !u!4 &2080690944
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2080690942}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.5912309, y: -8.002579, z: 4.042949}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2087641788
 GameObject:
   m_ObjectHideFlags: 0
@@ -20323,4 +20275,3 @@ SceneRoots:
   - {fileID: 642562860}
   - {fileID: 361886777}
   - {fileID: 1332723775}
-  - {fileID: 2080690944}
