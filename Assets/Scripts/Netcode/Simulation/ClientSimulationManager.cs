@@ -109,9 +109,18 @@ namespace Tankito.Netcode.Simulation
                         // Significa que el objeto no estaba spawneado en nuestra prediccion
                         if(snapshotObj is BulletSimulationObject bullet)
                         {
-                            var reconBullet = BulletPool.Instance.Get(bullet.SimObjId);
-                            reconBullet.AddToSim();
-                            if (DEBUG) Debug.Log($"[{SimClock.TickCounter}]reconBullet successfully added to sim? => " + m_simulationObjects.ContainsValue(reconBullet));
+                            if(snapshotObj.gameObject.activeSelf == false)
+                            {
+                                snapshotObj.gameObject.SetActive(true);
+                                snapshotObj.GetComponent<BulletController>().InitializeProperties();
+                                if (DEBUG) Debug.Log($"[{SimClock.TickCounter}]reconBullet successfully added to sim? => " + m_simulationObjects.ContainsValue(snapshotObj));
+                            }
+                            else
+                            {
+                                throw new InvalidOperationException("El objeto esta activo. Debería estar desactivado");
+                            }
+                            
+                            
                         }
                         else
                         {

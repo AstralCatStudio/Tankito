@@ -51,7 +51,8 @@ namespace Tankito.Netcode.Simulation
                 m_rigidbody.velocity,
                 m_bullet.m_lifetime,
                 m_bullet.m_bouncesLeft,
-                SimObjId
+                SimObjId,
+                OwnerClientId
             );
         }
 

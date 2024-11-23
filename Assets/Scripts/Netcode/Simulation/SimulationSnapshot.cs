@@ -93,9 +93,9 @@ namespace Tankito.Netcode.Simulation
                         // QUEREMOS RETRASAR EL SPAWN HASTA Q SE REQUIERA POR EL SIM MANAGER.
                         if (simObjUpdate.simObjType == SimulationObjectType.Bullet)
                         {
-                            BulletSimulationObject placeholderBullet = new();
-                            placeholderBullet.SetSimObjId(simObjUpdate.simObjId);
+                            BulletSimulationObject placeholderBullet = BulletPool.Instance.Get(simObjUpdate.simObjId, ((BulletSimulationState)simObjUpdate.state).OwnerId);
                             objectStates.Add(placeholderBullet, simObjUpdate.state);
+                            placeholderBullet.gameObject.SetActive(false);
                         }
                         else
                         {

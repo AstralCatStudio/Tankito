@@ -17,6 +17,7 @@ namespace Tankito.Netcode.Simulation
         public float LifeTime { get => lifeTime; }
         public int BouncesLeft { get => bouncesLeft; }
         public ulong SimObjId { get => simObjId; }
+        public ulong OwnerId { get => ownerId; }
 
         private Vector2 position;
         private float rotation;
@@ -24,10 +25,11 @@ namespace Tankito.Netcode.Simulation
         private float lifeTime; // In seconds
         private int bouncesLeft;
         private ulong simObjId;
+        private ulong ownerId;
 
         public const int MAX_SERIALIZED_SIZE = sizeof(float)*2 + sizeof(float)*2*2;
 
-        public BulletSimulationState(Vector2 position, float rotation, Vector2 velocity, float lifeTime, int bouncesLeft, ulong simObjId)
+        public BulletSimulationState(Vector2 position, float rotation, Vector2 velocity, float lifeTime, int bouncesLeft, ulong simObjId, ulong ownerId)
         {
             this.position = position;
             this.rotation = rotation;
@@ -35,6 +37,7 @@ namespace Tankito.Netcode.Simulation
             this.lifeTime = lifeTime;
             this.bouncesLeft = bouncesLeft;
             this.simObjId = simObjId;
+            this.ownerId = ownerId;
         }
 
         internal void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
@@ -43,6 +46,9 @@ namespace Tankito.Netcode.Simulation
             serializer.SerializeValue(ref rotation);
             serializer.SerializeValue(ref velocity);
             serializer.SerializeValue(ref lifeTime);
+            serializer.SerializeValue(ref bouncesLeft);
+            serializer.SerializeValue(ref simObjId);
+            serializer.SerializeValue(ref ownerId);
         }
     }
 }
