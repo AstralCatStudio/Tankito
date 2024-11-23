@@ -59,6 +59,8 @@ namespace Tankito
             currentMenuIndex = newMenuIndex;
 
             MusicManager.Instance.MenuChange(newMenuIndex);
+
+            MusicManager.Instance.PlaySound("burbujas");
         }
 
         public void SceneLoaderCallback(string functionIdx)
