@@ -70,7 +70,7 @@ namespace Tankito
         {
             var bulletObj = m_pool.Get();
             bulletObj.SetSimObjId(simObjId);
-            bulletObj.GetComponent<BulletController>().SetOwner(ownerId);
+            bulletObj.SetOwner(ownerId);
             bulletObj.GetComponent<BulletController>().InitializeProperties(false);
 
             return bulletObj;
@@ -93,7 +93,7 @@ namespace Tankito
             objRB.rotation = rotation;
 
             bulletObj.GenerateSimObjId(ownerId, tick, spawnN);
-            bulletObj.GetComponent<BulletController>().SetOwner(ownerId);
+            bulletObj.SetOwner(ownerId);
             bulletObj.GetComponent<BulletController>().InitializeProperties();
             
             return bulletObj;

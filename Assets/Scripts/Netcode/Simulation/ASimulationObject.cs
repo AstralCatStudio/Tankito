@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Tankito.Netcode.Simulation
 {
-    public abstract class ASimulationObject : NetworkBehaviour, INetworkSerializable
+    public abstract class ASimulationObject : NetworkBehaviour
     {
         public ulong SimObjId => m_simObjId;
 
@@ -32,7 +32,7 @@ namespace Tankito.Netcode.Simulation
             }
             //else  // Este else no lo queremos porque necesitamos que un host sea capaz de recoger el input del jugador,
             // de lo cual se encarga ClientSimulationManager
-            //{y
+            //{
             ClientSimulationManager.Instance.AddToSim(this);
             //}
         }
@@ -56,19 +56,7 @@ namespace Tankito.Netcode.Simulation
             OnComputeKinematics?.Invoke(deltaTime);
         }
 
-        // Bernat: Creo que estos metodos de iniciar reconciliacion y de reconciliar son tarea del simulation manager,
-        //         lo unico que ofrece el SimulationObject es como una etiqueta que designa que el simulation manager tendra en cuenta al
-        //         objeto a la hora de simular en red.
-        // public abstract void InitReconcilation(ISimulationState simulationState);
-        // public abstract void Reconciliate(int rewindTick);
-
         public abstract ISimulationState GetSimState();
         public abstract void SetSimState(in ISimulationState state);
-
-        public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
-        {
-            ulong objectId = NetworkObjectId;
-            serializer.SerializeValue(ref objectId);
-        }
     }
 }

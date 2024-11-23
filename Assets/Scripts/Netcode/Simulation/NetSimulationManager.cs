@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -13,6 +14,7 @@ namespace Tankito.Netcode.Simulation
         /// Value -> ASimulationObject component
         /// </summary>
         protected Dictionary<ulong, ASimulationObject> m_simulationObjects;
+        protected HashSet<ulong> m_removeFromSimQueue;
 
         public virtual ASimulationObject GetSimObj(ulong simObjId)
         {
@@ -23,12 +25,18 @@ namespace Tankito.Netcode.Simulation
         {
             return m_simulationObjects.ContainsKey(simObjId);
         }
+
+        public void QueueForRemoval(ulong simObjId)
+        {
+            m_removeFromSimQueue.Add(simObjId);
+        }
         
 
         protected override void Awake()
         {
             base.Awake();
             m_simulationObjects = new Dictionary<ulong, ASimulationObject>();
+            m_removeFromSimQueue = new HashSet<ulong>();
         }
 
         public virtual void AddToSim(ASimulationObject obj)
@@ -57,12 +65,25 @@ namespace Tankito.Netcode.Simulation
         /// </summary>
         public virtual void Simulate()
         {
-            List<ASimulationObject> simulationObjectsSnapshot = m_simulationObjects.Values.ToList<ASimulationObject>();
-            foreach (var obj in simulationObjectsSnapshot)
+            //List<ASimulationObject> simulationObjectsSnapshot = m_simulationObjects.Values.ToList<ASimulationObject>();
+            foreach (var obj in m_simulationObjects.Values)
             {
                 obj?.ComputeKinematics(SimClock.SimDeltaTime);
-                //Debug.Log($"ComputedKinematics for: {obj}");
             }
+
+            foreach(var delId in m_removeFromSimQueue)
+            {
+                var obj = m_simulationObjects[delId];
+                if (obj is BulletSimulationObject bullet)
+                {
+                    bullet.RemoveFromSim();
+                }
+                else
+                {
+                    throw new NotImplementedException();
+                }
+            }
+            m_removeFromSimQueue.Clear();
 
             Physics2D.Simulate(SimClock.SimDeltaTime);
         }

@@ -10,8 +10,8 @@ namespace Tankito.Netcode.Simulation
         [SerializeField] private BulletController m_bullet;
         public int SpawnTick { get => m_spawnTick; }
         private int m_spawnTick;
-        private int m_ownerId;
-        public int OnwerId => m_ownerId;
+        private ulong m_ownerId;
+        public ulong OwnerId => m_ownerId;
 
         
         void Start()
@@ -22,6 +22,11 @@ namespace Tankito.Netcode.Simulation
                 if (m_bullet == null) Debug.LogWarning("BulletSimulationObject could not find associated ABullet component!");
             }
         }
+
+        public void SetOwner(ulong ownerId)
+        {
+            m_ownerId = ownerId;
+        }
         
         public void AddToSim()
         {
@@ -31,6 +36,7 @@ namespace Tankito.Netcode.Simulation
         public void RemoveFromSim()
         {
             base.OnNetworkDespawn();
+            BulletPool.Instance.Release(this);
         }
 
         public void OnDisable()
@@ -54,7 +60,7 @@ namespace Tankito.Netcode.Simulation
                 m_bullet.m_lifetime,
                 m_bullet.m_bouncesLeft,
                 SimObjId,
-                OwnerClientId
+                OwnerId
             );
         }
 

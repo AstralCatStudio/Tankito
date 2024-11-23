@@ -13,7 +13,7 @@ namespace Tankito {
     
     public class BulletController : MonoBehaviour
     {
-        ulong OwnerId = 0;
+        BulletSimulationObject m_simObj;
         bool simulated = false;
         public int m_bouncesLeft = 0;
         public float LifeTime { get => m_lifetime; }
@@ -24,23 +24,19 @@ namespace Tankito {
         public Action<BulletController> OnSpawn = (ABullet) => { }, OnFly = (ABullet) => { }, OnHit = (ABullet) => { }, OnBounce = (ABullet) => { }, OnDetonate = (ABullet) => { };
         private void Awake()
         {
+            m_simObj = GetComponent<BulletSimulationObject>();
             m_rb = GetComponent<Rigidbody2D>();
-        }
-        
-        public void SetOwner(ulong ownerId)
-        {
-            this.OwnerId = ownerId;
         }
 
         public void InitializeProperties(bool triggerOnSpawnEvents = true)
         {           
             GetComponent<BulletSimulationObject>().OnComputeKinematics += MoveBullet;
 
-            transform.position = BulletCannonRegistry.Instance[OwnerId].Properties.startingPosition;
-            m_bouncesLeft = BulletCannonRegistry.Instance[OwnerId].Properties.bouncesTotal;
-            m_rb.velocity = BulletCannonRegistry.Instance[OwnerId].Properties.velocity * BulletCannonRegistry.Instance[OwnerId].Properties.direction.normalized;
+            transform.position = BulletCannonRegistry.Instance[m_simObj.OwnerId].Properties.startingPosition;
+            m_bouncesLeft = BulletCannonRegistry.Instance[m_simObj.OwnerId].Properties.bouncesTotal;
+            m_rb.velocity = BulletCannonRegistry.Instance[m_simObj.OwnerId].Properties.velocity * BulletCannonRegistry.Instance[m_simObj.OwnerId].Properties.direction.normalized;
             transform.rotation = Quaternion.LookRotation(new Vector3(0, 0, 1), m_rb.velocity.normalized);
-            foreach (var modifier in Tankito.BulletCannonRegistry.Instance[OwnerId].Modifiers)
+            foreach (var modifier in Tankito.BulletCannonRegistry.Instance[m_simObj.OwnerId].Modifiers)
             {
                 modifier.BindBulletEvents(this);
             }
@@ -66,12 +62,12 @@ namespace Tankito {
             {
                 gameObject.layer = 0;
             }
-            m_rb.velocity += (BulletCannonRegistry.Instance[OwnerId].Properties.acceleration != 0f) ? BulletCannonRegistry.Instance[OwnerId].Properties.acceleration * m_rb.velocity.normalized : Vector2.zero;
+            m_rb.velocity += (BulletCannonRegistry.Instance[m_simObj.OwnerId].Properties.acceleration != 0f) ? BulletCannonRegistry.Instance[m_simObj.OwnerId].Properties.acceleration * m_rb.velocity.normalized : Vector2.zero;
             m_lifetime += Time.deltaTime;
             OnFly.Invoke(this);
-            if (m_lifetime >= BulletCannonRegistry.Instance[OwnerId].Properties.lifetimeTotal)
+            if (m_lifetime >= BulletCannonRegistry.Instance[m_simObj.OwnerId].Properties.lifetimeTotal)
             {
-                Debug.Log($"lifetime: {m_lifetime}/{BulletCannonRegistry.Instance[OwnerId].Properties.lifetimeTotal}");
+                Debug.Log($"lifetime: {m_lifetime}/{BulletCannonRegistry.Instance[m_simObj.OwnerId].Properties.lifetimeTotal}");
                 Detonate();
             }
         }
@@ -90,12 +86,11 @@ namespace Tankito {
         public void Detonate()
         {
             OnDetonate.Invoke(this);
-        //    if (NetworkManager.Singleton.IsServer)
-        //    {
+           if (NetworkManager.Singleton.IsServer)
+           {
                 BulletSimulationObject bulletSimObj = GetComponent<BulletSimulationObject>();
-                BulletPool.Instance.Release(bulletSimObj);
-            bulletSimObj.RemoveFromSim();
-        //    }
+                ServerSimulationManager.Instance.QueueForRemoval(bulletSimObj.SimObjId);
+           }
         }   
 
         private void OnCollisionEnter2D(Collision2D collision)
@@ -118,7 +113,7 @@ namespace Tankito {
                     break;
 
                 case "Player":
-                    if (collision.gameObject.GetComponent<NetworkObject>().OwnerClientId == OwnerId && m_lifetime < 0.03f)
+                    if (collision.gameObject.GetComponent<NetworkObject>().OwnerClientId == m_simObj.OwnerId && m_lifetime < 0.03f)
                     {
                         //Debug.Log("Ignoing firing self collision");
                         //Detonate();

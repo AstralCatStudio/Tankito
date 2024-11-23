@@ -117,10 +117,8 @@ namespace Tankito.Netcode.Simulation
                             }
                             else
                             {
-                                throw new InvalidOperationException("El objeto esta activo. Debería estar desactivado");
+                                throw new InvalidOperationException("El objeto esta activo. Deberï¿½a estar desactivado");
                             }
-                            
-                            
                         }
                         else
                         {
