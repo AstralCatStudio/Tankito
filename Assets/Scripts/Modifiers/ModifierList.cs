@@ -10,5 +10,18 @@ namespace Tankito
         //para acceder a la lista y solo tener que mandar por network el indice en vez de el modificador entero
         //en teor�a solo habr�a uno de estos en todo el proyecto
         public List<Modifier> modifiers = new List<Modifier>();
+        public Modifier GetModifier(int modifierIndex)
+        {
+            if (modifiers[modifierIndex] != null)
+            {
+                return modifiers[modifierIndex];
+            }
+            else
+            {
+                Debug.Log("Este modificador no existe");
+                return modifiers[0];
+            }
+            
+        }
     }
 }

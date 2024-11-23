@@ -12,7 +12,6 @@ public class TankData : NetworkBehaviour
     public Action<TankData> OnDamaged = (TankData) => { };
     public NetworkVariable<int> health = new NetworkVariable<int>(2);
     public NetworkVariable<bool> isAlive = new NetworkVariable<bool>(true);
-
     public int points;
 
     public override void OnNetworkSpawn()
