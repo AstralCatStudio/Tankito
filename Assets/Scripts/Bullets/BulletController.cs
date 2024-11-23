@@ -20,6 +20,7 @@ namespace Tankito {
         public float m_lifetime = 0; // Life Time counter
         protected Vector2 lastCollisionNormal = Vector2.zero;
         private Rigidbody2D m_rb;
+        public float selfCollisionTreshold = 0.1f;
         public Action<BulletController> OnSpawn = (ABullet) => { }, OnFly = (ABullet) => { }, OnHit = (ABullet) => { }, OnBounce = (ABullet) => { }, OnDetonate = (ABullet) => { };
         private void Awake()
         {
@@ -53,6 +54,7 @@ namespace Tankito {
         private void Update()
         {
             transform.rotation = Quaternion.LookRotation(new Vector3(0, 0, 1), m_rb.velocity.normalized);
+            MoveBullet(Time.deltaTime);//borrar
         }
 
         void MoveBullet(float deltaTime)

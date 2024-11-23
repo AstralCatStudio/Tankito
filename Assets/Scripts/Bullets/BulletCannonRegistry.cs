@@ -8,8 +8,6 @@ namespace Tankito
         [SerializeField]
         public GameObject m_bulletPrefab;
         [SerializeField]
-        public GameObject m_fakeBulletPrefab;
-        [SerializeField]
         private BulletProperties m_baseBulletProperties;
         public BulletProperties BaseProperties { get => m_baseBulletProperties; }
         private Dictionary<ulong, BulletCannon> m_cannons = new Dictionary<ulong, BulletCannon>();
