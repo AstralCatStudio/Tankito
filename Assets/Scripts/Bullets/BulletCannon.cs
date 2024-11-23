@@ -112,5 +112,11 @@ namespace Tankito
         {            
                 timer += Time.deltaTime;
         }
+
+        [ContextMenu("TestSpawning")]
+        void TestSpawning()
+        {
+            ShootBullet(Vector2.zero, Vector2.zero, 0);
+        }
     }
 }

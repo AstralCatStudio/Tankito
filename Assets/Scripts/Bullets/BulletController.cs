@@ -13,7 +13,7 @@ namespace Tankito {
     
     public class BulletController : MonoBehaviour
     {
-        ulong ownerId = 0;
+        ulong OwnerId = 0;
         bool simulated = false;
         public int m_bouncesLeft = 0;
         public float LifeTime { get => m_lifetime; }
@@ -27,16 +27,15 @@ namespace Tankito {
             m_rb = GetComponent<Rigidbody2D>();
         }
         
-        private void OnEnable()
-        {
-            
+        public void InitializeProperties()
+        {           
             GetComponent<BulletSimulationObject>().OnComputeKinematics += MoveBullet;
 
-            transform.position = BulletCannonRegistry.Instance[ownerId].transform.position;
-            m_bouncesLeft = BulletCannonRegistry.Instance[ownerId].Properties.bouncesTotal;
-            m_rb.velocity = BulletCannonRegistry.Instance[ownerId].Properties.velocity * BulletCannonRegistry.Instance[ownerId].Properties.direction.normalized;
+            transform.position = BulletCannonRegistry.Instance[OwnerId].transform.position;
+            m_bouncesLeft = BulletCannonRegistry.Instance[OwnerId].Properties.bouncesTotal;
+            m_rb.velocity = BulletCannonRegistry.Instance[OwnerId].Properties.velocity * BulletCannonRegistry.Instance[OwnerId].Properties.direction.normalized;
             transform.rotation = Quaternion.LookRotation(new Vector3(0, 0, 1), m_rb.velocity.normalized);
-            foreach (var modifier in Tankito.BulletCannonRegistry.Instance[ownerId].Modifiers)
+            foreach (var modifier in Tankito.BulletCannonRegistry.Instance[OwnerId].Modifiers)
             {
                 modifier.BindBulletEvents(this);
             }
@@ -60,16 +59,13 @@ namespace Tankito {
 
         void MoveBullet(float deltaTime)
         {
-            if(m_lifetime >= selfCollisionTreshold)
-            {
-                gameObject.layer = 0;
-            }
-            m_rb.velocity += (BulletCannonRegistry.Instance[ownerId].Properties.acceleration != 0f) ? BulletCannonRegistry.Instance[ownerId].Properties.acceleration * m_rb.velocity.normalized : Vector2.zero;
-            m_lifetime += deltaTime;
+            
+            m_rb.velocity += (BulletCannonRegistry.Instance[OwnerId].Properties.acceleration != 0f) ? BulletCannonRegistry.Instance[OwnerId].Properties.acceleration * m_rb.velocity.normalized : Vector2.zero;
+            m_lifetime += Time.deltaTime;
             OnFly.Invoke(this);
-            if (m_lifetime >= BulletCannonRegistry.Instance[ownerId].Properties.lifetimeTotal)
+            if (m_lifetime >= BulletCannonRegistry.Instance[OwnerId].Properties.lifetimeTotal)
             {
-                Debug.Log($"lifetime: {m_lifetime}/{BulletCannonRegistry.Instance[ownerId].Properties.lifetimeTotal}");
+                Debug.Log($"lifetime: {m_lifetime}/{BulletCannonRegistry.Instance[OwnerId].Properties.lifetimeTotal}");
                 Detonate();
             }
         }
@@ -90,9 +86,8 @@ namespace Tankito {
             OnDetonate.Invoke(this);
             if (NetworkManager.Singleton.IsServer)
             {
-                BulletSimulationObject bulletSimulation = GetComponent<BulletSimulationObject>();
-                Destroy(gameObject);
-                //BulletPool.Instance.Release(bulletSimulation);
+                BulletSimulationObject bulletSimObj = GetComponent<BulletSimulationObject>();
+                BulletPool.Instance.Release(bulletSimObj);
             }
         }   
 
@@ -116,7 +111,7 @@ namespace Tankito {
                     break;
 
                 case "Player":
-                    if (collision.gameObject.GetComponent<NetworkObject>().OwnerClientId == ownerId && m_lifetime < 0.03f)
+                    if (collision.gameObject.GetComponent<NetworkObject>().OwnerClientId == OwnerId && m_lifetime < 0.03f)
                     {
                         //Debug.Log("Ignoing firing self collision");
                         //Detonate();
