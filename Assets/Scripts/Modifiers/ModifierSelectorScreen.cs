@@ -12,7 +12,6 @@ public class ModifierSelectorScreen : NetworkBehaviour
     Modifier selectedModifier;
     void Start()
     {
-            GenerateNewModifiers();
     }
     public override void OnNetworkSpawn()
     {
@@ -28,6 +27,11 @@ public class ModifierSelectorScreen : NetworkBehaviour
         {
             modifierSelectors[i].ChooseModifier += SelectModifier;
         }
+        if (IsServer)
+        {
+            GenerateNewModifiers();
+        }
+        
     }
     private void OnDisable()
     {
@@ -40,14 +44,26 @@ public class ModifierSelectorScreen : NetworkBehaviour
     {
 
     }
+    [ClientRpc]
+    void SyncronizeModifiersClientRpc(int[] modificadores)
+    {
+        for (int i = 0; i < modifierSelectors.Count; i++)
+        {
+            modifierSelectors[i].ApplyModifier(ModifierRegistry.Instance.GetModifier(modificadores[i]));
+            modifierSelectors[i].available = true;
+        }
+    }
     void GenerateNewModifiers()
     {
         modifiers = ModifierRegistry.Instance.GetRandomModifiers(6);
+        List<int> indexModificadores = new List<int>();
         for (int i = 0; i < modifierSelectors.Count; i++)
         {
+            indexModificadores.Add(ModifierRegistry.Instance.GetModifierIndex(modifiers[i]));
             modifierSelectors[i].ApplyModifier(modifiers[i]);
             modifierSelectors[i].available = true;
         }
+        SyncronizeModifiersClientRpc(indexModificadores.ToArray());
     }
     public void ConfirmSelection()
     {

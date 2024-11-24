@@ -239,6 +239,7 @@ MonoBehaviour:
     Prefabs:
       NetworkPrefabsLists:
       - {fileID: 11400000, guid: 8a4897daf3b43fe4f9108bcdb4681091, type: 2}
+      - {fileID: 11400000, guid: 8145358083afe8143bdefbf7632f6b51, type: 2}
     TickRate: 120
     ClientConnectionBufferTimeout: 10
     ConnectionApproval: 0
@@ -302,7 +303,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DEBUG: 0
-  m_startingScene: 0
+  m_startingScene: 1
 --- !u!4 &1609486872
 Transform:
   m_ObjectHideFlags: 0
