@@ -25,6 +25,9 @@ namespace Tankito.Netcode.Simulation
 
         [SerializeField] private bool DEBUG;// = true;
 
+        const int NO_ROLLBACK = -1;
+        int m_rollbackTick = NO_ROLLBACK;
+
         private SimulationSnapshot AuthSnapshot //Por como funciona el rollback, igual esto no hace falta y unicamente podemos necesitar 
                                                 //que se guarde el timestamp
         {
@@ -32,6 +35,21 @@ namespace Tankito.Netcode.Simulation
             {
                 var authStates = m_snapshotBuffer.Where(s => s.status == SnapshotStatus.Authoritative);
                 return (authStates.Count() > 0) ? authStates.MaxBy(s => s.timestamp) : default;
+            }
+        }
+
+        protected override int CaptureSnapshotTick 
+        {
+            get
+            {
+                if(m_rollbackTick ==  NO_ROLLBACK)
+                {
+                    return SimClock.TickCounter;
+                }
+                else
+                {
+                    return m_rollbackTick;
+                }
             }
         }
 
@@ -168,14 +186,14 @@ namespace Tankito.Netcode.Simulation
         public void Rollback(SimulationSnapshot authSnapshot)
         {
 
-            int rollbackCounter = authSnapshot.timestamp;
+            m_rollbackTick = authSnapshot.timestamp;
             
             //Pause Simulation Clock
             SimClock.Instance.StopClock();
 
             // We DON'T have to re-simulate the tick which we are getting as auth,
             // because it's already simulated. So just advance the counter
-            rollbackCounter++;
+            m_rollbackTick++;
 
             List<ulong> simObjectsToRemove = new List<ulong>();
             
@@ -193,7 +211,7 @@ namespace Tankito.Netcode.Simulation
                 // Put Input Components into replay mode
                 if(m_simulationObjects[objId] is TankSimulationObject tank)
                 {
-                    tank.StartInputReplay(rollbackCounter);
+                    tank.StartInputReplay(m_rollbackTick);
                 }
                 // Habra que hacer algo para restaurar objetos que puedieran haber deespawneado y todo eso supongo
             }
@@ -203,11 +221,11 @@ namespace Tankito.Netcode.Simulation
                 m_simulationObjects[simObjectsToRemove[i]].OnNetworkDespawn();
             }
             
-            while(rollbackCounter < SimClock.TickCounter)
+            while(m_rollbackTick < SimClock.TickCounter)
             {
                 // - Input Replay - DONE => Implicitly consumes inputs from input caches when pulling InputPayloads on Kinematic Functions
                 Simulate();
-                rollbackCounter++;
+                m_rollbackTick++;
             }
 
             // Set tank's input components back on live input mode
@@ -220,6 +238,7 @@ namespace Tankito.Netcode.Simulation
                 }
             }
 
+            m_rollbackTick = NO_ROLLBACK;
             //Resume Simulation Clock
             SimClock.Instance.ResumeClock();
         }

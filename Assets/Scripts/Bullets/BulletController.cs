@@ -68,12 +68,13 @@ namespace Tankito {
             if (m_lifetime >= BulletCannonRegistry.Instance[m_simObj.OwnerId].Properties.lifetimeTotal)
             {
                 Debug.Log($"lifetime: {m_lifetime}/{BulletCannonRegistry.Instance[m_simObj.OwnerId].Properties.lifetimeTotal}");
-                Detonate();
+                Detonate(true);
             }
         }
 
         protected void ResetBulletData()
         {
+            gameObject.layer = 8;
             m_bouncesLeft = 0;
             m_lifetime = 0;
             OnSpawn = (ABullet) => {};
@@ -83,14 +84,19 @@ namespace Tankito {
             OnDetonate = (ABullet) => {};
         }
 
-        public void Detonate()
+        public void Detonate(bool lifeTimeOver = false)
         {
-            OnDetonate.Invoke(this);
+           OnDetonate.Invoke(this);
            if (NetworkManager.Singleton.IsServer)
            {
                 BulletSimulationObject bulletSimObj = GetComponent<BulletSimulationObject>();
                 ServerSimulationManager.Instance.QueueForDespawn(bulletSimObj.SimObjId);
            }
+           else if(lifeTimeOver)
+           {
+                BulletSimulationObject bulletSimObj = GetComponent<BulletSimulationObject>();
+                ClientSimulationManager.Instance.QueueForDespawn(bulletSimObj.SimObjId);
+           }           
         }   
 
         private void OnCollisionEnter2D(Collision2D collision)
