@@ -15,6 +15,9 @@ namespace Tankito.Netcode.Simulation
         /// </summary>
         protected Dictionary<ulong, ASimulationObject> m_simulationObjects;
         protected HashSet<ASimulationObject> m_addToSimQueue;
+        protected HashSet<ulong> m_removeFromSimQueue;
+
+        protected abstract int CaptureSnapshotTick { get; }
 
         public virtual ASimulationObject GetSimObj(ulong simObjId)
         {
@@ -31,6 +34,7 @@ namespace Tankito.Netcode.Simulation
             base.Awake();
             m_simulationObjects = new Dictionary<ulong, ASimulationObject>();
             m_addToSimQueue = new HashSet<ASimulationObject>();
+            m_removeFromSimQueue = new HashSet<ulong>();
         }
 
         public virtual void AddToSim(ASimulationObject obj)
@@ -71,6 +75,19 @@ namespace Tankito.Netcode.Simulation
             }
         }
 
+        public void QueueForDespawn(ulong simObjId)
+        {
+            if (m_simulationObjects.ContainsKey(simObjId))
+            {
+                m_removeFromSimQueue.Add(simObjId);
+            }
+            else
+            {
+                throw new IndexOutOfRangeException($"[{SimClock.TickCounter}]SimObjId({simObjId}) is not registered in simulation object dictionary!");
+            }
+        }
+
+
         /// <summary>
         /// Advance the simulation forward by 1 simulation tick (simulation tick is determined by <see cref="SimClock.SimDeltaTime" />).
         /// </summary>
@@ -91,13 +108,28 @@ namespace Tankito.Netcode.Simulation
             m_addToSimQueue.Clear();
 
             Physics2D.Simulate(SimClock.SimDeltaTime);
+
+            foreach (var objId in m_removeFromSimQueue)
+            {
+                var obj = m_simulationObjects[objId];
+                if (obj is BulletSimulationObject bullet)
+                {
+                    Debug.Log($"[{SimClock.TickCounter}]Called Despawn for {objId}");
+                    bullet.OnNetworkDespawn();
+                }
+                else
+                {
+                    throw new NotImplementedException();
+                }
+            }
+            m_removeFromSimQueue.Clear();
         }
 
         public SimulationSnapshot CaptureSnapshot()
         {
             var newSnapshot = new SimulationSnapshot();
             newSnapshot.Initialize();
-            newSnapshot.timestamp = SimClock.TickCounter;
+            newSnapshot.timestamp = CaptureSnapshotTick;
 
             //Debug.Log(m_simulationObjects.Values.Count);
             foreach(var simObj in m_simulationObjects.Values)
