@@ -187,6 +187,10 @@ namespace Tankito.Netcode.Simulation
                             break;
                         }
                     }
+                    else
+                    {
+                        QueueForDespawn(objId);
+                    }
                 }
             }
             

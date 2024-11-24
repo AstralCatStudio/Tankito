@@ -90,7 +90,7 @@ namespace Tankito
             {
                 TankData tankData;
                 tankDataRef.TryGet(out tankData);
-                AddPlayer(tankData);
+                TryAddPlayer(tankData);
             }
             Debug.Log(m_players.Count);
             // Debug.LogWarning($"AAAA: {ids.Length}");
