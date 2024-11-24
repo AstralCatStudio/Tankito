@@ -13,7 +13,11 @@ public class ModifiersController : MonoBehaviour
     {
         ApplyModifiers();
     }
-
+    public void AddModifier(Modifier modifier)
+    {
+        modifiers.Add(modifier);
+        ApplyModifiers();
+    }
     void ApplyModifiers()
     {
         foreach (Modifier modifier in modifiers)

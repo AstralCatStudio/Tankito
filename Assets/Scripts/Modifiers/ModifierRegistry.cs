@@ -40,7 +40,7 @@ namespace Tankito
         }
         public Modifier GetRandomModifier()
         {
-            int randomModifier = Random.Range(0, modifierList.modifiers.Count);
+            int randomModifier = Random.Range(1, modifierList.modifiers.Count);
             return GetModifier(randomModifier);
         }
         public List<Modifier> GetRandomModifiers(int number)
@@ -48,14 +48,19 @@ namespace Tankito
             List<Modifier> modifiersUsed = new List<Modifier>();
             for (int i = 0; i < number; i++)
             {
-
+                Modifier newModifier = GetRandomModifier();
+                while (modifiersUsed.Contains(newModifier) || modifiersUsed.Count>= modifierList.modifiers.Count-1)
+                {
+                    newModifier = GetRandomModifier();
+                }
+                modifiersUsed.Add(newModifier);
             }
             return modifiersUsed;
         }
 
 
 
-        //llamadas alternativas con int por si acaso
+        //llamadas alternativas
         public Modifier GetModifier(int modifierID)
         {
             return modifierList.GetModifier(modifierID);
@@ -67,6 +72,14 @@ namespace Tankito
         public string GetModifierDescription(int modifierID)
         {
             return GetModifier(modifierID).GetDescription();
+        }
+        public Sprite GetModifierIcon(Modifier modifier)
+        {
+            return modifier.GetSprite();
+        }
+        public string GetModifierDescription(Modifier modifier)
+        {
+            return modifier.GetDescription();
         }
     }
 }
