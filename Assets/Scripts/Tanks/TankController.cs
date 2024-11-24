@@ -41,6 +41,7 @@ namespace Tankito
 
         //Variables Dash
         [SerializeField] private AnimationCurve m_dashSpeedCurve;
+        private float m_dashSpeedMultiplier = 1;
 
         private int currentDashReloadTick = -1;
         int dashTicks;
@@ -149,12 +150,14 @@ namespace Tankito
         {
             if (overwrite)
             {
-                dashTicks = Mathf.CeilToInt(dashDistance/dashSpeed / SimClock.SimDeltaTime);
+                m_dashSpeedMultiplier = dashSpeed;
+                dashTicks = Mathf.CeilToInt(dashDistance/m_dashSpeedMultiplier / SimClock.SimDeltaTime);
                 reloadDashTicks = Mathf.CeilToInt(dashCooldown / SimClock.SimDeltaTime);
             }
             else
             {
-                dashTicks += Mathf.CeilToInt(dashDistance/dashSpeed / SimClock.SimDeltaTime);
+                m_dashSpeedMultiplier *= dashSpeed;
+                dashTicks += Mathf.CeilToInt(dashDistance/m_dashSpeedMultiplier / SimClock.SimDeltaTime);
                 reloadDashTicks += Mathf.CeilToInt(dashCooldown / SimClock.SimDeltaTime);
             }
         }
@@ -244,7 +247,7 @@ namespace Tankito
             }
             
             //currentAcceleration = Mathf.Lerp(accelerationMultiplier, 0, (currentInputDashTick - (stateInitTick + fullDashTicks)) / (stateInitTick + dashTicks) - (stateInitTick + fullDashTicks));
-            float dashSpeed = m_dashSpeedCurve.Evaluate((currentInputDashTick-stateInitTick)/dashTicks);
+            float dashSpeed = m_dashSpeedMultiplier * m_dashSpeedCurve.Evaluate((currentInputDashTick-stateInitTick)/dashTicks);
 
             if(moveVector != Vector2.zero)
             {
