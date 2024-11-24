@@ -117,6 +117,16 @@ namespace Tankito
         }
 
         #region PlayerManagement
+        public bool TryAddPlayer(TankData player)
+        {
+            if (m_players.ContainsKey(player.OwnerClientId))
+            {
+                return false;
+            }
+            AddPlayer(player);
+            return true;
+        }
+
         public void AddPlayer(TankData player)
         {
             m_players.Add(player.OwnerClientId, player);
