@@ -280,8 +280,8 @@ GameObject:
   - component: {fileID: 4915372424005464369}
   - component: {fileID: 8984664987610868142}
   - component: {fileID: 7485991448734638459}
-  - component: {fileID: 4357900131188088903}
   - component: {fileID: 7459559392396742544}
+  - component: {fileID: 4357900131188088903}
   m_Layer: 5
   m_Name: Modifier Selector Screen Canvas
   m_TagString: Untagged
@@ -372,6 +372,26 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &7459559392396742544
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1351770429656057191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 935f8d851f839e34b8adea91655eeafa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  modifierSelectors:
+  - {fileID: 3311831532936956494}
+  - {fileID: 8707926015472997934}
+  - {fileID: 7259118302472592022}
+  - {fileID: 8299520254445905032}
+  - {fileID: 2330035429383141377}
+  - {fileID: 3119936237095033384}
+  playerChoosePowerupText: {fileID: 4106174497050554576}
 --- !u!114 &4357900131188088903
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -392,25 +412,6 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 0
---- !u!114 &7459559392396742544
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1351770429656057191}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 935f8d851f839e34b8adea91655eeafa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  modifierSelectors:
-  - {fileID: 3311831532936956494}
-  - {fileID: 8707926015472997934}
-  - {fileID: 7259118302472592022}
-  - {fileID: 8299520254445905032}
-  - {fileID: 2330035429383141377}
-  - {fileID: 3119936237095033384}
 --- !u!1 &3444237902055036632
 GameObject:
   m_ObjectHideFlags: 0
@@ -532,7 +533,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 7459559392396742544}
         m_TargetAssemblyTypeName: ModifierSelectorScreen, Assembly-CSharp
         m_MethodName: ConfirmSelection
         m_Mode: 1
