@@ -90,15 +90,18 @@ namespace Tankito
         private void TankDeath(TankData t)
         {
             t.AwardPoints(m_players.Count - AliveTanks.Count() - 1); // -1 porque no deberia darte puntos por estar tu mismo muerto
-            PlayerListUpdate();
+            PlayerListUpdate(true);
         }
 
-        private void PlayerListUpdate()
+        private void PlayerListUpdate(bool updateInputs = false)
         {
             UpdateAliveTanksGUI();
-            foreach(var tank in m_players.Values)
+            if (updateInputs)
             {
-                SetActiveTankInputs(tank);
+                foreach(var tank in m_players.Values)
+                {
+                    SetActiveTankInputs(tank);
+                }
             }
             CheckForWinner();
         }
