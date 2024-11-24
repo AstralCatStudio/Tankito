@@ -61,6 +61,8 @@ namespace Tankito
                 m_localPlayerInputObject.SetActive(false);
             }
 
+            if (DEBUG) Debug.Log("Se suscribe al evento de morir tanque");
+            TankData.OnTankDestroyed += TankDeath;
             //NetworkManager.Singleton.OnClientConnectedCallback += InitPlayersDictionary;
         }
 
