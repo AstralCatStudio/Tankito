@@ -122,13 +122,13 @@ namespace Tankito
             {
                 m_speed = mod.speedMultiplier;
                 m_rotationSpeed = mod.rotationSpeedMultiplier;
-                GetComponent<TankData>().SetHealth(mod.extraHealth);
+                //GetComponent<TankData>().SetHealth(mod.extraHealth);
             }
             else
             {
                 m_speed *= mod.speedMultiplier;
                 m_rotationSpeed *= mod.rotationSpeedMultiplier;
-                GetComponent<TankData>().AddHealth(mod.extraHealth);
+                //GetComponent<TankData>().AddHealth(mod.extraHealth);
             }
             SetParryTicksFromSeconds(mod.extraParryTime, mod.parryCooldownTimeAdded, reset);
             SetDashParams(mod.dashDistanceMultiplier, mod.dashSpeedMultiplier, mod.dashCooldownTimeAdded, reset);
