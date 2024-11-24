@@ -13,10 +13,6 @@ public class RoundUI : Singleton<RoundUI>
     public GameObject PanelAlivePlayers;
     public GameObject CountdownText;
     public GameObject BackButton;
-    private void Awake()
-    {
-
-    }
     #region Ranking
     public void SetActiveRanking(bool active)
     {

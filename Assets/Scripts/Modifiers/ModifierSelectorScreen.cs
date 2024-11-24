@@ -18,9 +18,9 @@ public class ModifierSelectorScreen : NetworkBehaviour
     {
         if(!IsServer)
         {
-            RoundManager.Instance._roundUI.PanelPowerUps = gameObject;
+            RoundUI.Instance.PanelPowerUps = gameObject;
         }
-        
+        gameObject.SetActive(false);
     }
     private void OnEnable()
     {
