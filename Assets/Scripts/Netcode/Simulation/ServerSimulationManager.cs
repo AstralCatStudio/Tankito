@@ -13,7 +13,8 @@ namespace Tankito.Netcode.Simulation
         /// Relates NetworkClientId(ulong) to a specific <see cref="RemoteTankInput"/>.  
         /// </summary>
         public Dictionary<ulong, RemoteTankInput> remoteInputTanks = new Dictionary<ulong,RemoteTankInput>();
-        protected HashSet<ulong> m_removeFromSimQueue;
+
+        protected override int CaptureSnapshotTick { get => SimClock.TickCounter; }
 
         void Start()
         {
@@ -21,20 +22,6 @@ namespace Tankito.Netcode.Simulation
             {
                 Debug.Log("Proceeding to destroy ServerSimulationManager (because it's NOT a SERVER)");
                 Destroy(this);
-            }
-
-            m_removeFromSimQueue = new HashSet<ulong>();
-        }
-        
-        public void QueueForRemoval(ulong simObjId)
-        {
-            if (m_simulationObjects.ContainsKey(simObjId))
-            {
-                m_removeFromSimQueue.Add(simObjId);
-            }
-            else
-            {
-                throw new IndexOutOfRangeException($"[{SimClock.TickCounter}]SimObjId({simObjId}) is not registered in simulation object dictionary!");
             }
         }
 
@@ -44,21 +31,6 @@ namespace Tankito.Netcode.Simulation
             //Debug.Log("TODO: Implement Input Gathering and Client Throttling RPC's on Server.");
             //GatherPlayerInput(); // Samplear la ventana de inputs. Aqui tambien iria la logica de client throttling
             base.Simulate();
-
-            foreach(var objId in m_removeFromSimQueue)
-            {
-                var obj = m_simulationObjects[objId];
-                if (obj is BulletSimulationObject bullet)
-                {
-                    Debug.Log($"[{SimClock.TickCounter}]Called Despawn for {objId}");
-                    bullet.OnNetworkDespawn();
-                }
-                else
-                {
-                    throw new NotImplementedException();
-                }
-            }
-            m_removeFromSimQueue.Clear();
             
             MessageHandlers.Instance.BroadcastSimulationSnapshot(CaptureSnapshot());
         }
