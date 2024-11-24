@@ -203,8 +203,8 @@ namespace Tankito
             
             if (IsServer)
             {
-                GameObject panelPowerUps = Instantiate<GameObject>(RoundUI.Instance.PanelPowerUps);
-                panelPowerUps.GetComponent<NetworkObject>().Spawn();
+                RoundUI.Instance.PanelPowerUps = Instantiate<GameObject>(RoundUI.Instance.PanelPowerUps);
+                RoundUI.Instance.PanelPowerUps.GetComponent<NetworkObject>().Spawn();
                 RoundManager.Instance.StartRoundCountdown();
                 DestroyButtonsClientRpc();
             }

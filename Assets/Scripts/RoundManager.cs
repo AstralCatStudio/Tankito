@@ -288,7 +288,7 @@ namespace Tankito
             {
                 ShowRanking();
                 Invoke(nameof(StartPowerUpSelection), 3.0f);
-                RoundUI.Instance.SetActiveRanking(false);
+                
             }
             else
             {
@@ -372,6 +372,7 @@ namespace Tankito
         private void StartPowerUpSelection()
         {
             RoundUI.Instance.SetActivePowerUps(true);
+            RoundUI.Instance.SetActiveRanking(false);
         }
 
         public void EndPowerUpSelection()
