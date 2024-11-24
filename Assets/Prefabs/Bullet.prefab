@@ -11,11 +11,11 @@ GameObject:
   - component: {fileID: 6215821909442432480}
   - component: {fileID: -5058717663011309955}
   - component: {fileID: 6545025246547745674}
-  - component: {fileID: 3221416329339783790}
   - component: {fileID: 1230613554501251170}
   - component: {fileID: -6159674049367059405}
   - component: {fileID: 9057162967867901668}
-  m_Layer: 0
+  - component: {fileID: 402144271898706436}
+  m_Layer: 8
   m_Name: Bullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -53,10 +53,10 @@ MonoBehaviour:
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 0
   ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 1
+  SceneMigrationSynchronization: 0
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
-  AutoObjectParentSync: 1
+  AutoObjectParentSync: 0
 --- !u!212 &6545025246547745674
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -109,30 +109,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &3221416329339783790
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4570257745151390860}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: efc6f84f749f3b34fad95e19d9899220, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_properties:
-    scaleMultiplier: {x: 0, y: 0}
-    startingPosition: {x: 0, y: 0}
-    velocity: 0
-    acceleration: 0
-    direction: {x: 0, y: 0}
-    rotationSpeed: 0
-    bouncesTotal: 0
-    lifetimeTotal: 2
-  m_shooterID: 0
-  m_rb: {fileID: 1230613554501251170}
-  m_explosion: {fileID: 1623344447312403577, guid: 51fbce7026ab63c4a826dc8f24339ab9, type: 3}
 --- !u!50 &1230613554501251170
 Rigidbody2D:
   serializedVersion: 4
@@ -149,7 +125,7 @@ Rigidbody2D:
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 0
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 504a65727c6898741afc19a8d3e76330, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -207,6 +183,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19fefaffd400da64a8fbfea59e386813, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_isKinematic: 0
-  m_rigidbody: {fileID: 0}
-  m_bullet: {fileID: 0}
+  m_simObjId: 0
+  m_rigidbody: {fileID: 1230613554501251170}
+  m_bullet: {fileID: 402144271898706436}
+--- !u!114 &402144271898706436
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4570257745151390860}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2dc7cd1e447068743a5841977211a1d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_bouncesLeft: 0
+  m_lifetime: 0
+  selfCollisionTreshold: 0.2

@@ -2,13 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Tankito;
-using Tankito.Netcode;
-using Tankito.Netcode.Simulation;
 using Tankito.Utils;
 using UnityEngine;
 
-namespace Tankito
+namespace Tankito.Netcode.Simulation
 {
     public class EmulatedTankInput : MonoBehaviour, ITankInput
     {

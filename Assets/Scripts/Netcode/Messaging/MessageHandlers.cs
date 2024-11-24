@@ -36,7 +36,6 @@ namespace Tankito.Netcode.Messaging
             {
                 Destroy(this);
             }
-
         }
 
         /// Se registran los mensajes en el GameManager ///

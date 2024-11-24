@@ -88,7 +88,6 @@ namespace Tankito.Netcode
         public NetworkObject GetNetworkObject(GameObject prefab, Vector3 position, Quaternion rotation)
         {
             var networkObject = m_PooledObjects[prefab].Get();
-
             var noTransform = networkObject.transform;
             noTransform.position = position;
             noTransform.rotation = rotation;

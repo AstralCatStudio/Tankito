@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using Tankito.Netcode;
+using Tankito.Netcode.Simulation;
 using Tankito.Utils;
 using Unity.Netcode;
 using UnityEngine;
@@ -105,14 +106,26 @@ namespace Tankito
                 SpawnManager spawnManager = FindObjectOfType<SpawnManager>();
                 spawnManager.SetPlayerInSpawn(clientId);
 
-                RoundManager roundManager = FindObjectOfType<RoundManager>();
-                roundManager.AddPlayer(newPlayer.gameObject);
-
-                // IMPORTANTE: Se propaga la nueva posicion a los clientes (SUJETO A CAMBIOS)
-                //NetworkObjectReference networkObjectReference = new NetworkObjectReference(newPlayer);
-                //SetObjectPositionClientRpc(newPlayer, newPlayer.GetComponent<Transform>().position);
-                // Ahora se maneja directamente en el spawn manager llamando a la funcion SetObjectPosition del GameManager
+                var tankData = newPlayer.GetComponent<TankData>();
+                Debug.Log($"TankData = {tankData}");
+                RoundManager.Instance.AddPlayer(tankData);
+                RoundManager.Instance.InitPlayersDictionary();
             }
+            //else
+            //{
+            //    if(clientId != NetworkManager.Singleton.LocalClientId)
+            //    {
+            //        if (RoundManager.Instance == null)
+            //        {
+            //            Debug.Log("ES EL ROUND MANAGER");
+            //        }
+            //        else if (m_playerPrefab.GetComponent<TankData>() == null)
+            //        {
+            //            Debug.Log("ES EL OBJETO");
+            //        }
+            //        RoundManager.Instance.AddPlayer(NetworkManager.LocalClient.PlayerObject.GetComponent<TankData>());
+            //    }
+            //}
 
             if (clientId != NetworkManager.Singleton.LocalClientId) return;
 

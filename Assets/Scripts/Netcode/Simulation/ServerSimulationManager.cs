@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using Tankito.Netcode.Messaging;
 using Unity.Netcode;
 using UnityEngine;
@@ -11,6 +13,8 @@ namespace Tankito.Netcode.Simulation
         /// Relates NetworkClientId(ulong) to a specific <see cref="RemoteTankInput"/>.  
         /// </summary>
         public Dictionary<ulong, RemoteTankInput> remoteInputTanks = new Dictionary<ulong,RemoteTankInput>();
+
+        protected override int CaptureSnapshotTick { get => SimClock.TickCounter; }
 
         void Start()
         {
@@ -27,6 +31,7 @@ namespace Tankito.Netcode.Simulation
             //Debug.Log("TODO: Implement Input Gathering and Client Throttling RPC's on Server.");
             //GatherPlayerInput(); // Samplear la ventana de inputs. Aqui tambien iria la logica de client throttling
             base.Simulate();
+            
             MessageHandlers.Instance.BroadcastSimulationSnapshot(CaptureSnapshot());
         }
 
@@ -54,6 +59,17 @@ namespace Tankito.Netcode.Simulation
         public void BroadcastLastSnapshot()
         {
             MessageHandlers.Instance.BroadcastSimulationSnapshot(CaptureSnapshot());
+        }
+        
+        [ContextMenu("PrintRegisteredIDs")]
+        public void PrintRegisteredIDs()
+        {
+            var debug = $"[{SimClock.TickCounter}]Registered SimObjIds:[ ";
+            foreach(var objId in m_simulationObjects.Keys)
+            {
+                debug += objId + (objId == m_simulationObjects.Keys.Last() ? " ]" : " , ");
+            }
+            Debug.Log(debug);
         }
 
         #endregion

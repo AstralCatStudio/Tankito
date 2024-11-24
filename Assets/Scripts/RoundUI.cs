@@ -2,15 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using Tankito;
 using TMPro;
+using Unity.Netcode;
 using UnityEngine;
 
-public class RoundUI : MonoBehaviour
+public class RoundUI : Singleton<RoundUI>
 {
     public GameObject PanelRanking;
     public GameObject PanelPowerUps;
     public GameObject PanelRankingFinal;
     public GameObject PanelAlivePlayers;
     public GameObject CountdownText;
+    public GameObject BackButton;
     public GameObject InitExitButton;
     public GameObject EndExitButton;
     public GameObject ScenarySelection;
@@ -53,7 +55,7 @@ public class RoundUI : MonoBehaviour
         PanelAlivePlayers.GetComponentInChildren<TextMeshProUGUI>().text = $"Remaining players: {players}";
     }
 
-    public void SetRemainingPlayersActive(bool active)
+    public void ActivateAliveTanksGUI(bool active)
     {
         PanelAlivePlayers.SetActive(active);
     }

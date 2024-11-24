@@ -4,34 +4,49 @@ using UnityEngine;
 
 namespace Tankito.Netcode.Simulation
 {
-    public abstract class ASimulationObject : NetworkBehaviour, INetworkSerializable
+    public abstract class ASimulationObject : NetworkBehaviour
     {
-        public bool IsKinematic {get => m_isKinematic; set => m_isKinematic = value; }
-        [SerializeField]
-        private bool m_isKinematic;
+        public ulong SimObjId => m_simObjId;
+        public abstract SimulationObjectType SimObjType { get; }
 
+        [SerializeField] // <-- FOR DEBUG ONLY (don't modify, just observe)
+        private ulong m_simObjId;
+        
         // Define a delegate for the kinematics computation
         public delegate void KinematicFunction(float deltaTime);
 
         // Define an event based on the delegate
         public event KinematicFunction OnComputeKinematics;
 
-        public override void OnNetworkSpawn() // Should work and be called for pooled objects too!
+        public void SetSimObjId(ulong simObjId) { m_simObjId = simObjId; }
+
+        public void GenerateSimObjId(ulong ownerId, int tick, int genN)
         {
-            if(IsServer)
+            m_simObjId = SimExtensions.HashSimObj(ownerId, tick, genN);
+        }
+
+        /// <summary>
+        /// Automatically adds the simulation object from the local <see cref="Simulation.NetSimulationManager"/>.
+        /// </summary>
+        public override void OnNetworkSpawn()
+        {
+            if(NetworkManager.Singleton.IsServer)
             {
                 ServerSimulationManager.Instance.AddToSim(this);
             }
             //else  // Este else no lo queremos porque necesitamos que un host sea capaz de recoger el input del jugador,
-                    // de lo cual se encarga ClientSimulationManager
+            // de lo cual se encarga ClientSimulationManager
             //{
-                ClientSimulationManager.Instance.AddToSim(this);
+            ClientSimulationManager.Instance.AddToSim(this);
             //}
         }
 
-        public override void OnNetworkDespawn() // Should work and be called for pooled objects too!
+        /// <summary>
+        /// Automatically removes the simulation object from the local <see cref="Simulation.NetSimulationManager"/>.
+        /// </summary>
+        public override void OnNetworkDespawn()
         {
-            if(IsServer)
+            if(NetworkManager.Singleton.IsServer)
             {
                 ServerSimulationManager.Instance.RemoveFromSim(this);
             }
@@ -48,19 +63,7 @@ namespace Tankito.Netcode.Simulation
             OnComputeKinematics?.Invoke(deltaTime);
         }
 
-        // Bernat: Creo que estos metodos de iniciar reconciliacion y de reconciliar son tarea del simulation manager,
-        //         lo unico que ofrece el SimulationObject es como una etiqueta que designa que el simulation manager tendra en cuenta al
-        //         objeto a la hora de simular en red.
-        // public abstract void InitReconcilation(ISimulationState simulationState);
-        // public abstract void Reconciliate(int rewindTick);
-
         public abstract ISimulationState GetSimState();
         public abstract void SetSimState(in ISimulationState state);
-
-        public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
-        {
-            ulong objectId = NetworkObjectId;
-            serializer.SerializeValue(ref objectId);
-        }
     }
 }

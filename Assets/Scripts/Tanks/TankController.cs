@@ -1,4 +1,6 @@
 using System.Collections;
+using System.Collections.Generic;
+using JetBrains.Annotations;
 using Tankito.Netcode;
 using Tankito.Netcode.Simulation;
 using UnityEngine;
@@ -16,22 +18,34 @@ namespace Tankito
 
     public class TankController : MonoBehaviour
     {
+        public static readonly HullStatsModifier BaseTankStats = 
+            new HullStatsModifier(
+                speed: 2.2f,
+                rotSpeed: 360f,
+                dashCooldown: 2f,
+                health: 2,
+                parryTime: 0.15f,
+                parryCooldown: 1.5f,
+                dashSpeed: 1f,
+                dashDistance: 1f
+            );
+        private List<HullModifier> m_modifiers = new List<HullModifier>();
+        public List<HullModifier> Modifiers => m_modifiers;
+
         [SerializeField] private Rigidbody2D m_tankRB;
-        [SerializeField] private float m_speed = 2.2f;
-        [SerializeField] private float m_rotationSpeed = 270.0f;
         [SerializeField] private Rigidbody2D m_turretRB;
         [Tooltip("How fast the turret can turn to aim in the specified direction.")]
-        [SerializeField]
-        private float m_aimSpeed = 720f;
+        [SerializeField] private float m_speed;
+        [SerializeField] private float m_rotationSpeed;
+        [SerializeField] private float m_aimSpeed = 900f;
 
         //Variables Dash
-        [SerializeField] private float accelerationMultiplier = 3;
-        [SerializeField] private float dashDuration = 0.25f;
-        [SerializeField] private float fullDashDuration = 0.1f;
-        [SerializeField] private float dashReloadDuration = 1;
+        [SerializeField] private AnimationCurve m_dashSpeedCurve;
+        private float m_dashSpeedMultiplier = 1;
+
         private int currentDashReloadTick = -1;
         int dashTicks;
-        int fullDashTicks;
+        //int fullDashTicks;
         int reloadDashTicks;
         [SerializeField] int stateInitTick;
 
@@ -45,6 +59,8 @@ namespace Tankito
 
         public delegate void DashEnd();
         public event DashEnd OnDashEnd;
+
+        [SerializeField] private BulletCannon cannon;
 
         public PlayerState PlayerState { get => playerState; set => playerState = value; }
         public int StateInitTick { get => stateInitTick; set => stateInitTick = value; }
@@ -65,25 +81,85 @@ namespace Tankito
             {
                 Debug.LogWarning("Error tank turret reference not set.");
             }
-            dashTicks = Mathf.CeilToInt(dashDuration / SimClock.SimDeltaTime);
-            fullDashTicks = Mathf.CeilToInt(fullDashDuration / SimClock.SimDeltaTime);
-            reloadDashTicks = Mathf.CeilToInt(dashReloadDuration / SimClock.SimDeltaTime);
-            stateInitTick = 1;
+
+            ApplyModifierList();
+            stateInitTick = 0;
         }
 
         void OnEnable()
         {
+            stateInitTick = 0;
             // Subscribe to SimulationObject Kinematics
             var tankSimObj = GetComponent<TankSimulationObject>();
             tankSimObj.OnComputeKinematics += ProcessInput;
-            tankSimObj.IsKinematic = true;
+
+            //Subscribe to Round Countdown Start
+            RoundManager.Instance.OnPreRoundStart += ApplyModifierList;
         }
 
         void OnDisable()
         {
-            // Subscribe to SimulationObject Kinematics
+            // Unsubscribe to SimulationObject Kinematics
             var tankSimObj = GetComponent<TankSimulationObject>();
             tankSimObj.OnComputeKinematics -= ProcessInput;
+            
+            //Unsubscribe to Round Countdown Start
+            RoundManager.Instance.OnPreRoundStart -= ApplyModifierList;
+        }
+
+        public void ApplyModifierList(int nRound = 0)
+        {
+            ApplyModifier(BaseTankStats, true);
+            foreach(var mod in m_modifiers)
+            {
+                ApplyModifier(mod.hullStatsModifier, false);
+            }
+        }
+
+        void ApplyModifier(HullStatsModifier mod, bool reset = false)
+        {
+            if (reset)
+            {
+                m_speed = mod.speedMultiplier;
+                m_rotationSpeed = mod.rotationSpeedMultiplier;
+                //GetComponent<TankData>().SetHealth(mod.extraHealth);
+            }
+            else
+            {
+                m_speed *= mod.speedMultiplier;
+                m_rotationSpeed *= mod.rotationSpeedMultiplier;
+                //GetComponent<TankData>().AddHealth(mod.extraHealth);
+            }
+            SetParryTicksFromSeconds(mod.extraParryTime, mod.parryCooldownTimeAdded, reset);
+            SetDashParams(mod.dashDistanceMultiplier, mod.dashSpeedMultiplier, mod.dashCooldownTimeAdded, reset);
+        }
+
+        private void SetParryTicksFromSeconds(float parryDuration, float parryCooldown, bool overwrite)
+        {
+            if (overwrite)
+            {
+
+            }
+            else
+            {
+
+            }
+        }
+
+        private void SetDashParams(float dashDistance, float dashSpeed, float dashCooldown, bool overwrite)
+        {
+            if (overwrite)
+            {
+                m_dashSpeedMultiplier = dashSpeed;
+                dashTicks = Mathf.CeilToInt(dashDistance/m_dashSpeedMultiplier / SimClock.SimDeltaTime);
+                reloadDashTicks = Mathf.CeilToInt(dashCooldown / SimClock.SimDeltaTime);
+            }
+            else
+            {
+                m_dashSpeedMultiplier *= dashSpeed;
+                dashTicks += Mathf.CeilToInt(dashDistance/m_dashSpeedMultiplier / SimClock.SimDeltaTime);
+                reloadDashTicks += Mathf.CeilToInt(dashCooldown / SimClock.SimDeltaTime);
+            }
         }
 
         public void BindInputSource(ITankInput inputSource)
@@ -98,14 +174,39 @@ namespace Tankito
             ProcessInput(input, deltaTime);
         }
         
+        private void FireTank(Vector2 aimVector, float deltaTime)
+        {
+            cannon.Shoot(aimVector);
+        }
+        
         private void ProcessInput(InputPayload input, float deltaTime)
         {
+            
+            if (DEBUG) Debug.Log($"Processing {gameObject} input: {input}");
             if((CanDash && input.action == TankAction.Dash) || playerState == PlayerState.Dashing)
             {
                 DashTank(dashVec, input.timestamp, deltaTime);
             }
             else
             {
+                switch (input.action)
+                {
+                    case TankAction.None:
+                        break;
+
+                    case TankAction.Dash:
+                        break;           
+
+                    case TankAction.Parry:
+                        break;
+
+                    case TankAction.Fire:
+                        FireTank(input.aimVector, deltaTime);
+                        break;
+
+                    default:
+                        break;
+                }
                 MoveTank(input.moveVector, deltaTime);
             }
             
@@ -136,7 +237,7 @@ namespace Tankito
         private void DashTank(Vector2 moveVector, int currentInputDashTick, float deltaTime)
         {
             if (DEBUG) Debug.Log($"[{SimClock.TickCounter}]: PlayerState : {playerState}");
-            float currentAcceleration;
+            
             if (playerState != PlayerState.Dashing)
             {
                 dashVec = moveVector;
@@ -144,27 +245,22 @@ namespace Tankito
                 playerState = PlayerState.Dashing;
                 if (DEBUG) Debug.Log($"[{SimClock.TickCounter}]Comienza el dash");
             }
-            if(currentInputDashTick < stateInitTick + fullDashTicks)
-            {
-                currentAcceleration = accelerationMultiplier;
-            }
-            else
-            {
-                currentAcceleration = Mathf.Lerp(accelerationMultiplier, 1, (currentInputDashTick - (stateInitTick + fullDashTicks)) / ((stateInitTick + dashTicks)) - (stateInitTick + fullDashTicks)); 
-            }
+            
+            //currentAcceleration = Mathf.Lerp(accelerationMultiplier, 0, (currentInputDashTick - (stateInitTick + fullDashTicks)) / (stateInitTick + dashTicks) - (stateInitTick + fullDashTicks));
+            float dashSpeed = m_dashSpeedMultiplier * m_dashSpeedCurve.Evaluate((currentInputDashTick-stateInitTick)/dashTicks);
 
             if(moveVector != Vector2.zero)
             {
-                m_tankRB.MovePosition(m_tankRB.position + m_speed * moveVector * deltaTime * currentAcceleration);
+                m_tankRB.MovePosition(m_tankRB.position + moveVector * deltaTime * dashSpeed);
             }
             else
             {
-                m_tankRB.MovePosition(m_tankRB.position + m_speed * (Vector2)transform.right * deltaTime * currentAcceleration);
+                m_tankRB.MovePosition(m_tankRB.position + (Vector2)transform.right * deltaTime * dashSpeed);
             }
 
             if (DEBUG)
             {
-                Debug.Log($"[{SimClock.TickCounter}] DASH: CurrentDashTick->{currentInputDashTick}. CurrentAcceleration->{currentAcceleration}. TickToEnd->{stateInitTick+dashTicks - currentInputDashTick}");
+                Debug.Log($"[{SimClock.TickCounter}] DASH: CurrentDashTick->{currentInputDashTick}. CurrentSpeedMult->{dashSpeed}. TickToEnd->{stateInitTick+dashTicks - currentInputDashTick}");
             }
 
             if (currentInputDashTick >= stateInitTick + dashTicks)
@@ -212,6 +308,10 @@ namespace Tankito
                 }
                 return false;
             }
-    }
+        }
+
+        #region Modifiers & TankData
+
+        #endregion
     } 
 }
