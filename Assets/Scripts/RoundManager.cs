@@ -67,45 +67,53 @@ namespace Tankito
         public void InitPlayersDictionary()
         {
             if (!IsServer) return;
-            Debug.LogWarning($"Jugadores conectados: {m_players.Count}");
-            ulong[] clientIds = new ulong[m_players.Count];
-            int i = 0;
-            foreach (ulong id in m_players.Keys)
-            {
-                clientIds[i] = id;
-                Debug.LogWarning($"id anadido al array {clientIds[i]}");
-                i++;
-            }
-            Debug.LogWarning($"i: {i}");
-            Debug.LogWarning($"Array complete: {clientIds.Length}");
-            NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(NetworkManager.Singleton.LocalClientId, out var playerObject);
-            InitPlayersDictionaryClientRpc(clientIds, playerObject);
+            //Debug.LogWarning($"Jugadores conectados: {m_players.Count}");
+            //ulong[] clientIds = new ulong[m_players.Count];
+            //int i = 0;
+            //foreach (ulong id in m_players.Keys)
+            //{
+            //    clientIds[i] = id;
+            //    Debug.LogWarning($"id anadido al array {clientIds[i]}");
+            //    i++;
+            //}
+            //Debug.LogWarning($"i: {i}");
+            //Debug.LogWarning($"Array complete: {clientIds.Length}");
+            //NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(NetworkManager.Singleton.LocalClientId, out var playerObject);
+            NetworkBehaviourReference[] tankDataRefs = m_players.Values.Select(td => new NetworkBehaviourReference(td)).ToArray();
+            InitPlayersDictionaryClientRpc(tankDataRefs);
         }
 
         [ClientRpc]
-        private void InitPlayersDictionaryClientRpc(ulong[] ids, NetworkObjectReference serverObject)
+        private void InitPlayersDictionaryClientRpc(NetworkBehaviourReference[] tankDataReferences)
         {
-            Debug.LogWarning($"AAAA: {ids.Length}");
-            if (serverObject.TryGet(out var targetObject))
+            foreach(var tankDataRef in tankDataReferences)
             {
-                if (!m_players.ContainsKey(ids[0]))
-                {
-                    AddPlayer(targetObject.GetComponent<TankData>());
-                }
+                TankData tankData;
+                tankDataRef.TryGet(out tankData);
+                AddPlayer(tankData);
             }
-                
-            for (int i = 0; i < ids.Length; i++)
-            {
-                Debug.LogWarning($"EEEEE: {ids[i]}");
-                if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(ids[i], out var playerObject))
-                {
-                    Debug.LogWarning($"Anade {ids[i]}");
-                    if (!m_players.ContainsKey(ids[i]))
-                    {
-                        AddPlayer(playerObject.GetComponent<TankData>());
-                    }
-                }
-            }
+            Debug.Log(m_players.Count);
+            // Debug.LogWarning($"AAAA: {ids.Length}");
+            // if (serverObject.TryGet(out var targetObject))
+            // {
+            //     if (!m_players.ContainsKey(ids[0]))
+            //     {
+            //         AddPlayer(targetObject.GetComponent<TankData>());
+            //     }
+            // }
+            //     
+            // for (int i = 0; i < ids.Length; i++)
+            // {
+            //     Debug.LogWarning($"EEEEE: {ids[i]}");
+            //     if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(ids[i], out var playerObject))
+            //     {
+            //         Debug.LogWarning($"Anade {ids[i]}");
+            //         if (!m_players.ContainsKey(ids[i]))
+            //         {
+            //             AddPlayer(playerObject.GetComponent<TankData>());
+            //         }
+            //     }
+            // }
         }
 
         #region PlayerManagement
