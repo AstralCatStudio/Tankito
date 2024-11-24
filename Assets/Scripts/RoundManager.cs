@@ -221,9 +221,15 @@ namespace Tankito
 
         public void StartRound()
         {
+            foreach (var item in m_players)
+            {
+                item.Value.gameObject.SetActive(true);
+            }
+            
             if (IsServer)
             {
                 StartRoundClientRpc();
+                m_spawnManager.ResetSpawnPoints();
             }
             
             m_startedRound = true;
