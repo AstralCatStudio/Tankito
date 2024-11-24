@@ -187,7 +187,7 @@ namespace Tankito.Netcode.Simulation
                             break;
                         }
                     }
-                    else
+                    else if(m_simulationObjects.Keys.Contains(objId))
                     {
                         QueueForDespawn(objId);
                     }
