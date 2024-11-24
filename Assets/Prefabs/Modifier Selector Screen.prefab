@@ -267,6 +267,7 @@ GameObject:
   - component: {fileID: 4740457877139995553}
   - component: {fileID: 2883058620776402804}
   - component: {fileID: 6064248681977499548}
+  - component: {fileID: -5911787234912045995}
   m_Layer: 5
   m_Name: Modifier Selector Screen
   m_TagString: Untagged
@@ -358,7 +359,26 @@ MonoBehaviour:
   - {fileID: 3609559990300093187}
   - {fileID: 439296569000970173}
   - {fileID: 1232279152095461464}
-  roundManager: {fileID: 0}
+--- !u!114 &-5911787234912045995
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1723466512449325202}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 951099334
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 0
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 0
 --- !u!1 &2300194763416389693
 GameObject:
   m_ObjectHideFlags: 0

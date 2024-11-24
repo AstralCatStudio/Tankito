@@ -4,18 +4,23 @@ using Tankito;
 using Unity.Netcode;
 using UnityEngine;
 
-public class ModifierSelectorScreen : MonoBehaviour
+public class ModifierSelectorScreen : NetworkBehaviour
 {
     [SerializeField]
     List<ModifierSelector> modifierSelectors;
-    [SerializeField]
-    RoundManager roundManager;
     List<Modifier> modifiers;
     Modifier selectedModifier;
     void Start()
     {
-        transform.SetParent(GameObject.FindWithTag(tag: "Canvas").transform);
-        GenerateNewModifiers();
+            GenerateNewModifiers();
+    }
+    public override void OnNetworkSpawn()
+    {
+        if(!IsServer)
+        {
+            RoundManager.Instance._roundUI.PanelPowerUps = gameObject;
+        }
+        
     }
     private void OnEnable()
     {
@@ -46,6 +51,6 @@ public class ModifierSelectorScreen : MonoBehaviour
     }
     public void ConfirmSelection()
     {
-        roundManager.EndPowerUpSelection();
+        RoundManager.Instance.EndPowerUpSelection();
     }
 }

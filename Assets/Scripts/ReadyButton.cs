@@ -214,6 +214,8 @@ public class ReadyButton : NetworkBehaviour
     {
         if (IsServer)
         {
+            GameObject panelPowerUps = Instantiate<GameObject>(_roundManager._roundUI.PanelPowerUps);
+            panelPowerUps.GetComponent<NetworkObject>().Spawn();
             _roundManager.InitializeRound();
             DestroyButtonsClientRpc();
         }

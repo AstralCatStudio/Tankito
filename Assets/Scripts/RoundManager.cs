@@ -455,6 +455,7 @@ public class RoundManager : NetworkBehaviour
         if (IsServer)
         {
             Invoke(nameof(InitializeRound), 1.0f);
+
         }
     }
     [ClientRpc]

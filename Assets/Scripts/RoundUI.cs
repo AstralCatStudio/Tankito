@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Tankito;
 using TMPro;
+using Unity.Netcode;
 using UnityEngine;
 
 public class RoundUI : MonoBehaviour
@@ -12,7 +13,10 @@ public class RoundUI : MonoBehaviour
     public GameObject PanelAlivePlayers;
     public GameObject CountdownText;
     public GameObject BackButton;
+    private void Awake()
+    {
 
+    }
     #region Ranking
     public void SetActiveRanking(bool active)
     {
