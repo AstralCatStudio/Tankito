@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Tankito.Netcode.Simulation;
 using UnityEngine;
 using UnityEngine.Pool;
+using Unity.Netcode;
 
 namespace Tankito
 {
@@ -97,8 +98,16 @@ namespace Tankito
 
             bulletObj.GenerateSimObjId(ownerId, tick, spawnN);
             bulletObj.SetOwner(ownerId);
-            bulletObj.OnNetworkSpawn();
             bulletObj.GetComponent<BulletController>().InitializeProperties();
+            
+            if (NetworkManager.Singleton.IsServer)
+            {
+                ServerSimulationManager.Instance.QueueForSpawn(bulletObj);
+            }
+            else
+            {
+                ClientSimulationManager.Instance.QueueForSpawn(bulletObj);
+            }
             
             return bulletObj;
         }

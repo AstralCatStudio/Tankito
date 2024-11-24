@@ -26,7 +26,7 @@ namespace Tankito.Netcode.Simulation
             m_removeFromSimQueue = new HashSet<ulong>();
         }
         
-        public void QueueForRemoval(ulong simObjId)
+        public void QueueForDespawn(ulong simObjId)
         {
             if (m_simulationObjects.ContainsKey(simObjId))
             {
