@@ -7,27 +7,31 @@ using Tankito;
 
 public class TankData : NetworkBehaviour
 {
-    public delegate void TankDestroyedHandler(GameObject tank);
+    public delegate void TankDestroyedHandler(TankData tank);
     public static event TankDestroyedHandler OnTankDestroyed;
-    public Action<TankData> OnDamaged = (TankData) => { };
-    public NetworkVariable<int> health = new NetworkVariable<int>(2);
-    public NetworkVariable<bool> isAlive = new NetworkVariable<bool>(true);
-    public int points;
+    public Action<TankData> OnDamaged = (TankData damagedTank) => { };
+    private NetworkVariable<int> m_health = new NetworkVariable<int>(2);
+    private NetworkVariable<bool> m_isAlive = new NetworkVariable<bool>(true);
+    private int m_points;
+    public int Health => m_health.Value;
+    public bool Alive => m_isAlive.Value;
+    public int Points => m_points;
 
     public override void OnNetworkSpawn()
     {
-        base.OnNetworkSpawn();
-
-        points = 0;
+        m_points = 0;
     }
 
     public void Die()
     {
-        if (IsServer)
-        {
-            OnTankDestroyed?.Invoke(gameObject);
-            Debug.Log($"{gameObject.name} ha sido destruido");
-        }
+        OnTankDestroyed?.Invoke(this);
+        Debug.LogWarning("TODO: Trigger tank death animation");
+        gameObject.SetActive(false);
+    }
+
+    public void AwardPoints(int awardedPoints)
+    {
+        m_points += awardedPoints;
     }
 
     public void TakeDamage(int damage)
@@ -35,11 +39,11 @@ public class TankData : NetworkBehaviour
         OnDamaged(this);
         if (IsServer)
         {
-            health.Value -= damage;
+            m_health.Value -= damage;
             
-            if (health.Value <= 0)
+            if (m_health.Value <= 0)
             {
-                isAlive.Value = false;
+                m_isAlive.Value = false;
                 Die();
             }
         }
@@ -47,13 +51,10 @@ public class TankData : NetworkBehaviour
 
     public void ResetTank()
     {
-        Debug.Log("Reseting tank");
-        health.Value = 2;
-        isAlive.Value = true;
-    }
-
-    public void IncreasePoints(int newPoints)
-    {
-        points += newPoints;
+        //Debug.LogWarning("TODO: maybe play spawn animation?");
+        gameObject.SetActive(true);
+        Debug.LogError("TODO: RESET HEALTH TO BASE AMOUNT INSTEAD OF CONSTANT 2");
+        m_health.Value = 2;
+        m_isAlive.Value = true;
     }
 }

@@ -4,497 +4,447 @@ using UnityEngine;
 using Unity.Netcode;
 using System.Linq;
 using Tankito.Netcode.Messaging;
+using System;
 
-public class RoundManager : NetworkBehaviour
+namespace Tankito
 {
-    private int _currentRound = 0;
-    public int _maxRounds = 5;
-
-    private string _ranking;
-
-    public RoundUI _roundUI;
-
-    public float _countdownTime = 5f;
-    private float _currentTime;
-
-    private Dictionary<ulong, GameObject> _players = new Dictionary<ulong, GameObject>();
-    private Dictionary<ulong, GameObject> _alivePlayers = new Dictionary<ulong, GameObject>();
-
-    public bool _startedGame;
-    private bool _startedRound;
-
-    private SpawnManager _spawnManager;
-    public GameObject _playerInput;
-    [SerializeField] private bool DEBUG = false;
-
-    public delegate void RoundStart(int nRound);
-    public event RoundStart OnRoundStart;
-
-    public static RoundManager Instance { get; private set; }
-
-    private void Awake()
+    public class RoundManager : NetworkBehaviour
     {
-        if (Instance == null)
+        private int m_currentRound = 0;
+        public int m_maxRounds = 5;
+
+        private string m_ranking;
+
+        public RoundUI m_roundUI;
+
+        const float timeToCountdown = 5f;
+        private float m_currentCountdownTime;
+
+        private Dictionary<ulong, TankData> m_players = new Dictionary<ulong, TankData>();
+        public bool m_startedGame;
+        public bool IsGameStarted => m_startedGame;
+        private bool m_startedRound;
+
+        private SpawnManager m_spawnManager;
+        public GameObject m_localPlayerInputObject;
+        [SerializeField] private bool DEBUG = false;
+
+        public delegate void RoundStart(int nRound);
+        public event RoundStart OnRoundStart;
+
+        public static RoundManager Instance { get; private set; }
+        public IEnumerable<TankData> AliveTanks { get => m_players.Where(p => p.Value.Alive == true).Select(p => p.Value); }
+
+        private void Awake()
         {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(this);
-        }
-    }
-
-    void Start()
-    {
-        _startedGame = false;
-        _startedRound = false;
-
-        _playerInput = GameObject.Find("PlayerInput");
-
-        if (IsServer)
-        {
-            _spawnManager = GameObject.Find("SpawnManager").GetComponent<SpawnManager>();
-        }
-
-        if (!_startedGame)
-        {
-            DisablePlayerInput();
-        }
-
-        _roundUI = FindObjectOfType<RoundUI>();
-    }
-
-    void Update()
-    {
-        if (IsServer)
-        {
-            if (Input.GetKeyUp(KeyCode.Alpha2) && _startedRound && _alivePlayers.Count > 1)
+            if (Instance == null)
             {
-                DebugDamagePlayer();
+                Instance = this;
             }
-
-        }
-    }
-
-    #region PlayerManagement
-    public void AddPlayer(GameObject player)
-    {
-        ulong clientId = player.GetComponent<NetworkObject>().OwnerClientId;
-        if (!_players.ContainsKey(clientId))
-        {
-            _players.Add(clientId, player);
-            Debug.Log($"Jugador anadido. N� de jugadores: {_players.Count}");
-        }
-    }
-
-    public void RemovePlayer(ulong clientId)
-    {
-        if (_players.ContainsKey(clientId))
-        {
-            _players.Remove(clientId);
-            if (_startedGame && _alivePlayers.ContainsKey(clientId))
+            else
             {
-                _alivePlayers.Remove(clientId);
-            }
-
-            Debug.Log($"Jugador desconectado y eliminado. N� de jugadores: {_players.Count}");
-
-            if (_startedRound)
-            {
-                UpdateRemainingPlayersTextClientRpc(_alivePlayers.Count);
-                CheckForWinner();
+                Destroy(this);
             }
         }
-    }
 
-    public void EliminatePlayer(GameObject player)
-    {
-        if (!IsServer) return;
-
-        ulong clientId = player.GetComponent<NetworkObject>().OwnerClientId;
-
-        if (_alivePlayers.ContainsKey(clientId))
+        void Start()
         {
-            _alivePlayers.Remove(clientId);
+            m_startedGame = false;
+            m_startedRound = false;
 
-            DisablePlayerInputClientRpc(player.GetComponent<NetworkObject>().OwnerClientId);
+            m_localPlayerInputObject = GameObject.Find("PlayerInput");
 
-            NetworkObjectReference playerReference = new NetworkObjectReference(player.GetComponent<NetworkObject>());
-            DisableTankClientRpc(playerReference);
+            if (IsServer)
+            {
+                m_spawnManager = GameObject.Find("SpawnManager").GetComponent<SpawnManager>();
+            }
 
-            player.GetComponent<TankData>().IncreasePoints(_players.Count - _alivePlayers.Count);
+            if (!m_startedGame)
+            {
+                m_localPlayerInputObject.SetActive(false);
+            }
 
-            //Debug.Log($"El jugador {player.GetComponent<NetworkObject>().OwnerClientId} de puntuacion {player.GetComponent<TankData>().points} ha sido eliminado");
+            m_roundUI = FindObjectOfType<RoundUI>();
+        }
 
-            UpdateRemainingPlayersTextClientRpc(_alivePlayers.Count);
-            if (DEBUG) Debug.Log($"El jugador {player.name} de puntuacion {player.GetComponent<TankData>().points} ha sido eliminado");
+        #region PlayerManagement
+        public void AddPlayer(TankData player)
+        {
+            m_players.Add(player.OwnerClientId, player);
+            PlayerListUpdate();
+        }
+
+        public void RemovePlayer(ulong clientId)
+        {
+            m_players.Remove(clientId);
+            PlayerListUpdate();
+        }
+
+
+        private void OnEnable()
+        {
+            if (DEBUG) Debug.Log("Se suscribe al evento de morir tanque");
+            TankData.OnTankDestroyed += TankDeath;
+        }
+
+        private void OnDisable()
+        {
+            if (DEBUG) Debug.Log("Se desuscribe al evento de morir tanque");
+            TankData.OnTankDestroyed -= TankDeath;
+        }
+
+        private void TankDeath(TankData t)
+        {
+            t.AwardPoints(m_players.Count - AliveTanks.Count() - 1); // -1 porque no deberia darte puntos por estar tu mismo muerto
+            PlayerListUpdate();
+        }
+
+        private void PlayerListUpdate()
+        {
+            UpdateAliveTanksGUI();
+            foreach(var tank in m_players.Values)
+            {
+                SetActiveTankInputs(tank);
+            }
             CheckForWinner();
         }
-    }
+        #endregion
 
-    private void OnEnable()
-    {
-        if (DEBUG) Debug.Log("Se suscribe al evento de morir tanque");
-        TankData.OnTankDestroyed += EliminatePlayer;
-    }
 
-    private void OnDisable()
-    {
-        if (DEBUG) Debug.Log("Se desuscribe al evento de morir tanque");
-        TankData.OnTankDestroyed -= EliminatePlayer;
-    }
-
-    public void DebugDamagePlayer()
-    {
-        _alivePlayers.ElementAt(1).Value.GetComponent<TankData>().TakeDamage(2);
-    }
-
-    [ClientRpc]
-    private void DisableTankClientRpc(NetworkObjectReference targetObjectReference)
-    {
-        if (targetObjectReference.TryGet(out var targetObject))
+        [ContextMenu("TestDamageLocalPlayer")]
+        public void TestDamagePlayer()
         {
-            if (targetObject != null)
+            m_players[NetworkManager.Singleton.LocalClientId].TakeDamage(1);
+        }
+
+        public void StartRoundCountdown()
+        {
+            StartRoundCountdown(m_currentRound++);
+        }
+
+        public void StartRoundCountdown(int newRound)
+        {
+            m_roundUI.SetActivePowerUps(false);
+            //DisablePowerUpsClientRpc();
+
+            ResetPlayers();
+
+            Debug.Log("Inicio ronda " + newRound);
+            UpdateAliveTanksGUI();
+            StartCountdown();
+
+            ClockSignal signal = new ClockSignal();
+            signal.header = ClockSignalHeader.Start;
+            MessageHandlers.Instance.SendClockSignal(signal);
+
+            OnRoundStart?.Invoke(newRound);
+        }
+
+        private void ResetPlayers()
+        {
+            m_spawnManager.ResetSpawnPoints();
+
+            foreach (var tank in AliveTanks)
             {
-                Debug.Log($"GameObject del jugador {targetObject.GetComponent<NetworkObject>().OwnerClientId} desactivado en todos los clientes.");
-                targetObject.gameObject.SetActive(false);
-            }
-            else
-            {
-                Debug.LogWarning($"No se encontr� el PlayerObject para el cliente con ID {targetObject.GetComponent<NetworkObject>().OwnerClientId}");
+                tank.ResetTank();
             }
         }
-    }
 
-    [ClientRpc]
-    private void EnableTankClientRpc(NetworkObjectReference targetObjectReference)
-    {
-        if (targetObjectReference.TryGet(out var targetObject))
+        private void UpdateAliveTanksGUI()
         {
-            if (targetObject != null)
-            {
-                Debug.Log($"GameObject del jugador {targetObject.GetComponent<NetworkObject>().OwnerClientId} activado en todos los clientes.");
-                targetObject.gameObject.SetActive(true);
-            }
-            else
-            {
-                Debug.LogWarning($"No se encontr� el PlayerObject para el cliente con ID {targetObject.GetComponent<NetworkObject>().OwnerClientId}");
-            }
+            m_roundUI.SetRemainingPlayers(AliveTanks.Count());
         }
-    }
 
-    #endregion
-
-    public void InitializeRound()
-    {
-        _roundUI.SetActivePowerUps(false);
-        DisablePowerUpsClientRpc();
-
-        _currentRound++;
-
-        ResetPlayers();
-
-        Debug.Log("Inicio ronda " + _currentRound);
-        UpdateRemainingPlayersTextClientRpc(_alivePlayers.Count);
-        StartCountdown();
-
-        ClockSignal signal = new ClockSignal();
-        signal.header = ClockSignalHeader.Start;
-        MessageHandlers.Instance.SendClockSignal(signal);
-
-        OnRoundStart?.Invoke(_currentRound);
-    }
-
-    public bool IsGameStarted()
-    {
-        return _startedGame;
-    }
-
-    private void ResetPlayers()
-    {
-        _alivePlayers = new Dictionary<ulong, GameObject>(_players);
-
-        if (_currentRound > 1)
+        private void SetActiveTankInputs(TankData tank)
         {
-            _spawnManager.ResetSpawnPoints();
+            var active = tank.Alive;
 
-            foreach (var aux in _alivePlayers)
+            // tank.GetComponent<ITankInput>().SetActive(active);
+
+            if (tank.IsLocalPlayer)
             {
-                GameObject player = aux.Value;
-                if (player != null)
-                {
-                    if (!player.activeSelf)
-                    {
-                        NetworkObjectReference targetObject = new NetworkObjectReference(player.GetComponent<NetworkObject>());
-                        EnableTankClientRpc(targetObject);
-                    }
-                    player.GetComponent<TankData>().ResetTank();
-                }
+                m_localPlayerInputObject.SetActive(active);
             }
         }
-    }
 
-    [ClientRpc]
-    private void SetActiveRemainingPlayersClientRpc(bool active)
-    {
-        _roundUI.SetRemainingPlayersActive(active);
-    }
+        #region Countdown
 
-    [ClientRpc]
-    private void UpdateRemainingPlayersTextClientRpc(int players)
-    {
-        Debug.Log("Rpc player text");
-        _roundUI.SetRemainingPlayers(players);
-    }
-
-    #region Countdown
-
-    private void StartCountdown()
-    {
-        _startedGame = true;
-        _currentTime = _countdownTime;
-        StartCountdownClientRpc();
-        CancelInvoke(nameof(UpdateCountdown));
-        InvokeRepeating(nameof(UpdateCountdown), 0f, 1f);
-
-        if (DEBUG) Debug.Log("Cuenta atras iniciada");
-
-        DisablePlayerInputClientRpc();
-    }
-
-    private void UpdateCountdown()
-    {
-        if (_currentTime > 0)
+        private void StartCountdown()
         {
-            SetCountdownTextClientRpc(_currentTime.ToString());
-            _currentTime--;
-        }
-        else
-        {
+            m_startedGame = true;
+            m_currentCountdownTime = timeToCountdown;
+            StartCountdownClientRpc();
             CancelInvoke(nameof(UpdateCountdown));
-            EndCountdown();
+            InvokeRepeating(nameof(UpdateCountdown), 0f, 1f);
+
+            if (DEBUG) Debug.Log("Cuenta atras iniciada");
+
+            m_localPlayerInputObject.SetActive(false);
         }
-    }
 
-    private void EndCountdown()
-    {
-        if (DEBUG) Debug.Log("Fin de cuenta atras");
-
-        SetCountdownTextClientRpc("BATTLE!");
-        Invoke(nameof(EndCountdownClientRpc), 0.7f);
-
-        _startedRound = true;
-
-        SetActiveRemainingPlayersClientRpc(true);
-
-        EnablePlayerInputClientRpc();
-    }
-
-    [ClientRpc]
-    private void SetCountdownTextClientRpc(string text)
-    {
-        _roundUI.SetCountdownText(text);
-    }
-
-    [ClientRpc]
-    private void StartCountdownClientRpc()
-    {
-        _roundUI.SetActiveCountownText(true);
-    }
-
-    [ClientRpc]
-    private void EndCountdownClientRpc()
-    {
-        _roundUI.SetActiveCountownText(false);
-    }
-
-    #endregion
-
-    #region PlayerInputManagement
-    public void DisablePlayerInput()
-    {
-        _playerInput.SetActive(false);
-    }
-
-    [ClientRpc]
-    private void DisablePlayerInputClientRpc()
-    {
-        if (_playerInput != null)
+        private void UpdateCountdown()
         {
-            Debug.Log("Player input desactivado");
-            _playerInput.SetActive(false);
+            if (m_currentCountdownTime > 0)
+            {
+                SetCountdownTextClientRpc(m_currentCountdownTime.ToString());
+                m_currentCountdownTime--;
+            }
+            else
+            {
+                CancelInvoke(nameof(UpdateCountdown));
+                EndCountdown();
+            }
         }
-        else
-        {
-            Debug.Log("Player input no encontrado");
-        }
-    }
 
-    [ClientRpc]
-    private void DisablePlayerInputClientRpc(ulong clientId)
-    {
-        if (clientId == NetworkManager.Singleton.LocalClientId)
+        private void EndCountdown()
         {
-            //Debug.Log("Desactivo input porque me han derrotado");
-            if (_playerInput != null)
+            if (DEBUG) Debug.Log("Fin de cuenta atras");
+
+            SetCountdownTextClientRpc("BATTLE!");
+            Invoke(nameof(StartRound), 0.7f);
+        }
+
+        [ClientRpc]
+        private void SetCountdownTextClientRpc(string text)
+        {
+            m_roundUI.SetCountdownText(text);
+        }
+
+        [ClientRpc]
+        private void StartCountdownClientRpc()
+        {
+            m_roundUI.SetActiveCountownText(true);
+        }
+
+        [ClientRpc]
+        private void EndCountdownClientRpc()
+        {
+            m_roundUI.SetActiveCountownText(false);
+        }
+
+        #endregion
+    /*
+        #region PlayerInputManagement
+        public void DisablePlayerInput()
+        {
+            m_playerInputObject.SetActive(false);
+        }
+
+        [ClientRpc]
+        private void DisablePlayerInputClientRpc()
+        {
+            if (m_playerInputObject != null)
             {
                 Debug.Log("Player input desactivado");
-                _playerInput.SetActive(false);
+                m_playerInputObject.SetActive(false);
             }
             else
             {
                 Debug.Log("Player input no encontrado");
             }
         }
-    }
 
-    [ClientRpc]
-    private void EnablePlayerInputClientRpc()
-    {
-        if (_playerInput != null)
+        [ClientRpc]
+        private void DisablePlayerInputClientRpc(ulong clientId)
         {
-            _playerInput.SetActive(true);
-        }
-    }
-
-    #endregion
-
-    #region FlujoPartida
-
-    [ClientRpc]
-    private void DisablePowerUpsClientRpc()
-    {
-        _roundUI.SetActivePowerUps(false);
-    }
-
-    private void CheckForWinner()
-    {
-        if (_alivePlayers.Count == 1)
-        {
-            if (DEBUG) Debug.Log("Alguien ha ganado la ronda");
-            _alivePlayers[0].GetComponent<TankData>().IncreasePoints(_players.Count);
-            EndRound();
-        }
-        else
-        {
-            if (DEBUG) Debug.Log("La ronda sigue");
-        }
-    }
-
-    private void EndRound()
-    {
-        if (DEBUG) Debug.Log("NETLESS: Fin de ronda");
-        _startedRound = false;
-        EndRoundClientRpc();
-        DisablePlayerInputClientRpc();
-        SetActiveRemainingPlayersClientRpc(false);
-        BetweenRounds();
-    }
-
-    [ClientRpc]
-    private void EndRoundClientRpc()
-    {
-        if (DEBUG) Debug.Log("NETCODE: Fin de ronda en todos");
-    }
-
-    private void BetweenRounds()
-    {
-        if (_currentRound < _maxRounds)
-        {
-            ShowRanking();
-            Invoke(nameof(PowerUpSelection), 3.0f);
-            //Invoke(nameof(InitializeRound), 8.0f);
-        }
-        else
-        {
-            ShowRanking(); //ShowFinalRanking();
-            //ShowFinalRankingClientRpc();
-            Invoke(nameof(EndGame), 5.0f);
-        }
-    }
-
-    private void ShowRanking()
-    {
-        if (DEBUG) Debug.Log("NETLESS: Se muestra el ranking");
-        GenerateRanking();
-        ShowRankingClientRpc(_ranking);
-    }
-
-    [ClientRpc]
-    private void ShowRankingClientRpc(string ranking)
-    {
-        if (DEBUG) Debug.Log("NETCODE: Se muestra el ranking en todos");
-        _roundUI.SetActiveRanking(true);
-        _roundUI.SetRankingText(ranking);
-    }
-
-    private void ShowFinalRanking()
-    {
-        if (DEBUG) Debug.Log("NETLESS: Se muestra el ranking final");
-        //_roundUI.SetActiveRankingFinal(true);
-        ShowFinalRankingClientRpc();
-    }
-
-    [ClientRpc]
-    private void ShowFinalRankingClientRpc()
-    {
-        if (DEBUG) Debug.Log("NETCODE: Se muestra el ranking final en todos");
-        _roundUI.SetActiveRankingFinal(true);
-    }
-
-    private void PowerUpSelection()
-    {
-        if (DEBUG) Debug.Log("NETLESS: Se eligen power ups");
-        _roundUI.SetActiveRanking(false);
-        _roundUI.SetActivePowerUps(true);
-        ShowPowerUpsClientRpc();
-        //Invoke(nameof(InitializeRound), 8.0f);
-    }
-    public void EndPowerUpSelection()
-    {
-        if (IsServer)
-        {
-            Invoke(nameof(InitializeRound), 1.0f);
-        }
-    }
-    [ClientRpc]
-    private void ShowPowerUpsClientRpc()
-    {
-        if (DEBUG) Debug.Log("NETCODE: Se muestran los power ups en todos");
-        _roundUI.SetActiveRanking(false);
-        _roundUI.SetActivePowerUps(true);
-    }
-
-    private void EndGame()
-    {
-        if (DEBUG) Debug.Log("NETLESS: Fin de la partida");
-        _startedGame = false;
-        EndGameClientRpc();
-    }
-
-    [ClientRpc]
-    private void EndGameClientRpc()
-    {
-        if (DEBUG) Debug.Log("NETCODE: Final de partida en todos");
-    }
-    #endregion
-
-    private void GenerateRanking()
-    {
-        if (_currentRound == _maxRounds)
-        {
-            _ranking = "Ranking Final: ";
-        }
-        else
-        {
-            _ranking = "Ranking: ";
+            if (clientId == NetworkManager.Singleton.LocalClientId)
+            {
+                //Debug.Log("Desactivo input porque me han derrotado");
+                if (m_playerInputObject != null)
+                {
+                    Debug.Log("Player input desactivado");
+                    m_playerInputObject.SetActive(false);
+                }
+                else
+                {
+                    Debug.Log("Player input no encontrado");
+                }
+            }
         }
 
-        List<GameObject> sortedPlayers = _players.Values.OrderByDescending(player => player.GetComponent<TankData>().points).ToList<GameObject>();
-
-        for (int i = 0; i < sortedPlayers.Count; i++)
+        [ClientRpc]
+        private void EnablePlayerInputClientRpc()
         {
-            _ranking += $"\n{i + 1}. Jugador {sortedPlayers[i].GetComponent<NetworkObject>().OwnerClientId}:  {sortedPlayers[i].GetComponent<TankData>().points} puntos";
+            if (m_playerInputObject != null)
+            {
+                m_playerInputObject.SetActive(true);
+            }
+        }
+
+        #endregion
+    */
+        #region FlujoPartida
+        public void StartRound()
+        {
+            if (IsServer)
+            {
+                StartRoundClientRpc();
+            }
+            
+            m_startedRound = true;
+            m_roundUI.ActivateAliveTanksGUI(true);
+            m_localPlayerInputObject.SetActive(true);
+        }
+
+        [ClientRpc]
+        public void StartRoundClientRpc()
+        {
+            if (!IsServer)
+            {
+                StartRound();
+            }
+        }
+
+        private void EndRound()
+        {
+            if (IsServer)
+            {
+                EndRoundClientRpc();
+            }
+            
+            m_startedRound = false;
+            if (DEBUG) Debug.Log("NETLESS: Fin de ronda");
+            m_localPlayerInputObject.SetActive(false);
+            m_roundUI.ActivateAliveTanksGUI(false);
+            BetweenRounds();
+        }
+
+        [ClientRpc]
+        private void EndRoundClientRpc()
+        {
+            if (!IsServer)
+            {
+                EndRound();
+            }
+        }
+
+        [ClientRpc]
+        //private void DisablePowerUpsClientRpc()
+        {
+            m_roundUI.SetActivePowerUps(false);
+        }
+
+        private void CheckForWinner()
+        {
+            var nAlive = AliveTanks.Count();
+
+            switch(nAlive)
+            {
+                case 1:
+                    var winner = AliveTanks.First();
+                    if (DEBUG) Debug.Log($"{winner} ha ganado la ronda");
+                    EndRound();
+                    break;
+
+                case 0:
+                    if (DEBUG) Debug.Log($"Nadie ha ganado la ronda, EMPATE!");
+                    EndRound();
+                    break;
+
+                default:
+                    if (DEBUG) Debug.Log("La ronda sigue");
+                    break;
+            }
+        }
+
+        private void BetweenRounds()
+        {
+            if (m_currentRound < m_maxRounds)
+            {
+                ShowRanking();
+                Invoke(nameof(PowerUpSelection), 3.0f);
+            }
+            else
+            {
+                ShowRanking();
+                Invoke(nameof(EndGame), 5.0f);
+            }
+        }
+
+        private void ShowRanking()
+        {
+            if (DEBUG) Debug.Log("NETLESS: Se muestra el ranking");
+            GenerateRanking();
+            ShowRankingClientRpc(m_ranking);
+        }
+
+        [ClientRpc]
+        //private void ShowRankingClientRpc(string ranking)
+        {
+            if (DEBUG) Debug.Log("NETCODE: Se muestra el ranking en todos");
+            m_roundUI.SetActiveRanking(true);
+            m_roundUI.SetRankingText(ranking);
+        }
+
+        private void ShowFinalRanking()
+        {
+            if (DEBUG) Debug.Log("NETLESS: Se muestra el ranking final");
+            //_roundUI.SetActiveRankingFinal(true);
+            ShowFinalRankingClientRpc();
+        }
+
+        [ClientRpc]
+        //private void ShowFinalRankingClientRpc()
+        {
+            if (DEBUG) Debug.Log("NETCODE: Se muestra el ranking final en todos");
+            m_roundUI.SetActiveRankingFinal(true);
+        }
+
+        private void PowerUpSelection()
+        {
+            if (DEBUG) Debug.Log("NETLESS: Se eligen power ups");
+            m_roundUI.SetActiveRanking(false);
+            m_roundUI.SetActivePowerUps(true);
+            ShowPowerUpsClientRpc();
+        }
+
+        public void EndPowerUpSelection()
+        {
+            if (IsServer)
+            {
+                Invoke(nameof(StartRoundCountdown), 1.0f);
+            }
+        }
+
+        [ClientRpc]
+        //private void ShowPowerUpsClientRpc()
+        {
+            if (DEBUG) Debug.Log("NETCODE: Se muestran los power ups en todos");
+            m_roundUI.SetActiveRanking(false);
+            m_roundUI.SetActivePowerUps(true);
+        }
+
+        private void EndGame()
+        {
+            if (DEBUG) Debug.Log("NETLESS: Fin de la partida");
+            m_startedGame = false;
+            EndGameClientRpc();
+        }
+
+        [ClientRpc]
+        private void EndGameClientRpc()
+        {
+            if (DEBUG) Debug.Log("NETCODE: Final de partida en todos");
+        }
+        #endregion
+
+        private void GenerateRanking()
+        {
+            if (m_currentRound == m_maxRounds)
+            {
+                m_ranking = "Ranking Final: ";
+            }
+            else
+            {
+                m_ranking = "Ranking: ";
+            }
+
+            TankData[] tanksByPoints = m_players.Values.OrderByDescending(tank => tank.Points).ToArray();
+
+            for (int i = 0; i < tanksByPoints.Length; i++)
+            {
+                m_ranking += $"\n{i + 1}. Jugador {tanksByPoints[i].OwnerClientId}:  {tanksByPoints[i].Points} puntos";
+            }
         }
     }
 }

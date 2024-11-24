@@ -7,21 +7,16 @@ public class EventSystemEnabler : MonoBehaviour
 {
     private InputSystemUIInputModule _inputSystemUIInputModule;
 
-    void Start()
+    void Awake()
     {
         _inputSystemUIInputModule = GetComponentInParent<InputSystemUIInputModule>();
     }
 
-    private void OnEnable()
-    {
-        StartCoroutine(Co_ActivateInputComponent());
-    }
-
-    private IEnumerator Co_ActivateInputComponent()
+    private IEnumerator RefreshInputSystemUIInputModule()
     {
         yield return new WaitForEndOfFrame();
         _inputSystemUIInputModule.enabled = false;
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForEndOfFrame();
         _inputSystemUIInputModule.enabled = true;
     }
 }

@@ -51,7 +51,7 @@ public class RoundUI : MonoBehaviour
         PanelAlivePlayers.GetComponentInChildren<TextMeshProUGUI>().text = $"Remaining players: {players}";
     }
 
-    public void SetRemainingPlayersActive(bool active)
+    public void ActivateAliveTanksGUI(bool active)
     {
         PanelAlivePlayers.SetActive(active);
     }

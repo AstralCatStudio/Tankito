@@ -117,7 +117,7 @@ namespace Tankito
             // BindInputActions(); Bound by the player input script itself on network spawn.
         }
 
-        private void OnClientDisconnect(ulong obj)
+        private void OnClientDisconnect(ulong clientId)
         {
             //Debug.LogException(new NotImplementedException());
 
@@ -125,10 +125,10 @@ namespace Tankito
             if (IsServer)
             {
                 SpawnManager spawnManager = FindObjectOfType<SpawnManager>();
-                spawnManager.FreeSpawnPoint(obj);
+                spawnManager.FreeSpawnPoint(clientId);
 
                 RoundManager roundManager = FindObjectOfType<RoundManager>();
-                roundManager.RemovePlayer(obj);
+                roundManager.RemovePlayer(clientId);
             }
         }
 
