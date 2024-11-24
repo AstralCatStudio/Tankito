@@ -111,7 +111,15 @@ namespace Tankito
             }
             else
             {
-                RoundManager.Instance.AddPlayer(NetworkManager.LocalClient.PlayerObject.GetComponent<TankData>());
+                if(RoundManager.Instance == null)
+                {
+                    Debug.Log("ES EL ROUND MANAGER");
+                }
+                else if(m_playerPrefab.GetComponent<TankData>() == null)
+                {
+                    Debug.Log("ES EL OBJETO");
+                }
+                RoundManager.Instance.AddPlayer(m_playerPrefab.GetComponent<TankData>());
             }
             FindPlayerInput();
             // BindInputActions(); Bound by the player input script itself on network spawn.
