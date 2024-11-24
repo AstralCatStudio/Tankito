@@ -8,7 +8,7 @@ public class ModifiersController : MonoBehaviour
 {
     public List<Modifier> modifiers;
     public BulletCannon m_bulletCannon;
-    public TankController tankController;
+    public TankController m_tankController;
     private void Start()
     {
         ApplyModifiers();
@@ -29,11 +29,11 @@ public class ModifiersController : MonoBehaviour
 
             foreach(HullModifier hullMod in modifier.hullModifiers)
             {
-                
+                m_tankController.Modifiers.Add(hullMod);
             }
         }
         m_bulletCannon.ApplyModifierProperties();
-        //TODO: aplicar tambi�n los del tanque
+        m_tankController.ApplyModifierList();
     }
 
 }

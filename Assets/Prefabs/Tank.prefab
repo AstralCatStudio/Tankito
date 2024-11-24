@@ -345,14 +345,53 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_tankRB: {fileID: 8520293575514935909}
+  m_turretRB: {fileID: 8342253699622009969}
   m_speed: 5
   m_rotationSpeed: 270
-  m_turretRB: {fileID: 8342253699622009969}
   m_aimSpeed: 1080
+  dashSpeedCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 4.177798
+      outSlope: 4.177798
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.23987862
+      value: 1.0021644
+      inSlope: 4.177798
+      outSlope: Infinity
+      tangentMode: 101
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.8808637
+      value: 1.0044379
+      inSlope: Infinity
+      outSlope: -8.379485
+      tangentMode: 71
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1.0007324
+      value: 0
+      inSlope: -8.379485
+      outSlope: -8.379485
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   accelerationMultiplier: 3
-  dashDuration: 0.5
-  fullDashDuration: 0.2
-  dashReloadDuration: 1
   stateInitTick: 0
   playerState: 0
   DEBUG: 0
@@ -389,7 +428,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   modifiers:
   - {fileID: 11400000, guid: ea21ca02f7b67da4a953781fdb2aa96c, type: 2}
-  bulletCreator: {fileID: 792954130975718086}
+  m_bulletCannon: {fileID: 0}
   tankController: {fileID: 258216026692416356}
 --- !u!114 &-8960492625490029074
 MonoBehaviour:
