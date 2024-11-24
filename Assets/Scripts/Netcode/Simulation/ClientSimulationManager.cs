@@ -26,16 +26,6 @@ namespace Tankito.Netcode.Simulation
 
         const int NO_ROLLBACK = -1;
         int m_rollbackTick = NO_ROLLBACK;
-
-        private SimulationSnapshot AuthSnapshot //Por como funciona el rollback, igual esto no hace falta y unicamente podemos necesitar 
-                                                //que se guarde el timestamp
-        {
-            get
-            {
-                var authStates = m_snapshotBuffer.Where(s => s.status == SnapshotStatus.Authoritative);
-                return (authStates.Count() > 0) ? authStates.MaxBy(s => s.timestamp) : default;
-            }
-        }
         const int NO_SNAPSHOT = -1;
         private int m_lastAuthSnapshotTimestamp;//Por como funciona el rollback, igual esto no hace falta y unicamente podemos necesitar 
                                                 //que se guarde el timestamp. EDIT: Vale, en efecto, lo estoy cambiando para desligar

@@ -45,12 +45,12 @@ namespace Tankito
 
         private void OnEnable()
         {
-            RoundManager.Instance.OnRoundStart += ApplyModifierProperties;
+            RoundManager.Instance.OnPreRoundStart += ApplyModifierProperties;
         }
 
         private void OnDisable()
         {
-            RoundManager.Instance.OnRoundStart -= ApplyModifierProperties;
+            RoundManager.Instance.OnPreRoundStart -= ApplyModifierProperties;
         }
 
         private void Start()

@@ -34,7 +34,6 @@ public class SpawnManager : MonoBehaviour
                         $"Libre: {_spawnPoints.ElementAt(i).clientId == null})");
                 }
             }
-
             //NetworkManager.Singleton.OnClientConnectedCallback += SetPlayerInSpawn;
             //NetworkManager.Singleton.OnClientDisconnectCallback += FreeSpawnPoint;
         }
