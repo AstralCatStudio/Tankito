@@ -2,26 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.InputSystem.UI;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class EventSystemEnabler : MonoBehaviour
 {
-    private InputSystemUIInputModule _inputSystemUIInputModule;
-
-    void Start()
+    void Update()
     {
-        _inputSystemUIInputModule = GetComponentInParent<InputSystemUIInputModule>();
+        Debug.Log("EventSystem current input module: " + EventSystem.current.currentInputModule.name);
     }
 
-    private void OnEnable()
+    [ContextMenu("Test UpdateEventSystemModules")]
+    public void TestUpdateEventSystemModules()
     {
-        StartCoroutine(Co_ActivateInputComponent());
-    }
-
-    private IEnumerator Co_ActivateInputComponent()
-    {
-        yield return new WaitForEndOfFrame();
-        _inputSystemUIInputModule.enabled = false;
-        yield return new WaitForSeconds(0.2f);
-        _inputSystemUIInputModule.enabled = true;
+        EventSystem.current.UpdateModules();
     }
 }

@@ -76,7 +76,7 @@ namespace Tankito.Netcode.Messaging
             if (!NetworkManager.Singleton.IsServer) return;
             
             int throttleTicks = (SimClock.TickCounter + Parameters.SERVER_IDEAL_INPUT_BUFFER_SIZE - 1) - ServerSimulationManager.Instance.remoteInputTanks[clientId].Last;
-            var throttleSignal = new ClockSignal(ClockSignalHeader.Throttle, throttleTicks);//, SimClock.TickCounter);
+            var throttleSignal = new ClockSignal(ClockSignalHeader.Throttle, throttleTicks);
             
             ulong[] target = new ulong[] {clientId};
             SendClockSignal(throttleSignal, NetworkDelivery.Unreliable, target);
@@ -90,8 +90,6 @@ namespace Tankito.Netcode.Messaging
             var syncSignal = new ClockSignal(ClockSignalHeader.Sync, syncTick);
 
             SendClockSignal(syncSignal, NetworkDelivery.ReliableSequenced);
-
-            //            Debug.Break();
         }
 
         public void ReceiveClockSignal(ulong serverId, FastBufferReader payload)
