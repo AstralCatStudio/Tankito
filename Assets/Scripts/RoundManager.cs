@@ -90,7 +90,7 @@ namespace Tankito
             {
                 TankData tankData;
                 tankDataRef.TryGet(out tankData);
-                AddPlayer(tankData);
+                TryAddPlayer(tankData);
             }
             Debug.Log(m_players.Count);
             // Debug.LogWarning($"AAAA: {ids.Length}");
@@ -117,6 +117,16 @@ namespace Tankito
         }
 
         #region PlayerManagement
+        public bool TryAddPlayer(TankData player)
+        {
+            if (m_players.ContainsKey(player.OwnerClientId))
+            {
+                return false;
+            }
+            AddPlayer(player);
+            return true;
+        }
+
         public void AddPlayer(TankData player)
         {
             m_players.Add(player.OwnerClientId, player);
