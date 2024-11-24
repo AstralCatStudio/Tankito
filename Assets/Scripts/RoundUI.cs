@@ -13,6 +13,10 @@ public class RoundUI : Singleton<RoundUI>
     public GameObject PanelAlivePlayers;
     public GameObject CountdownText;
     public GameObject BackButton;
+    public GameObject InitExitButton;
+    public GameObject EndExitButton;
+    public GameObject ScenarySelection;
+
     #region Ranking
     public void SetActiveRanking(bool active)
     {
@@ -74,16 +78,35 @@ public class RoundUI : Singleton<RoundUI>
 
     #region BackButton
 
-    public void SetActiveBackButton(bool active)
+    public void SetActiveInitExitButton(bool active)
     {
-        BackButton.SetActive(active);
+        InitExitButton.SetActive(active);
     }
 
-    public void Back()
+    public void SetActiveEndExitButton(bool active)
     {
-        Debug.Log("Pulsaste Back");
+        EndExitButton.SetActive(active);
+    }
+
+    public void Exit()
+    {
+        Debug.Log("Pulsaste Exit");
 
         DisconnectHandler.Instance.ExitGame();
+    }
+
+    #endregion
+
+    #region Scenary
+
+    public void SetActiveScenarySelection(bool active)
+    {
+        ScenarySelection.SetActive(active);
+    }
+
+    public void SetScenaryText(string newText)
+    {
+        ScenarySelection.GetComponentInChildren<TextMeshProUGUI>().text = newText;
     }
 
     #endregion

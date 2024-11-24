@@ -38,22 +38,6 @@ namespace Tankito
         }
 
         private NetworkList<PlayerReadyStatus> _readyStatusList;
-        if (IsClient)
-        {
-            _readyButton.gameObject.SetActive(true);
-            _readyButton.onClick.AddListener(OnReadyClicked);
-        }
-    }
-    public override void OnNetworkSpawn()
-    {
-        base.OnNetworkSpawn();
-        _readyStatusList.OnListChanged += OnReadyCountChanged;
-        if (IsServer)
-        {
-            //Debug.Log("Entro en network spawn");
-            NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
-            NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnected;
-
         private void Awake()
         {
             _readyStatusList = new NetworkList<PlayerReadyStatus>();
