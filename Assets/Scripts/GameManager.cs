@@ -239,20 +239,21 @@ namespace Tankito
             AutoPhysics2DUpdate(false);
         }
 
-        public void SetObjectPosition(GameObject targetObject, Vector3 newPosition)
+        public void SetObjectPosition(GameObject targetObject, Vector3 newPosition, Quaternion newRotation)
         {
             NetworkObjectReference networkObjectReference = new NetworkObjectReference(targetObject);
-            SetObjectPositionClientRpc(networkObjectReference, newPosition);
+            SetObjectPositionClientRpc(networkObjectReference, newPosition, newRotation);
         }
 
         [ClientRpc]
-        private void SetObjectPositionClientRpc(NetworkObjectReference targetObjectReference, Vector3 newPosition)
+        private void SetObjectPositionClientRpc(NetworkObjectReference targetObjectReference, Vector3 newPosition, Quaternion newRotation)
         {
             if (targetObjectReference.TryGet(out var targetObject))
             {
                 if (targetObject != null)
                 {
                     targetObject.gameObject.GetComponent<Transform>().position = newPosition;
+                    targetObject.gameObject.GetComponent<Transform>().rotation = newRotation;
                     Debug.Log($"GameObject del jugador {targetObject.GetComponent<NetworkObject>().OwnerClientId} colocado en el punto {newPosition.ToString()}");
                 }
                 else
@@ -263,7 +264,7 @@ namespace Tankito
         }
 
         [ClientRpc]
-        public void SetObjectPositionClientRpc(NetworkObjectReference targetObjectReference, Vector3 newPosition, ulong clientId)
+        public void SetObjectPositionClientRpc(NetworkObjectReference targetObjectReference, Vector3 newPosition, Quaternion newRotation, ulong clientId)
         {
             if (NetworkManager.Singleton.LocalClientId == clientId)
             {
@@ -272,6 +273,7 @@ namespace Tankito
                     if (targetObject != null)
                     {
                         targetObject.gameObject.GetComponent<Transform>().position = newPosition;
+                        targetObject.gameObject.GetComponent<Transform>().rotation = newRotation;
                         Debug.Log($"GameObject del jugador {targetObject.GetComponent<NetworkObject>().OwnerClientId} colocado en el punto {newPosition.ToString()}");
                     }
                     else
