@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using Tankito.Netcode.Messaging;
 using Tankito.Utils;
 using Unity.Netcode;
@@ -175,6 +176,8 @@ namespace Tankito.Netcode.Simulation
             // We DON'T have to re-simulate the tick which we are getting as auth,
             // because it's already simulated. So just advance the counter
             rollbackCounter++;
+
+            List<ulong> simObjectsToRemove = new List<ulong>();
             
             foreach(var objId in m_simulationObjects.Keys)
             {
@@ -184,8 +187,7 @@ namespace Tankito.Netcode.Simulation
                 }
                 else
                 {
-                    // Remove miss-predicted object from simulation
-                    m_simulationObjects[objId].OnNetworkDespawn();
+                    simObjectsToRemove.Add(objId);
                 }
                 
                 // Put Input Components into replay mode
@@ -194,6 +196,11 @@ namespace Tankito.Netcode.Simulation
                     tank.StartInputReplay(rollbackCounter);
                 }
                 // Habra que hacer algo para restaurar objetos que puedieran haber deespawneado y todo eso supongo
+            }
+
+            for(int i = 0; i < simObjectsToRemove.Count; i++)
+            {
+                m_simulationObjects[simObjectsToRemove[i]].OnNetworkDespawn();
             }
             
             while(rollbackCounter < SimClock.TickCounter)
