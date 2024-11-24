@@ -27,7 +27,7 @@ namespace Tankito
         [SerializeField] private bool DEBUG = false;
 
         public delegate void RoundStart(int nRound);
-        public event RoundStart OnPreRoundStart = (int nRound) => {};
+        public event RoundStart OnPreRoundStart = (int nRound) => { };
 
         public static RoundManager Instance { get; private set; }
         public IEnumerable<TankData> AliveTanks { get => m_players.Where(p => p.Value.Alive == true).Select(p => p.Value); }
@@ -60,12 +60,59 @@ namespace Tankito
             {
                 m_localPlayerInputObject.SetActive(false);
             }
+
+            //NetworkManager.Singleton.OnClientConnectedCallback += InitPlayersDictionary;
+        }
+
+        public void InitPlayersDictionary()
+        {
+            if (!IsServer) return;
+            Debug.LogWarning($"Jugadores conectados: {m_players.Count}");
+            ulong[] clientIds = new ulong[m_players.Count];
+            int i = 0;
+            foreach (ulong id in m_players.Keys)
+            {
+                clientIds[i] = id;
+                Debug.LogWarning($"id anadido al array {clientIds[i]}");
+                i++;
+            }
+            Debug.LogWarning($"i: {i}");
+            Debug.LogWarning($"Array complete: {clientIds.Length}");
+            NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(NetworkManager.Singleton.LocalClientId, out var playerObject);
+            InitPlayersDictionaryClientRpc(clientIds, playerObject);
+        }
+
+        [ClientRpc]
+        private void InitPlayersDictionaryClientRpc(ulong[] ids, NetworkObjectReference serverObject)
+        {
+            Debug.LogWarning($"AAAA: {ids.Length}");
+            if (serverObject.TryGet(out var targetObject))
+            {
+                if (!m_players.ContainsKey(ids[0]))
+                {
+                    AddPlayer(targetObject.GetComponent<TankData>());
+                }
+            }
+                
+            for (int i = 0; i < ids.Length; i++)
+            {
+                Debug.LogWarning($"EEEEE: {ids[i]}");
+                if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(ids[i], out var playerObject))
+                {
+                    Debug.LogWarning($"Anade {ids[i]}");
+                    if (!m_players.ContainsKey(ids[i]))
+                    {
+                        AddPlayer(playerObject.GetComponent<TankData>());
+                    }
+                }
+            }
         }
 
         #region PlayerManagement
         public void AddPlayer(TankData player)
         {
             m_players.Add(player.OwnerClientId, player);
+            Debug.LogWarning($"Jugador anadido, {m_players.Count} jugadores");
             PlayerListUpdate();
         }
 
@@ -98,7 +145,7 @@ namespace Tankito
             UpdateAliveTanksGUI();
             if (updateInputs && m_startedGame)
             {
-                foreach(var tank in m_players.Values)
+                foreach (var tank in m_players.Values)
                 {
                     SetActiveTankInputs(tank);
                 }
@@ -231,7 +278,7 @@ namespace Tankito
                 StartRoundClientRpc();
                 m_spawnManager.ResetSpawnPoints();
             }
-            
+
             m_startedRound = true;
             RoundUI.Instance.SetActiveCountownText(false);
             RoundUI.Instance.ActivateAliveTanksGUI(true);
@@ -253,7 +300,7 @@ namespace Tankito
             {
                 EndRoundClientRpc();
             }
-            
+
             m_startedRound = false;
             if (DEBUG) Debug.Log("NETLESS: Fin de ronda");
             m_localPlayerInputObject.SetActive(false);
@@ -274,7 +321,7 @@ namespace Tankito
         {
             var nAlive = AliveTanks.Count();
 
-            switch(nAlive)
+            switch (nAlive)
             {
                 case 1:
                     var winner = AliveTanks.First();
@@ -299,7 +346,7 @@ namespace Tankito
             {
                 ShowRanking();
                 Invoke(nameof(StartPowerUpSelection), 3.0f);
-                
+
             }
             else
             {
@@ -343,7 +390,7 @@ namespace Tankito
         private void ShowRanking()
         {
             Debug.Log("Rankgin Screen show called.");
-            
+
             if (IsServer)
             {
                 ShowRankingClientRpc();
@@ -399,7 +446,7 @@ namespace Tankito
             {
                 EndPowerUpSelectionClientRpc();
             }
-            
+
             RoundUI.Instance.SetActivePowerUps(false);
             Invoke(nameof(StartRoundCountdown), 1.0f);
         }
