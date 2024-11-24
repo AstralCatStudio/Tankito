@@ -49,12 +49,19 @@ public class TankData : NetworkBehaviour
         }
     }
 
+    public void AddHealth(int addedHealth)
+    {
+        m_health.Value += addedHealth;
+    }
+    public void SetHealth(int newHealth)
+    {
+        m_health.Value = newHealth;
+    }
+
     public void ResetTank()
     {
         //Debug.LogWarning("TODO: maybe play spawn animation?");
         gameObject.SetActive(true);
-        Debug.LogError("TODO: RESET HEALTH TO BASE AMOUNT INSTEAD OF CONSTANT 2");
-        m_health.Value = 2;
         m_isAlive.Value = true;
     }
 }

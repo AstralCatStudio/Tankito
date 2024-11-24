@@ -9,12 +9,12 @@ namespace Tankito
     {
         public float speedMultiplier;
         public float rotationSpeedMultiplier;
-        public float dashCooldownTimeAdded;
         public int extraHealth;
         public float extraParryTime;
         public float parryCooldownTimeAdded;
         public float dashSpeedMultiplier;
         public float dashDistanceMultiplier;
+        public float dashCooldownTimeAdded;
 
         public HullStatsModifier(float speed, float rotSpeed, float dashCooldown, int health, float parryTime, float parryCooldown, float dashSpeed, float dashDistance)
         {
