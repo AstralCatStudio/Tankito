@@ -127,8 +127,6 @@ namespace Tankito
 
             SceneManager.LoadScene("Loading");
 
-            GameManager.Instance.UnloadScene();
-
             if (DEBUG) Debug.Log("Loading Main Menu...");
 
             ClientData.Instance.firstLoad = false;

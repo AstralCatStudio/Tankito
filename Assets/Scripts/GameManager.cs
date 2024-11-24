@@ -144,17 +144,9 @@ namespace Tankito
             m_loadingSceneFlag = false;
         }
 
-        public void UnloadScene()
+        public void OnSceneLoading()
         {
-            // Assure only the server calls this when the NetworkObject is
-            // spawned and the scene is loaded.
-            if (!IsServer || !IsSpawned)//|| !sceneLoaded.IsValid() || !sceneLoaded.isLoaded) // ADAPTAR??
-            {
-                return;
-            }
-
             m_loadingSceneFlag = true;
-            m_playerInput = null;
         }
 
         public void FindPlayerInput()
