@@ -14,14 +14,16 @@ namespace Tankito {
     public class BulletController : MonoBehaviour
     {
         BulletSimulationObject m_simObj;
-        bool simulated = false;
         public int m_bouncesLeft = 0;
         public float LifeTime { get => m_lifetime; }
         public float m_lifetime = 0; // Life Time counter
         protected Vector2 lastCollisionNormal = Vector2.zero;
         private Rigidbody2D m_rb;
         public float selfCollisionTreshold = 0.1f;
-        public Action<BulletController> OnSpawn = (ABullet) => { }, OnFly = (ABullet) => { }, OnHit = (ABullet) => { }, OnBounce = (ABullet) => { }, OnDetonate = (ABullet) => { };
+        public Action<BulletController> OnSpawn = (ABullet) => { }, OnFly = (ABullet) => { },
+                                        OnHit = (ABullet) => { }, OnBounce = (ABullet) => { },
+                                        OnDetonate = (ABullet) => { };
+        
         private void Awake()
         {
             m_simObj = GetComponent<BulletSimulationObject>();

@@ -96,7 +96,7 @@ public class SpawnManager : MonoBehaviour
         _spawnPoints[_spawnPoints.Count - 1] = (_spawnPoints[_spawnPoints.Count - 1].pos, null);
 
         // Si no se ha empezado la partida, se recolocan todos los tanques que han cambiado de spawn
-        if (!FindObjectOfType<RoundManager>().IsGameStarted())
+        if (!FindObjectOfType<RoundManager>().IsGameStarted)
         {
             for (int i = index; i < _spawnPoints.Count; i++)
             {

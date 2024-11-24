@@ -105,19 +105,19 @@ namespace Tankito
                 SpawnManager spawnManager = FindObjectOfType<SpawnManager>();
                 spawnManager.SetPlayerInSpawn(clientId);
 
-                RoundManager roundManager = FindObjectOfType<RoundManager>();
-                roundManager.AddPlayer(newPlayer.gameObject);
-
-                // IMPORTANTE: Se propaga la nueva posicion a los clientes (SUJETO A CAMBIOS)
-                //NetworkObjectReference networkObjectReference = new NetworkObjectReference(newPlayer);
-                //SetObjectPositionClientRpc(newPlayer, newPlayer.GetComponent<Transform>().position);
-                // Ahora se maneja directamente en el spawn manager llamando a la funcion SetObjectPosition del GameManager
+                var tankData = newPlayer.GetComponent<TankData>();
+                Debug.Log($"TankData = {tankData}");
+                RoundManager.Instance.AddPlayer(tankData);
+            }
+            else
+            {
+                RoundManager.Instance.AddPlayer(NetworkManager.LocalClient.PlayerObject.GetComponent<TankData>());
             }
             FindPlayerInput();
             // BindInputActions(); Bound by the player input script itself on network spawn.
         }
 
-        private void OnClientDisconnect(ulong obj)
+        private void OnClientDisconnect(ulong clientId)
         {
             //Debug.LogException(new NotImplementedException());
 
@@ -125,10 +125,10 @@ namespace Tankito
             if (IsServer)
             {
                 SpawnManager spawnManager = FindObjectOfType<SpawnManager>();
-                spawnManager.FreeSpawnPoint(obj);
+                spawnManager.FreeSpawnPoint(clientId);
 
                 RoundManager roundManager = FindObjectOfType<RoundManager>();
-                roundManager.RemovePlayer(obj);
+                roundManager.RemovePlayer(clientId);
             }
         }
 

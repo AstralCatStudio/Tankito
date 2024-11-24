@@ -36,7 +36,6 @@ namespace Tankito.Netcode.Messaging
             {
                 Destroy(this);
             }
-
         }
 
         /// <summary>

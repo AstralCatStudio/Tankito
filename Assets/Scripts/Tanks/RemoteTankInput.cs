@@ -1,13 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Tankito;
-using Tankito.Netcode;
 using Tankito.Utils;
 using Unity.Services.Matchmaker.Models;
 using UnityEngine;
 
-namespace Tankito.Netcode
+namespace Tankito.Netcode.Simulation
 {
     public class RemoteTankInput : MonoBehaviour, ITankInput
     {
