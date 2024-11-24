@@ -6,7 +6,6 @@ using Unity.Netcode;
 using Tankito.Netcode;
 using UnityEngine.UIElements;
 using Tankito.Netcode.Simulation;
-using UnityEditor.PackageManager;
 
 namespace Tankito {
 
