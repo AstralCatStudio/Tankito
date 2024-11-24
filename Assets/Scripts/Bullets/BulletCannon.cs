@@ -26,6 +26,7 @@ namespace Tankito
     public class BulletCannon : NetworkBehaviour
     {
         public BulletProperties m_bulletProperties;
+        [SerializeField]
         private List<BulletModifier> m_bulletModifiers = new List<BulletModifier>();
         
         // Esto deberia ser comun para todos los bullets no deberia ser algo de cada disparador

@@ -88,8 +88,13 @@ public class ModifierSelectorScreen : NetworkBehaviour
     void SelectModifier(ModifierSelector modifierSelector)
     {
         selectedModifier = modifierSelector;
+        SelectModifierServerRpc(modifierSelectors.IndexOf(selectedModifier));
     }
-
+    [ServerRpc(RequireOwnership = false)]
+    void SelectModifierServerRpc(int index)
+    {
+        selectedModifier = modifierSelectors[index];
+    }
     [ClientRpc]
     void SyncronizeModifiersClientRpc(int[] modificadores)
     {
@@ -119,17 +124,20 @@ public class ModifierSelectorScreen : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void ConfirmSelectionServerRpc(ulong playerClientId)
     {
-        if(tankorder == tanksInOrder.IndexOf(playerClientId) && selectedModifier.available)
+        if (tankorder == tanksInOrder.IndexOf(playerClientId) && selectedModifier.available)
         {
+            Debug.Log("poniendo modificador");
             selectedModifier.available = false;
             AddModifierClientRpc(playerClientId, modifierSelectors.IndexOf(selectedModifier));
             tankorder++;
             if (tankorder >= tanksInOrder.Count)
             {
+                Debug.Log("terminao");
                 RoundManager.Instance.EndPowerUpSelection();
             }
             else
             {
+                Debug.Log("siguiente");
                 SetSelectorPlayer(tankorder);
             }
         }

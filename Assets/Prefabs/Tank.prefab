@@ -350,8 +350,8 @@ MonoBehaviour:
   m_turretRB: {fileID: 8342253699622009969}
   m_aimSpeed: 1080
   accelerationMultiplier: 3
-  dashDuration: 0.5
-  fullDashDuration: 0.2
+  m_dashDuration: 0.25
+  dashCruiseDuration: 0.1
   dashReloadDuration: 1
   stateInitTick: 0
   playerState: 0
@@ -389,7 +389,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   modifiers:
   - {fileID: 11400000, guid: ea21ca02f7b67da4a953781fdb2aa96c, type: 2}
-  bulletCreator: {fileID: 792954130975718086}
+  m_bulletCannon: {fileID: 792954130975718086}
   tankController: {fileID: 258216026692416356}
 --- !u!114 &-8960492625490029074
 MonoBehaviour:
@@ -602,6 +602,7 @@ MonoBehaviour:
     lifetimeTotal: 10
     spawnTickTime: 0
     ownerID: 0
+  m_bulletModifiers: []
   interval: 0.5
   baseBulletAmount: 3
   m_bulletAmount: 0
