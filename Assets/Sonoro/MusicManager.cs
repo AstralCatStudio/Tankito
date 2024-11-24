@@ -489,7 +489,7 @@ public class MusicManager : MonoBehaviour
         {
             case 0: // Fondo del mar (Underwater)
                 reverbZone.room = -100; // Reverberación suave y oscura
-                reverbZone.roomHF = -4000; // Atenuación intensa de frecuencias altas
+                reverbZone.roomHF = -2000; // Atenuación intensa de frecuencias altas
                 reverbZone.decayTime = 5.0f; // Decaimiento lento para simular profundidad
                 reverbZone.decayHFRatio = 0.3f; // Bajas frecuencias dominantes
                 reverbZone.reflections = -300; // Reflexiones débiles
@@ -507,7 +507,7 @@ public class MusicManager : MonoBehaviour
 
             case 2: // Cueva
                 reverbZone.room = -200; // Reverberación fuerte
-                reverbZone.roomHF = -3500; // Atenuación media de altas frecuencias
+                reverbZone.roomHF = -1500; // Atenuación media de altas frecuencias
                 reverbZone.decayTime = 3.0f; // Decaimiento prolongado
                 reverbZone.decayHFRatio = 0.5f; // Decaimiento equilibrado
                 reverbZone.reflections = -100; // Reflexiones audibles pero suaves
