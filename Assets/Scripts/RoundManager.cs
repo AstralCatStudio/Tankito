@@ -324,6 +324,11 @@ namespace Tankito
             return rankingStr;
         }
 
+        public List<TankData> GetTankOrder()
+        {
+            return m_players.Values.OrderByDescending(tank => tank.Points).ToList<TankData>();
+        }
+
         private void ShowRanking()
         {
             if (IsServer)

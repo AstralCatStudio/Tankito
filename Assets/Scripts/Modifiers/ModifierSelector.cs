@@ -25,7 +25,7 @@ namespace Tankito
             description.text = ModifierRegistry.Instance.GetModifierDescription(modifier);
             image.sprite = ModifierRegistry.Instance.GetModifierIcon(modifier);
         }
-        Modifier GetModifier()
+        public Modifier GetModifier()
         {
             return modifier;
         }

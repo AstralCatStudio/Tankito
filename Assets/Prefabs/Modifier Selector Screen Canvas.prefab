@@ -391,6 +391,7 @@ MonoBehaviour:
   - {fileID: 8299520254445905032}
   - {fileID: 2330035429383141377}
   - {fileID: 3119936237095033384}
+  playerChoosePowerupText: {fileID: 4106174497050554576}
 --- !u!114 &4357900131188088903
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -531,7 +532,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 8946953550615755186}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 7459559392396742544}
+        m_TargetAssemblyTypeName: ModifierSelectorScreen, Assembly-CSharp
+        m_MethodName: ConfirmSelection
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &7410069213665623517
 GameObject:
   m_ObjectHideFlags: 0
@@ -543,8 +556,6 @@ GameObject:
   - component: {fileID: 8227036984962925259}
   - component: {fileID: 6556971091188216544}
   - component: {fileID: 328506426266140058}
-  - component: {fileID: 1047287982819083676}
-  - component: {fileID: 2710243317980673626}
   m_Layer: 5
   m_Name: Modifier Selector Screen
   m_TagString: Untagged
@@ -617,45 +628,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &1047287982819083676
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7410069213665623517}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 935f8d851f839e34b8adea91655eeafa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  modifierSelectors:
-  - {fileID: 3311831532936956494}
-  - {fileID: 8707926015472997934}
-  - {fileID: 7259118302472592022}
-  - {fileID: 8299520254445905032}
-  - {fileID: 2330035429383141377}
-  - {fileID: 3119936237095033384}
---- !u!114 &2710243317980673626
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7410069213665623517}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 951099334
-  AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
-  ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 1
-  SpawnWithObservers: 1
-  DontDestroyWithOwner: 0
-  AutoObjectParentSync: 1
 --- !u!1001 &2778699791173224637
 PrefabInstance:
   m_ObjectHideFlags: 0

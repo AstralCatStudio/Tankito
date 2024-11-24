@@ -27,7 +27,7 @@ namespace Tankito
     {
         public BulletProperties m_bulletProperties;
         private List<BulletModifier> m_bulletModifiers = new List<BulletModifier>();
-
+        
         // Esto deberia ser comun para todos los bullets no deberia ser algo de cada disparador
         [SerializeField]
         float interval = 1;
