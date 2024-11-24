@@ -403,7 +403,7 @@ public class RoundManager : NetworkBehaviour
         {
             ShowRanking();
             Invoke(nameof(PowerUpSelection), 3.0f);
-            Invoke(nameof(InitializeRound), 8.0f);
+            //Invoke(nameof(InitializeRound), 8.0f);
         }
         else
         {
@@ -448,8 +448,15 @@ public class RoundManager : NetworkBehaviour
         _roundUI.SetActiveRanking(false);
         _roundUI.SetActivePowerUps(true);
         ShowPowerUpsClientRpc();
+        //Invoke(nameof(InitializeRound), 8.0f);
     }
-
+    public void EndPowerUpSelection()
+    {
+        if (IsServer)
+        {
+            Invoke(nameof(InitializeRound), 1.0f);
+        }
+    }
     [ClientRpc]
     private void ShowPowerUpsClientRpc()
     {
