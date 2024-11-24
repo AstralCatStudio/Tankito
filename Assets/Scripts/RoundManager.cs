@@ -5,6 +5,7 @@ using Unity.Netcode;
 using System.Linq;
 using Tankito.Netcode.Messaging;
 using System;
+using UnityEngine.InputSystem;
 
 namespace Tankito
 {
@@ -13,14 +14,10 @@ namespace Tankito
         private int m_currentRound = 0;
         public int m_maxRounds = 5;
 
-        private string m_ranking;
-
-        public RoundUI m_roundUI;
-
         const float timeToCountdown = 5f;
         private float m_currentCountdownTime;
 
-        private Dictionary<ulong, TankData> m_players = new Dictionary<ulong, TankData>();
+        private Dictionary<ulong, TankData> m_players;
         public bool m_startedGame;
         public bool IsGameStarted => m_startedGame;
         private bool m_startedRound;
@@ -30,7 +27,7 @@ namespace Tankito
         [SerializeField] private bool DEBUG = false;
 
         public delegate void RoundStart(int nRound);
-        public event RoundStart OnRoundStart;
+        public event RoundStart OnRoundStart = (int nRound) => {};
 
         public static RoundManager Instance { get; private set; }
         public IEnumerable<TankData> AliveTanks { get => m_players.Where(p => p.Value.Alive == true).Select(p => p.Value); }
@@ -45,14 +42,14 @@ namespace Tankito
             {
                 Destroy(this);
             }
+            m_players = new Dictionary<ulong, TankData>();
+            m_localPlayerInputObject = FindObjectOfType<PlayerInput>().gameObject;
         }
 
         void Start()
         {
             m_startedGame = false;
             m_startedRound = false;
-
-            m_localPlayerInputObject = GameObject.Find("PlayerInput");
 
             if (IsServer)
             {
@@ -63,8 +60,6 @@ namespace Tankito
             {
                 m_localPlayerInputObject.SetActive(false);
             }
-
-            m_roundUI = FindObjectOfType<RoundUI>();
         }
 
         #region PlayerManagement
@@ -79,7 +74,6 @@ namespace Tankito
             m_players.Remove(clientId);
             PlayerListUpdate();
         }
-
 
         private void OnEnable()
         {
@@ -111,12 +105,8 @@ namespace Tankito
         #endregion
 
 
-        [ContextMenu("TestDamageLocalPlayer")]
-        public void TestDamagePlayer()
-        {
-            m_players[NetworkManager.Singleton.LocalClientId].TakeDamage(1);
-        }
 
+        #region Countdown
         public void StartRoundCountdown()
         {
             StartRoundCountdown(m_currentRound++);
@@ -124,14 +114,20 @@ namespace Tankito
 
         public void StartRoundCountdown(int newRound)
         {
-            m_roundUI.SetActivePowerUps(false);
-            //DisablePowerUpsClientRpc();
-
             ResetPlayers();
 
             Debug.Log("Inicio ronda " + newRound);
             UpdateAliveTanksGUI();
-            StartCountdown();
+
+            m_startedGame = true;
+            m_currentCountdownTime = timeToCountdown;
+            ActivateCountdownGUIClientRpc();
+            CancelInvoke(nameof(UpdateCountdown));
+            InvokeRepeating(nameof(UpdateCountdown), 0f, 1f);
+
+            if (DEBUG) Debug.Log("Cuenta atras iniciada");
+
+            m_localPlayerInputObject.SetActive(false);
 
             ClockSignal signal = new ClockSignal();
             signal.header = ClockSignalHeader.Start;
@@ -140,53 +136,11 @@ namespace Tankito
             OnRoundStart?.Invoke(newRound);
         }
 
-        private void ResetPlayers()
-        {
-            m_spawnManager.ResetSpawnPoints();
-
-            foreach (var tank in AliveTanks)
-            {
-                tank.ResetTank();
-            }
-        }
-
-        private void UpdateAliveTanksGUI()
-        {
-            m_roundUI.SetRemainingPlayers(AliveTanks.Count());
-        }
-
-        private void SetActiveTankInputs(TankData tank)
-        {
-            var active = tank.Alive;
-
-            // tank.GetComponent<ITankInput>().SetActive(active);
-
-            if (tank.IsLocalPlayer)
-            {
-                m_localPlayerInputObject.SetActive(active);
-            }
-        }
-
-        #region Countdown
-
-        private void StartCountdown()
-        {
-            m_startedGame = true;
-            m_currentCountdownTime = timeToCountdown;
-            StartCountdownClientRpc();
-            CancelInvoke(nameof(UpdateCountdown));
-            InvokeRepeating(nameof(UpdateCountdown), 0f, 1f);
-
-            if (DEBUG) Debug.Log("Cuenta atras iniciada");
-
-            m_localPlayerInputObject.SetActive(false);
-        }
-
         private void UpdateCountdown()
         {
             if (m_currentCountdownTime > 0)
             {
-                SetCountdownTextClientRpc(m_currentCountdownTime.ToString());
+                SetCountdownGUIClientRpc(m_currentCountdownTime.ToString());
                 m_currentCountdownTime--;
             }
             else
@@ -200,80 +154,64 @@ namespace Tankito
         {
             if (DEBUG) Debug.Log("Fin de cuenta atras");
 
-            SetCountdownTextClientRpc("BATTLE!");
+            SetCountdownGUIClientRpc("BATTLE!");
             Invoke(nameof(StartRound), 0.7f);
         }
 
         [ClientRpc]
-        private void SetCountdownTextClientRpc(string text)
+        private void SetCountdownGUIClientRpc(string text)
         {
-            m_roundUI.SetCountdownText(text);
+            RoundUI.Instance.SetCountdownText(text);
         }
 
         [ClientRpc]
-        private void StartCountdownClientRpc()
+        private void ActivateCountdownGUIClientRpc()
         {
-            m_roundUI.SetActiveCountownText(true);
+            RoundUI.Instance.SetActiveCountownText(true);
         }
 
         [ClientRpc]
-        private void EndCountdownClientRpc()
+        private void DeactivateCountdownGUIClientRpc()
         {
-            m_roundUI.SetActiveCountownText(false);
+            RoundUI.Instance.SetActiveCountownText(false);
         }
-
         #endregion
-    /*
-        #region PlayerInputManagement
-        public void DisablePlayerInput()
-        {
-            m_playerInputObject.SetActive(false);
-        }
 
-        [ClientRpc]
-        private void DisablePlayerInputClientRpc()
+
+
+        #region Game State Helpers & GUIs
+        private void ResetPlayers()
         {
-            if (m_playerInputObject != null)
+            m_spawnManager.ResetSpawnPoints();
+
+            foreach (var tank in AliveTanks)
             {
-                Debug.Log("Player input desactivado");
-                m_playerInputObject.SetActive(false);
-            }
-            else
-            {
-                Debug.Log("Player input no encontrado");
+                tank.ResetTank();
             }
         }
 
-        [ClientRpc]
-        private void DisablePlayerInputClientRpc(ulong clientId)
+        private void UpdateAliveTanksGUI()
         {
-            if (clientId == NetworkManager.Singleton.LocalClientId)
+            RoundUI.Instance.SetRemainingPlayers(AliveTanks.Count());
+        }
+        private void SetActiveTankInputs(TankData tank)
+        {
+            var active = tank.Alive;
+
+            // tank.GetComponent<ITankInput>().SetActive(active);
+
+            if (tank.IsLocalPlayer)
             {
-                //Debug.Log("Desactivo input porque me han derrotado");
-                if (m_playerInputObject != null)
-                {
-                    Debug.Log("Player input desactivado");
-                    m_playerInputObject.SetActive(false);
-                }
-                else
-                {
-                    Debug.Log("Player input no encontrado");
-                }
+                m_localPlayerInputObject.SetActive(active);
             }
         }
-
-        [ClientRpc]
-        private void EnablePlayerInputClientRpc()
-        {
-            if (m_playerInputObject != null)
-            {
-                m_playerInputObject.SetActive(true);
-            }
-        }
-
         #endregion
-    */
-        #region FlujoPartida
+
+
+
+        #region Round Logic
+
+
         public void StartRound()
         {
             if (IsServer)
@@ -282,7 +220,7 @@ namespace Tankito
             }
             
             m_startedRound = true;
-            m_roundUI.ActivateAliveTanksGUI(true);
+            RoundUI.Instance.ActivateAliveTanksGUI(true);
             m_localPlayerInputObject.SetActive(true);
         }
 
@@ -305,7 +243,7 @@ namespace Tankito
             m_startedRound = false;
             if (DEBUG) Debug.Log("NETLESS: Fin de ronda");
             m_localPlayerInputObject.SetActive(false);
-            m_roundUI.ActivateAliveTanksGUI(false);
+            RoundUI.Instance.ActivateAliveTanksGUI(false);
             BetweenRounds();
         }
 
@@ -318,12 +256,6 @@ namespace Tankito
             }
         }
 
-        [ClientRpc]
-        //private void DisablePowerUpsClientRpc()
-        {
-            m_roundUI.SetActivePowerUps(false);
-        }
-
         private void CheckForWinner()
         {
             var nAlive = AliveTanks.Count();
@@ -333,12 +265,12 @@ namespace Tankito
                 case 1:
                     var winner = AliveTanks.First();
                     if (DEBUG) Debug.Log($"{winner} ha ganado la ronda");
-                    EndRound();
+                    if (IsServer) EndRound();
                     break;
 
                 case 0:
                     if (DEBUG) Debug.Log($"Nadie ha ganado la ronda, EMPATE!");
-                    EndRound();
+                    if (IsServer) EndRound();
                     break;
 
                 default:
@@ -352,99 +284,146 @@ namespace Tankito
             if (m_currentRound < m_maxRounds)
             {
                 ShowRanking();
-                Invoke(nameof(PowerUpSelection), 3.0f);
+                Invoke(nameof(StartPowerUpSelection), 3.0f);
+                RoundUI.Instance.SetActiveRanking(false);
             }
             else
             {
                 ShowRanking();
                 Invoke(nameof(EndGame), 5.0f);
+                RoundUI.Instance.SetActiveRanking(false);
             }
-        }
-
-        private void ShowRanking()
-        {
-            if (DEBUG) Debug.Log("NETLESS: Se muestra el ranking");
-            GenerateRanking();
-            ShowRankingClientRpc(m_ranking);
-        }
-
-        [ClientRpc]
-        //private void ShowRankingClientRpc(string ranking)
-        {
-            if (DEBUG) Debug.Log("NETCODE: Se muestra el ranking en todos");
-            m_roundUI.SetActiveRanking(true);
-            m_roundUI.SetRankingText(ranking);
-        }
-
-        private void ShowFinalRanking()
-        {
-            if (DEBUG) Debug.Log("NETLESS: Se muestra el ranking final");
-            //_roundUI.SetActiveRankingFinal(true);
-            ShowFinalRankingClientRpc();
-        }
-
-        [ClientRpc]
-        //private void ShowFinalRankingClientRpc()
-        {
-            if (DEBUG) Debug.Log("NETCODE: Se muestra el ranking final en todos");
-            m_roundUI.SetActiveRankingFinal(true);
-        }
-
-        private void PowerUpSelection()
-        {
-            if (DEBUG) Debug.Log("NETLESS: Se eligen power ups");
-            m_roundUI.SetActiveRanking(false);
-            m_roundUI.SetActivePowerUps(true);
-            ShowPowerUpsClientRpc();
-        }
-
-        public void EndPowerUpSelection()
-        {
-            if (IsServer)
-            {
-                Invoke(nameof(StartRoundCountdown), 1.0f);
-            }
-        }
-
-        [ClientRpc]
-        //private void ShowPowerUpsClientRpc()
-        {
-            if (DEBUG) Debug.Log("NETCODE: Se muestran los power ups en todos");
-            m_roundUI.SetActiveRanking(false);
-            m_roundUI.SetActivePowerUps(true);
-        }
-
-        private void EndGame()
-        {
-            if (DEBUG) Debug.Log("NETLESS: Fin de la partida");
-            m_startedGame = false;
-            EndGameClientRpc();
-        }
-
-        [ClientRpc]
-        private void EndGameClientRpc()
-        {
-            if (DEBUG) Debug.Log("NETCODE: Final de partida en todos");
         }
         #endregion
 
-        private void GenerateRanking()
+
+
+        #region RankingScreen
+        private string GenerateRanking()
         {
+            string rankingStr;
             if (m_currentRound == m_maxRounds)
             {
-                m_ranking = "Ranking Final: ";
+                rankingStr = "Ranking Final: ";
             }
             else
             {
-                m_ranking = "Ranking: ";
+                rankingStr = "Ranking: ";
             }
 
             TankData[] tanksByPoints = m_players.Values.OrderByDescending(tank => tank.Points).ToArray();
 
             for (int i = 0; i < tanksByPoints.Length; i++)
             {
-                m_ranking += $"\n{i + 1}. Jugador {tanksByPoints[i].OwnerClientId}:  {tanksByPoints[i].Points} puntos";
+                rankingStr += $"\n{i + 1}. Jugador {tanksByPoints[i].OwnerClientId}:  {tanksByPoints[i].Points} puntos";
+            }
+
+            return rankingStr;
+        }
+
+        private void ShowRanking()
+        {
+            if (IsServer)
+            {
+                ShowRankingClientRpc();
+            }
+
+            RoundUI.Instance.SetActiveRanking(true);
+            RoundUI.Instance.SetRankingText(GenerateRanking());
+        }
+
+        [ClientRpc]
+        private void ShowRankingClientRpc()
+        {
+            if (!IsServer)
+            {
+                ShowRanking();
             }
         }
+
+        private void ShowFinalRanking()
+        {
+            if (IsServer)
+            {
+                ShowFinalRankingClientRpc();
+            }
+
+            if (DEBUG) Debug.Log("Se muestra el ranking final");
+            RoundUI.Instance.SetActiveRankingFinal(true);
+            RoundUI.Instance.SetRankingText(GenerateRanking());
+        }
+
+        [ClientRpc]
+        private void ShowFinalRankingClientRpc()
+        {
+            if (!IsServer)
+            {
+                ShowFinalRanking();
+            }
+        }
+        #endregion
+
+
+
+        #region PowerupScreen
+        private void StartPowerUpSelection()
+        {
+            RoundUI.Instance.SetActivePowerUps(true);
+        }
+
+        public void EndPowerUpSelection()
+        {
+            if (IsServer)
+            {
+                EndPowerUpSelectionClientRpc();
+            }
+            
+            RoundUI.Instance.SetActivePowerUps(false);
+            Invoke(nameof(StartRoundCountdown), 1.0f);
+        }
+
+        [ClientRpc]
+        public void EndPowerUpSelectionClientRpc()
+        {
+            if (!IsServer)
+            {
+                EndPowerUpSelection();
+            }
+        }
+        #endregion
+
+
+
+        #region Game End
+        private void EndGame()
+        {
+            if (IsServer)
+            {
+                EndGameClientRpc();
+            }
+
+            if (DEBUG) Debug.Log("Fin de la partida");
+            m_startedGame = false;
+        }
+
+        [ClientRpc]
+        private void EndGameClientRpc()
+        {
+            if (!IsServer)
+            {
+                EndGame();
+            }
+        }
+        #endregion
+
+
+
+        #region DEBUG Methods
+        [ContextMenu("TestDamageLocalPlayer")]
+        public void TestDamagePlayer()
+        {
+            m_players[NetworkManager.Singleton.LocalClientId].TakeDamage(1);
+        }
+        #endregion
     }
 }

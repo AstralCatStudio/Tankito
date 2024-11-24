@@ -4,7 +4,7 @@ using Tankito;
 using TMPro;
 using UnityEngine;
 
-public class RoundUI : MonoBehaviour
+public class RoundUI : Singleton<RoundUI>
 {
     public GameObject PanelRanking;
     public GameObject PanelPowerUps;

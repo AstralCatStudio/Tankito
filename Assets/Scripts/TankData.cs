@@ -8,7 +8,7 @@ using Tankito;
 public class TankData : NetworkBehaviour
 {
     public delegate void TankDestroyedHandler(TankData tank);
-    public static event TankDestroyedHandler OnTankDestroyed;
+    public static event TankDestroyedHandler OnTankDestroyed = (TankData tank) => { };
     public Action<TankData> OnDamaged = (TankData damagedTank) => { };
     private NetworkVariable<int> m_health = new NetworkVariable<int>(2);
     private NetworkVariable<bool> m_isAlive = new NetworkVariable<bool>(true);
@@ -17,7 +17,7 @@ public class TankData : NetworkBehaviour
     public bool Alive => m_isAlive.Value;
     public int Points => m_points;
 
-    public override void OnNetworkSpawn()
+    void Start()
     {
         m_points = 0;
     }
