@@ -14,6 +14,7 @@ namespace Tankito.Netcode.Simulation
         /// Value -> ASimulationObject component
         /// </summary>
         protected Dictionary<ulong, ASimulationObject> m_simulationObjects;
+        protected HashSet<ASimulationObject> m_addToSimQueue;
 
         public virtual ASimulationObject GetSimObj(ulong simObjId)
         {
@@ -23,12 +24,13 @@ namespace Tankito.Netcode.Simulation
         public bool ContainsSimObj(ulong simObjId)
         {
             return m_simulationObjects.ContainsKey(simObjId);
-        }        
+        }
 
         protected override void Awake()
         {
             base.Awake();
             m_simulationObjects = new Dictionary<ulong, ASimulationObject>();
+            m_addToSimQueue = new HashSet<ASimulationObject>();
         }
 
         public virtual void AddToSim(ASimulationObject obj)
@@ -57,6 +59,18 @@ namespace Tankito.Netcode.Simulation
             SimClock.OnTick -= Simulate;
         }
 
+        public void QueueForSpawn(ASimulationObject simObj)
+        {
+            if (!m_simulationObjects.ContainsKey(simObj.SimObjId))
+            {
+                m_addToSimQueue.Add(simObj);
+            }
+            else
+            {
+                throw new IndexOutOfRangeException($"[{SimClock.TickCounter}]SimObjId({simObj}) is already registered in simulation object dictionary!");
+            }
+        }
+
         /// <summary>
         /// Advance the simulation forward by 1 simulation tick (simulation tick is determined by <see cref="SimClock.SimDeltaTime" />).
         /// </summary>
@@ -65,8 +79,16 @@ namespace Tankito.Netcode.Simulation
             //List<ASimulationObject> simulationObjectsSnapshot = m_simulationObjects.Values.ToList<ASimulationObject>();
             foreach (var obj in m_simulationObjects.Values)
             {
-                obj?.ComputeKinematics(SimClock.SimDeltaTime);
+                obj.ComputeKinematics(SimClock.SimDeltaTime);
             }
+
+            foreach(var newObj in m_addToSimQueue)
+            {
+                newObj.OnNetworkSpawn();
+                newObj.ComputeKinematics(SimClock.SimDeltaTime);
+            }
+            
+            m_addToSimQueue.Clear();
 
             Physics2D.Simulate(SimClock.SimDeltaTime);
         }

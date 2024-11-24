@@ -89,7 +89,7 @@ namespace Tankito {
            if (NetworkManager.Singleton.IsServer)
            {
                 BulletSimulationObject bulletSimObj = GetComponent<BulletSimulationObject>();
-                ServerSimulationManager.Instance.QueueForRemoval(bulletSimObj.SimObjId);
+                ServerSimulationManager.Instance.QueueForDespawn(bulletSimObj.SimObjId);
            }
         }   
 
