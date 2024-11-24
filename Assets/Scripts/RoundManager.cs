@@ -154,6 +154,7 @@ namespace Tankito
 
         private void TankDeath(TankData t)
         {
+            Debug.Log("Round Manager registered a tank death");
             t.AwardPoints(m_players.Count - AliveTanks.Count() - 1); // -1 porque no deberia darte puntos por estar tu mismo muerto
             PlayerListUpdate(true);
         }
