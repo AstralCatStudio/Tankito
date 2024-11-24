@@ -11,10 +11,11 @@ namespace Tankito.Netcode.Simulation
     {
         private SortedSet<InputPayload> m_inputBuffer = new SortedSet<InputPayload>(new ByTimestamp());
         private InputPayload m_replayInput;
+        [SerializeField] private bool DEBUG;
 
-        [SerializeField] private /*const*/ int N_IDEAL_INPUT = 10;
-        public int IdealBufferSize { get => N_IDEAL_INPUT; }
-        public int BufferSize { get => m_inputBuffer.Count; }
+        //const int N_IDEAL_INPUT = 10;
+        public int IdealBufferSize { get => Parameters.SERVER_IDEAL_INPUT_BUFFER_SIZE; }
+        public int Last { get =>  (m_inputBuffer.Count != 0) ? m_inputBuffer.Last().timestamp : 0; }
 
         public void AddInput(InputPayload[] newInputWindow)
         {
@@ -22,6 +23,23 @@ namespace Tankito.Netcode.Simulation
             m_inputBuffer.UnionWith(newInputWindow.Where(i => i.timestamp > SimClock.TickCounter));
 
             RemoveStaleInput();
+
+            if (DEBUG)
+            {
+                var debug = $"[{SimClock.TickCounter}]Remote Input Window: [ ";
+                foreach(var i in m_inputBuffer)
+                {
+                    if (i.timestamp == SimClock.TickCounter)
+                        debug += i.timestamp + " | ";
+                    else if (i.timestamp == (SimClock.TickCounter + IdealBufferSize))
+                        debug += i.timestamp + " | ";
+                    else if (!i.Equals(m_inputBuffer.Last()))
+                        debug += i.timestamp + ", ";
+                    else
+                        debug += i.timestamp + " ]";
+                }
+                Debug.Log(debug);
+            }
         }
 
         public InputPayload GetInput()

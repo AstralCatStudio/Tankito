@@ -23,7 +23,7 @@ public class HoverButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         Color newColor = color * hoverColorFactor;
         newColor.a = 1f;
         gameObject.GetComponent<Image>().color = newColor;
-        MusicManager.Instance.PlaySound("bip");
+        MusicManager.Instance.PlaySoundPitch("bip",0.1f);
     }
 
     

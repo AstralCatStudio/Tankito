@@ -7,14 +7,12 @@ namespace Tankito.Netcode.Simulation
 {
     public class SnapshotJitterBuffer : Singleton<SnapshotJitterBuffer>
     {
-        const double AUTH_SNAPSHOT_JITTER_BUFFER_SIZE = 0.036;
-
         private int m_bufferCount;
+        public int SnapshotTimestamp { get => m_latestSnapshot.timestamp; }
         private SimulationSnapshot m_latestSnapshot;
         private double m_bufferedTime;
-        private double m_timeToBuffer;
+        private double TimeToBuffer { get => Parameters.SNAPSHOT_JITTER_BUFFER_TIME; }
 
-        public double BufferTime { get => m_timeToBuffer; }
 
         protected override void Awake()
         {
@@ -26,25 +24,23 @@ namespace Tankito.Netcode.Simulation
             
             base.Awake();
 
-            m_timeToBuffer = AUTH_SNAPSHOT_JITTER_BUFFER_SIZE;
             m_latestSnapshot = default;
         }
 
         void Update()
         {
             m_bufferedTime += Time.deltaTime;
-            SimulationSnapshot newSnapshot;
-            if(GetSnapshot(out newSnapshot))
+
+                        
+            if (m_bufferCount > 0 && m_bufferedTime >= TimeToBuffer)
             {
                 m_bufferedTime = 0;
-                ClientSimulationManager.Instance.EvaluateForReconciliation(newSnapshot);
+                ClientSimulationManager.Instance.EvaluateForReconciliation(m_latestSnapshot);
+                m_latestSnapshot = default;
+                m_bufferCount = 0;
             }
         }
 
-        public void SetBufferTime(double seconds)
-        {
-            m_timeToBuffer = seconds;
-        }
 
         public bool AddSnapshot(SimulationSnapshot newSnapshot)
         {
@@ -59,42 +55,5 @@ namespace Tankito.Netcode.Simulation
                 return false;
             }
         }
-
-        public bool GetSnapshot(out SimulationSnapshot snapshot)
-        {
-            if (m_bufferCount > 0 && m_bufferedTime >= m_timeToBuffer)
-            {
-                snapshot = m_latestSnapshot;
-                m_latestSnapshot = default;
-                m_bufferCount = 0;
-                return true;
-            }
-            else
-            {
-                snapshot = default;
-                return false;
-            }
-        }
-
-        #if UNITY_EDITOR
-
-        [ContextMenu("Increase Jitter Buffer Size")]
-        public void IncreaseJitterBufferSize()
-        {
-            double bufferTicks = BufferTime + 0.005;
-            this.SetBufferTime(bufferTicks);
-            Debug.Log($"Set Jitter Buffer to : {bufferTicks}ticks");
-        }
-
-        [ContextMenu("Decrease Jitter Buffer Size")]
-        public void DecreaseJitterBufferSize()
-        {
-            double bufferTime = BufferTime - 0.005;
-
-            this.SetBufferTime(bufferTime);
-            Debug.Log($"Set Jitter BufferTime to : {bufferTime}s");
-        }
-
-        #endif
     }
 }

@@ -35,6 +35,7 @@ namespace Tankito
                 ClientData.Instance.onCharacterPurchased += UnlockCharacter;
             }
         }
+
         public void OpenShopItem()
         {
             var menu = MenuController.Instance;
@@ -53,6 +54,11 @@ namespace Tankito
                 ownTag.SetActive(true);
                 ClientData.Instance.onCharacterPurchased -= UnlockCharacter;
             }
+        }
+
+        public void Unsubscribe()
+        {
+            ClientData.Instance.onCharacterPurchased -= UnlockCharacter;
         }
     }
 }

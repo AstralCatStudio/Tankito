@@ -66,6 +66,9 @@ namespace Tankito.Netcode
         {
             ((UnityTransport)NetworkManager.Singleton.NetworkConfig.NetworkTransport).UseWebSockets = USE_WEB_SOCKETS;
             Debug.Log("UseWebSockets: " + USE_WEB_SOCKETS);
+
+            m_region = "";
+
             StartButtons();
         }
 
@@ -162,6 +165,9 @@ namespace Tankito.Netcode
         {
             await CreateRelayAllocation();
             TextEditor te = new TextEditor(); te.text = m_joinCode; te.SelectAll(); te.Copy();
+
+            GameManager.Instance.OnSceneLoading();
+
             NetworkManager.Singleton.StartHost();
             
             SceneLoader.Singleton.LoadGameScene();
@@ -174,6 +180,9 @@ namespace Tankito.Netcode
 
             var joinAllocation = await RelayService.Instance.JoinAllocationAsync(joinCode: m_joinCode);
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(new RelayServerData(joinAllocation, CONNECTION_TYPE));
+
+            GameManager.Instance.OnSceneLoading();
+
             NetworkManager.Singleton.StartClient();
 
             SceneLoader.Singleton.LoadGameScene();
@@ -184,6 +193,9 @@ namespace Tankito.Netcode
         {
             await CreateRelayAllocation();
             TextEditor te = new TextEditor(); te.text = m_joinCode; te.SelectAll(); te.Copy();
+
+            GameManager.Instance.OnSceneLoading();
+
             NetworkManager.Singleton.StartServer();
 
             SceneLoader.Singleton.LoadGameScene();

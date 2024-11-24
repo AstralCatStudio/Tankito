@@ -92,12 +92,16 @@ namespace Tankito
             yield return SceneManager.LoadSceneAsync("MainMenu", LoadSceneMode.Additive);
             if (DEBUG) Debug.Log("Main Menu Loaded!");
 
+            ClientData.Instance.InitSelectCharacter();
+
             SceneManager.UnloadSceneAsync("Loading");
         }
 
         IEnumerator LoadGameSceneAsync()
         {
             if (!SceneManager.GetSceneByName("Lobby").IsValid()) throw new InvalidOperationException("You shouldn't be loading the game scene without having loaded the Lobby!");
+
+            ClientData.Instance.UnsubscribeButtons();
 
             SceneManager.LoadScene("Loading");
 
@@ -123,8 +127,6 @@ namespace Tankito
 
             SceneManager.LoadScene("Loading");
 
-            GameManager.Instance.UnloadScene();
-
             if (DEBUG) Debug.Log("Loading Main Menu...");
 
             ClientData.Instance.firstLoad = false;
@@ -132,6 +134,8 @@ namespace Tankito
             yield return SceneManager.LoadSceneAsync("MainMenu", LoadSceneMode.Additive);
 
             if (DEBUG) Debug.Log("Main Menu Loaded!");
+
+            ClientData.Instance.InitSelectCharacter();
 
             SceneManager.UnloadSceneAsync("Loading");
         }

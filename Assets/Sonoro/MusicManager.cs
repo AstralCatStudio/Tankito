@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class MusicManager : Singleton<MusicManager>
+public class MusicManager : MonoBehaviour
 {
     [SerializeField] private AudioClip[] playaClips;
     [SerializeField] private AudioClip[] sushiClips;
@@ -38,15 +38,33 @@ public class MusicManager : Singleton<MusicManager>
     private float lastVolMusic = -1f;
     private float lastVolSounds = -1f;
 
-    protected override void Awake()
+    private AudioReverbZone reverbZone;
+
+    public static MusicManager Instance;
+
+    protected void Awake()
     {
-        base.Awake();
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
 
         DontDestroyOnLoad(gameObject);
 
         audioSourceA = CreateAudioSource(true);
         audioSourceB = CreateAudioSource(true);
         backgroundSoundSource = CreateAudioSource(true);
+
+
+        reverbZone = GetComponent<AudioReverbZone>();
+        if (reverbZone == null)
+        {
+            Debug.LogWarning("No se encontró una AudioReverbZone en el GameObject.");
+        }
 
         songs["PLAYA"] = playaClips;
         songs["SUSHI"] = sushiClips;
@@ -58,6 +76,7 @@ public class MusicManager : Singleton<MusicManager>
 
         InitializeSoundPool();
     }
+
 
     private void OnValidate()
     {
@@ -120,7 +139,7 @@ public class MusicManager : Singleton<MusicManager>
     {
         if (audioSourceA != null) audioSourceA.volume = volMusic;
         if (audioSourceB != null) audioSourceB.volume = volMusic;
-        Debug.Log($"Volumen de música actualizado: {volMusic}");
+        //Debug.Log($"Volumen de música actualizado: {volMusic}");
     }
 
     private void UpdateSoundVolume()
@@ -134,7 +153,7 @@ public class MusicManager : Singleton<MusicManager>
         {
             backgroundSoundSource.volume = volSounds;
         }
-        Debug.Log($"Volumen de sonidos actualizado: {volSounds}");
+        //Debug.Log($"Volumen de sonidos actualizado: {volSounds}");
     }
 
     private AudioSource CreateAudioSource(bool loop)
@@ -330,6 +349,12 @@ public class MusicManager : Singleton<MusicManager>
         audioSource.Play();
     }
 
+    public void PlaySoundPitch(string soundName)
+    {
+        PlaySoundPitch(soundName, 0.15f);
+    }
+
+
     public void PlaySoundPitch(string soundName, float pitchVariation = 0.1f)
     {
         AudioClip clip = Resources.Load<AudioClip>($"Sonidos/{soundName}");
@@ -352,4 +377,167 @@ public class MusicManager : Singleton<MusicManager>
         audioSource.volume = volSounds;
         audioSource.Play();
     }
+
+
+    public void MuteSong()
+    {
+        if (isPlayingA && audioSourceA.isPlaying)
+        {
+            audioSourceA.Pause();
+        }
+        else if (!isPlayingA && audioSourceB.isPlaying)
+        {
+            audioSourceB.Pause();
+        }
+    }
+
+    public void ResumeSong()
+    {
+        if (isPlayingA && audioSourceA.clip != null)
+        {
+            audioSourceA.UnPause();
+        }
+        else if (!isPlayingA && audioSourceB.clip != null)
+        {
+            audioSourceB.UnPause();
+        }
+    }
+
+    public void MuteBackground()
+    {
+        if (backgroundSoundSource.isPlaying)
+        {
+            backgroundSoundSource.Pause();
+        }
+    }
+
+    public void ResumeBackground()
+    {
+        if (backgroundSoundSource.clip != null)
+        {
+            backgroundSoundSource.UnPause();
+        }
+    }
+
+    public void MenuChange(int newMenuIndex)
+    {
+        var menuMappings = new Dictionary<int, (int phase, string sound, string soundEffect)>
+    {
+        { 0, (0, "amb_underwater", "aceptar2") }, // InitialScreenLogIn
+        { 1, (0, "amb_underwater", "aceptar2") }, // MainMenu
+        { 2, (1, "amb_underwater", "aceptar2") }, // Settings
+        { 3, (0, "amb_underwater", "aceptar2") }, // Credits
+        { 4, (0, "amb_underwater", "aceptar2") }, // LogOut
+        { 5, (2, "amb_underwater", "snd_entershop") }, // Shop
+        { 6, (1, "amb_beach", "snd_jugar") }, // PlayMenu
+        { 7, (1, "amb_beach", "aceptar2") }, // Lobby
+        { 8, (1, "amb_beach", "aceptar2") }, // CharacterSelection
+        { 9, (3, "amb_underwater", "snd_enterpve") } // Singleplayer
+    };
+
+        if (menuMappings.TryGetValue(newMenuIndex, out var action))
+        {
+            SetPhase(action.phase);              // Cambia la fase de música
+            PlaySound(action.soundEffect);       // Reproduce efecto de sonido
+            if (!IsBackgroundSoundPlaying(action.sound))
+            {
+                PlayBackgroundSound(action.sound); // Reproduce el sonido de fondo
+            }
+
+            // Actualiza la AudioReverbZone
+            SetReverbZone(action.phase, 5f, 20f); // Configura preset y distancias
+        }
+        else
+        {
+            Debug.LogWarning($"El índice {newMenuIndex} no tiene acciones definidas.");
+        }
+    }
+
+
+    private bool IsBackgroundSoundPlaying(string soundName)
+    {
+        // Asegúrate de que el AudioSource no sea nulo y esté reproduciendo algo
+        if (backgroundSoundSource != null && backgroundSoundSource.isPlaying)
+        {
+            // Compara el nombre del clip actual con el sonido solicitado
+            return backgroundSoundSource.clip != null && backgroundSoundSource.clip.name == soundName;
+        }
+
+        return false; // No está sonando nada o el AudioSource no está configurado
+    }
+
+
+    private void SetReverbZone(int phase, float minDistance, float maxDistance)
+    {
+        if (reverbZone == null)
+        {
+            Debug.LogError("No se puede configurar la AudioReverbZone porque no está asignada.");
+            return;
+        }
+
+        // Ajustar las distancias de la zona
+        reverbZone.minDistance = minDistance;
+        reverbZone.maxDistance = maxDistance;
+
+        // Usar el preset personalizado para ajustar parámetros manualmente
+        reverbZone.reverbPreset = AudioReverbPreset.User;
+
+        //Debug.Log("PHASE: " + phase);
+
+        // Configuración según la fase
+        switch (phase)
+        {
+            case 0: // Fondo del mar (Underwater)
+                reverbZone.room = -100; // Reverberación suave y oscura
+                reverbZone.roomHF = -2000; // Atenuación intensa de frecuencias altas
+                reverbZone.decayTime = 5.0f; // Decaimiento lento para simular profundidad
+                reverbZone.decayHFRatio = 0.3f; // Bajas frecuencias dominantes
+                reverbZone.reflections = -300; // Reflexiones débiles
+                reverbZone.reverb = 200; // Reverberación posterior moderada
+                break;
+
+            case 1: // Playa
+                reverbZone.room = -500; // Reverberación ligera
+                reverbZone.roomHF = -2000; // Atenuación media de altas frecuencias
+                reverbZone.decayTime = 2.5f; // Decaimiento más rápido
+                reverbZone.decayHFRatio = 0.6f; // Proporción equilibrada
+                reverbZone.reflections = -100; // Reflexiones más claras
+                reverbZone.reverb = 100; // Reverberación posterior ligera
+                break;
+
+            case 2: // Cueva
+                reverbZone.room = -200; // Reverberación fuerte
+                reverbZone.roomHF = -1500; // Atenuación media de altas frecuencias
+                reverbZone.decayTime = 3.0f; // Decaimiento prolongado
+                reverbZone.decayHFRatio = 0.5f; // Decaimiento equilibrado
+                reverbZone.reflections = -100; // Reflexiones audibles pero suaves
+                reverbZone.reverb = 150; // Reverberación posterior intensa
+                break;
+
+            case 3: // Pozo pve
+                reverbZone.room = -300; // Reverberación marcada
+                reverbZone.roomHF = -1000; // Atenuación ligera de altas frecuencias
+                reverbZone.decayTime = 2.0f; // Decaimiento corto
+                reverbZone.decayHFRatio = 0.8f; // Altas frecuencias ligeramente dominantes
+                reverbZone.reflections = 100; // Reflexiones claras
+                reverbZone.reverb = 400; // Reverberación posterior definida
+                break;
+
+            default: // Sin reverberación
+                reverbZone.room = -10000; // Sin reverberación
+                reverbZone.roomHF = -10000; // Sin frecuencias altas
+                reverbZone.decayTime = 0.1f; // Decaimiento mínimo
+                reverbZone.decayHFRatio = 0.1f;
+                reverbZone.reflections = -10000;
+                reverbZone.reverb = -10000;
+                break;
+        }
+
+        Debug.Log($"ReverbZone actualizada para la fase {phase}: MinDistance={minDistance}, MaxDistance={maxDistance}");
+    }
+
+
+
+
+
 }
