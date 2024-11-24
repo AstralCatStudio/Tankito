@@ -1,7 +1,9 @@
 name: Build and Publish Project
  
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - main
  
 jobs:
   buildForAllSupportedPlatforms:
