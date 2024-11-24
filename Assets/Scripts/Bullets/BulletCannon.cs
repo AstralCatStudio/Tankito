@@ -30,8 +30,10 @@ namespace Tankito
         private List<BulletModifier> m_bulletModifiers = new List<BulletModifier>();
         
         // Esto deberia ser comun para todos los bullets no deberia ser algo de cada disparador
-        [SerializeField]
+        
         float interval = 1;
+        [SerializeField]
+        float baseInterval = 0.5f;
         float timer = 0;
         List<GameObject> bulletsShot = new List<GameObject>();
         private List<Vector2> BulletDirections = new List<Vector2>();
@@ -66,6 +68,7 @@ namespace Tankito
             BulletDirections.Add(new Vector2(1,0)) ;
             m_bulletAmount = baseBulletAmount;
             m_bulletProperties = BulletCannonRegistry.Instance.BaseProperties;
+            interval = baseInterval;
             foreach (BulletModifier modifier in m_bulletModifiers)
             {
                 m_bulletProperties.velocity *= modifier.bulletStatsModifier.speedMultiplier;
@@ -76,6 +79,7 @@ namespace Tankito
                 BulletDirections.AddRange(modifier.bulletStatsModifier.BulletDirections);
                 m_bulletAmount += modifier.bulletStatsModifier.amountAdded;
                 m_bulletAmount *= modifier.bulletStatsModifier.amountMultiplier;
+                interval += modifier.bulletStatsModifier.reloadTimeAdded;
             }
         }
 
