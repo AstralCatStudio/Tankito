@@ -24,9 +24,22 @@ public class TankData : NetworkBehaviour
 
     public void Die()
     {
+        if (IsServer)
+        {
+            DieClientRpc();
+        }
         OnTankDestroyed?.Invoke(this);
         Debug.LogWarning("TODO: Trigger tank death animation");
         gameObject.SetActive(false);
+    }
+
+    [ClientRpc]
+    public void DieClientRpc()
+    {
+        if (!IsServer)
+        {
+            Die();
+        }
     }
 
     public void AwardPoints(int awardedPoints)
