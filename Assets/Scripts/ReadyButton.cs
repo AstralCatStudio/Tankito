@@ -5,6 +5,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Tankito.Utils;
 
 namespace Tankito
 {
@@ -199,10 +200,9 @@ namespace Tankito
 
         private void StartGame()
         {
-            
             if (IsServer)
             {
-                RoundUI.Instance.PanelPowerUps = Instantiate<GameObject>(RoundUI.Instance.PanelPowerUps);
+                RoundUI.Instance.PanelPowerUps = Instantiate(RoundUI.Instance.PanelPowerUps, GameInstanceParent.Instance.transform);
                 RoundUI.Instance.PanelPowerUps.GetComponent<NetworkObject>().Spawn();
                 RoundManager.Instance.StartRoundCountdown();
                 DestroyButtonsClientRpc();

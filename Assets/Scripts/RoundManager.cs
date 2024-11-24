@@ -27,7 +27,7 @@ namespace Tankito
         [SerializeField] private bool DEBUG = false;
 
         public delegate void RoundStart(int nRound);
-        public event RoundStart OnRoundStart = (int nRound) => {};
+        public event RoundStart OnPreRoundStart = (int nRound) => {};
 
         public static RoundManager Instance { get; private set; }
         public IEnumerable<TankData> AliveTanks { get => m_players.Where(p => p.Value.Alive == true).Select(p => p.Value); }
@@ -96,14 +96,18 @@ namespace Tankito
         private void PlayerListUpdate(bool updateInputs = false)
         {
             UpdateAliveTanksGUI();
-            if (updateInputs)
+            if (updateInputs && m_startedGame)
             {
                 foreach(var tank in m_players.Values)
                 {
                     SetActiveTankInputs(tank);
                 }
             }
-            CheckForWinner();
+
+            if (m_startedGame)
+            {
+                CheckForWinner();
+            }
         }
         #endregion
 
@@ -112,12 +116,14 @@ namespace Tankito
         #region Countdown
         public void StartRoundCountdown()
         {
+            RoundUI.Instance.SetActiveScenarySelection(false);
             StartRoundCountdown(m_currentRound++);
         }
 
         public void StartRoundCountdown(int newRound)
         {
             ResetPlayers();
+            OnPreRoundStart?.Invoke(newRound);
 
             Debug.Log("Inicio ronda " + newRound);
             UpdateAliveTanksGUI();
@@ -135,8 +141,6 @@ namespace Tankito
             ClockSignal signal = new ClockSignal();
             signal.header = ClockSignalHeader.Start;
             MessageHandlers.Instance.SendClockSignal(signal);
-
-            OnRoundStart?.Invoke(newRound);
         }
 
         private void UpdateCountdown()
@@ -223,6 +227,7 @@ namespace Tankito
             }
             
             m_startedRound = true;
+            RoundUI.Instance.SetActiveCountownText(false);
             RoundUI.Instance.ActivateAliveTanksGUI(true);
             m_localPlayerInputObject.SetActive(true);
         }
@@ -331,6 +336,8 @@ namespace Tankito
 
         private void ShowRanking()
         {
+            Debug.Log("Rankgin Screen show called.");
+            
             if (IsServer)
             {
                 ShowRankingClientRpc();
