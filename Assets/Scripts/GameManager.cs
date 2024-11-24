@@ -109,19 +109,23 @@ namespace Tankito
                 var tankData = newPlayer.GetComponent<TankData>();
                 Debug.Log($"TankData = {tankData}");
                 RoundManager.Instance.AddPlayer(tankData);
+                RoundManager.Instance.InitPlayersDictionary();
             }
-            else
-            {
-                if(RoundManager.Instance == null)
-                {
-                    Debug.Log("ES EL ROUND MANAGER");
-                }
-                else if(m_playerPrefab.GetComponent<TankData>() == null)
-                {
-                    Debug.Log("ES EL OBJETO");
-                }
-                RoundManager.Instance.AddPlayer(m_playerPrefab.GetComponent<TankData>());
-            }
+            //else
+            //{
+            //    if(clientId != NetworkManager.Singleton.LocalClientId)
+            //    {
+            //        if (RoundManager.Instance == null)
+            //        {
+            //            Debug.Log("ES EL ROUND MANAGER");
+            //        }
+            //        else if (m_playerPrefab.GetComponent<TankData>() == null)
+            //        {
+            //            Debug.Log("ES EL OBJETO");
+            //        }
+            //        RoundManager.Instance.AddPlayer(NetworkManager.LocalClient.PlayerObject.GetComponent<TankData>());
+            //    }
+            //}
 
             if (clientId != NetworkManager.Singleton.LocalClientId) return;
 
