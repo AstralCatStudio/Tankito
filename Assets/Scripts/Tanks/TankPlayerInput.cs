@@ -36,8 +36,8 @@ namespace Tankito
 
     public class TankPlayerInput : MonoBehaviour, ITankInput
     {
-        private const int INPUT_CACHE_SIZE = 256;
-        private CircularBuffer<InputPayload> m_inputCache = new CircularBuffer<InputPayload>(INPUT_CACHE_SIZE);
+        private int INPUT_CACHE_SIZE => SimulationParameters.SNAPSHOT_BUFFER_SIZE;
+        private CircularBuffer<InputPayload> m_inputCache;
         [SerializeField] private int m_inputReplayTick = NO_REPLAY;
         private const int NO_REPLAY = -1;
 
@@ -59,6 +59,7 @@ namespace Tankito
 
         void Start()
         {
+            m_inputCache = new CircularBuffer<InputPayload>(INPUT_CACHE_SIZE);
             if (m_turretRB == null) Debug.LogWarning("Turret Rigidbody2D reference not set.");
             if (m_turretAnimator == null) Debug.LogWarning("Turret Animator reference not set!");
             if (m_hullAnimator == null) Debug.LogWarning("Hull Animator reference not set!");

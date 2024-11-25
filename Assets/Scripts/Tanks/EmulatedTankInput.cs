@@ -9,8 +9,8 @@ namespace Tankito.Netcode.Simulation
 {
     public class EmulatedTankInput : MonoBehaviour, ITankInput
     {
-        private const int INPUT_CACHE_SIZE = 256;
-        private CircularBuffer<InputPayload> m_inputBuffer = new CircularBuffer<InputPayload>(INPUT_CACHE_SIZE);
+        private int INPUT_CACHE_SIZE => SimulationParameters.SNAPSHOT_BUFFER_SIZE;
+        private CircularBuffer<InputPayload> m_inputBuffer;
         private float m_attenuationSeconds = 0.5f;
         [SerializeField] private int m_attenuationTicks;
         private InputPayload m_currentInput;
@@ -29,6 +29,11 @@ namespace Tankito.Netcode.Simulation
         void Awake()
         {
             m_attenuationTicks = (int)(m_attenuationSeconds/SimClock.SimDeltaTime);
+        }
+
+        void Start()
+        {
+            m_inputBuffer = new CircularBuffer<InputPayload>(INPUT_CACHE_SIZE);
         }
 
         public void ReceiveInputWindow(InputPayload[] inputWindow)
