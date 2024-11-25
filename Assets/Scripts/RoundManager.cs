@@ -411,7 +411,6 @@ namespace Tankito
             {
                 ShowRanking();
                 Invoke(nameof(EndGame), 5.0f);
-                RoundUI.Instance.SetActiveRanking(false);
             }
         }
         #endregion
@@ -455,7 +454,7 @@ namespace Tankito
                 ShowRankingClientRpc();
             }
 
-            RoundUI.Instance.SetActiveRanking(true);
+            RoundUI.Instance.ActivateRankingGUI(true);
             RoundUI.Instance.SetRankingText(GenerateRanking());
         }
 
@@ -496,7 +495,7 @@ namespace Tankito
         private void StartPowerUpSelection()
         {
             RoundUI.Instance.SetActivePowerUps(true);
-            RoundUI.Instance.SetActiveRanking(false);
+            RoundUI.Instance.ActivateRankingGUI(false);
         }
 
         public void EndPowerUpSelection()
@@ -535,6 +534,8 @@ namespace Tankito
 
             if (DEBUG) Debug.Log("Fin de la partida");
             m_startedGame = false;
+            //RoundUI.Instance.ActivateRankingGUI(false);
+            RoundUI.Instance.ActivateEndExitButton(true);
         }
 
         [ClientRpc]

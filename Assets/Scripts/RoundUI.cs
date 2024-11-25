@@ -20,7 +20,7 @@ public class RoundUI : Singleton<RoundUI>
     public GameObject LobbyInfo;
 
     #region Ranking
-    public void SetActiveRanking(bool active)
+    public void ActivateRankingGUI(bool active)
     {
         PanelRanking.SetActive(active);
     }
@@ -85,7 +85,7 @@ public class RoundUI : Singleton<RoundUI>
         InitExitButton.SetActive(active);
     }
 
-    public void SetActiveEndExitButton(bool active)
+    public void ActivateEndExitButton(bool active)
     {
         EndExitButton.SetActive(active);
     }
