@@ -155,9 +155,9 @@ MonoBehaviour:
   Median_Latency: 0.16
   Worst_Case_Latency: 0.4
   Client_Jitter_Buffer_Time: 0.008
-  Sim_Tick_Rate: 60
+  Sim_Tick_Rate: 30
   DEBUG_LATENCY: 0
-  DEBUG_PARAMS: 1
+  DEBUG_PARAMS: 0
   m_debugRate: 2
 --- !u!4 &524099866
 Transform:
@@ -241,7 +241,7 @@ MonoBehaviour:
       NetworkPrefabsLists:
       - {fileID: 11400000, guid: 8a4897daf3b43fe4f9108bcdb4681091, type: 2}
       - {fileID: 11400000, guid: 8145358083afe8143bdefbf7632f6b51, type: 2}
-    TickRate: 120
+    TickRate: 60
     ClientConnectionBufferTimeout: 10
     ConnectionApproval: 0
     ConnectionData: 
@@ -304,7 +304,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DEBUG: 0
-  m_startingScene: 0
+  m_startingScene: 1
 --- !u!4 &1609486872
 Transform:
   m_ObjectHideFlags: 0

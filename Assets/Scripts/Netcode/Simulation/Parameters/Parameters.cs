@@ -76,11 +76,13 @@ namespace Tankito.Netcode
                 
                 if (DEBUG_PARAMS)
                 {
+                    /*
                     Debug.Log($"PARAMS(WorstCase ping={(int)(WORST_CASE_LATENCY*1000)}ms): " +
                                 "\nSNAPSHOT_BUFFER_SIZE: " + SNAPSHOT_BUFFER_SIZE +
                                 "\nCLIENT_INPUT_WINDOW_SIZE: " + CLIENT_INPUT_WINDOW_SIZE +
                                 "\nSERVER_IDEAL_INPUT_BUFFER_SIZE: " + SERVER_IDEAL_INPUT_BUFFER_SIZE +
                                 "\nSNAPSHOT_JITTER_BUFFER_TIME: " + SNAPSHOT_JITTER_BUFFER_TIME);
+                    */
                 }
             }
         }

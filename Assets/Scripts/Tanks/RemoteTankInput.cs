@@ -15,7 +15,7 @@ namespace Tankito.Netcode.Simulation
 
         //const int N_IDEAL_INPUT = 10;
         public int IdealBufferSize { get => SimulationParameters.SERVER_IDEAL_INPUT_BUFFER_SIZE; }
-        public int Last { get =>  (m_inputBuffer.Count != 0) ? m_inputBuffer.Last().timestamp : 0; }
+        public int Last { get =>  (m_inputBuffer.Count != 0) ? m_inputBuffer.Last().timestamp : SimClock.TickCounter; }
 
         public void AddInput(InputPayload[] newInputWindow)
         {

@@ -86,7 +86,7 @@ namespace Tankito
                 Debug.LogWarning("Error tank turret reference not set.");
             }
 
-            ApplyModifierList();
+            //ApplyModifierList();
             stateInitTick = 0;
         }
 
@@ -98,7 +98,7 @@ namespace Tankito
             tankSimObj.OnComputeKinematics += ProcessInput;
 
             //Subscribe to Round Countdown Start
-            RoundManager.Instance.OnPreRoundStart += ApplyModifierList;
+            //RoundManager.Instance.OnPreRoundStart += ApplyModifierList;
         }
 
         void OnDisable()
@@ -108,7 +108,7 @@ namespace Tankito
             tankSimObj.OnComputeKinematics -= ProcessInput;
             
             //Unsubscribe to Round Countdown Start
-            RoundManager.Instance.OnPreRoundStart -= ApplyModifierList;
+            //RoundManager.Instance.OnPreRoundStart -= ApplyModifierList;
         }
 
         public void ApplyModifierList(int nRound = 0)
@@ -122,17 +122,18 @@ namespace Tankito
 
         void ApplyModifier(HullStatsModifier mod, bool reset = false)
         {
+            //Debug.Log("tanque aplicando mods");
             if (reset)
             {
                 m_speed = mod.speedMultiplier;
                 m_rotationSpeed = mod.rotationSpeedMultiplier;
-                //GetComponent<TankData>().SetHealth(mod.extraHealth);
+                GetComponent<TankData>().SetHealth(mod.extraHealth);
             }
             else
             {
                 m_speed *= mod.speedMultiplier;
                 m_rotationSpeed *= mod.rotationSpeedMultiplier;
-                //GetComponent<TankData>().AddHealth(mod.extraHealth);
+                GetComponent<TankData>().AddHealth(mod.extraHealth);
             }
             SetParryTicksFromSeconds(mod.extraParryTime, mod.parryCooldownTimeAdded, reset);
             SetDashParams(mod.dashDistanceMultiplier, mod.dashSpeedMultiplier, mod.dashCooldownTimeAdded, reset);

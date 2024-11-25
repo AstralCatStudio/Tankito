@@ -125,9 +125,8 @@ namespace Tankito.Netcode.Messaging
                 case ClockSignalHeader.Sync:
                     if (NetworkManager.Singleton.IsClient && !NetworkManager.Singleton.IsServer)
                     {
-                        if (DEBUG_CLOCK) Debug.Log("Attempting to Synchronize the local client simulation clock.");
                         int latencyTicks = (int)(SimulationParameters.CURRENT_LATENCY * 2/SimulationParameters.SIM_DELTA_TIME);
-                        Debug.Log($"[{SimClock.TickCounter}]Latency Ticks: {latencyTicks}ticks ({(int)(2*SimulationParameters.CURRENT_LATENCY * 1000)}ms(RTT) @{(int)(SimulationParameters.SIM_DELTA_TIME * 1000)}ms(dT))");
+                        if (DEBUG_CLOCK) Debug.Log($"[{SimClock.TickCounter}]Latency Ticks: {latencyTicks}ticks ({(int)(2*SimulationParameters.CURRENT_LATENCY * 1000)}ms(RTT) @{(int)(SimulationParameters.SIM_DELTA_TIME * 1000)}ms(dT)): Setting clock to = {signal.signalTicks+latencyTicks}");
                         SimClock.Instance.SetClock(signal.signalTicks + latencyTicks);
                         // Make sure we reset our throttle speed to baseline (NO THROTTLING)
                         SimClock.Instance.ThrottleClock(0);
@@ -198,17 +197,6 @@ namespace Tankito.Netcode.Messaging
             {
                 // Store inputWindow
                 ServerSimulationManager.Instance.remoteInputTanks[senderId].AddInput(receivedInputWindow.ToArray());
-
-                // Respond with throttling signal
-                /*int throttleTicks = ServerSimulationManager.Instance.remoteInputTanks[senderId].IdealBufferSize-ServerSimulationManager.Instance.remoteInputTanks[senderId].BufferSize;
-                var throttleSignal = new ClockSignal(ClockSignalHeader.Throttle, throttleTicks, SimClock.TickCounter);
-                var throttleWriter = new FastBufferWriter(FastBufferWriter.GetWriteSize(throttleSignal), Allocator.Temp);
-
-                using (throttleWriter)
-                {
-                    throttleWriter.WriteValue(throttleSignal);
-                    NetworkManager.CustomMessagingManager.SendNamedMessage(MessageName.ClockSignal, senderId, throttleWriter, NetworkDelivery.Unreliable);
-                }*/
             }
 
             if (DEBUG_INPUT)

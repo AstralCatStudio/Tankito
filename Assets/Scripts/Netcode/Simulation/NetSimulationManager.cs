@@ -77,6 +77,7 @@ namespace Tankito.Netcode.Simulation
 
         public void QueueForDespawn(ulong simObjId)
         {
+            Debug.Log($"Queued [{simObjId}] for despawn");
             if (m_simulationObjects.ContainsKey(simObjId))
             {
                 m_removeFromSimQueue.Add(simObjId);
@@ -114,7 +115,7 @@ namespace Tankito.Netcode.Simulation
                 var obj = m_simulationObjects[objId];
                 if (obj is BulletSimulationObject bullet)
                 {
-                    Debug.Log($"[{SimClock.TickCounter}]Called Despawn for {objId}");
+                    //Debug.Log($"[{SimClock.TickCounter}]Called Despawn for {objId}");
                     bullet.OnNetworkDespawn();
                 }
                 else

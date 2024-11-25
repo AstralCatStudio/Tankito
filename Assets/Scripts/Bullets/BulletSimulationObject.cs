@@ -54,14 +54,10 @@ namespace Tankito.Netcode.Simulation
 
         public override void SetSimState(in ISimulationState state)
         {
-            if(!gameObject.activeSelf)
-            {
-                gameObject.SetActive(true);
-            }
             if (state is BulletSimulationState bulletState)
             {
-                m_rigidbody.position = bulletState.Position;
-                m_rigidbody.rotation = bulletState.Rotation;
+                //Debug.Log($"SetSimState to: pos({bulletState.Position}), rot({bulletState.Rotation}), vel({bulletState.Velocity}), LifeTime({bulletState.LifeTime}), BouncesLeft({bulletState.BouncesLeft})");
+                transform.SetPositionAndRotation(bulletState.Position, Quaternion.AngleAxis(bulletState.Rotation,Vector3.forward));
                 m_rigidbody.velocity = bulletState.Velocity;
                 m_bulletController.m_lifetime = bulletState.LifeTime;
                 m_bulletController.m_bouncesLeft = bulletState.BouncesLeft;

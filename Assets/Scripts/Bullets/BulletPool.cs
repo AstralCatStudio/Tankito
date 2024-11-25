@@ -66,47 +66,50 @@ namespace Tankito
             }
         }
 
-        // Esto se llama para spawnear balas en medio de la simulacion
-        public BulletSimulationObject Get(ulong simObjId, ulong ownerId)
-        {
-            var bulletObj = m_pool.Get();
-            bulletObj.SetSimObjId(simObjId);
-            bulletObj.SetOwner(ownerId);
-            bulletObj.GetComponent<BulletController>().InitializeProperties(false);
-            bulletObj.OnNetworkSpawn();
-
-            return bulletObj;
-        }
 
         public BulletSimulationObject Get(Vector2 position, Vector2 rotation, ulong ownerId, int tick, int spawnN)
         {   
             float rotationDeg = Mathf.Atan2(rotation.x, rotation.y);
-
-            return Get(position, rotationDeg, ownerId, tick, spawnN);
+            var simObjId = SimExtensions.HashSimObj(ownerId, tick, spawnN);
+            return Get(position, rotationDeg, ownerId, simObjId);
         }
 
-        public BulletSimulationObject Get(Vector2 position, float rotation, ulong ownerId, int tick, int spawnN)
+        /// <summary>
+        /// Gets and (if <paramref name="autoSpawn"/> is true) adds a new bullet object to the local <see cref="NetSimulationManager"/>.<br />
+        /// If <paramref name="autoSpawn"/> is false, you must call <see cref="BulletSimulationObject.OnNetworkSpawn()"/> 
+        /// </summary>
+        /// <param name="position"></param>
+        /// <param name="rotation"></param>
+        /// <param name="ownerId"></param>
+        /// <param name="simObjId"></param>
+        /// <param name="autoSpawn"></param>
+        /// <returns></returns>
+        public BulletSimulationObject Get(Vector2 position, float rotation, ulong ownerId, ulong simObjId, bool autoSpawn = true)
         {   
-            Debug.Log($"[{SimClock.TickCounter}]Get called!");
+            if (DEBUG) Debug.Log($"[{SimClock.TickCounter}]Get called, Arguments: position");
 
 
             var bulletObj = m_pool.Get();
             var objRB = bulletObj.GetComponent<Rigidbody2D>();
-            bulletObj.GenerateSimObjId(ownerId, tick, spawnN);
-            objRB.position = position;
-            objRB.rotation = rotation;
+            bulletObj.SetSimObjId(simObjId);
+            // We dont use rigidbody transformations because they won't be changed until after the next physics update
+            //objRB.transform.position = position;
+            //objRB.rotation = rotation;
+            bulletObj.transform.SetPositionAndRotation(position, Quaternion.AngleAxis(rotation,Vector3.forward));
 
-            bulletObj.GenerateSimObjId(ownerId, tick, spawnN);
             bulletObj.SetOwner(ownerId);
             bulletObj.GetComponent<BulletController>().InitializeProperties();
             
-            if (NetworkManager.Singleton.IsServer)
+            if (autoSpawn)
             {
-                ServerSimulationManager.Instance.QueueForSpawn(bulletObj);
-            }
-            else
-            {
-                ClientSimulationManager.Instance.QueueForSpawn(bulletObj);
+                if (NetworkManager.Singleton.IsServer)
+                {
+                    ServerSimulationManager.Instance.QueueForSpawn(bulletObj);
+                }
+                else
+                {
+                    ClientSimulationManager.Instance.QueueForSpawn(bulletObj);
+                }
             }
             
             return bulletObj;
@@ -114,7 +117,7 @@ namespace Tankito
 
         public void Release(BulletSimulationObject bullet)
         {
-            Debug.Log($"[{SimClock.TickCounter}]Release called on {bullet.SimObjId}!");
+            if (DEBUG) Debug.Log($"[{SimClock.TickCounter}]Release called on {bullet.SimObjId}!");
             m_pool.Release(bullet);
         }
     }
