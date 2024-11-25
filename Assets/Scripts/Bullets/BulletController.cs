@@ -22,7 +22,8 @@ namespace Tankito {
         public Action<BulletController> OnSpawn = (ABullet) => { }, OnFly = (ABullet) => { },
                                         OnHit = (ABullet) => { }, OnBounce = (ABullet) => { },
                                         OnDetonate = (ABullet) => { };
-        
+        [SerializeField] private bool PREDICT_DESTRUCTION = true;
+
         private void Awake()
         {
             m_simObj = GetComponent<BulletSimulationObject>();
@@ -68,7 +69,7 @@ namespace Tankito {
             OnFly.Invoke(this);
             if (m_lifetime >= BulletCannonRegistry.Instance[m_simObj.OwnerId].Properties.lifetimeTotal)
             {
-                Debug.Log($"lifetime: {m_lifetime}/{BulletCannonRegistry.Instance[m_simObj.OwnerId].Properties.lifetimeTotal}");
+                //Debug.Log($"lifetime: {m_lifetime}/{BulletCannonRegistry.Instance[m_simObj.OwnerId].Properties.lifetimeTotal}");
                 Detonate(true);
             }
         }
@@ -76,7 +77,7 @@ namespace Tankito {
         protected void ResetBulletData()
         {
             gameObject.layer = 8;
-            m_bouncesLeft = 0;
+            m_bouncesLeft = int.MaxValue; // int.MaxValue PARA EVITAR Detonate prematuro en colisiones previas a la inicializacion y simulacion de la bala.
             m_lifetime = 0;
             OnSpawn = (ABullet) => {};
             OnFly = (ABullet) => {};
@@ -94,9 +95,9 @@ namespace Tankito {
                 BulletSimulationObject bulletSimObj = GetComponent<BulletSimulationObject>();
                 ServerSimulationManager.Instance.QueueForDespawn(bulletSimObj.SimObjId);
            }
-           else if(lifeTimeOver)
+           else if(PREDICT_DESTRUCTION || lifeTimeOver)
            {
-                Debug.Log(lifeTimeOver);
+                //Debug.Log("LifeTimeOver?=>" + lifeTimeOver);
                 BulletSimulationObject bulletSimObj = GetComponent<BulletSimulationObject>();
                 ClientSimulationManager.Instance.QueueForDespawn(bulletSimObj.SimObjId);
            }

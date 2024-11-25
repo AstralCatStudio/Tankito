@@ -130,9 +130,9 @@ namespace Tankito.Netcode.Simulation
         {
             if (state is TankSimulationState tankState)
             {
-                m_tankRB.position = tankState.Position;
-                m_tankRB.rotation = tankState.HullRotation;
-                m_turretRB.rotation = tankState.TurretRotation;
+                m_tankRB.transform.position = tankState.Position;
+                m_tankRB.transform.rotation = Quaternion.AngleAxis(tankState.HullRotation, Vector3.forward);
+                m_turretRB.transform.rotation = Quaternion.AngleAxis(tankState.TurretRotation, Vector3.forward);
                 m_tankRB.velocity = tankState.Velocity;
                 m_controller.PlayerState = tankState.PlayerState;
                 m_controller.StateInitTick = tankState.StateInitTick;

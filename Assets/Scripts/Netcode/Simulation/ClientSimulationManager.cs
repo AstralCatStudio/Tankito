@@ -22,7 +22,7 @@ namespace Tankito.Netcode.Simulation
         [SerializeField] private TankDelta m_tankSimulationTolerance;
         [SerializeField] private BulletDelta m_bulletSimulationTolerance;
 
-        [SerializeField] private bool DEBUG;
+        [SerializeField] private bool DEBUG = true;
 
         const int NO_ROLLBACK = -1;
         int m_rollbackTick = NO_ROLLBACK;
@@ -63,7 +63,6 @@ namespace Tankito.Netcode.Simulation
             }
             m_tankSimulationTolerance = new TankDelta(new Vector2(0.1f,0.1f), 3f, new Vector2(0.2f,0.2f), 60f, 0);
             m_bulletSimulationTolerance = new BulletDelta(new Vector2(0.1f,0.1f), 1f, new Vector2(0.1f,0.1f));
-            DEBUG = false;
 
             m_snapshotBuffer = new CircularBuffer<SimulationSnapshot>(SNAPSHOT_BUFFER_SIZE);
             m_lastAuthSnapshotTimestamp = NO_SNAPSHOT;
@@ -92,6 +91,7 @@ namespace Tankito.Netcode.Simulation
             // Cache Simulation State
             SimulationSnapshot newSnapshot = CaptureSnapshot();
             newSnapshot.status = SnapshotStatus.Predicted;
+            //if (!SimClock.Instance.Active) Debug.Log($"[{SimClock.TickCounter}]ReconciliatedSnapshot-> saved to buffer at({newSnapshot.timestamp})");
             m_snapshotBuffer.Add(newSnapshot, newSnapshot.timestamp);
         }
         
@@ -144,13 +144,15 @@ namespace Tankito.Netcode.Simulation
                         // Auth Obj NOT in Snapshot
                         if (newAuthSnapshot[authObjId].type == SimulationObjectType.Bullet)
                         {
+                            var bulletState = (BulletSimulationState)newAuthSnapshot[authObjId].state;
                             // Si es su 1er tick de vida, dejamos que intente el propio rollback instanciar la bala
-                            if (((BulletSimulationState)newAuthSnapshot[authObjId].state).LifeTime >= SimClock.SimDeltaTime*2)
+                            if (bulletState.LifeTime >= SimClock.SimDeltaTime*2)
                             {
                                 missingObjects = true;
                                 var ownerId =  ((BulletSimulationState)newAuthSnapshot[authObjId].state).OwnerId;
-                                BulletPool.Instance.Get(authObjId, ownerId);
-                                if (DEBUG) Debug.Log($"[{SimClock.TickCounter}]reconBullet successfully added to sim? => " + m_simulationObjects.ContainsKey(authObjId));
+                                var authBullet = BulletPool.Instance.Get(bulletState.Position, bulletState.Rotation, ownerId, authObjId, autoSpawn:false);
+                                authBullet.OnNetworkSpawn();
+                                if (DEBUG) Debug.Log($"[{SimClock.TickCounter}]Reconciliated Bullet[{authObjId}] successfully added to sim? => " + m_simulationObjects.ContainsKey(authObjId));
                             }
                             else
                             {
@@ -214,6 +216,7 @@ namespace Tankito.Netcode.Simulation
                 }
                 else
                 {
+                    if (DEBUG) Debug.Log($"Queueing [{objId}] for despawn (NOT found in authSnapshot)");
                     QueueForDespawn(objId);
                 }
                 
@@ -337,7 +340,7 @@ namespace Tankito.Netcode.Simulation
                 }
             }
             
-            Debug.Log("Thresholds check: " + desyncs);
+            if (DEBUG) Debug.Log("Thresholds check: " + desyncs);
         }
 
         [ContextMenu("TestTimeTravel")]

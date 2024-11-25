@@ -64,6 +64,12 @@ namespace Tankito.Netcode.Simulation
         }
 
         public abstract ISimulationState GetSimState();
+
+        /// <summary>
+        /// It is recommended that you set the transform of objects instead of their rigidbodies,
+        /// since rigidboy transformations are not changed until the next Physics update.
+        /// </summary>
+        /// <param name="state"></param>
         public abstract void SetSimState(in ISimulationState state);
     }
 }
