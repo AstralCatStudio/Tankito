@@ -94,6 +94,7 @@ namespace Tankito.Netcode.Simulation
             {
                 str += $" ({pair.Key}) |";
             }
+            str += ")";
 
             return str;
         }
