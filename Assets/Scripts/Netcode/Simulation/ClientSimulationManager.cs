@@ -187,10 +187,6 @@ namespace Tankito.Netcode.Simulation
                             break;
                         }
                     }
-                    else if(m_simulationObjects.Keys.Contains(objId))
-                    {
-                        QueueForDespawn(objId);
-                    }
                 }
             }
             
@@ -209,8 +205,6 @@ namespace Tankito.Netcode.Simulation
             // We DON'T have to re-simulate the tick which we are getting as auth,
             // because it's already simulated. So just advance the counter
             m_rollbackTick++;
-
-            List<ulong> simObjectsToRemove = new List<ulong>();
             
             foreach(var objId in m_simulationObjects.Keys)
             {
@@ -220,7 +214,7 @@ namespace Tankito.Netcode.Simulation
                 }
                 else
                 {
-                    simObjectsToRemove.Add(objId);
+                    QueueForDespawn(objId);
                 }
                 
                 // Put Input Components into replay mode
@@ -229,11 +223,6 @@ namespace Tankito.Netcode.Simulation
                     tank.StartInputReplay(m_rollbackTick);
                 }
                 // Habra que hacer algo para restaurar objetos que puedieran haber deespawneado y todo eso supongo
-            }
-
-            for(int i = 0; i < simObjectsToRemove.Count; i++)
-            {
-                m_simulationObjects[simObjectsToRemove[i]].OnNetworkDespawn();
             }
             
             while(m_rollbackTick < SimClock.TickCounter)
