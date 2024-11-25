@@ -186,7 +186,7 @@ namespace Tankito
         public void StartRoundCountdown()
         {
             RoundUI.Instance.SetActiveScenarySelection(false);
-            StartRoundCountdown(m_currentRound++);
+            StartRoundCountdown(m_currentRound);
         }
 
         /// <summary>
@@ -360,6 +360,7 @@ namespace Tankito
             }
 
             m_startedRound = false;
+            m_currentRound++;
             if (DEBUG) Debug.Log("NETLESS: Fin de ronda");
             m_localPlayerInputObject.SetActive(false);
             RoundUI.Instance.ActivateAliveTanksGUI(false);
