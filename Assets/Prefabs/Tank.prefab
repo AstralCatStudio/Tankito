@@ -351,7 +351,43 @@ MonoBehaviour:
   m_aimSpeed: 1080
   m_dashSpeedCurve:
     serializedVersion: 2
-    m_Curve: []
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 3.9969535
+      outSlope: 3.9969535
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.25093076
+      value: 1.0029585
+      inSlope: 3.9969535
+      outSlope: Infinity
+      tangentMode: 101
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.93138117
+      value: 1.0005159
+      inSlope: Infinity
+      outSlope: -14.494554
+      tangentMode: 71
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0.0059165955
+      inSlope: -14.494554
+      outSlope: 0
+      tangentMode: 69
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4

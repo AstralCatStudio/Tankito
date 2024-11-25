@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6545025246547745674}
   - component: {fileID: 1230613554501251170}
   - component: {fileID: -6159674049367059405}
-  - component: {fileID: 9057162967867901668}
+  - component: {fileID: 5391157036757002482}
   - component: {fileID: 402144271898706436}
   m_Layer: 8
   m_Name: Bullet
@@ -32,7 +32,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.2957, y: 0.2957, z: 0.2957}
+  m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -54,7 +54,7 @@ MonoBehaviour:
   SynchronizeTransform: 0
   ActiveSceneSynchronization: 0
   SceneMigrationSynchronization: 0
-  SpawnWithObservers: 1
+  SpawnWithObservers: 0
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 0
 --- !u!212 &6545025246547745674
@@ -170,8 +170,8 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.8
---- !u!114 &9057162967867901668
+  m_Radius: 0.6
+--- !u!114 &5391157036757002482
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -185,7 +185,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_simObjId: 0
   m_rigidbody: {fileID: 1230613554501251170}
-  m_bullet: {fileID: 402144271898706436}
+  m_bulletController: {fileID: 402144271898706436}
 --- !u!114 &402144271898706436
 MonoBehaviour:
   m_ObjectHideFlags: 0

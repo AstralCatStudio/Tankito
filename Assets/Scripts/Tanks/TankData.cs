@@ -4,6 +4,7 @@ using UnityEngine;
 using Unity.Netcode;
 using System;
 using Tankito;
+using NUnit.Framework;
 
 public class TankData : NetworkBehaviour
 {
@@ -28,6 +29,7 @@ public class TankData : NetworkBehaviour
         {
             DieClientRpc();
         }
+
         OnTankDestroyed?.Invoke(this);
         Debug.LogWarning("TODO: Trigger tank death animation");
         gameObject.SetActive(false);
@@ -42,9 +44,27 @@ public class TankData : NetworkBehaviour
         }
     }
 
+    /// <summary>
+    /// Should Only Be Called  from the server OR as a clientRpc (e.g from the server)
+    /// </summary>
+    /// <param name="awardedPoints"></param>
     public void AwardPoints(int awardedPoints)
     {
+        if (IsServer)
+        {
+            AwardPointsClientRpc(awardedPoints);
+        }
+
         m_points += awardedPoints;
+    }
+
+    [ClientRpc]
+    public void AwardPointsClientRpc(int awardedPoints)
+    {
+        if (!IsServer)
+        {
+            AwardPoints(awardedPoints);
+        }
     }
 
     public void TakeDamage(int damage)

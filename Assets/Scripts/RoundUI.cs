@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Tankito;
@@ -16,6 +17,7 @@ public class RoundUI : Singleton<RoundUI>
     public GameObject InitExitButton;
     public GameObject EndExitButton;
     public GameObject ScenarySelection;
+    public GameObject LobbyInfo;
 
     #region Ranking
     public void SetActiveRanking(bool active)
@@ -64,7 +66,7 @@ public class RoundUI : Singleton<RoundUI>
 
     #region Countdown
 
-    public void SetActiveCountownText(bool active)
+    public void ActivateCountdownGUI(bool active)
     {
         CountdownText.SetActive(active);
     }
@@ -78,7 +80,7 @@ public class RoundUI : Singleton<RoundUI>
 
     #region BackButton
 
-    public void SetActiveInitExitButton(bool active)
+    public void ActivateInitExitButton(bool active)
     {
         InitExitButton.SetActive(active);
     }
@@ -107,6 +109,11 @@ public class RoundUI : Singleton<RoundUI>
     public void SetScenaryText(string newText)
     {
         ScenarySelection.GetComponentInChildren<TextMeshProUGUI>().text = newText;
+    }
+
+    internal void ActivateLobbyInfoGUI(bool active)
+    {
+        LobbyInfo.SetActive(active);
     }
 
     #endregion

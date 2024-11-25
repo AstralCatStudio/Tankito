@@ -6,9 +6,11 @@ using System.Linq;
 using Tankito.Netcode.Messaging;
 using System;
 using UnityEngine.InputSystem;
+using UnityEditor.VersionControl;
 
 namespace Tankito
 {
+
     public class RoundManager : NetworkBehaviour
     {
         private int m_currentRound = 0;
@@ -22,7 +24,6 @@ namespace Tankito
         public bool IsGameStarted => m_startedGame;
         private bool m_startedRound;
 
-        private SpawnManager m_spawnManager;
         public GameObject m_localPlayerInputObject;
         [SerializeField] private bool DEBUG = false;
 
@@ -51,22 +52,15 @@ namespace Tankito
             m_startedGame = false;
             m_startedRound = false;
 
-            if (IsServer)
-            {
-                m_spawnManager = GameObject.Find("SpawnManager").GetComponent<SpawnManager>();
-            }
-
             if (!m_startedGame)
             {
                 m_localPlayerInputObject.SetActive(false);
             }
 
-            if (DEBUG) Debug.Log("Se suscribe al evento de morir tanque");
-            TankData.OnTankDestroyed += TankDeath;
             //NetworkManager.Singleton.OnClientConnectedCallback += InitPlayersDictionary;
         }
 
-        public void InitPlayersDictionary()
+        public void UpdateRemoteClientPlayerList()
         {
             if (!IsServer) return;
             //Debug.LogWarning($"Jugadores conectados: {m_players.Count}");
@@ -156,7 +150,11 @@ namespace Tankito
 
         private void TankDeath(TankData t)
         {
-            t.AwardPoints(m_players.Count - AliveTanks.Count() - 1); // -1 porque no deberia darte puntos por estar tu mismo muerto
+            if (IsServer)
+            {
+                t.AwardPoints(m_players.Count - AliveTanks.Count() - 1); // -1 porque no deberia darte puntos por estar tu mismo muerto
+            }
+
             PlayerListUpdate(true);
             Debug.Log($"Round Manager registered a tank death: Tank[{t.OwnerClientId}]-Points: {t.Points}");
         }
@@ -182,15 +180,23 @@ namespace Tankito
 
 
         #region Countdown
+        /// <summary>
+        /// Only called by the server
+        /// </summary>
         public void StartRoundCountdown()
         {
             RoundUI.Instance.SetActiveScenarySelection(false);
             StartRoundCountdown(m_currentRound++);
         }
 
+        /// <summary>
+        /// Only called by the server
+        /// </summary>
         public void StartRoundCountdown(int newRound)
         {
             ResetPlayers();
+            // To avoid SimClocks diverging in the between rounds phase
+            MessageHandlers.Instance.SendSynchronizationSignal();
             OnPreRoundStart?.Invoke(newRound);
 
             Debug.Log("Inicio ronda " + newRound);
@@ -211,6 +217,9 @@ namespace Tankito
             MessageHandlers.Instance.SendClockSignal(signal);
         }
 
+        /// <summary>
+        /// Only called by the server
+        /// </summary>
         private void UpdateCountdown()
         {
             if (m_currentCountdownTime > 0)
@@ -225,6 +234,9 @@ namespace Tankito
             }
         }
 
+        /// <summary>
+        /// Only called by the server
+        /// </summary>
         private void EndCountdown()
         {
             if (DEBUG) Debug.Log("Fin de cuenta atras");
@@ -242,26 +254,52 @@ namespace Tankito
         [ClientRpc]
         private void ActivateCountdownGUIClientRpc()
         {
-            RoundUI.Instance.SetActiveCountownText(true);
+            RoundUI.Instance.ActivateCountdownGUI(true);
         }
 
         [ClientRpc]
         private void DeactivateCountdownGUIClientRpc()
         {
-            RoundUI.Instance.SetActiveCountownText(false);
+            RoundUI.Instance.ActivateCountdownGUI(false);
         }
         #endregion
 
 
 
         #region Game State Helpers & GUIs
+        /// <summary>
+        /// Should only be called by the server
+        /// </summary>
         private void ResetPlayers()
         {
-            m_spawnManager.ResetSpawnPoints();
+            RespawnTanks();
+            FindObjectOfType<SpawnManager>().ResetSpawnPoints();
+        }
+
+        private void RespawnTanks()
+        {
+            if (IsServer)
+            {
+                RespawnTanksClientRpc();
+            }
 
             foreach (var tank in AliveTanks)
             {
                 tank.ResetTank();
+            }
+            
+            foreach (var item in m_players)
+            {
+                item.Value.gameObject.SetActive(true);
+            }
+        }
+
+        [ClientRpc]
+        private void RespawnTanksClientRpc()
+        {
+            if (!IsServer)
+            {
+                RespawnTanks();
             }
         }
 
@@ -269,6 +307,7 @@ namespace Tankito
         {
             RoundUI.Instance.SetRemainingPlayers(AliveTanks.Count());
         }
+
         private void SetActiveTankInputs(TankData tank)
         {
             var active = tank.Alive;
@@ -288,20 +327,16 @@ namespace Tankito
 
 
         public void StartRound()
-        {
-            foreach (var item in m_players)
-            {
-                item.Value.gameObject.SetActive(true);
-            }
-            
+        {            
             if (IsServer)
             {
                 StartRoundClientRpc();
-                m_spawnManager.ResetSpawnPoints();
             }
 
             m_startedRound = true;
-            RoundUI.Instance.SetActiveCountownText(false);
+            RoundUI.Instance.ActivateLobbyInfoGUI(false);
+            RoundUI.Instance.ActivateCountdownGUI(false);
+            RoundUI.Instance.ActivateInitExitButton(false);
             RoundUI.Instance.ActivateAliveTanksGUI(true);
             m_localPlayerInputObject.SetActive(true);
         }
@@ -320,6 +355,8 @@ namespace Tankito
             if (IsServer)
             {
                 EndRoundClientRpc();
+                // To avoid SimClocks diverging in the between rounds phase
+                MessageHandlers.Instance.SendSynchronizationSignal();
             }
 
             m_startedRound = false;
@@ -469,7 +506,10 @@ namespace Tankito
             }
 
             RoundUI.Instance.SetActivePowerUps(false);
-            Invoke(nameof(StartRoundCountdown), 1.0f);
+            if (IsServer)
+            {
+                Invoke(nameof(StartRoundCountdown), 1.0f);
+            }
         }
 
         [ClientRpc]

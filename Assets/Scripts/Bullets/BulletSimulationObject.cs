@@ -1,5 +1,4 @@
 using System;
-using Unity.Netcode;
 using UnityEngine;
 
 namespace Tankito.Netcode.Simulation
@@ -7,7 +6,7 @@ namespace Tankito.Netcode.Simulation
     public class BulletSimulationObject : ASimulationObject
     {
         [SerializeField] private Rigidbody2D m_rigidbody;
-        [SerializeField] private BulletController m_bullet;
+        [SerializeField] private BulletController m_bulletController;
         public int SpawnTick { get => m_spawnTick; }
         private int m_spawnTick;
         private ulong m_ownerId;
@@ -17,10 +16,10 @@ namespace Tankito.Netcode.Simulation
 
         void Start()
         {
-            if (m_bullet == null)
+            if (m_bulletController == null)
             {
-                m_bullet = GetComponent<BulletController>();
-                if (m_bullet == null) Debug.LogWarning("BulletSimulationObject could not find associated ABullet component!");
+                m_bulletController = GetComponent<BulletController>();
+                if (m_bulletController == null) Debug.LogWarning("BulletSimulationObject could not find associated ABullet component!");
             }
         }
         
@@ -46,8 +45,8 @@ namespace Tankito.Netcode.Simulation
                 m_rigidbody.position,
                 m_rigidbody.rotation,
                 m_rigidbody.velocity,
-                m_bullet.m_lifetime,
-                m_bullet.m_bouncesLeft,
+                m_bulletController.m_lifetime,
+                m_bulletController.m_bouncesLeft,
                 SimObjId,
                 OwnerId
             );
@@ -64,8 +63,8 @@ namespace Tankito.Netcode.Simulation
                 m_rigidbody.position = bulletState.Position;
                 m_rigidbody.rotation = bulletState.Rotation;
                 m_rigidbody.velocity = bulletState.Velocity;
-                m_bullet.m_lifetime = bulletState.LifeTime;
-                m_bullet.m_bouncesLeft = bulletState.BouncesLeft;
+                m_bulletController.m_lifetime = bulletState.LifeTime;
+                m_bulletController.m_bouncesLeft = bulletState.BouncesLeft;
             }
             else
             {

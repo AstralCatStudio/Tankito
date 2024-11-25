@@ -27,7 +27,7 @@ namespace Tankito
                 parryTime: 0.15f,
                 parryCooldown: 1.5f,
                 dashSpeed: 1f,
-                dashDistance: 1f
+                dashDistance: 0.5f
             );
         private List<HullModifier> m_modifiers = new List<HullModifier>();
         public List<HullModifier> Modifiers => m_modifiers;
@@ -41,12 +41,13 @@ namespace Tankito
 
         //Variables Dash
         [SerializeField] private AnimationCurve m_dashSpeedCurve;
-        private float m_dashSpeedMultiplier = 1;
+        private float m_dashSpeedMultiplier = 1f;
+        private float m_dashDistance;
 
         private int currentDashReloadTick = -1;
-        int dashTicks;
+        int m_dashTicks;
         //int fullDashTicks;
-        int reloadDashTicks;
+        int m_reloadDashTicks;
         [SerializeField] int stateInitTick;
 
 
@@ -151,15 +152,17 @@ namespace Tankito
             if (overwrite)
             {
                 m_dashSpeedMultiplier = dashSpeed;
-                dashTicks = Mathf.CeilToInt(dashDistance/m_dashSpeedMultiplier / SimClock.SimDeltaTime);
-                reloadDashTicks = Mathf.CeilToInt(dashCooldown / SimClock.SimDeltaTime);
+                m_dashDistance = dashDistance;
+                m_reloadDashTicks = Mathf.CeilToInt(dashCooldown / SimClock.SimDeltaTime);
             }
             else
             {
                 m_dashSpeedMultiplier *= dashSpeed;
-                dashTicks += Mathf.CeilToInt(dashDistance/m_dashSpeedMultiplier / SimClock.SimDeltaTime);
-                reloadDashTicks += Mathf.CeilToInt(dashCooldown / SimClock.SimDeltaTime);
+                m_dashDistance += dashDistance;
+                m_reloadDashTicks += Mathf.CeilToInt(dashCooldown / SimClock.SimDeltaTime);
             }
+
+            m_dashTicks = Mathf.CeilToInt(m_dashDistance/m_dashSpeedMultiplier / SimClock.SimDeltaTime);
         }
 
         public void BindInputSource(ITankInput inputSource)
@@ -247,7 +250,7 @@ namespace Tankito
             }
             
             //currentAcceleration = Mathf.Lerp(accelerationMultiplier, 0, (currentInputDashTick - (stateInitTick + fullDashTicks)) / (stateInitTick + dashTicks) - (stateInitTick + fullDashTicks));
-            float dashSpeed = m_dashSpeedMultiplier * m_dashSpeedCurve.Evaluate((currentInputDashTick-stateInitTick)/dashTicks);
+            float dashSpeed = m_dashSpeedMultiplier * m_dashSpeedCurve.Evaluate((currentInputDashTick-stateInitTick)/m_dashTicks);
 
             if(moveVector != Vector2.zero)
             {
@@ -260,10 +263,10 @@ namespace Tankito
 
             if (DEBUG)
             {
-                Debug.Log($"[{SimClock.TickCounter}] DASH: CurrentDashTick->{currentInputDashTick}. CurrentSpeedMult->{dashSpeed}. TickToEnd->{stateInitTick+dashTicks - currentInputDashTick}");
+                Debug.Log($"[{SimClock.TickCounter}] DASH: CurrentDashTick->{currentInputDashTick}. CurrentSpeedMult->{dashSpeed}. TickToEnd->{stateInitTick+m_dashTicks - currentInputDashTick}");
             }
 
-            if (currentInputDashTick >= stateInitTick + dashTicks)
+            if (currentInputDashTick >= stateInitTick + m_dashTicks)
             {
                 currentDashReloadTick = 0;
                 OnDashEnd?.Invoke();
@@ -298,7 +301,7 @@ namespace Tankito
             if (currentDashReloadTick == -1) return true;
             else
             {
-                if (currentDashReloadTick < reloadDashTicks)
+                if (currentDashReloadTick < m_reloadDashTicks)
                 {
                     currentDashReloadTick++;
                 }

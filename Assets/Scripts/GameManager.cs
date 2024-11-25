@@ -109,7 +109,7 @@ namespace Tankito
                 var tankData = newPlayer.GetComponent<TankData>();
                 Debug.Log($"TankData = {tankData}");
                 RoundManager.Instance.AddPlayer(tankData);
-                RoundManager.Instance.InitPlayersDictionary();
+                RoundManager.Instance.UpdateRemoteClientPlayerList();
             }
             //else
             //{
@@ -147,8 +147,9 @@ namespace Tankito
                 SpawnManager spawnManager = FindObjectOfType<SpawnManager>();
                 spawnManager.FreeSpawnPoint(clientId);
 
-                RoundManager roundManager = FindObjectOfType<RoundManager>();
-                roundManager.RemovePlayer(clientId);
+                RoundManager.Instance.RemovePlayer(clientId);
+                RoundManager.Instance.UpdateRemoteClientPlayerList();
+
             }
         }
 

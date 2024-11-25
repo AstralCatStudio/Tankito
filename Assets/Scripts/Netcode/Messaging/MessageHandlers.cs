@@ -129,7 +129,8 @@ namespace Tankito.Netcode.Messaging
                         int latencyTicks = (int)(Parameters.CURRENT_LATENCY * 2/Parameters.SIM_DELTA_TIME);
                         Debug.Log($"[{SimClock.TickCounter}]Latency Ticks: {latencyTicks}ticks ({(int)(2*Parameters.CURRENT_LATENCY * 1000)}ms(RTT) @{(int)(Parameters.SIM_DELTA_TIME * 1000)}ms(dT))");
                         SimClock.Instance.SetClock(signal.signalTicks + latencyTicks);
-
+                        // Make sure we reset our throttle speed to baseline (NO THROTTLING)
+                        SimClock.Instance.ThrottleClock(0);
                     }
                     break;
 
