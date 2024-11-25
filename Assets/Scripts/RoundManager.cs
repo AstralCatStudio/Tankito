@@ -12,8 +12,8 @@ namespace Tankito
     {
         private int m_currentRound = 0;
         public int m_maxRounds = 5;
-
-        const float timeToCountdown = 5f;
+        [SerializeField]
+        float timeToCountdown = 5f;
         private float m_currentCountdownTime;
 
         private Dictionary<ulong, TankData> m_players;
@@ -133,23 +133,11 @@ namespace Tankito
             PlayerListUpdate();
         }
 
-        private void OnEnable()
-        {
-            if (DEBUG) Debug.Log("Se suscribe al evento de morir tanque");
-            TankData.OnTankDestroyed += TankDeath;
-        }
-
-        private void OnDisable()
-        {
-            if (DEBUG) Debug.Log("Se desuscribe al evento de morir tanque");
-            TankData.OnTankDestroyed -= TankDeath;
-        }
-
-        private void TankDeath(TankData t)
+        public void TankDeath(TankData t)
         {
             if (IsServer)
             {
-                t.AwardPoints(m_players.Count - AliveTanks.Count() - 1); // -1 porque no deberia darte puntos por estar tu mismo muerto
+                t.AwardPoints(m_players.Count - AliveTanks.Count()); // -1 porque no deberia darte puntos por estar tu mismo muerto
             }
 
             PlayerListUpdate(true);
@@ -280,7 +268,7 @@ namespace Tankito
                 RespawnTanksClientRpc();
             }
 
-            foreach (var tank in AliveTanks)
+            foreach (var tank in m_players.Values)
             {
                 tank.ResetTank();
             }
@@ -329,13 +317,14 @@ namespace Tankito
             {
                 StartRoundClientRpc();
             }
-
+            
             m_startedRound = true;
             RoundUI.Instance.ActivateLobbyInfoGUI(false);
             RoundUI.Instance.ActivateCountdownGUI(false);
             RoundUI.Instance.ActivateInitExitButton(false);
             RoundUI.Instance.ActivateAliveTanksGUI(true);
             m_localPlayerInputObject.SetActive(true);
+            PlayerListUpdate();
         }
 
         [ClientRpc]
@@ -381,6 +370,7 @@ namespace Tankito
             {
                 case 1:
                     var winner = AliveTanks.First();
+                    winner.AwardPoints(m_players.Count);
                     if (DEBUG) Debug.Log($"{winner} ha ganado la ronda");
                     if (IsServer) EndRound();
                     break;
@@ -439,7 +429,7 @@ namespace Tankito
 
         public List<TankData> GetTankOrder()
         {
-            return m_players.Values.OrderByDescending(tank => tank.Points).ToList<TankData>();
+            return m_players.Values.OrderBy(tank => tank.Points).ToList<TankData>();
         }
 
         private void ShowRanking()
@@ -551,7 +541,7 @@ namespace Tankito
         [ContextMenu("TestDamageLocalPlayer")]
         public void TestDamagePlayer()
         {
-            m_players[NetworkManager.Singleton.LocalClientId].TakeDamage(1);
+            //m_players[NetworkManager.Singleton.LocalClientId].TakeDamage(1);
         }
         #endregion
     }

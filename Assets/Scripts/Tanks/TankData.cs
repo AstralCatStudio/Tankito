@@ -5,22 +5,27 @@ using Unity.Netcode;
 using System;
 using Tankito;
 using NUnit.Framework;
+using Tankito.Netcode.Simulation;
+using UnityEngine.Rendering;
 
 public class TankData : NetworkBehaviour
 {
     public delegate void TankDestroyedHandler(TankData tank);
-    public static event TankDestroyedHandler OnTankDestroyed = (TankData tank) => { };
-    public Action<TankData> OnDamaged = (TankData damagedTank) => { };
-    private NetworkVariable<int> m_health = new NetworkVariable<int>(2);
-    private NetworkVariable<bool> m_isAlive = new NetworkVariable<bool>(true);
+    public event TankDestroyedHandler OnTankDestroyed = (TankData tank) => { };
+    //public Action<TankData> OnDamaged = (TankData damagedTank) => { };
+    private int m_health;
+    private bool m_isAlive;
     private int m_points;
-    public int Health => m_health.Value;
-    public bool Alive => m_isAlive.Value;
+    public int Health => m_health;
+    public bool Alive => m_isAlive;
     public int Points => m_points;
 
     void Start()
     {
-        m_points = 0;
+        if (IsServer)
+        {
+            m_points = 0;
+        }
     }
 
     public void Die()
@@ -30,8 +35,8 @@ public class TankData : NetworkBehaviour
             DieClientRpc();
         }
 
-        OnTankDestroyed?.Invoke(this);
-        Debug.LogWarning("TODO: Trigger tank death animation");
+        OnTankDestroyed.Invoke(this);
+        UnityEngine.Debug.LogWarning("TODO: Trigger tank death animation");
         gameObject.SetActive(false);
     }
 
@@ -43,7 +48,15 @@ public class TankData : NetworkBehaviour
             Die();
         }
     }
-
+    private void OnEnable()
+    {
+        OnTankDestroyed += RoundManager.Instance.TankDeath;
+    }
+    private void OnDisable()
+    {
+        
+        OnTankDestroyed -= RoundManager.Instance.TankDeath;
+    }
     /// <summary>
     /// Should Only Be Called  from the server OR as a clientRpc (e.g from the server)
     /// </summary>
@@ -54,29 +67,32 @@ public class TankData : NetworkBehaviour
         {
             AwardPointsClientRpc(awardedPoints);
         }
-
         m_points += awardedPoints;
+        
     }
-
     [ClientRpc]
-    public void AwardPointsClientRpc(int awardedPoints)
+    void AwardPointsClientRpc(int awardedPoints)
     {
         if (!IsServer)
         {
             AwardPoints(awardedPoints);
         }
+        
     }
-
+    private void Update()
+    {
+        //Debug.Log("Vida actual: "+ m_health);
+    }
     public void TakeDamage(int damage)
     {
-        OnDamaged(this);
+        //OnDamaged(this);
         if (IsServer)
         {
-            m_health.Value -= damage;
+            m_health -= damage;
             
-            if (m_health.Value <= 0)
+            if (m_health <= 0)
             {
-                m_isAlive.Value = false;
+                m_isAlive = false;
                 Die();
             }
         }
@@ -84,17 +100,27 @@ public class TankData : NetworkBehaviour
 
     public void AddHealth(int addedHealth)
     {
-        m_health.Value += addedHealth;
+        if (IsServer)
+        {
+            m_health += addedHealth;
+        }
+        
     }
     public void SetHealth(int newHealth)
     {
-        m_health.Value = newHealth;
+        if (IsServer)
+        {
+            m_health = newHealth;
+        }
     }
 
     public void ResetTank()
     {
         //Debug.LogWarning("TODO: maybe play spawn animation?");
         gameObject.SetActive(true);
-        m_isAlive.Value = true;
+        if (IsServer)
+        {
+            m_isAlive = true;
+        }
     }
 }

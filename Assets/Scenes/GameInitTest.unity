@@ -2153,7 +2153,7 @@ GameObject:
   - component: {fileID: 983521815}
   - component: {fileID: 983521814}
   m_Layer: 0
-  m_Name: '@ModifierRegistry'
+  m_Name: ModifierRegistry
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4295,9 +4295,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_maxRounds: 5
+  timeToCountdown: 3
   m_startedGame: 0
   m_localPlayerInputObject: {fileID: 0}
-  DEBUG: 0
+  DEBUG: 1
 --- !u!4 &1603395879
 Transform:
   m_ObjectHideFlags: 0
@@ -4636,7 +4637,7 @@ GameObject:
   - component: {fileID: 1672948430}
   - component: {fileID: 1672948429}
   m_Layer: 0
-  m_Name: '@BulletCannonRegistry'
+  m_Name: BulletCannonRegistry
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

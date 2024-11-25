@@ -20,6 +20,9 @@ public class ModifiersController : MonoBehaviour
     }
     void ApplyModifiers()
     {
+        //Debug.Log("aplicando modificadores");
+        m_bulletCannon.Modifiers.Clear();
+        m_tankController.Modifiers.Clear();
         foreach (Modifier modifier in modifiers)
         {
             foreach (BulletModifier bulletModifier in modifier.bulletModifiers)

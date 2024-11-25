@@ -114,7 +114,7 @@ namespace Tankito
 
         public void Release(BulletSimulationObject bullet)
         {
-            Debug.Log($"[{SimClock.TickCounter}]Release called on {bullet.SimObjId}!");
+            //Debug.Log($"[{SimClock.TickCounter}]Release called on {bullet.SimObjId}!");
             m_pool.Release(bullet);
         }
     }
