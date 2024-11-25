@@ -11,12 +11,12 @@ public class ChangeWorstLatency : MonoBehaviour
     private void Start()
     {
         text = GetComponent<TextMeshProUGUI>();
-        text.text = ((int)(Parameters.WORST_CASE_LATENCY * 1000)).ToString() + "ms";
+        text.text = ((int)(SimulationParameters.WORST_CASE_LATENCY * 1000)).ToString() + "ms";
     }
 
     public void OnWorstLatencyChange(float value)
     {
         GetComponent<TextMeshProUGUI>().text = value.ToString() + "ms";
-        Parameters.WORST_CASE_LATENCY = (double)value/1000;
+        SimulationParameters.WORST_CASE_LATENCY = (double)value/1000;
     }
 }

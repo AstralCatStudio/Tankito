@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Tankito.Netcode
 {
-    public /*static*/ class Parameters : Singleton<Parameters>
+    public /*static*/ class SimulationParameters : Singleton<SimulationParameters>
     {
 
         /// <summary>
@@ -23,14 +23,18 @@ namespace Tankito.Netcode
         
 
         [SerializeField] double Median_Latency = 0.16;
+        public double MedianLatency => Median_Latency;
         [SerializeField] double Worst_Case_Latency = 0.400;
+        public double WorstCaseLatency => Worst_Case_Latency;
         [SerializeField] double Client_Jitter_Buffer_Time = 0.02;
+        [SerializeField] int Sim_Tick_Rate = 30;
+        public int SimTickRate => Sim_Tick_Rate;
+
         /// <summary>
         /// Latency of ping (HRTT).
         /// </summary>
         public static double CURRENT_LATENCY { get =>  Math.Abs((NetworkManager.Singleton.ServerTime - NetworkManager.Singleton.LocalTime).Time); }
 
-        [SerializeField] int Sim_Tick_Rate = 30;
         [SerializeField] bool DEBUG_LATENCY = false;
         [SerializeField] bool DEBUG_PARAMS = false;
 
@@ -46,21 +50,38 @@ namespace Tankito.Netcode
             base.Awake();
             DontDestroyOnLoad(gameObject);
         }
+
+        public void SetParams(float medianLatency, float worstCaseLatency, int simTickRate)
+        {
+            Median_Latency = medianLatency;
+            Worst_Case_Latency = worstCaseLatency;
+            Sim_Tick_Rate = simTickRate;
+        }
+
+        [SerializeField] float m_debugRate = 2f;
+        float m_debugTimeAccum = 0f;
         
         void Update()
         {
-            if (DEBUG_LATENCY)
+            m_debugTimeAccum += Time.deltaTime;
+
+            if ((int) m_debugTimeAccum > m_debugRate)
             {
-                Debug.Log("Average Latency (ping/HRTT): "+ (int)(CURRENT_LATENCY * 1000) + "ms");
-            }
-            
-            if (DEBUG_PARAMS)
-            {
-                Debug.Log("PARAMS: " +
-                            "\nSNAPSHOT_BUFFER_SIZE: " + SNAPSHOT_BUFFER_SIZE +
-                            "\nCLIENT_INPUT_WINDOW_SIZE: " + CLIENT_INPUT_WINDOW_SIZE +
-                            "\nSERVER_IDEAL_INPUT_BUFFER_SIZE: " + SERVER_IDEAL_INPUT_BUFFER_SIZE +
-                            "\nSNAPSHOT_JITTER_BUFFER_TIME: " + SNAPSHOT_JITTER_BUFFER_TIME);
+                m_debugTimeAccum = 0;
+                if (DEBUG_LATENCY)
+                {
+                    if (NetworkManager.Singleton.IsClient || NetworkManager.Singleton.IsServer)
+                        Debug.Log("Average Latency (ping/HRTT): "+ (int)(CURRENT_LATENCY * 1000) + "ms");
+                }
+                
+                if (DEBUG_PARAMS)
+                {
+                    Debug.Log($"PARAMS(WorstCase ping={(int)(WORST_CASE_LATENCY*1000)}ms): " +
+                                "\nSNAPSHOT_BUFFER_SIZE: " + SNAPSHOT_BUFFER_SIZE +
+                                "\nCLIENT_INPUT_WINDOW_SIZE: " + CLIENT_INPUT_WINDOW_SIZE +
+                                "\nSERVER_IDEAL_INPUT_BUFFER_SIZE: " + SERVER_IDEAL_INPUT_BUFFER_SIZE +
+                                "\nSNAPSHOT_JITTER_BUFFER_TIME: " + SNAPSHOT_JITTER_BUFFER_TIME);
+                }
             }
         }
     }

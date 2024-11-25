@@ -14,7 +14,7 @@ namespace Tankito.Netcode.Simulation
         [SerializeField] private bool DEBUG;
 
         //const int N_IDEAL_INPUT = 10;
-        public int IdealBufferSize { get => Parameters.SERVER_IDEAL_INPUT_BUFFER_SIZE; }
+        public int IdealBufferSize { get => SimulationParameters.SERVER_IDEAL_INPUT_BUFFER_SIZE; }
         public int Last { get =>  (m_inputBuffer.Count != 0) ? m_inputBuffer.Last().timestamp : 0; }
 
         public void AddInput(InputPayload[] newInputWindow)

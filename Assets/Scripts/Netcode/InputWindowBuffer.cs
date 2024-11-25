@@ -9,7 +9,7 @@ namespace Tankito.Netcode
     // Uso exclusivo CLIENTE
     public class InputWindowBuffer : Singleton<InputWindowBuffer>
     {
-        private int WINDOW_SIZE { get => Parameters.CLIENT_INPUT_WINDOW_SIZE; }
+        private int WINDOW_SIZE { get => SimulationParameters.CLIENT_INPUT_WINDOW_SIZE; }
 
         public FixedSizeQueue<InputPayload> inputWindow;// = new FixedSizeQueue<InputPayload>(WINDOW_SIZE);
         [SerializeField] private bool DEBUG;

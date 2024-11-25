@@ -11,7 +11,7 @@ namespace Tankito.Netcode.Simulation
 {
     public class ClientSimulationManager : NetSimulationManager<ClientSimulationManager>
     {
-        int SNAPSHOT_BUFFER_SIZE { get => Parameters.SNAPSHOT_BUFFER_SIZE; }
+        int SNAPSHOT_BUFFER_SIZE { get => SimulationParameters.SNAPSHOT_BUFFER_SIZE; }
         CircularBuffer<SimulationSnapshot> m_snapshotBuffer;
 
         /// <summary>

@@ -74,6 +74,10 @@ namespace Tankito
 
         private void OnClientConnected(ulong clientId)
         {
+            if (IsServer)
+            {
+                ServerSendSimulationParameters(clientId);
+            }
             //Debug.Log("GameManager CLIENT CONNECTED called.");
 
             if (m_loadingSceneFlag)
@@ -135,6 +139,24 @@ namespace Tankito
             NetworkManager.Singleton.CustomMessagingManager.RegisterNamedMessageHandler(MessageName.InputWindow, MessageHandlers.Instance.ReceiveInputWindow);
             NetworkManager.Singleton.CustomMessagingManager.RegisterNamedMessageHandler(MessageName.RelayInputWindow, MessageHandlers.Instance.ReceiveRelayedInputWindow);
             NetworkManager.Singleton.CustomMessagingManager.RegisterNamedMessageHandler(MessageName.SimulationSnapshot, MessageHandlers.Instance.ReceiveSimulationSnapshot);
+        }
+
+        private void ServerSendSimulationParameters(ulong clientId)
+        {
+            var medianLatency = (float)SimulationParameters.Instance.MedianLatency;
+            var worstLatency = (float)SimulationParameters.Instance.WorstCaseLatency;
+            var simTickRate = SimulationParameters.Instance.SimTickRate;
+
+            ClientRpcParams target = new ClientRpcParams();
+            target.Send.TargetClientIds = new ulong[] {clientId};
+            SetSimulationParametersClientRpc(medianLatency, worstLatency, simTickRate, target);
+        }
+
+        [ClientRpc()]
+        private void SetSimulationParametersClientRpc(float medianLatency, float worstCaseLatency, int simTickRate, ClientRpcParams clientRpcSendParams)
+        {
+            Debug.Log("Received Simulation Parameters!");
+            SimulationParameters.Instance.SetParams(medianLatency, worstCaseLatency, simTickRate);
         }
 
         private void OnClientDisconnect(ulong clientId)

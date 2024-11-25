@@ -74,7 +74,7 @@ namespace Tankito.Netcode.Messaging
         {
             if (!NetworkManager.Singleton.IsServer) return;
             
-            int throttleTicks = (SimClock.TickCounter + Parameters.SERVER_IDEAL_INPUT_BUFFER_SIZE - 1) - ServerSimulationManager.Instance.remoteInputTanks[clientId].Last;
+            int throttleTicks = (SimClock.TickCounter + SimulationParameters.SERVER_IDEAL_INPUT_BUFFER_SIZE - 1) - ServerSimulationManager.Instance.remoteInputTanks[clientId].Last;
             var throttleSignal = new ClockSignal(ClockSignalHeader.Throttle, throttleTicks);
             
             ulong[] target = new ulong[] {clientId};
@@ -85,7 +85,7 @@ namespace Tankito.Netcode.Messaging
         {
             if (!NetworkManager.Singleton.IsServer) return;
 
-            int syncTick = SimClock.TickCounter + Parameters.SERVER_IDEAL_INPUT_BUFFER_SIZE + 1;
+            int syncTick = SimClock.TickCounter + SimulationParameters.SERVER_IDEAL_INPUT_BUFFER_SIZE + 1;
             var syncSignal = new ClockSignal(ClockSignalHeader.Sync, syncTick);
 
             SendClockSignal(syncSignal, NetworkDelivery.ReliableSequenced);
@@ -126,8 +126,8 @@ namespace Tankito.Netcode.Messaging
                     if (NetworkManager.Singleton.IsClient && !NetworkManager.Singleton.IsServer)
                     {
                         if (DEBUG_CLOCK) Debug.Log("Attempting to Synchronize the local client simulation clock.");
-                        int latencyTicks = (int)(Parameters.CURRENT_LATENCY * 2/Parameters.SIM_DELTA_TIME);
-                        Debug.Log($"[{SimClock.TickCounter}]Latency Ticks: {latencyTicks}ticks ({(int)(2*Parameters.CURRENT_LATENCY * 1000)}ms(RTT) @{(int)(Parameters.SIM_DELTA_TIME * 1000)}ms(dT))");
+                        int latencyTicks = (int)(SimulationParameters.CURRENT_LATENCY * 2/SimulationParameters.SIM_DELTA_TIME);
+                        Debug.Log($"[{SimClock.TickCounter}]Latency Ticks: {latencyTicks}ticks ({(int)(2*SimulationParameters.CURRENT_LATENCY * 1000)}ms(RTT) @{(int)(SimulationParameters.SIM_DELTA_TIME * 1000)}ms(dT))");
                         SimClock.Instance.SetClock(signal.signalTicks + latencyTicks);
                         // Make sure we reset our throttle speed to baseline (NO THROTTLING)
                         SimClock.Instance.ThrottleClock(0);

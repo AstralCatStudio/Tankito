@@ -12,7 +12,7 @@ namespace Tankito
 {
     public class SimClock : Singleton<SimClock>
     {
-        public static float SimDeltaTime { get => (float)Parameters.SIM_DELTA_TIME; }
+        public static float SimDeltaTime { get => (float)SimulationParameters.SIM_DELTA_TIME; }
 
         double m_tickDeltaTime;
         double m_tickTimer;
@@ -41,7 +41,7 @@ namespace Tankito
             m_tickTimer = 0;
             m_tickCounter = 0;
             m_active = false;
-            m_tickDeltaTime = Parameters.SIM_DELTA_TIME;
+            m_tickDeltaTime = SimulationParameters.SIM_DELTA_TIME;
         }
 
 
@@ -103,7 +103,7 @@ namespace Tankito
             {
                 m_averageThrottleTicks += throttleTicks/m_throttleMessages;
 
-                float newTPS = Parameters.SIM_TICK_RATE + Mathf.Clamp(m_averageThrottleTicks, 1-Parameters.SIM_TICK_RATE, Parameters.SIM_TICK_RATE);
+                float newTPS = SimulationParameters.SIM_TICK_RATE + Mathf.Clamp(m_averageThrottleTicks, 1-SimulationParameters.SIM_TICK_RATE, SimulationParameters.SIM_TICK_RATE);
 
                 if (DEBUG) Debug.Log($"Throttling({m_averageThrottleTicks}) at: {newTPS}");
 

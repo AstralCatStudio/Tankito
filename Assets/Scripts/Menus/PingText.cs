@@ -24,7 +24,7 @@ public class PingText : MonoBehaviour
     void Start()
     {
         text = GetComponent<TextMeshProUGUI>();
-        m_ticksToDebug = Parameters.SIM_TICK_RATE;
+        m_ticksToDebug = SimulationParameters.SIM_TICK_RATE;
     }
 
     void Debug()
@@ -32,7 +32,7 @@ public class PingText : MonoBehaviour
         m_currentTick++;
         if(m_currentTick >= m_ticksToDebug)
         {
-            text.text = (int)(Parameters.CURRENT_LATENCY * 1000) + "ms";
+            text.text = (int)(SimulationParameters.CURRENT_LATENCY * 1000) + "ms";
             m_currentTick = 0;
         }
     }
