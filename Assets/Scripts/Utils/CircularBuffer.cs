@@ -87,7 +87,7 @@ namespace Tankito.Utils
         }
 
         /// <summary>
-        /// Gets an item from the circular buffer at a specific index (clamped to buffer size).
+        /// Gets an item from the circular buffer at a specific index (wrapped into to buffer size).
         /// </summary>
         /// <param name="idx"></param>
         /// <returns></returns>

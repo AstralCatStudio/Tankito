@@ -14,7 +14,8 @@ namespace Tankito.Netcode.Simulation
         private float m_attenuationSeconds = 0.5f;
         [SerializeField] private int m_attenuationTicks;
         private InputPayload m_currentInput;
-        //private InputPayload m_lastReceivedInput;
+        
+        public InputPayload LastInput => m_currentInput;
 
         [SerializeField] private bool DEBUG = false;
 
@@ -90,11 +91,6 @@ namespace Tankito.Netcode.Simulation
                 m_inputReplayTick++;
             }
 
-            return m_currentInput;
-        }
-
-        public InputPayload GetCurrentInput()
-        {
             return m_currentInput;
         }
 

@@ -11,8 +11,15 @@ namespace Tankito
     // He puesto una interfaz porque asi se puede modularizar el uso del simulador de inputs para el Dead Reckoning
     public interface ITankInput
     {
+        /// <summary>
+        /// Must implement conditional getter that also works correctly in replay mode.
+        /// </summary>
+
         InputPayload GetInput();
-        InputPayload GetCurrentInput();
+        /// <summary>
+        /// Must implement conditional getter that also works correctly in replay mode.
+        /// </summary>
+        InputPayload LastInput { get; }
 
         /// <summary>
         /// Makes the <see cref="TankPlayerInput.GetInput()" /> method return cached input, starting from the given timestamp.
@@ -41,6 +48,7 @@ namespace Tankito
         [SerializeField] private int m_inputReplayTick = NO_REPLAY;
         private const int NO_REPLAY = -1;
 
+        public InputPayload LastInput => m_inputReplayTick==NO_REPLAY ? m_currentInput : m_inputCache.Get(m_inputReplayTick);
         private InputPayload m_currentInput;
         [SerializeField]
         private TankController m_tankController;
@@ -104,19 +112,20 @@ namespace Tankito
                 var replayedInput = m_inputCache.Get(m_inputReplayTick);
                 gotPayload = replayedInput;
             }
+
+            // The internal state of m_currentInput must be reset back to TankAction.None, in order to avoid
+            // continuously posting the same action after all ticks.
+            if (m_currentInput.action == TankAction.Fire || m_currentInput.action == TankAction.Dash || m_currentInput.action == TankAction.Parry)
+            {
+                m_currentInput.action = TankAction.None;
+            }
             
             if (DEBUG)
             {
-                Debug.Log("GetInput:" + m_currentInput);
+                Debug.Log($"GetInput{(m_inputReplayTick!=NO_REPLAY?("["+m_inputReplayTick+"]") : "")}:" + m_currentInput);
             }
-            m_currentInput.action = TankAction.None;
 
             return gotPayload;
-        }
-
-        public InputPayload GetCurrentInput()
-        {
-            return m_currentInput;
         }
 
         public void StartInputReplay(int timestamp)
@@ -224,7 +233,6 @@ namespace Tankito
             if (ctx.performed)
             {
                 m_currentInput.action = TankAction.Fire;
-                //m_cannon.Shoot(); // Esto va a haber que cambiarlo a que se realice el evento de disparo a golpe de simulacion, no cuando se haga el input!
             }
             else
             {

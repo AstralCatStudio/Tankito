@@ -11,6 +11,8 @@ namespace Tankito.Netcode.Simulation
     {
         private SortedSet<InputPayload> m_inputBuffer = new SortedSet<InputPayload>(new ByTimestamp());
         private InputPayload m_replayInput;
+        public InputPayload LastInput => m_replayInput;
+        
         [SerializeField] private bool DEBUG;
 
         //const int N_IDEAL_INPUT = 10;
@@ -66,11 +68,6 @@ namespace Tankito.Netcode.Simulation
                 m_inputBuffer.Remove(m_inputBuffer.First());
                 m_replayInput = input;
             }            
-            return m_replayInput;
-        }
-        
-        public InputPayload GetCurrentInput()
-        {
             return m_replayInput;
         }
 

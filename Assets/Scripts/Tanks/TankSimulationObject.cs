@@ -120,7 +120,7 @@ namespace Tankito.Netcode.Simulation
                 m_tankRB.rotation,
                 m_tankRB.velocity,
                 m_turretRB.rotation,
-                m_inputComponent.GetCurrentInput().action,
+                m_inputComponent.LastInput.action,
                 playerState,
                 stateInitTick
             );
