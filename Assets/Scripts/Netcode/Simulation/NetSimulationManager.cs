@@ -77,7 +77,7 @@ namespace Tankito.Netcode.Simulation
 
         public void QueueForDespawn(ulong simObjId)
         {
-            //Debug.Log($"Queued [{simObjId}] for despawn");
+            Debug.Log($"Queued [{simObjId}] for despawn");
             if (m_simulationObjects.ContainsKey(simObjId))
             {
                 m_removeFromSimQueue.Add(simObjId);
@@ -100,10 +100,8 @@ namespace Tankito.Netcode.Simulation
                 obj.ComputeKinematics(SimClock.SimDeltaTime);
             }
 
-            // This is placed here in order to act on SimObj created during the ComputeKinematics phase
             foreach(var newObj in m_addToSimQueue)
             {
-                //Debug.Log("Added "+ newObj);
                 newObj.OnNetworkSpawn();
                 newObj.ComputeKinematics(SimClock.SimDeltaTime);
             }

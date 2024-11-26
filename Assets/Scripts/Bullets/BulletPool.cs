@@ -13,7 +13,7 @@ namespace Tankito
         [SerializeField] private GameObject m_bulletPrefab;
         [SerializeField] private int m_prewarmCount;
         private ObjectPool<BulletSimulationObject> m_pool;
-        [SerializeField] private bool DEBUG = false;
+        private bool DEBUG;
 
         [ContextMenu("InitializePool")]
         public void Start()
@@ -86,7 +86,7 @@ namespace Tankito
         /// <returns></returns>
         public BulletSimulationObject Get(Vector2 position, float rotation, ulong ownerId, ulong simObjId, bool autoSpawn = true)
         {   
-            if (DEBUG) Debug.Log($"[{SimClock.TickCounter}]Get called, Arguments: pos({position}) | rot({rotation}) | ownerId({ownerId}) | simObjId({simObjId}) | autoSpawn({autoSpawn})");
+            if (DEBUG) Debug.Log($"[{SimClock.TickCounter}]Get called, Arguments: position");
 
 
             var bulletObj = m_pool.Get();

@@ -152,11 +152,11 @@ namespace Tankito.Netcode.Simulation
                                 var ownerId =  ((BulletSimulationState)newAuthSnapshot[authObjId].state).OwnerId;
                                 var authBullet = BulletPool.Instance.Get(bulletState.Position, bulletState.Rotation, ownerId, authObjId, autoSpawn:false);
                                 authBullet.OnNetworkSpawn();
-                                if (DEBUG) Debug.Log($"[{SimClock.TickCounter}]Reconciliated Bullet[{authObjId}|LifeTime:{((BulletSimulationState)newAuthSnapshot[authObjId].state).LifeTime}] successfully added to sim? => " + m_simulationObjects.ContainsKey(authObjId));
+                                if (DEBUG) Debug.Log($"[{SimClock.TickCounter}]Reconciliated Bullet[{authObjId}] successfully added to sim? => " + m_simulationObjects.ContainsKey(authObjId));
                             }
                             else
                             {
-                                if (DEBUG) Debug.Log($"[{SimClock.TickCounter}]Handing spawning attempt over to reconciliation (remote client input replay) because {authObjId}'s lifetime is lower than 2 ticks (it was spawned on tick[{predictedSnapshot.timestamp}])");
+                                Debug.Log($"[{SimClock.TickCounter}]Handing spawning attempt over to reconciliation (remote client input replay) because {authObjId}'s lifetime is lower than 2 ticks (it was spawned on tick[{predictedSnapshot.timestamp}])");
                             }
                         }
                         else
@@ -204,46 +204,32 @@ namespace Tankito.Netcode.Simulation
             //Pause Simulation Clock
             SimClock.Instance.StopClock();
 
-            var predictedSnapshot = m_snapshotBuffer[m_rollbackTick];
-            
-            foreach(var objId in authSnapshot.IDs)
-            {
-                if (m_simulationObjects.ContainsKey(objId))
-                {
-                    m_simulationObjects[objId].SetSimState(authSnapshot[objId].state);
-
-                    // Put Input Components into replay mode
-                    if(m_simulationObjects[objId] is TankSimulationObject tank)
-                    {
-                        tank.StartInputReplay(m_rollbackTick);
-                    }
-                }
-                else
-                {
-                // Habra que hacer algo para restaurar objetos que puedieran haber deespawneado y todo eso supongo
-                    if (DEBUG) Debug.Log($"{objId} SHOULD BE SPAWNED SOMEHOW?");
-                }
-            }
-
-            // Despawn those objects that were wrongfully predicted
-            foreach(var objId in predictedSnapshot.IDs)
-            {
-                if (m_simulationObjects.ContainsKey(objId) && !authSnapshot.ContainsId(objId))
-                {
-                    var simObj = m_simulationObjects[objId];
-
-                    // Forecefully despawn that bullet
-                    if (simObj is BulletSimulationObject bullet)
-                    {
-                        if (DEBUG) Debug.Log("Forcefully despawning bullet that shouldn't exist");
-                        bullet.OnNetworkDespawn();
-                    }
-                }
-            }
-
             // We DON'T have to re-simulate the tick which we are getting as auth,
             // because it's already simulated. So just advance the counter
             m_rollbackTick++;
+
+            // We must only reconcile those objects that were present on the predicted snapshot (and therefore, predicted themselves).
+            var predictedSimObjs = m_simulationObjects.Where(obj => m_snapshotBuffer[m_rollbackTick].ContainsId(obj.Key));
+            
+            foreach(var objIdPair in predictedSimObjs)
+            {
+                if (authSnapshot.ContainsId(objIdPair.Key))
+                {
+                    m_simulationObjects[objIdPair.Key].SetSimState(authSnapshot[objIdPair.Key].state);
+                }
+                else
+                {
+                    if (DEBUG) Debug.Log($"Queueing [{objIdPair}] for despawn (NOT found in authSnapshot)");
+                    QueueForDespawn(objIdPair.Key);
+                }
+                
+                // Put Input Components into replay mode
+                if(m_simulationObjects[objIdPair.Key] is TankSimulationObject tank)
+                {
+                    tank.StartInputReplay(m_rollbackTick);
+                }
+                // Habra que hacer algo para restaurar objetos que puedieran haber deespawneado y todo eso supongo
+            }
             
             while(m_rollbackTick < SimClock.TickCounter)
             {
@@ -253,9 +239,9 @@ namespace Tankito.Netcode.Simulation
             }
 
             // Set tank's input components back on live input mode
-            foreach(var objId in authSnapshot.IDs)
+            foreach(var objIdPair in predictedSimObjs)
             {
-                if(m_simulationObjects.ContainsKey(objId) && m_simulationObjects[objId] is TankSimulationObject tank)
+                if(m_simulationObjects[objIdPair.Key] is TankSimulationObject tank)
                 {
                     var lastReplayTick = tank.StopInputReplay();
                     //if (DEBUG) Debug.Log($"Tank({tank.NetworkObjectId})'s last replayed input was on Tick- {lastReplayTick}");
