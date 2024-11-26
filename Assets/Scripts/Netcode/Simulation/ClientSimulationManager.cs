@@ -207,21 +207,24 @@ namespace Tankito.Netcode.Simulation
             // We DON'T have to re-simulate the tick which we are getting as auth,
             // because it's already simulated. So just advance the counter
             m_rollbackTick++;
+
+            // We must only reconcile those objects that were present on the predicted snapshot (and therefore, predicted themselves).
+            var predictedSimObjs = m_simulationObjects.Where(obj => m_snapshotBuffer[m_rollbackTick].ContainsId(obj.Key));
             
-            foreach(var objId in m_simulationObjects.Keys)
+            foreach(var objIdPair in predictedSimObjs)
             {
-                if (authSnapshot.ContainsId(objId))
+                if (authSnapshot.ContainsId(objIdPair.Key))
                 {
-                    m_simulationObjects[objId].SetSimState(authSnapshot[objId].state);
+                    m_simulationObjects[objIdPair.Key].SetSimState(authSnapshot[objIdPair.Key].state);
                 }
                 else
                 {
-                    if (DEBUG) Debug.Log($"Queueing [{objId}] for despawn (NOT found in authSnapshot)");
-                    QueueForDespawn(objId);
+                    if (DEBUG) Debug.Log($"Queueing [{objIdPair}] for despawn (NOT found in authSnapshot)");
+                    QueueForDespawn(objIdPair.Key);
                 }
                 
                 // Put Input Components into replay mode
-                if(m_simulationObjects[objId] is TankSimulationObject tank)
+                if(m_simulationObjects[objIdPair.Key] is TankSimulationObject tank)
                 {
                     tank.StartInputReplay(m_rollbackTick);
                 }
@@ -236,9 +239,9 @@ namespace Tankito.Netcode.Simulation
             }
 
             // Set tank's input components back on live input mode
-            foreach(var obj in m_simulationObjects.Values)
+            foreach(var objIdPair in predictedSimObjs)
             {
-                if (obj!= null && obj is  TankSimulationObject tank)
+                if(m_simulationObjects[objIdPair.Key] is TankSimulationObject tank)
                 {
                     var lastReplayTick = tank.StopInputReplay();
                     //if (DEBUG) Debug.Log($"Tank({tank.NetworkObjectId})'s last replayed input was on Tick- {lastReplayTick}");
