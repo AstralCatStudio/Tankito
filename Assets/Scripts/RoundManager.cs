@@ -150,7 +150,7 @@ namespace Tankito
 
         private void PlayerListUpdate(bool updateInputs = false)
         {
-            UpdateAliveTanksGUI();
+            UpdateRoundCounterGUI();
             if (updateInputs && m_startedGame)
             {
                 foreach (var tank in m_players.Values)
@@ -189,7 +189,7 @@ namespace Tankito
             OnPreRoundStart?.Invoke(newRound);
 
             Debug.Log("Inicio ronda " + newRound);
-            UpdateAliveTanksGUI();
+            UpdateRoundCounterGUI();
 
             m_startedGame = true;
             m_currentCountdownTime = timeToCountdown;
@@ -292,9 +292,11 @@ namespace Tankito
             }
         }
 
-        private void UpdateAliveTanksGUI()
+        // Bernat: He hecho un hack super feo, esto antes era el numero de jugadores vivos, pero como no tenia mucho sentido lo he cambiaado y ya.
+        // pero no he cambiado los callsites de la funcion, porque con tal de que se actualice me da igual xd
+        private void UpdateRoundCounterGUI()
         {
-            RoundUI.Instance.SetRemainingPlayers(AliveTanks.Count());
+            RoundUI.Instance.SetCurrentRound(m_currentRound+1);
         }
 
         private void SetActiveTankInputs(TankData tank)
@@ -325,7 +327,7 @@ namespace Tankito
             m_startedRound = true;
             RoundUI.Instance.ActivateLobbyInfoGUI(false);
             RoundUI.Instance.ActivateCountdownGUI(false);
-            RoundUI.Instance.ActivateInitExitButton(false);
+            //RoundUI.Instance.ActivateInitExitButton(false);
             RoundUI.Instance.ActivateAliveTanksGUI(true);
             m_localPlayerInputObject.SetActive(true);
             PlayerListUpdate();

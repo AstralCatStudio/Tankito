@@ -52,9 +52,9 @@ public class RoundUI : Singleton<RoundUI>
 
     #region RemainingPlayers
 
-    public void SetRemainingPlayers(int players)
+    public void SetCurrentRound(int roundNumber)
     {
-        PanelAlivePlayers.GetComponentInChildren<TextMeshProUGUI>().text = $"Remaining players: {players}";
+        PanelAlivePlayers.GetComponentInChildren<TextMeshProUGUI>().text = $"Round: {roundNumber}/{RoundManager.Instance.m_maxRounds}";
     }
 
     public void ActivateAliveTanksGUI(bool active)
