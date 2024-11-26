@@ -123,6 +123,10 @@ namespace Tankito
         public void AddPlayer(TankData player)
         {
             m_players.Add(player.OwnerClientId, player);
+            foreach(TankData playerdata in m_players.Values)
+            {
+                playerdata.GetComponent<TankSkinController>().SetOwnedSkin();
+            }
             Debug.LogWarning($"Jugador anadido, {m_players.Count} jugadores");
             PlayerListUpdate();
         }

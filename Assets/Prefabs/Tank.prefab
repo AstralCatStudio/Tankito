@@ -210,6 +210,7 @@ GameObject:
   - component: {fileID: 5903910165241873950}
   - component: {fileID: 8799390587279230347}
   - component: {fileID: -8960492625490029074}
+  - component: {fileID: 5467474100561306828}
   m_Layer: 0
   m_Name: Tank
   m_TagString: Player
@@ -442,6 +443,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdb1e6acf157e54419aec1f3788466b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &5467474100561306828
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5904161972637957731}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55665caebe1719447a25224cdf51b420, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hull: {fileID: 2091983495115637899}
+  cannon: {fileID: 6606327937572388032}
+  fish: {fileID: 0}
 --- !u!1 &6459951814770460290
 GameObject:
   m_ObjectHideFlags: 0
