@@ -70,35 +70,18 @@ namespace Tankito.Netcode.Simulation
 
         public override void Simulate()
         {
-            //Debug.Log("CLIENT SimulationManager Simulate() called!");
-            
-            //Debug.Log("TODO: Implement Input Sampling and Sending on client.");
-
-
+            // We don't want HOSTs to execute Simulate twice per tick.
+            // They should only Simulate with server logic, no need for prediciton and/or simulation throttling.
             if (!NetworkManager.Singleton.IsServer)
             {
-                // We don't want HOSTs to execute Simulate twice per tick.
-                // They should only Simulate with server logic, no need for prediciton and/or simulation throttling.
-
-                // Input Sending ocurrs within the implicit TankController calls.
-                // |
-                // --> SampleInput(); // Ensamblar ventana de inputs y mandarla al servidor.
-                // Tambien dead reckoning!
-
                 base.Simulate();
-                
             }
-            // Cache Simulation State
+            
+            // Cache Simulation Snapshot for prediction Rollback
             SimulationSnapshot newSnapshot = CaptureSnapshot();
             newSnapshot.status = SnapshotStatus.Predicted;
-            //if (!SimClock.Instance.Active) Debug.Log($"[{SimClock.TickCounter}]ReconciliatedSnapshot-> saved to buffer at({newSnapshot.timestamp})");
             m_snapshotBuffer.Add(newSnapshot, newSnapshot.timestamp);
         }
-        
-        // public bool ContainedSimObj(ulong simObjId, int tick)
-        // {
-        //     return m_snapshotBuffer[tick].ContainsId(simObjId);
-        // }
 
         public void EvaluateForReconciliation(SimulationSnapshot newAuthSnapshot)
         {
@@ -114,68 +97,41 @@ namespace Tankito.Netcode.Simulation
 
             m_lastAuthSnapshotTimestamp = newAuthSnapshot.timestamp;
 
-            // Jump forward in time to sim state
+            SimClock.Instance.StopClock();
+
+            // Jump forward in time to future sim state received in auth snapshot
             if (newAuthSnapshot.timestamp >= SimClock.TickCounter)
             {
                 if (DEBUG) Debug.Log($"[{SimClock.TickCounter}]Jumping forward to future state[{newAuthSnapshot.timestamp}]");
-
+                
                 SimClock.Instance.SetClock(newAuthSnapshot.timestamp);
                 SetSimulation(newAuthSnapshot);
                 m_snapshotBuffer.Add(newAuthSnapshot, newAuthSnapshot.timestamp);
+
+                SimClock.Instance.ResumeClock();
                 return;
             }
-            
-            if (DEBUG) Debug.Log($"[{SimClock.TickCounter}]Evaluating Desync for: "+ m_snapshotBuffer.Get(newAuthSnapshot.timestamp));
 
 
             if (DEBUG) Debug.Log("Evaluating Desync for: "+ m_snapshotBuffer.Get(newAuthSnapshot.timestamp));
+
             SimulationSnapshot predictedSnapshot = m_snapshotBuffer.Where(s => s.timestamp == newAuthSnapshot.timestamp 
-                && s.status == SnapshotStatus.Predicted).FirstOrDefault();
+                                                                    && s.status == SnapshotStatus.Predicted).FirstOrDefault();
 
             if (!predictedSnapshot.Equals(default(SimulationSnapshot)))
             {
-                bool missingObjects = false;
-                
-                foreach(var authObjId in newAuthSnapshot.IDs)
-                {
-                    //if (DEBUG) Debug.Log($"[{SimClock.TickCounter}]: {snapshotObj}");
-                    if (!predictedSnapshot.ContainsId(authObjId))
-                    {
-                        // Auth Obj NOT in Snapshot
-                        if (newAuthSnapshot[authObjId].type == SimulationObjectType.Bullet)
-                        {
-                            var bulletState = (BulletSimulationState)newAuthSnapshot[authObjId].state;
-                            // Si es su 1er tick de vida, dejamos que intente el propio rollback instanciar la bala
-                            if (bulletState.LifeTime >= SimClock.SimDeltaTime*2)
-                            {
-                                missingObjects = true;
-                                var ownerId =  ((BulletSimulationState)newAuthSnapshot[authObjId].state).OwnerId;
-                                var authBullet = BulletPool.Instance.Get(bulletState.Position, bulletState.Rotation, ownerId, authObjId, autoSpawn:false);
-                                authBullet.OnNetworkSpawn();
-                                if (DEBUG) Debug.Log($"[{SimClock.TickCounter}]Reconciliated Bullet[{authObjId}|LifeTime:{((BulletSimulationState)newAuthSnapshot[authObjId].state).LifeTime}] successfully added to sim? => " + m_simulationObjects.ContainsKey(authObjId));
-                            }
-                            else
-                            {
-                                if (DEBUG) Debug.Log($"[{SimClock.TickCounter}]Handing spawning attempt over to reconciliation (remote client input replay) because {authObjId}'s lifetime is lower than 2 ticks (it was spawned on tick[{predictedSnapshot.timestamp}])");
-                            }
-                        }
-                        else
-                        {
-                            throw new InvalidOperationException($"Pero que cojones estas intentando hacer? (sim doesn't contain {authObjId} and it isn't a bullet)");
-                        }
-                    }
-                }
+                bool predictedObjectsMissMatch = predictedSnapshot.IDs.Except(newAuthSnapshot.IDs).Union(newAuthSnapshot.IDs.Except(predictedSnapshot.IDs)).Count() > 0;
+                bool rolledBack = false;
 
-                if (missingObjects)
-                {
-                    Rollback(newAuthSnapshot);
-                    m_snapshotBuffer.Add(newAuthSnapshot, newAuthSnapshot.timestamp);
-                    return;
-                }
+                SetSimulation(newAuthSnapshot);
+                    // At this point all registered simObjs (e.g simulation objects in scene) should be the
+                    // same as the ones stored on the incoming auth snapshot.
 
-                foreach (var objId in predictedSnapshot.IDs)
+                // We skip Delta comparison stage if we had wrongfuly predicted the objects in the snapshot,
+                // if that's the case we force the rollback.
+                if (predictedObjectsMissMatch == false)
                 {
-                    if (newAuthSnapshot.ContainsId(objId))
+                    foreach (var objId in newAuthSnapshot.IDs)
                     {
                         if (CheckForDesync(predictedSnapshot[objId].state, newAuthSnapshot[objId].state))
                         {
@@ -186,76 +142,100 @@ namespace Tankito.Netcode.Simulation
                             }
                             
                             Rollback(newAuthSnapshot);
+                            rolledBack = true;
                             break;
                         }
                     }
                 }
+                else
+                {
+                    Rollback(newAuthSnapshot);
+                    rolledBack = true;
+                }
+
+                if (rolledBack == false)
+                {
+                    // Reset simulation state back to last cached state
+                    SetSimulation(m_snapshotBuffer.Last);
+                }
+            }
+            else
+            {
+                m_snapshotBuffer.Add(newAuthSnapshot, newAuthSnapshot.timestamp);
             }
             
-            //newAuthSnapshot.status = SnapshotStatus.Authoritative;   DEBE LLEGAR AUTH DESDE SERVER
-            m_snapshotBuffer.Add(newAuthSnapshot, newAuthSnapshot.timestamp);
+            SimClock.Instance.ResumeClock();
         }
 
+        /// <summary>
+        /// Strict setting of the simulation state to the auth is a pre-requisite of rollback.
+        /// This also implies which simulationObjects are registered/present in the simulation (because Simulate is a global action).
+        /// <para/> WARNING!!! Calling this function is only safe when the <see cref="SimClock"/> is NOT active (stopped).
+        /// It is recommended that calls to it are done between <see cref="SimClock.StopClock"/> and <see cref="SimClock.ResumeClock"/>.
+        /// </summary>
+        /// <param name="authSnapshot"></param>
+        /// <exception cref="InvalidOperationException"></exception>
         public void Rollback(SimulationSnapshot authSnapshot)
         {
 
             m_rollbackTick = authSnapshot.timestamp;
-            
-            //Pause Simulation Clock
-            SimClock.Instance.StopClock();
 
-            var predictedSnapshot = m_snapshotBuffer[m_rollbackTick];
-            
-            foreach(var objId in authSnapshot.IDs)
+            // Iterate over the simulation objects, they should already only be those present in the
+            // incoming state and set input components into replay mode for resimulation purposes.
+
+            // Setting of the state SetSimulation() to reconciliation evaluator function.
+            /*
+            foreach(var objId in m_simulationObjects.Keys)
             {
-                if (m_simulationObjects.ContainsKey(objId))
+                if (authSnapshot.ContainsId(objId))
                 {
-                    m_simulationObjects[objId].SetSimState(authSnapshot[objId].state);
+                    var simObj = m_simulationObjects[objId];
+                    simObj.SetSimState(authSnapshot[objId].state);
 
-                    // Put Input Components into replay mode
-                    if(m_simulationObjects[objId] is TankSimulationObject tank)
+                    // Put Tanks into input replay mode so they pull the correct (past) inputs from their respective buffers.
+                    if (simObj is TankSimulationObject tank)
                     {
-                        tank.StartInputReplay(m_rollbackTick);
+                        // We set the input replay tick as the next from the rollback tick because otherwise we will be replaying ipnut that
+                        // is lagged by 1 tick (since we don't have to simulate the incoming snapshot tick).
+                        tank.StartInputReplay(m_rollbackTick + 1);
                     }
                 }
                 else
                 {
-                // Habra que hacer algo para restaurar objetos que puedieran haber deespawneado y todo eso supongo
-                    if (DEBUG) Debug.Log($"{objId} SHOULD BE SPAWNED SOMEHOW?");
+                    throw new InvalidOperationException($"[{SimClock.TickCounter}] Present simulation object miss-match! {objId} is not present in authSnapshot[{authSnapshot.timestamp}]");
                 }
             }
+            */
 
-            // Despawn those objects that were wrongfully predicted
-            foreach(var objId in predictedSnapshot.IDs)
+            // Sanity checks and Inpunt Replay
+            foreach()
+
+            foreach(var objId in authSnapshot.IDs)
             {
-                if (m_simulationObjects.ContainsKey(objId) && !authSnapshot.ContainsId(objId))
+                if (!m_simulationObjects.ContainsKey(objId))
                 {
-                    var simObj = m_simulationObjects[objId];
-
-                    // Forecefully despawn that bullet
-                    if (simObj is BulletSimulationObject bullet)
-                    {
-                        if (DEBUG) Debug.Log("Forcefully despawning bullet that shouldn't exist");
-                        bullet.OnNetworkDespawn();
-                    }
+                    throw new InvalidOperationException($"[{SimClock.TickCounter}] Present simulation object miss-match! {objId} from authSnapshot[{authSnapshot.timestamp}] is not present in current simulation state! ");
                 }
             }
 
             // We DON'T have to re-simulate the tick which we are getting as auth,
-            // because it's already simulated. So just advance the counter
+            // because it's already simulated. So just advance the counter.
             m_rollbackTick++;
+
             
-            while(m_rollbackTick < SimClock.TickCounter)
+            // We must resimulate all ticks up to (and including) the "present" tick,
+            // in order to catch back up to our simlation predictions and not fall back in sim ticks,
+            // which would cause a desync.
+            while(m_rollbackTick <= SimClock.TickCounter)
             {
-                // - Input Replay - DONE => Implicitly consumes inputs from input caches when pulling InputPayloads on Kinematic Functions
                 Simulate();
                 m_rollbackTick++;
             }
 
             // Set tank's input components back on live input mode
-            foreach(var objId in authSnapshot.IDs)
+            foreach(var obj in m_simulationObjects.Values)
             {
-                if(m_simulationObjects.ContainsKey(objId) && m_simulationObjects[objId] is TankSimulationObject tank)
+                if (obj!= null && obj is  TankSimulationObject tank)
                 {
                     var lastReplayTick = tank.StopInputReplay();
                     //if (DEBUG) Debug.Log($"Tank({tank.NetworkObjectId})'s last replayed input was on Tick- {lastReplayTick}");
@@ -263,28 +243,48 @@ namespace Tankito.Netcode.Simulation
             }
 
             m_rollbackTick = NO_ROLLBACK;
-            //Resume Simulation Clock
-            SimClock.Instance.ResumeClock();
         }
 
-        // WIP !!
-        public void SetSimulation(SimulationSnapshot newSimSnapshot)
+        /// <summary>
+        /// This sets the Simulation State to be the same as <paramref name="snapshotToSet"/>. This also includes 
+        /// the necessary destruction/creation of simulation objects in order to match the objects present in the snapshot.
+        /// <para/> WARNING!!! Calling this function is only safe when the <see cref="SimClock"/> is NOT active (stopped),
+        /// it is recommended calls to it are done between <see cref="SimClock.StopClock"/> and <see cref="SimClock.ResumeClock"/>.
+        /// </summary>
+        /// <param name="snapshotToSet"></param>
+        public void SetSimulation(SimulationSnapshot snapshotToSet)
         {
-            SimClock.Instance.StopClock();
-            
-            foreach(var objId in newSimSnapshot.IDs)
+            foreach(var objId in snapshotToSet.IDs)
             {
-                if (m_simulationObjects.Keys.Contains(objId))
+                if (m_simulationObjects.ContainsKey(objId))
                 {
-                    m_simulationObjects[objId].SetSimState(newSimSnapshot[objId].state);
-                }
-                else
-                {
-                    Debug.LogException(new NotImplementedException());
+                    m_simulationObjects[objId].SetSimState(snapshotToSet[objId].state);
+                    if (newAuthSnapshot[authObjId].type == SimulationObjectType.Bullet)
+                    {
+                        var bulletState = (BulletSimulationState)newAuthSnapshot[authObjId].state;
+                        // Si es su 1er tick de vida, dejamos que intente el propio rollback instanciar la bala
+                        if (bulletState.LifeTime >= SimClock.SimDeltaTime*2)
+                        {
+                            missingObjects = true;
+                            var ownerId =  ((BulletSimulationState)newAuthSnapshot[authObjId].state).OwnerId;
+                            var authBullet = BulletPool.Instance.Get(bulletState.Position, bulletState.Rotation, ownerId, authObjId, autoSpawn:false);
+                            authBullet.OnNetworkSpawn();
+                            if (DEBUG) Debug.Log($"[{SimClock.TickCounter}]Reconciliated Bullet[{authObjId}|LifeTime:{((BulletSimulationState)newAuthSnapshot[authObjId].state).LifeTime}] successfully added to sim? => " + m_simulationObjects.ContainsKey(authObjId));
+                        }
+                        else
+                        {
+                            if (DEBUG) Debug.Log($"[{SimClock.TickCounter}]Handing spawning attempt over to reconciliation (remote client input replay) because {authObjId}'s lifetime is lower than 2 ticks (it was spawned on tick[{predictedSnapshot.timestamp}])");
+                        }
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException($"Pero que cojones estas intentando hacer? (sim doesn't contain {authObjId} and it isn't a bullet)");
+                    }
                 }
             }
 
-            SimClock.Instance.ResumeClock();
+            // Remove objects in our present simulation that aren't present in the auth snapshot
+
         }
 
         private bool CheckForDesync(in ISimulationState simStateA,in ISimulationState simStateB)
@@ -301,7 +301,7 @@ namespace Tankito.Netcode.Simulation
                 return SimExtensions.CompareDeltas(bulletDelta, m_bulletSimulationTolerance);
             }
 
-            Debug.LogException(new InvalidOperationException("Desync check failed, type mismatch: " + simStateA.GetType() + "-" + simStateB.GetType()));
+            Debug.LogException(new InvalidOperationException("Desync check failed, simObj type mismatch: " + simStateA.GetType() + "-" + simStateB.GetType()));
             return false;
         }
 
@@ -313,14 +313,6 @@ namespace Tankito.Netcode.Simulation
             ISimulationState stateToCopy = m_simulationObjects[0].GetSimState(); // Explicit casting is not necessary
             m_simulationObjects[1].SetSimState(stateToCopy);
         }
-
-        /*[ContextMenu("StateComparison")]
-        public void StateComparison()
-        {
-            TankSimulationState tankA = new TankSimulationState(Vector2.right, 90, Vector2.zero, 0, TankAction.None);
-            TankSimulationState tankB = new TankSimulationState(Vector2.right*0.9f, 90, Vector2.zero, 0, TankAction.Fire);
-            Debug.Log(SimExtensions.Delta(tankA, tankB));
-        }*/
 
         [ContextMenu("StateComparison")]
         public void SnapshotComparison()
@@ -374,7 +366,9 @@ namespace Tankito.Netcode.Simulation
                 throw new IndexOutOfRangeException($"No snapshot to warp to at tick - {warpTick}");
             }
             
+            SimClock.Instance.StopClock();
             SetSimulation(pastSnapshot);
+            SimClock.Instance.ResumeClock();
         }
 
         [ContextMenu("TestRollback")]
