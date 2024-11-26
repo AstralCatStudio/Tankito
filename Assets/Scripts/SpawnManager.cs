@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
 {
-    public List<(Vector3 pos, ulong? clientId)> _spawnPoints;
+    public List<(Transform transform, ulong? clientId)> m_spawnPoints;
 
     void Awake()
     {
@@ -21,48 +21,49 @@ public class SpawnManager : MonoBehaviour
 
             if ((transforms.Length > 0) && transforms.Length <= 5)
             {
-                _spawnPoints = new List<(Vector3 pos, ulong? clientId)>();
+                m_spawnPoints = new List<(Transform transform, ulong? clientId)>();
 
                 for (int i = 1; i < transforms.Length; i++)
                 {
-                    _spawnPoints.Add((transforms[i].position, null));
+                    m_spawnPoints.Add((transforms[i], null));
                 }
 
-                for (int i = 0; i < _spawnPoints.Count; i++)
+                for (int i = 0; i < m_spawnPoints.Count; i++)
                 {
-                    Debug.Log($"Spawn point {i + 1}: ({_spawnPoints.ElementAt(i).pos.x}, {_spawnPoints.ElementAt(i).pos.y}. " +
-                        $"Libre: {_spawnPoints.ElementAt(i).clientId == null})");
+                    Debug.Log($"Spawn point {i + 1}: ({m_spawnPoints.ElementAt(i).transform.position.x}, {m_spawnPoints.ElementAt(i).transform.position.y}. " +
+                        $"Libre: {m_spawnPoints.ElementAt(i).clientId == null})");
                 }
             }
-
-            //NetworkManager.Singleton.OnClientConnectedCallback += SetPlayerInSpawn;
-            //NetworkManager.Singleton.OnClientDisconnectCallback += FreeSpawnPoint;
+        }
+        else
+        {
+            Destroy(this);
         }
     }
 
     public void SetPlayerInSpawn(ulong id)
     {
-        for (int i = 0; i < _spawnPoints.Count; i++)
+        for (int i = 0; i < m_spawnPoints.Count; i++)
         {
-            if (_spawnPoints[i].clientId == null)
+            if (m_spawnPoints[i].clientId == null)
             {
                 Debug.Log($"Cliente {id} se coloca en spawn {i}");
                 // En el primer spawn vacio almacena el id del jugador que ahora lo ocupara
-                var newTupla = (_spawnPoints[i].pos, id);
-                _spawnPoints[i] = newTupla;
+                var newTupla = (m_spawnPoints[i].transform, id);
+                m_spawnPoints[i] = newTupla;
 
                 // Coloca al jugador de ID recibido en el punto de spawn
                 GameObject player = NetworkManager.Singleton.ConnectedClients[id].PlayerObject.gameObject;
-                GameManager.Instance.SetObjectPosition(player, _spawnPoints[i].pos);
+                GameManager.Instance.SetObjectPosition(player, m_spawnPoints[i].transform.position, m_spawnPoints[i].transform.rotation);
                 break;
             }
-            else if (_spawnPoints[i].clientId != null)
+            else if (m_spawnPoints[i].clientId != null)
             {
-                Debug.Log($"Cliente {_spawnPoints[i].clientId}, ya conectado, se coloca en spawn {i}");
+                Debug.Log($"Cliente {m_spawnPoints[i].clientId}, ya conectado, se coloca en spawn {i}");
 
                 // Coloca al jugador ya conectado en el punto de spawn
-                GameObject player = NetworkManager.Singleton.ConnectedClients[(ulong)_spawnPoints[i].clientId].PlayerObject.gameObject;
-                GameManager.Instance.SetObjectPositionClientRpc(player, _spawnPoints[i].pos, id);
+                GameObject player = NetworkManager.Singleton.ConnectedClients[(ulong)m_spawnPoints[i].clientId].PlayerObject.gameObject;
+                GameManager.Instance.SetObjectPositionClientRpc(player, m_spawnPoints[i].transform.position, m_spawnPoints[i].transform.rotation, id);
             }
         }
     }
@@ -71,9 +72,9 @@ public class SpawnManager : MonoBehaviour
     {
         int index = -1;
 
-        for (int i = 0; i < _spawnPoints.Count; i++)
+        for (int i = 0; i < m_spawnPoints.Count; i++)
         {
-            if (_spawnPoints[i].clientId == id)
+            if (m_spawnPoints[i].clientId == id)
             {
                 index = i;
                 break;
@@ -87,23 +88,23 @@ public class SpawnManager : MonoBehaviour
         }
 
         // Se desplazan los ids de los clientes sobre el spawn point que ha quedado libre
-        for (int i = index + 1; i < _spawnPoints.Count; i++)
+        for (int i = index + 1; i < m_spawnPoints.Count; i++)
         {
-            _spawnPoints[i - 1] = (_spawnPoints[i - 1].pos, _spawnPoints[i].clientId);
+            m_spawnPoints[i - 1] = (m_spawnPoints[i - 1].transform, m_spawnPoints[i].clientId);
         }
 
         // Se vacia el ultimo spawn point
-        _spawnPoints[_spawnPoints.Count - 1] = (_spawnPoints[_spawnPoints.Count - 1].pos, null);
+        m_spawnPoints[m_spawnPoints.Count - 1] = (m_spawnPoints[m_spawnPoints.Count - 1].transform, null);
 
         // Si no se ha empezado la partida, se recolocan todos los tanques que han cambiado de spawn
-        if (!FindObjectOfType<RoundManager>().IsGameStarted())
+        if (!FindObjectOfType<RoundManager>().IsGameStarted)
         {
-            for (int i = index; i < _spawnPoints.Count; i++)
+            for (int i = index; i < m_spawnPoints.Count; i++)
             {
-                if (_spawnPoints[i].clientId != null)
+                if (m_spawnPoints[i].clientId != null)
                 {
-                    GameObject player = NetworkManager.Singleton.ConnectedClients[(ulong)_spawnPoints[i].clientId].PlayerObject.gameObject;
-                    GameManager.Instance.SetObjectPosition(player, _spawnPoints[i].pos);
+                    GameObject player = NetworkManager.Singleton.ConnectedClients[(ulong)m_spawnPoints[i].clientId].PlayerObject.gameObject;
+                    GameManager.Instance.SetObjectPosition(player, m_spawnPoints[i].transform.position, m_spawnPoints[i].transform.rotation);
                 }
             }
         }
@@ -113,15 +114,16 @@ public class SpawnManager : MonoBehaviour
     {
         Debug.Log("Reseting all players position to spawn point");
 
-        for (int i = 0; i < _spawnPoints.Count; i++)
+        for (int i = 0; i < m_spawnPoints.Count; i++)
         {
-            if (_spawnPoints[i].clientId != null)
+            if (m_spawnPoints[i].clientId != null)
             {
-                Debug.Log($"Cliente {_spawnPoints[i].clientId} recolocado en el spawn {i}");
-                NetworkManager.Singleton.ConnectedClients[(ulong)_spawnPoints[i].clientId].PlayerObject.GetComponent<Transform>().position = _spawnPoints[i].pos;
+                Debug.Log($"Cliente {m_spawnPoints[i].clientId} recolocado en el spawn {i}");
+                NetworkManager.Singleton.ConnectedClients[(ulong)m_spawnPoints[i].clientId].PlayerObject.GetComponent<Transform>().position = m_spawnPoints[i].transform.position;
+                NetworkManager.Singleton.ConnectedClients[(ulong)m_spawnPoints[i].clientId].PlayerObject.GetComponent<Transform>().rotation = m_spawnPoints[i].transform.rotation;
 
-                GameObject player = NetworkManager.Singleton.ConnectedClients[(ulong)_spawnPoints[i].clientId].PlayerObject.gameObject;
-                GameManager.Instance.SetObjectPosition(player, _spawnPoints[i].pos);
+                GameObject player = NetworkManager.Singleton.ConnectedClients[(ulong)m_spawnPoints[i].clientId].PlayerObject.gameObject;
+                GameManager.Instance.SetObjectPosition(player, m_spawnPoints[i].transform.position, m_spawnPoints[i].transform.rotation);
             }
         }
     }
@@ -130,9 +132,9 @@ public class SpawnManager : MonoBehaviour
     {
         Debug.Log("Vaciando todos los spawns");
 
-        for (int i = 0; i < _spawnPoints.Count; i++)
+        for (int i = 0; i < m_spawnPoints.Count; i++)
         {
-            _spawnPoints[i] = (_spawnPoints[i].pos, null);
+            m_spawnPoints[i] = (m_spawnPoints[i].transform, null);
         }
     }
 
@@ -145,17 +147,17 @@ public class SpawnManager : MonoBehaviour
         foreach (var client in NetworkManager.Singleton.ConnectedClients.Values)
         {
             Debug.Log($"Recolocando al cliente {client.ClientId}");
-            for (int i = 0; i < _spawnPoints.Count; i++)
+            for (int i = 0; i < m_spawnPoints.Count; i++)
             {
-                if (_spawnPoints[i].clientId == null)
+                if (m_spawnPoints[i].clientId == null)
                 {
                     Debug.Log($"Cliente {client.ClientId} se coloca en spawn {i}");
 
-                    var newTupla = (_spawnPoints[i].pos, client.ClientId);
-                    _spawnPoints[i] = newTupla;
+                    var newTupla = (m_spawnPoints[i].transform, client.ClientId);
+                    m_spawnPoints[i] = newTupla;
 
                     GameObject player = client.PlayerObject.gameObject;
-                    GameManager.Instance.SetObjectPosition(player, _spawnPoints[i].pos);
+                    GameManager.Instance.SetObjectPosition(player, m_spawnPoints[i].transform.position, m_spawnPoints[i].transform.rotation);
                     break;
                 }
                 else

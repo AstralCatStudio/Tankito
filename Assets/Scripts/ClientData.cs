@@ -5,6 +5,7 @@ using Tankito;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
+using UnityEngine.TextCore.Text;
 using UnityEngine.UI;
 
 public class ClientData : Singleton<ClientData>
@@ -34,10 +35,11 @@ public class ClientData : Singleton<ClientData>
         InitCharactersData();
         InitClientData();
         ChooseCharactersInShop();
-
         firstLoad = true;
 
         DontDestroyOnLoad(gameObject);
+
+        
     }
 
     private void InitClientData()
@@ -46,6 +48,7 @@ public class ClientData : Singleton<ClientData>
         accountT = 0;
         username = "guest";
         characters[0].unlocked = true;  //characters[0] -> fish
+        SelectCharacter(characters[0]);
     }
 
     public void InitSelectCharacter()
@@ -138,7 +141,11 @@ public class ClientData : Singleton<ClientData>
             c.selected = false;
         }
         character.selected = true;
-        selectionSkinButton.sprite = character.data.sprite;
+        if (selectionSkinButton != null)
+        {
+            selectionSkinButton.sprite = character.data.sprite;
+        }
+        
     }
     public Character GetCharacterSelected()
     {
@@ -147,5 +154,19 @@ public class ClientData : Singleton<ClientData>
             if (c.selected) return c;
         }
         return characters[0];
+    }
+
+    public void UnsubscribeButtons()
+    {
+        ShopContent shop = GameObject.FindObjectOfType<ShopContent>(true);
+
+        if (shop!=null)
+        {
+            shop.UnsubscribeButtons();
+        }
+        else
+        {
+            Debug.LogWarning("Tienda no encontrada");
+        }
     }
 }

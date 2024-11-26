@@ -7,24 +7,36 @@ using UnityEngine;
 public class ModifiersController : MonoBehaviour
 {
     public List<Modifier> modifiers;
-    public CreateBullet bulletCreator;
-    public TankController tankController;
+    public BulletCannon m_bulletCannon;
+    public TankController m_tankController;
     private void Start()
     {
-        applyModifiers();
+        ApplyModifiers();
     }
-
-    void applyModifiers()
+    public void AddModifier(Modifier modifier)
     {
+        modifiers.Add(modifier);
+        ApplyModifiers();
+    }
+    void ApplyModifiers()
+    {
+        //Debug.Log("aplicando modificadores");
+        m_bulletCannon.Modifiers.Clear();
+        m_tankController.Modifiers.Clear();
         foreach (Modifier modifier in modifiers)
         {
             foreach (BulletModifier bulletModifier in modifier.bulletModifiers)
             {
-                bulletCreator.modifiers.Add(bulletModifier);
+                m_bulletCannon.Modifiers.Add(bulletModifier);
+            }
+
+            foreach(HullModifier hullMod in modifier.hullModifiers)
+            {
+                m_tankController.Modifiers.Add(hullMod);
             }
         }
-        bulletCreator.applyModifierProperties();
-        //TODO: aplicar también los del tanque
+        m_bulletCannon.ApplyModifierProperties();
+        m_tankController.ApplyModifierList();
     }
 
 }

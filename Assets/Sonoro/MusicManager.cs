@@ -139,7 +139,7 @@ public class MusicManager : MonoBehaviour
     {
         if (audioSourceA != null) audioSourceA.volume = volMusic;
         if (audioSourceB != null) audioSourceB.volume = volMusic;
-        Debug.Log($"Volumen de música actualizado: {volMusic}");
+        //Debug.Log($"Volumen de música actualizado: {volMusic}");
     }
 
     private void UpdateSoundVolume()
@@ -153,7 +153,7 @@ public class MusicManager : MonoBehaviour
         {
             backgroundSoundSource.volume = volSounds;
         }
-        Debug.Log($"Volumen de sonidos actualizado: {volSounds}");
+        //Debug.Log($"Volumen de sonidos actualizado: {volSounds}");
     }
 
     private AudioSource CreateAudioSource(bool loop)
@@ -482,14 +482,14 @@ public class MusicManager : MonoBehaviour
         // Usar el preset personalizado para ajustar parámetros manualmente
         reverbZone.reverbPreset = AudioReverbPreset.User;
 
-        Debug.Log("PHASE: " + phase);
+        //Debug.Log("PHASE: " + phase);
 
         // Configuración según la fase
         switch (phase)
         {
             case 0: // Fondo del mar (Underwater)
                 reverbZone.room = -100; // Reverberación suave y oscura
-                reverbZone.roomHF = -4000; // Atenuación intensa de frecuencias altas
+                reverbZone.roomHF = -2000; // Atenuación intensa de frecuencias altas
                 reverbZone.decayTime = 5.0f; // Decaimiento lento para simular profundidad
                 reverbZone.decayHFRatio = 0.3f; // Bajas frecuencias dominantes
                 reverbZone.reflections = -300; // Reflexiones débiles
@@ -507,7 +507,7 @@ public class MusicManager : MonoBehaviour
 
             case 2: // Cueva
                 reverbZone.room = -200; // Reverberación fuerte
-                reverbZone.roomHF = -3500; // Atenuación media de altas frecuencias
+                reverbZone.roomHF = -1500; // Atenuación media de altas frecuencias
                 reverbZone.decayTime = 3.0f; // Decaimiento prolongado
                 reverbZone.decayHFRatio = 0.5f; // Decaimiento equilibrado
                 reverbZone.reflections = -100; // Reflexiones audibles pero suaves

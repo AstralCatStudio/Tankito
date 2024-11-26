@@ -3,6 +3,7 @@ using Tankito.Utils;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Windows;
 using static Tankito.TankController;
 
 namespace Tankito
@@ -35,8 +36,8 @@ namespace Tankito
 
     public class TankPlayerInput : MonoBehaviour, ITankInput
     {
-        private const int INPUT_CACHE_SIZE = 256;
-        private CircularBuffer<InputPayload> m_inputCache = new CircularBuffer<InputPayload>(INPUT_CACHE_SIZE);
+        private int INPUT_CACHE_SIZE => SimulationParameters.SNAPSHOT_BUFFER_SIZE;
+        private CircularBuffer<InputPayload> m_inputCache;
         [SerializeField] private int m_inputReplayTick = NO_REPLAY;
         private const int NO_REPLAY = -1;
 
@@ -49,6 +50,8 @@ namespace Tankito
         private Rigidbody2D m_turretRB;
         [SerializeField] private bool DEBUG = false;
 
+        private Vector2? mousePosition;
+
         void Awake()
         {
             m_inputCache = new CircularBuffer<InputPayload>(INPUT_CACHE_SIZE);
@@ -56,6 +59,7 @@ namespace Tankito
 
         void Start()
         {
+            m_inputCache = new CircularBuffer<InputPayload>(INPUT_CACHE_SIZE);
             if (m_turretRB == null) Debug.LogWarning("Turret Rigidbody2D reference not set.");
             if (m_turretAnimator == null) Debug.LogWarning("Turret Animator reference not set!");
             if (m_hullAnimator == null) Debug.LogWarning("Hull Animator reference not set!");
@@ -81,13 +85,16 @@ namespace Tankito
         /// <returns></returns>
         public InputPayload GetInput()
         {
+            
             InputPayload gotPayload;
             if (m_inputReplayTick == NO_REPLAY)
             {
                 // Live Input Mode
+                Aim();
                 m_currentInput.timestamp = SimClock.TickCounter;
                 m_inputCache.Add(m_currentInput, SimClock.TickCounter);
                 InputWindowBuffer.Instance.AddInputToWindow(m_currentInput);
+                
                 gotPayload = m_currentInput;
             }
             else
@@ -97,11 +104,12 @@ namespace Tankito
                 var replayedInput = m_inputCache.Get(m_inputReplayTick);
                 gotPayload = replayedInput;
             }
-
+            
             if (DEBUG)
             {
                 Debug.Log("GetInput:" + m_currentInput);
             }
+            m_currentInput.action = TankAction.None;
 
             return gotPayload;
         }
@@ -145,7 +153,21 @@ namespace Tankito
         {
             m_currentInput.action = TankAction.Dash; 
         }
-
+        void Aim()
+        {
+            Vector2 lookVector;
+            if (mousePosition != null)
+            {
+                
+                lookVector = (Vector2)mousePosition - (Vector2)Camera.main.WorldToScreenPoint(m_turretRB.position);
+                
+                if (lookVector.sqrMagnitude > 1)
+                {
+                    lookVector.Normalize();
+                }
+                m_currentInput.aimVector = lookVector;
+            }
+        }
         public void OnAim(InputAction.CallbackContext ctx)
         {
             var input = ctx.ReadValue<Vector2>();
@@ -154,19 +176,25 @@ namespace Tankito
             if (ctx.control.path != "/Mouse/position")
             {
                 lookVector = new Vector2(input.x, input.y);
+                mousePosition = null;
+                if (lookVector.sqrMagnitude > 1)
+                {
+                    lookVector.Normalize();
+                }
+                m_currentInput.aimVector = lookVector;
             }
             else
             {
                 // Mouse control fallback/input processing
-                lookVector = input - (Vector2)Camera.main.WorldToScreenPoint(m_turretRB.position);
+                mousePosition = input;
+                Aim();
+                
             }
 
-            if (lookVector.sqrMagnitude > 1)
-            {
-                lookVector.Normalize();
-            }
+            
 
-            m_currentInput.aimVector = lookVector;
+            
+            
         }
 
 

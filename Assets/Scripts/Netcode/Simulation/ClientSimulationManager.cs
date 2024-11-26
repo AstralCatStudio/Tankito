@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using Tankito.Netcode.Messaging;
 using Tankito.Utils;
 using Unity.Netcode;
@@ -10,7 +11,7 @@ namespace Tankito.Netcode.Simulation
 {
     public class ClientSimulationManager : NetSimulationManager<ClientSimulationManager>
     {
-        int SNAPSHOT_BUFFER_SIZE { get => Parameters.SNAPSHOT_BUFFER_SIZE; }
+        int SNAPSHOT_BUFFER_SIZE { get => SimulationParameters.SNAPSHOT_BUFFER_SIZE; }
         CircularBuffer<SimulationSnapshot> m_snapshotBuffer;
 
         /// <summary>
@@ -21,8 +22,10 @@ namespace Tankito.Netcode.Simulation
         [SerializeField] private TankDelta m_tankSimulationTolerance;
         [SerializeField] private BulletDelta m_bulletSimulationTolerance;
 
-        [SerializeField] private bool DEBUG;
+        [SerializeField] private bool DEBUG = true;
 
+        const int NO_ROLLBACK = -1;
+        int m_rollbackTick = NO_ROLLBACK;
         const int NO_SNAPSHOT = -1;
         private int m_lastAuthSnapshotTimestamp;//Por como funciona el rollback, igual esto no hace falta y unicamente podemos necesitar 
                                                 //que se guarde el timestamp. EDIT: Vale, en efecto, lo estoy cambiando para desligar
@@ -36,6 +39,21 @@ namespace Tankito.Netcode.Simulation
         //    }
         //}
 
+        protected override int CaptureSnapshotTick 
+        {
+            get
+            {
+                if(m_rollbackTick ==  NO_ROLLBACK)
+                {
+                    return SimClock.TickCounter;
+                }
+                else
+                {
+                    return m_rollbackTick;
+                }
+            }
+        }
+
         void Start()
         {
             if (!NetworkManager.Singleton.IsClient)
@@ -45,7 +63,6 @@ namespace Tankito.Netcode.Simulation
             }
             m_tankSimulationTolerance = new TankDelta(new Vector2(0.1f,0.1f), 3f, new Vector2(0.2f,0.2f), 60f, 0);
             m_bulletSimulationTolerance = new BulletDelta(new Vector2(0.1f,0.1f), 1f, new Vector2(0.1f,0.1f));
-            DEBUG = false;
 
             m_snapshotBuffer = new CircularBuffer<SimulationSnapshot>(SNAPSHOT_BUFFER_SIZE);
             m_lastAuthSnapshotTimestamp = NO_SNAPSHOT;
@@ -74,8 +91,14 @@ namespace Tankito.Netcode.Simulation
             // Cache Simulation State
             SimulationSnapshot newSnapshot = CaptureSnapshot();
             newSnapshot.status = SnapshotStatus.Predicted;
+            //if (!SimClock.Instance.Active) Debug.Log($"[{SimClock.TickCounter}]ReconciliatedSnapshot-> saved to buffer at({newSnapshot.timestamp})");
             m_snapshotBuffer.Add(newSnapshot, newSnapshot.timestamp);
         }
+        
+        // public bool ContainedSimObj(ulong simObjId, int tick)
+        // {
+        //     return m_snapshotBuffer[tick].ContainsId(simObjId);
+        // }
 
         public void EvaluateForReconciliation(SimulationSnapshot newAuthSnapshot)
         {
@@ -104,21 +127,62 @@ namespace Tankito.Netcode.Simulation
             
             if (DEBUG) Debug.Log($"[{SimClock.TickCounter}]Evaluating Desync for: "+ m_snapshotBuffer.Get(newAuthSnapshot.timestamp));
 
+
+            if (DEBUG) Debug.Log("Evaluating Desync for: "+ m_snapshotBuffer.Get(newAuthSnapshot.timestamp));
             SimulationSnapshot predictedSnapshot = m_snapshotBuffer.Where(s => s.timestamp == newAuthSnapshot.timestamp 
                 && s.status == SnapshotStatus.Predicted).FirstOrDefault();
 
             if (!predictedSnapshot.Equals(default(SimulationSnapshot)))
             {
-                foreach (var objSnapShot in predictedSnapshot.Keys)
+                bool missingObjects = false;
+                
+                foreach(var authObjId in newAuthSnapshot.IDs)
                 {
-                    if (newAuthSnapshot.ContainsKey(objSnapShot))
+                    //if (DEBUG) Debug.Log($"[{SimClock.TickCounter}]: {snapshotObj}");
+                    if (!predictedSnapshot.ContainsId(authObjId))
                     {
-                        if (CheckForDesync(predictedSnapshot[objSnapShot], newAuthSnapshot[objSnapShot]))
+                        // Auth Obj NOT in Snapshot
+                        if (newAuthSnapshot[authObjId].type == SimulationObjectType.Bullet)
+                        {
+                            var bulletState = (BulletSimulationState)newAuthSnapshot[authObjId].state;
+                            // Si es su 1er tick de vida, dejamos que intente el propio rollback instanciar la bala
+                            if (bulletState.LifeTime >= SimClock.SimDeltaTime*2)
+                            {
+                                missingObjects = true;
+                                var ownerId =  ((BulletSimulationState)newAuthSnapshot[authObjId].state).OwnerId;
+                                var authBullet = BulletPool.Instance.Get(bulletState.Position, bulletState.Rotation, ownerId, authObjId, autoSpawn:false);
+                                authBullet.OnNetworkSpawn();
+                                if (DEBUG) Debug.Log($"[{SimClock.TickCounter}]Reconciliated Bullet[{authObjId}] successfully added to sim? => " + m_simulationObjects.ContainsKey(authObjId));
+                            }
+                            else
+                            {
+                                Debug.Log($"[{SimClock.TickCounter}]Handing spawning attempt over to reconciliation (remote client input replay) because {authObjId}'s lifetime is lower than 2 ticks (it was spawned on tick[{predictedSnapshot.timestamp}])");
+                            }
+                        }
+                        else
+                        {
+                            throw new InvalidOperationException($"Pero que cojones estas intentando hacer? (sim doesn't contain {authObjId} and it isn't a bullet)");
+                        }
+                    }
+                }
+
+                if (missingObjects)
+                {
+                    Rollback(newAuthSnapshot);
+                    m_snapshotBuffer.Add(newAuthSnapshot, newAuthSnapshot.timestamp);
+                    return;
+                }
+
+                foreach (var objId in predictedSnapshot.IDs)
+                {
+                    if (newAuthSnapshot.ContainsId(objId))
+                    {
+                        if (CheckForDesync(predictedSnapshot[objId].state, newAuthSnapshot[objId].state))
                         {
                             if (DEBUG)
                             {
                                 Debug.Log($"[{SimClock.TickCounter}]Rolling back to [{newAuthSnapshot.timestamp}]"+
-                                $"\nBecause {objSnapShot.NetworkObjectId} dind't meet the delta Thresholds");
+                                $"\nBecause {objId} dind't meet the delta Thresholds");
                             }
                             
                             Rollback(newAuthSnapshot);
@@ -135,45 +199,53 @@ namespace Tankito.Netcode.Simulation
         public void Rollback(SimulationSnapshot authSnapshot)
         {
 
-            int rollbackCounter = authSnapshot.timestamp;
+            m_rollbackTick = authSnapshot.timestamp;
             
             //Pause Simulation Clock
             SimClock.Instance.StopClock();
 
             // We DON'T have to re-simulate the tick which we are getting as auth,
             // because it's already simulated. So just advance the counter
-            rollbackCounter++;
-
-            foreach(var obj in m_simulationObjects.Values)
+            m_rollbackTick++;
+            
+            foreach(var objId in m_simulationObjects.Keys)
             {
-                obj.SetSimState(authSnapshot[obj]);
-
+                if (authSnapshot.ContainsId(objId))
+                {
+                    m_simulationObjects[objId].SetSimState(authSnapshot[objId].state);
+                }
+                else
+                {
+                    if (DEBUG) Debug.Log($"Queueing [{objId}] for despawn (NOT found in authSnapshot)");
+                    QueueForDespawn(objId);
+                }
                 
                 // Put Input Components into replay mode
-                if(obj is TankSimulationObject tank)
+                if(m_simulationObjects[objId] is TankSimulationObject tank)
                 {
-                    tank.StartInputReplay(rollbackCounter);
+                    tank.StartInputReplay(m_rollbackTick);
                 }
                 // Habra que hacer algo para restaurar objetos que puedieran haber deespawneado y todo eso supongo
             }
             
-            while(rollbackCounter < SimClock.TickCounter)
+            while(m_rollbackTick < SimClock.TickCounter)
             {
                 // - Input Replay - DONE => Implicitly consumes inputs from input caches when pulling InputPayloads on Kinematic Functions
                 Simulate();
-                rollbackCounter++;
+                m_rollbackTick++;
             }
 
             // Set tank's input components back on live input mode
             foreach(var obj in m_simulationObjects.Values)
             {
-                if (obj is  TankSimulationObject tank)
+                if (obj!= null && obj is  TankSimulationObject tank)
                 {
                     var lastReplayTick = tank.StopInputReplay();
                     //if (DEBUG) Debug.Log($"Tank({tank.NetworkObjectId})'s last replayed input was on Tick- {lastReplayTick}");
                 }
             }
 
+            m_rollbackTick = NO_ROLLBACK;
             //Resume Simulation Clock
             SimClock.Instance.ResumeClock();
         }
@@ -183,11 +255,11 @@ namespace Tankito.Netcode.Simulation
         {
             SimClock.Instance.StopClock();
             
-            foreach(var obj in newSimSnapshot.Keys)
+            foreach(var objId in newSimSnapshot.IDs)
             {
-                if (m_simulationObjects.Values.Contains(obj))
+                if (m_simulationObjects.Keys.Contains(objId))
                 {
-                    obj.SetSimState(newSimSnapshot[obj]);
+                    m_simulationObjects[objId].SetSimState(newSimSnapshot[objId].state);
                 }
                 else
                 {
@@ -249,26 +321,26 @@ namespace Tankito.Netcode.Simulation
             if (DEBUG) Debug.Log("DeltaSnapshot: " + deltas.Select(d => d.ToString()));
 
             string desyncs = "Desyncs: ";
-            foreach(var obj in pastSnapshot.Keys)
+            foreach(var objId in pastSnapshot.IDs)
             {
-                if (lastSnapshot.ContainsKey(obj))
+                if (lastSnapshot.ContainsId(objId))
                 {
-                    desyncs += $"[{obj.NetworkObjectId}]-> " + CheckForDesync(lastSnapshot[obj], pastSnapshot[obj]) + "   ";
+                    desyncs += $"[{objId}]-> " + CheckForDesync(lastSnapshot[objId].state, pastSnapshot[objId].state) + "   ";
                 }
                 else
                 {
-                    desyncs += $"[{obj.NetworkObjectId}]-> missing in LastSnapshot. ";
+                    desyncs += $"[{objId}]-> missing in LastSnapshot. ";
                 }
             }
-            foreach(var obj in lastSnapshot.Keys)
+            foreach(var obj in lastSnapshot.IDs)
             {
-                if (!pastSnapshot.ContainsKey(obj))
+                if (!pastSnapshot.ContainsId(obj))
                 {
-                    desyncs += $"[{obj.NetworkObjectId}]-> missing in PastSnapshot. ";
+                    desyncs += $"[{obj}]-> missing in PastSnapshot. ";
                 }
             }
             
-            Debug.Log("Thresholds check: " + desyncs);
+            if (DEBUG) Debug.Log("Thresholds check: " + desyncs);
         }
 
         [ContextMenu("TestTimeTravel")]

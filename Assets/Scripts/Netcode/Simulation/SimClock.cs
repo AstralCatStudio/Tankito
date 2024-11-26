@@ -12,9 +12,9 @@ namespace Tankito
 {
     public class SimClock : Singleton<SimClock>
     {
-        public static float SimDeltaTime { get => (float)Parameters.SIM_DELTA_TIME; }
+        public static float SimDeltaTime { get => (float)SimulationParameters.SIM_DELTA_TIME; }
 
-        double m_tickDeltaTime;
+        [SerializeField] double m_tickDeltaTime; // <---- [SerializeField] FOR INSPECTOR DEBUG
         double m_tickTimer;
         [SerializeField] private int m_tickCounter;
         public static int TickCounter { get => Instance.m_tickCounter; }
@@ -22,7 +22,7 @@ namespace Tankito
 
         public bool Active { get => m_active; }
 
-        private int m_throttleInterval = 1;
+        private int m_throttleInterval = 2;
         private float m_averageThrottleTicks;
         private int m_throttleMessages;
 
@@ -41,7 +41,7 @@ namespace Tankito
             m_tickTimer = 0;
             m_tickCounter = 0;
             m_active = false;
-            m_tickDeltaTime = Parameters.SIM_DELTA_TIME;
+            m_tickDeltaTime = SimulationParameters.SIM_DELTA_TIME;
         }
 
 
@@ -61,7 +61,7 @@ namespace Tankito
 
         internal void StartClock()
         {
-            //Debug.Log("Se inica el reloj");
+            if (DEBUG) Debug.Log("SimClock STARTED!");
             m_tickTimer = 0;
             m_active = true;
             AutoPhysics2DUpdate(false);
@@ -93,17 +93,17 @@ namespace Tankito
         {
             if (NetworkManager.Singleton.IsServer)
             {
-                Debug.LogWarning("SERVER MUSTN'T Throttle");
+                Debug.LogError("SERVER MUSTN'T Throttle");
                 return;
             }
             
             m_throttleMessages++;
+            m_averageThrottleTicks += throttleTicks;
 
             if (m_throttleMessages >= m_throttleInterval)
             {
-                m_averageThrottleTicks += throttleTicks/m_throttleMessages;
-
-                float newTPS = Parameters.SIM_TICK_RATE + Mathf.Clamp(m_averageThrottleTicks, 1-Parameters.SIM_TICK_RATE, Parameters.SIM_TICK_RATE);
+                m_averageThrottleTicks /= m_throttleMessages;
+                float newTPS = SimulationParameters.SIM_TICK_RATE + Mathf.Clamp(m_averageThrottleTicks, 1-SimulationParameters.SIM_TICK_RATE, SimulationParameters.SIM_TICK_RATE);
 
                 if (DEBUG) Debug.Log($"Throttling({m_averageThrottleTicks}) at: {newTPS}");
 
@@ -111,7 +111,6 @@ namespace Tankito
                 m_throttleMessages = 0;
                 m_averageThrottleTicks = 0;
             }
-
         }
         
         public void AutoPhysics2DUpdate(bool auto)

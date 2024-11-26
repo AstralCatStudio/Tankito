@@ -11,7 +11,7 @@ namespace Tankito.Netcode.Simulation
         public int SnapshotTimestamp { get => m_latestSnapshot.timestamp; }
         private SimulationSnapshot m_latestSnapshot;
         private double m_bufferedTime;
-        private double TimeToBuffer { get => Parameters.SNAPSHOT_JITTER_BUFFER_TIME; }
+        private double TimeToBuffer { get => SimulationParameters.SNAPSHOT_JITTER_BUFFER_TIME; }
 
 
         protected override void Awake()

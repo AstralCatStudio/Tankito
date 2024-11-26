@@ -9,10 +9,28 @@ namespace Tankito
     public class Modifier : ScriptableObject
     {
         [SerializeField]
-        public Sprite logo;
-        public string description;
+        private Sprite logo;
+        [SerializeField]
+        private string title;
+        [SerializeField]
+        private string description;
+        [SerializeField]
+        public bool stackable;
         //contiene una lista de hull modifiers y bullet modifiers, este scriptable object será el que le llegue al tanque
         public List<BulletModifier> bulletModifiers = new List<BulletModifier>();
         public List<HullModifier> hullModifiers = new List<HullModifier>();
+
+        public Sprite GetSprite()
+        {
+            return logo;
+        }
+        public string GetDescription()
+        {
+            return description;
+        }
+        public string GetTitle()
+        {
+            return title;
+        }
     }
 }

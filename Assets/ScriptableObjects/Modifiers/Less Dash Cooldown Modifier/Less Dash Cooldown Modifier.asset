@@ -12,8 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8cd9a9b75cfb494c8fa78e72de18880, type: 3}
   m_Name: Less Dash Cooldown Modifier
   m_EditorClassIdentifier: 
-  logo: {fileID: 0}
-  description: 
+  logo: {fileID: 21300000, guid: 9de7ae4cfa3b1324ca34e0f77274d1af, type: 3}
+  title: More Dashes
+  description: Your Dash Cooldown is Faster
+  stackable: 1
   bulletModifiers: []
   hullModifiers:
   - {fileID: 11400000, guid: d48480bf9ce2987439e8d3b6d86fcdfc, type: 2}

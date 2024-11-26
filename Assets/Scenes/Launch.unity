@@ -152,12 +152,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18d1c73e433ddb14a87a6125ba978f0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Median_Latency: 0.06
-  Worst_Case_Latency: 0.25
+  Median_Latency: 0.16
+  Worst_Case_Latency: 0.4
   Client_Jitter_Buffer_Time: 0.008
   Sim_Tick_Rate: 60
   DEBUG_LATENCY: 0
   DEBUG_PARAMS: 0
+  m_debugRate: 2
 --- !u!4 &524099866
 Transform:
   m_ObjectHideFlags: 0
@@ -209,7 +210,7 @@ MonoBehaviour:
   m_MaxPacketQueueSize: 256
   m_MaxPayloadSize: 6144
   m_HeartbeatTimeoutMS: 500
-  m_ConnectTimeoutMS: 1000
+  m_ConnectTimeoutMS: 2000
   m_MaxConnectAttempts: 60
   m_DisconnectTimeoutMS: 30000
   ConnectionData:
@@ -239,6 +240,7 @@ MonoBehaviour:
     Prefabs:
       NetworkPrefabsLists:
       - {fileID: 11400000, guid: 8a4897daf3b43fe4f9108bcdb4681091, type: 2}
+      - {fileID: 11400000, guid: 8145358083afe8143bdefbf7632f6b51, type: 2}
     TickRate: 60
     ClientConnectionBufferTimeout: 10
     ConnectionApproval: 0

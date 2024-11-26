@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using Tankito.Netcode;
+using Tankito.Netcode.Simulation;
 using Tankito.Utils;
 using Unity.Netcode;
 using UnityEngine;
@@ -73,6 +74,10 @@ namespace Tankito
 
         private void OnClientConnected(ulong clientId)
         {
+            if (IsServer)
+            {
+                ServerSendSimulationParameters(clientId);
+            }
             //Debug.Log("GameManager CLIENT CONNECTED called.");
 
             if (m_loadingSceneFlag)
@@ -105,14 +110,26 @@ namespace Tankito
                 SpawnManager spawnManager = FindObjectOfType<SpawnManager>();
                 spawnManager.SetPlayerInSpawn(clientId);
 
-                RoundManager roundManager = FindObjectOfType<RoundManager>();
-                roundManager.AddPlayer(newPlayer.gameObject);
-
-                // IMPORTANTE: Se propaga la nueva posicion a los clientes (SUJETO A CAMBIOS)
-                //NetworkObjectReference networkObjectReference = new NetworkObjectReference(newPlayer);
-                //SetObjectPositionClientRpc(newPlayer, newPlayer.GetComponent<Transform>().position);
-                // Ahora se maneja directamente en el spawn manager llamando a la funcion SetObjectPosition del GameManager
+                var tankData = newPlayer.GetComponent<TankData>();
+                Debug.Log($"TankData = {tankData}");
+                RoundManager.Instance.AddPlayer(tankData);
+                RoundManager.Instance.UpdateRemoteClientPlayerList();
             }
+            //else
+            //{
+            //    if(clientId != NetworkManager.Singleton.LocalClientId)
+            //    {
+            //        if (RoundManager.Instance == null)
+            //        {
+            //            Debug.Log("ES EL ROUND MANAGER");
+            //        }
+            //        else if (m_playerPrefab.GetComponent<TankData>() == null)
+            //        {
+            //            Debug.Log("ES EL OBJETO");
+            //        }
+            //        RoundManager.Instance.AddPlayer(NetworkManager.LocalClient.PlayerObject.GetComponent<TankData>());
+            //    }
+            //}
 
             if (clientId != NetworkManager.Singleton.LocalClientId) return;
 
@@ -122,6 +139,24 @@ namespace Tankito
             NetworkManager.Singleton.CustomMessagingManager.RegisterNamedMessageHandler(MessageName.InputWindow, MessageHandlers.Instance.ReceiveInputWindow);
             NetworkManager.Singleton.CustomMessagingManager.RegisterNamedMessageHandler(MessageName.RelayInputWindow, MessageHandlers.Instance.ReceiveRelayedInputWindow);
             NetworkManager.Singleton.CustomMessagingManager.RegisterNamedMessageHandler(MessageName.SimulationSnapshot, MessageHandlers.Instance.ReceiveSimulationSnapshot);
+        }
+
+        private void ServerSendSimulationParameters(ulong clientId)
+        {
+            var medianLatency = (float)SimulationParameters.Instance.MedianLatency;
+            var worstLatency = (float)SimulationParameters.Instance.WorstCaseLatency;
+            var simTickRate = SimulationParameters.Instance.SimTickRate;
+
+            ClientRpcParams target = new ClientRpcParams();
+            target.Send.TargetClientIds = new ulong[] {clientId};
+            SetSimulationParametersClientRpc(medianLatency, worstLatency, simTickRate, target);
+        }
+
+        [ClientRpc()]
+        private void SetSimulationParametersClientRpc(float medianLatency, float worstCaseLatency, int simTickRate, ClientRpcParams clientRpcSendParams)
+        {
+            Debug.Log("Received Simulation Parameters!");
+            SimulationParameters.Instance.SetParams(medianLatency, worstCaseLatency, simTickRate);
         }
 
         private void OnClientDisconnect(ulong clientId)
@@ -134,8 +169,9 @@ namespace Tankito
                 SpawnManager spawnManager = FindObjectOfType<SpawnManager>();
                 spawnManager.FreeSpawnPoint(clientId);
 
-                RoundManager roundManager = FindObjectOfType<RoundManager>();
-                roundManager.RemovePlayer(clientId);
+                RoundManager.Instance.RemovePlayer(clientId);
+                RoundManager.Instance.UpdateRemoteClientPlayerList();
+
             }
         }
 
@@ -144,17 +180,9 @@ namespace Tankito
             m_loadingSceneFlag = false;
         }
 
-        public void UnloadScene()
+        public void OnSceneLoading()
         {
-            // Assure only the server calls this when the NetworkObject is
-            // spawned and the scene is loaded.
-            if (!IsServer || !IsSpawned)//|| !sceneLoaded.IsValid() || !sceneLoaded.isLoaded) // ADAPTAR??
-            {
-                return;
-            }
-
             m_loadingSceneFlag = true;
-            m_playerInput = null;
         }
 
         public void FindPlayerInput()
@@ -247,20 +275,21 @@ namespace Tankito
             AutoPhysics2DUpdate(false);
         }
 
-        public void SetObjectPosition(GameObject targetObject, Vector3 newPosition)
+        public void SetObjectPosition(GameObject targetObject, Vector3 newPosition, Quaternion newRotation)
         {
             NetworkObjectReference networkObjectReference = new NetworkObjectReference(targetObject);
-            SetObjectPositionClientRpc(networkObjectReference, newPosition);
+            SetObjectPositionClientRpc(networkObjectReference, newPosition, newRotation);
         }
 
         [ClientRpc]
-        private void SetObjectPositionClientRpc(NetworkObjectReference targetObjectReference, Vector3 newPosition)
+        private void SetObjectPositionClientRpc(NetworkObjectReference targetObjectReference, Vector3 newPosition, Quaternion newRotation)
         {
             if (targetObjectReference.TryGet(out var targetObject))
             {
                 if (targetObject != null)
                 {
                     targetObject.gameObject.GetComponent<Transform>().position = newPosition;
+                    targetObject.gameObject.GetComponent<Transform>().rotation = newRotation;
                     Debug.Log($"GameObject del jugador {targetObject.GetComponent<NetworkObject>().OwnerClientId} colocado en el punto {newPosition.ToString()}");
                 }
                 else
@@ -271,7 +300,7 @@ namespace Tankito
         }
 
         [ClientRpc]
-        public void SetObjectPositionClientRpc(NetworkObjectReference targetObjectReference, Vector3 newPosition, ulong clientId)
+        public void SetObjectPositionClientRpc(NetworkObjectReference targetObjectReference, Vector3 newPosition, Quaternion newRotation, ulong clientId)
         {
             if (NetworkManager.Singleton.LocalClientId == clientId)
             {
@@ -280,6 +309,7 @@ namespace Tankito
                     if (targetObject != null)
                     {
                         targetObject.gameObject.GetComponent<Transform>().position = newPosition;
+                        targetObject.gameObject.GetComponent<Transform>().rotation = newRotation;
                         Debug.Log($"GameObject del jugador {targetObject.GetComponent<NetworkObject>().OwnerClientId} colocado en el punto {newPosition.ToString()}");
                     }
                     else

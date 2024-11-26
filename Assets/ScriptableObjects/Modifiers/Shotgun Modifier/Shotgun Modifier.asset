@@ -12,8 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8cd9a9b75cfb494c8fa78e72de18880, type: 3}
   m_Name: Shotgun Modifier
   m_EditorClassIdentifier: 
-  logo: {fileID: 0}
-  description: 
+  logo: {fileID: 21300000, guid: be378ec5a96027e48bc6002788eb0644, type: 3}
+  title: Shotgun Cannon
+  description: Your shoots are like shotguns
+  stackable: 0
   bulletModifiers:
   - {fileID: 11400000, guid: c06dbf1f373ea6c42afc2e58768c7e34, type: 2}
   hullModifiers: []

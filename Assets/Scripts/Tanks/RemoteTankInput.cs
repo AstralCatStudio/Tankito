@@ -1,13 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Tankito;
-using Tankito.Netcode;
 using Tankito.Utils;
 using Unity.Services.Matchmaker.Models;
 using UnityEngine;
 
-namespace Tankito.Netcode
+namespace Tankito.Netcode.Simulation
 {
     public class RemoteTankInput : MonoBehaviour, ITankInput
     {
@@ -16,8 +14,8 @@ namespace Tankito.Netcode
         [SerializeField] private bool DEBUG;
 
         //const int N_IDEAL_INPUT = 10;
-        public int IdealBufferSize { get => Parameters.SERVER_IDEAL_INPUT_BUFFER_SIZE; }
-        public int Last { get =>  (m_inputBuffer.Count != 0) ? m_inputBuffer.Last().timestamp : 0; }
+        public int IdealBufferSize { get => SimulationParameters.SERVER_IDEAL_INPUT_BUFFER_SIZE; }
+        public int Last { get =>  (m_inputBuffer.Count != 0) ? m_inputBuffer.Last().timestamp : SimClock.TickCounter; }
 
         public void AddInput(InputPayload[] newInputWindow)
         {

@@ -39,4 +39,12 @@ public class ShopContent : MonoBehaviour
 
         contentInstance.GetComponent<Button>().onClick.AddListener(() => MusicManager.Instance.PlaySound("aceptar"));
     }
+
+    public void UnsubscribeButtons()
+    {
+        foreach(var i in shopContent)
+        {
+            i.GetComponent<ShopCharacterButton>().Unsubscribe();
+        }
+    }
 }

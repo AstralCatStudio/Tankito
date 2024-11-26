@@ -12,8 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8cd9a9b75cfb494c8fa78e72de18880, type: 3}
   m_Name: More Bullet Count Modifier
   m_EditorClassIdentifier: 
-  logo: {fileID: 0}
-  description: 
+  logo: {fileID: 21300000, guid: 079f2a8d43074194182270e6f797cb48, type: 3}
+  title: More Bullets
+  description: You Shoot One Extra Bullet
+  stackable: 1
   bulletModifiers:
   - {fileID: 11400000, guid: 8e56796384585aa468beb8f828fa00ec, type: 2}
   hullModifiers: []
