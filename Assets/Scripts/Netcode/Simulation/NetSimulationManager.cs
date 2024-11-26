@@ -115,7 +115,7 @@ namespace Tankito.Netcode.Simulation
                 var obj = m_simulationObjects[objId];
                 if (obj is BulletSimulationObject bullet)
                 {
-                    Debug.Log($"[{SimClock.TickCounter}]Called Despawn for {objId}");
+                    //Debug.Log($"[{SimClock.TickCounter}]Called Despawn for {objId}");
                     bullet.OnNetworkDespawn();
                 }
                 else
