@@ -155,7 +155,7 @@ MonoBehaviour:
   Median_Latency: 0.16
   Worst_Case_Latency: 0.4
   Client_Jitter_Buffer_Time: 0.008
-  Sim_Tick_Rate: 30
+  Sim_Tick_Rate: 60
   DEBUG_LATENCY: 0
   DEBUG_PARAMS: 0
   m_debugRate: 2
@@ -210,7 +210,7 @@ MonoBehaviour:
   m_MaxPacketQueueSize: 256
   m_MaxPayloadSize: 6144
   m_HeartbeatTimeoutMS: 500
-  m_ConnectTimeoutMS: 1000
+  m_ConnectTimeoutMS: 2000
   m_MaxConnectAttempts: 60
   m_DisconnectTimeoutMS: 30000
   ConnectionData:
@@ -304,7 +304,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DEBUG: 0
-  m_startingScene: 1
+  m_startingScene: 0
 --- !u!4 &1609486872
 Transform:
   m_ObjectHideFlags: 0
