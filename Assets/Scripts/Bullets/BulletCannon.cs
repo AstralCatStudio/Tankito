@@ -108,7 +108,6 @@ namespace Tankito
 
         void ShootBullet(Vector2 position, Vector2 direction, int spawnN)
         {
-            
             m_bulletProperties.direction = direction;
             m_bulletProperties.startingPosition = position;
             m_bulletProperties.spawnTickTime = SimClock.TickCounter;

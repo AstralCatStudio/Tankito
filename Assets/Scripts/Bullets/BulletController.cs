@@ -6,6 +6,7 @@ using Unity.Netcode;
 using Tankito.Netcode;
 using UnityEngine.UIElements;
 using Tankito.Netcode.Simulation;
+using System.Linq;
 
 namespace Tankito {
 
@@ -34,10 +35,8 @@ namespace Tankito {
         {           
             GetComponent<BulletSimulationObject>().OnComputeKinematics += MoveBullet;
 
-            transform.position = BulletCannonRegistry.Instance[m_simObj.OwnerId].Properties.startingPosition;
             m_bouncesLeft = BulletCannonRegistry.Instance[m_simObj.OwnerId].Properties.bouncesTotal;
             m_rb.velocity = BulletCannonRegistry.Instance[m_simObj.OwnerId].Properties.velocity * BulletCannonRegistry.Instance[m_simObj.OwnerId].Properties.direction.normalized;
-            transform.rotation = Quaternion.LookRotation(new Vector3(0, 0, 1), m_rb.velocity.normalized);
             foreach (var modifier in Tankito.BulletCannonRegistry.Instance[m_simObj.OwnerId].Modifiers)
             {
                 modifier.BindBulletEvents(this);
@@ -110,6 +109,7 @@ namespace Tankito {
         private void OnCollisionEnter2D(Collision2D collision)
         {
             lastCollisionNormal = collision.GetContact(0).normal;
+            //Debug.Log($"[{SimClock.TickCounter}]Collided with: {collision.gameObject} at {collision.contacts.First().point}");
             switch (collision.gameObject.tag)
             {
                 case "NormalWall":
