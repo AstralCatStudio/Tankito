@@ -52,8 +52,6 @@ namespace Tankito.Netcode.Simulation
                 }
             }
 
-            throw new NotImplementedException("TODO: falta recoger los objetos que estan presentes en el snapshot B pero no en el A");
-
             return snapshotDeltas;
         }
 

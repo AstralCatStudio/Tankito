@@ -8,7 +8,7 @@ namespace Tankito.Netcode.Simulation
         [SerializeField] private Rigidbody2D m_tankRB;
         [SerializeField] private Rigidbody2D m_turretRB;
         [SerializeField] private ITankInput m_inputComponent;
-        [SerializeField] private TankController m_controller;
+        [SerializeField] private TankController m_tankController;
         public void StartInputReplay(int timestamp) { m_inputComponent.StartInputReplay(timestamp); }
         public int StopInputReplay() { return m_inputComponent.StopInputReplay(); }
         public override SimulationObjectType SimObjType => SimulationObjectType.Tank;
@@ -23,9 +23,9 @@ namespace Tankito.Netcode.Simulation
                     Debug.Log("Error tank Rigibody2D reference not set.");
                 }
             }
-            if(m_controller == null)
+            if(m_tankController == null)
             {
-                m_controller = GetComponent<TankController>();
+                m_tankController = GetComponent<TankController>();
                 if (m_tankRB == null)
                 {
                     Debug.Log("Error tank controller reference not set.");
@@ -103,7 +103,7 @@ namespace Tankito.Netcode.Simulation
 
         public override ISimulationState GetSimState()
         {
-            PlayerState playerState = m_controller.PlayerState;
+            PlayerState playerState = m_tankController.PlayerState;
             int stateInitTick;
             if(playerState == PlayerState.Moving)
             {
@@ -111,7 +111,7 @@ namespace Tankito.Netcode.Simulation
             }
             else
             {
-                stateInitTick = m_controller.StateInitTick;
+                stateInitTick = m_tankController.StateInitTick;
             }
 
             return new TankSimulationState
@@ -120,9 +120,10 @@ namespace Tankito.Netcode.Simulation
                 m_tankRB.rotation,
                 m_tankRB.velocity,
                 m_turretRB.rotation,
-                m_inputComponent.LastInput.action,
-                playerState,
-                stateInitTick
+                m_inputComponent.LastInput.action, // <----- Gets the "currently" active input
+                m_tankController.TicksSinceFire,
+                m_tankController.TicksSinceDash,
+                m_tankController.TicksSinceParry
             );
         }
 
@@ -134,8 +135,7 @@ namespace Tankito.Netcode.Simulation
                 m_tankRB.transform.rotation = Quaternion.AngleAxis(tankState.HullRotation, Vector3.forward);
                 m_turretRB.transform.rotation = Quaternion.AngleAxis(tankState.TurretRotation, Vector3.forward);
                 m_tankRB.velocity = tankState.Velocity;
-                m_controller.PlayerState = tankState.PlayerState;
-                m_controller.StateInitTick = tankState.StateInitTick;
+                m_tankController.LastFireTick = tankState.LastFireTick;
             }
             else
             {

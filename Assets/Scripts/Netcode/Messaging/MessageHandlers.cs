@@ -288,7 +288,7 @@ namespace Tankito.Netcode.Messaging
 
             snapshot.status = SnapshotStatus.Authoritative;
 
-            var writer = new FastBufferWriter(SimulationSnapshot.MAX_SERIALIZED_SIZE, Allocator.Temp);
+            var writer = new FastBufferWriter(snapshot.GetSerializedSize(), Allocator.Temp);
             var customMessagingManager = NetworkManager.Singleton.CustomMessagingManager;
 
             using (writer)

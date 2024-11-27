@@ -72,7 +72,14 @@ namespace Tankito
         //Apaño feo pero que tendrá que funcionar
         [SerializeField] private BulletCannon m_cannon;
         private int m_lastFireTick;
-        private int FireReloadTick => m_lastFireTick + m_cannon.ReloadTicks;
+        private int FireReloadTick { get => m_lastFireTick + m_cannon.ReloadTicks;
+                                     set => m_lastFireTick = value - m_cannon.ReloadTicks; }
+        // El getter no esta expuesto porque no deberia usarse al hacer GetSimState, 
+        public int LastFireTick { set => m_lastFireTick = value; }
+        public ushort TicksSinceFire { get => (ushort)(SimClock.TickCounter-m_lastFireTick); }
+
+        public ushort TicksSinceDash { get; }
+        public ushort TicksSinceParry { get; }
 
         void Start()
         {

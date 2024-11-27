@@ -25,9 +25,9 @@ namespace Tankito.Netcode.Simulation
         public SnapshotStatus status;
         private Dictionary<ulong, (SimulationObjectType type, ISimulationState state)> objectStates;
 
-        const int MAX_TANKS_IN_LOBBY = 4;
-        const int MAX_PROJECTILES_IN_LOBBY = 20;
-        public const int MAX_SERIALIZED_SIZE = TankSimulationState.MAX_SERIALIZED_SIZE*MAX_TANKS_IN_LOBBY + BulletSimulationState.MAX_SERIALIZED_SIZE*MAX_PROJECTILES_IN_LOBBY;
+        //const int MAX_TANKS_IN_LOBBY = 4;
+        //const int MAX_PROJECTILES_IN_LOBBY = 20;
+        //public const int MAX_SERIALIZED_SIZE = TankSimulationState.MAX_SERIALIZED_SIZE*MAX_TANKS_IN_LOBBY + BulletSimulationState.MAX_SERIALIZED_SIZE*MAX_PROJECTILES_IN_LOBBY;
 
         public IEnumerable<ulong> IDs { get => objectStates.Keys; }
         public IEnumerable<(SimulationObjectType type, ISimulationState state)> States { get => objectStates.Values; }
@@ -52,16 +52,35 @@ namespace Tankito.Netcode.Simulation
 
         internal bool ContainsId(ulong obj) { return objectStates.ContainsKey(obj); }
 
+        /// <summary>
+        /// Returns the size of the struct after serializing it with <see cref="NetworkSerialize"/> 
+        /// </summary>
+        /// <returns></returns>
+        public int GetSerializedSize()
+        {
+            // Header
+            int bytes = sizeof(int) + // timestamp
+                        sizeof(SnapshotStatus) + // status
+                        sizeof(ushort); // number of objects
+            
+            // SimulationObjectUpdate
+            foreach(var objState in objectStates.Values)
+            {
+                bytes += SimulationObjectUpdate.GetSerializedSize(in objState.state);
+            }
+                        
+            return bytes;
+        }
 
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
         {
-            int nObjects = default;
+            ushort nObjects = default;
 
             serializer.SerializeValue(ref timestamp);
 
             serializer.SerializeValue(ref status);
 
-            if (serializer.IsWriter) nObjects = objectStates.Keys.Count;
+            if (serializer.IsWriter) nObjects = (ushort)objectStates.Keys.Count;
 
             serializer.SerializeValue(ref nObjects);
             
@@ -69,7 +88,7 @@ namespace Tankito.Netcode.Simulation
             {
                 foreach(var objStatePair in objectStates)
                 {
-                    SimulationObjectUpdate simObjUpdate = new SimulationObjectUpdate(objStatePair.Key, objStatePair.Value);
+                    SimulationObjectUpdate simObjUpdate = new SimulationObjectUpdate(objStatePair.Key, objStatePair.Value, timestamp);
                     simObjUpdate.NetworkSerialize(serializer);
                 }
             }
