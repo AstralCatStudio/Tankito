@@ -537,6 +537,10 @@ public class MusicManager : MonoBehaviour
     }
 
 
+    public void FasePartida(int jugadoresVivos, int jugadoresTotales)
+    {
+
+    }
 
 
 
