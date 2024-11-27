@@ -69,6 +69,8 @@ namespace Tankito
 
         public BulletSimulationObject Get(Vector2 position, Vector2 rotation, ulong ownerId, int tick, int spawnN)
         {   
+            if (DEBUG) Debug.Log($"[{SimClock.TickCounter}]Get called, Arguments: pos({position}) | rot({rotation}) | ownerId({ownerId}) | tick({tick}) | spawnN({spawnN})");
+
             float rotationDeg = Mathf.Atan2(rotation.x, rotation.y);
             var simObjId = SimExtensions.HashSimObj(ownerId, tick, spawnN);
             return Get(position, rotationDeg, ownerId, simObjId);
@@ -86,7 +88,7 @@ namespace Tankito
         /// <returns></returns>
         public BulletSimulationObject Get(Vector2 position, float rotation, ulong ownerId, ulong simObjId, bool autoSpawn = true)
         {   
-            if (DEBUG) Debug.Log($"[{SimClock.TickCounter}]Get called, Arguments: pos({position}) | rot({rotation}) | ownerId({ownerId}) | simObjId({simObjId}) | autoSpawn({autoSpawn})");
+            if (DEBUG && !autoSpawn) Debug.Log($"[{SimClock.TickCounter}]Get called, Arguments: pos({position}) | rot({rotation}) | ownerId({ownerId}) | simObjId({simObjId}) | autoSpawn({autoSpawn})");
 
 
             var bulletObj = m_pool.Get();

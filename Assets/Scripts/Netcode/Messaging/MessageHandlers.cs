@@ -67,7 +67,7 @@ namespace Tankito.Netcode.Messaging
             }
 
             if (NetworkManager.Singleton.IsServer && !NetworkManager.Singleton.IsClient) SimClock.Instance.StartClock();
-            if (DEBUG_CLOCK) Debug.Log($"Sent clock signal: {signal}");
+            if (DEBUG_CLOCK) Debug.Log($"[{SimClock.TickCounter}]Sent clock signal: {signal}");
         }
 
         private void SendThrottleSignal(ulong clientId)

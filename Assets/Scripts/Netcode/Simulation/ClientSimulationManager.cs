@@ -113,7 +113,7 @@ namespace Tankito.Netcode.Simulation
             }
 
 
-            if (DEBUG) Debug.Log("Evaluating Desync for: "+ m_snapshotBuffer.Get(newAuthSnapshot.timestamp));
+            if (DEBUG) Debug.Log("["+SimClock.TickCounter+"]"+"Evaluating Desync for: "+ m_snapshotBuffer.Get(newAuthSnapshot.timestamp));
 
             SimulationSnapshot predictedSnapshot = m_snapshotBuffer.Where(s => s.timestamp == newAuthSnapshot.timestamp 
                                                                     && s.status == SnapshotStatus.Predicted).FirstOrDefault();
