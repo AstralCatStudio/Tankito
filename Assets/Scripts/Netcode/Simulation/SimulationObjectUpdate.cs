@@ -24,7 +24,7 @@ namespace Tankito.Netcode.Simulation
 
         public SimulationObjectUpdate(ulong simObjId, (SimulationObjectType simObjType, ISimulationState iState) state, int timestamp)
         {
-            this.ID = (ushort)simObjId; // Shouldn't cause issues if the hashing funciton has low enough collison rate.
+            this.ID = simObjId;
             this.type = state.simObjType;
             this.state = state.iState;
             m_timestamp = timestamp;
