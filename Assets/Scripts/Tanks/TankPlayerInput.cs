@@ -53,8 +53,6 @@ namespace Tankito
         [SerializeField]
         private TankController m_tankController;
         [SerializeField]
-        private Animator m_turretAnimator, m_hullAnimator;
-        [SerializeField]
         private Rigidbody2D m_turretRB;
         [SerializeField] private bool DEBUG = false;
 
@@ -69,8 +67,6 @@ namespace Tankito
         {
             m_inputCache = new CircularBuffer<InputPayload>(INPUT_CACHE_SIZE);
             if (m_turretRB == null) Debug.LogWarning("Turret Rigidbody2D reference not set.");
-            if (m_turretAnimator == null) Debug.LogWarning("Turret Animator reference not set!");
-            if (m_hullAnimator == null) Debug.LogWarning("Hull Animator reference not set!");
             if (m_tankController == null) m_tankController = GetComponent<TankController>();
             if (m_tankController == null) Debug.LogWarning("Tank Controller reference not set!");
             m_inputReplayTick = NO_REPLAY;

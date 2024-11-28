@@ -96,7 +96,7 @@ namespace Tankito {
             }
             else if(PREDICT_DESTRUCTION || lifeTimeOver)
             {
-                    Debug.Log("LifeTimeOver?=>" + lifeTimeOver);
+                    // Debug.Log("LifeTimeOver?=>" + lifeTimeOver);
                     BulletSimulationObject bulletSimObj = GetComponent<BulletSimulationObject>();
                     ClientSimulationManager.Instance.QueueForDespawn(bulletSimObj.SimObjId);
             }

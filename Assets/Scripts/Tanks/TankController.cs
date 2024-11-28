@@ -25,10 +25,10 @@ namespace Tankito
                 speed: 3f,
                 rotSpeed: 360f,
                 health: 2,
-                parryTime: 0.15f,
+                parryTime: 0.2f,
                 parryCooldown: 1.5f,
-                dashSpeed: 3f,
-                dashDistance: 0.5f,
+                dashSpeed: 4f,
+                dashDistance: 1.5f,
                 dashCooldown: 2f
             );
         private List<HullModifier> m_modifiers = new List<HullModifier>();
@@ -41,9 +41,10 @@ namespace Tankito
         [SerializeField] private float m_rotationSpeed;
         [SerializeField] private float m_aimSpeed = 900f;
 
-        //Variables Dash
+        // Used to calculate dash movement *NOT Animation!
         [SerializeField] private AnimationCurve m_dashSpeedCurve;
-        private float m_dashSpeedMultiplier = 1f;
+        [SerializeField] private Animator m_hullAnimator, m_turretAnimator;
+        private float m_dashSpeedMultiplier;
         private float m_dashDistance;
         int m_dashTicks;
         int m_dashCooldownTicks;
@@ -56,6 +57,7 @@ namespace Tankito
         [SerializeField] private ITankInput m_tankInput;
         [SerializeField] private bool DEBUG_INPUT_CALLS = false;
         [SerializeField] private bool DEBUG_DASH = false;
+        [SerializeField] private bool DEBUG_PARRY = false;
         [SerializeField] private bool DEBUG_FIRE = false;
 
         public PlayerState PlayerState { get => m_playerState; set => m_playerState = value; }
@@ -216,6 +218,7 @@ namespace Tankito
             {
 
                 case TankAction.None:
+                    if (m_playerState != PlayerState.Dashing && m_playerState != PlayerState.Parrying && m_playerState != PlayerState.Firing)
                     m_playerState = PlayerState.Moving;
                     break;
 
@@ -259,23 +262,45 @@ namespace Tankito
                     MoveTank(input.moveVector, deltaTime);
                     AimTank(input.aimVector, deltaTime);
                     FireTank(input.aimVector, input.timestamp);
+
+                    // Reset state to movement for next tick (firing is considered to only take 0 ticks right now)
+                    m_playerState = PlayerState.Moving;
                     break;
 
                 case PlayerState.Dashing:
+                    int dashTick =  input.timestamp - m_lastDashTick;
+                    DashTank(input.moveVector, dashTick, deltaTime);
                     AimTank(input.aimVector, deltaTime);
-                    DashTank(input.moveVector, input.timestamp - m_lastDashTick, deltaTime);
+
+                    if (dashTick >= m_dashTicks)
+                    {
+                        m_playerState = PlayerState.Moving;
+                    }
                     break;
 
                 case PlayerState.Parrying:
+                    int parryTick = input.timestamp - m_lastParryTick;
                     MoveTank(input.moveVector, deltaTime);
-                    ParryTank(input.timestamp - m_lastParryTick);
+                    ParryTank(parryTick);
+
+                    if (parryTick >= m_parryTicks)
+                    {
+                        m_playerState = PlayerState.Moving;
+                    }
                     break;
             }
         }
 
         private void ParryTank(int parryTick)
         {
-            Debug.LogWarning($"TODO: Implement Parry. progressTicks( {parryTick}/{m_parryTicks} )");
+            if (DEBUG_PARRY) Debug.LogWarning($"TODO: Implement Parry. progressTicks( {parryTick}/{m_parryTicks} )");
+
+            // Only trigger Parry Animations during the first parry tick, and only if NOT rolling back
+            if (parryTick == 0 && SimClock.Instance.Active)
+            {
+                m_turretAnimator.SetTrigger("Parry");
+                m_hullAnimator.SetTrigger("Parry");
+            }
         }
 
         private void FireTank(Vector2 aimVector, int inputTick)
@@ -316,14 +341,18 @@ namespace Tankito
         /// <param name="dashTick"></param>
         private void DashTank(Vector2 moveVector, int dashTick, float deltaTime)
         {
-            
+            if (DEBUG_DASH)
+            {
+                Debug.Log($"[{SimClock.TickCounter}] DASH: progressTicks( {dashTick}/{m_dashTicks} )");
+            }
+
             if (dashTick == 0)
             {
                 m_playerState = PlayerState.Dashing;
                 if (DEBUG_DASH) Debug.Log($"[{SimClock.TickCounter}]Comienza el dash");
             }
 
-            float dashSpeed = m_speed * m_dashSpeedMultiplier * m_dashSpeedCurve.Evaluate((float)dashTick/m_dashTicks);
+            float dashSpeed = m_dashSpeedMultiplier * m_dashSpeedCurve.Evaluate((float)dashTick/m_dashTicks);
 
             if(moveVector != Vector2.zero)
             {
@@ -333,11 +362,6 @@ namespace Tankito
             else
             {
                 m_tankRB.MovePosition(m_tankRB.position + (Vector2)transform.right * deltaTime * dashSpeed);
-            }
-
-            if (DEBUG_DASH)
-            {
-                Debug.Log($"[{SimClock.TickCounter}] DASH: progressTicks( {dashTick}/{m_dashTicks} )");
             }
         }
 

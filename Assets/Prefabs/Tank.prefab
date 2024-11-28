@@ -393,9 +393,11 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   m_playerState: 0
-  DEBUG_INPUT_CALLS: 1
-  DEBUG_DASH: 1
-  DEBUG_FIRE: 1
+  m_turretAnimator: {fileID: 6117245905817614025}
+  m_hullAnimator: {fileID: 5873195794702409541}
+  DEBUG_INPUT_CALLS: 0
+  DEBUG_DASH: 0
+  DEBUG_FIRE: 0
   m_cannon: {fileID: 792954130975718086}
 --- !u!114 &5903910165241873950
 MonoBehaviour:
@@ -411,8 +413,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_inputReplayTick: -1
   m_tankController: {fileID: 258216026692416356}
-  m_turretAnimator: {fileID: 6117245905817614025}
-  m_hullAnimator: {fileID: 5873195794702409541}
   m_turretRB: {fileID: 8342253699622009969}
   DEBUG: 0
 --- !u!114 &8799390587279230347
