@@ -13,21 +13,22 @@ using System.Collections;
 using TMPro;
 using UnityEngine.SceneManagement;
 using Tankito;
+using Tankito.InputFields;
 
 namespace Tankito.Netcode
 {
-        public class LoginGUIManager : MonoBehaviour
+    public class LoginGUIManager : MonoBehaviour
     {
         const int MAX_CONNECTIONS = 4;
         public static readonly string CONNECTION_TYPE =
 
-        #if UNITY_WEBGL
+#if UNITY_WEBGL
         "wss";
         const bool USE_WEB_SOCKETS = true;
-        #else
+#else
         "dtls";
         const bool USE_WEB_SOCKETS = false;
-        #endif
+#endif
 
 
         string m_joinCode = "Enter room code...";
@@ -97,7 +98,7 @@ namespace Tankito.Netcode
 
             GameObject buttonHost = GameObject.Instantiate(buttonPrefab, transform.GetChild(0));
             ConfigButton(buttonHost, HostButton, "Host");
-            
+
             GameObject buttonServer = GameObject.Instantiate(buttonPrefab, transform.GetChild(0));
             ConfigButton(buttonServer, ServerButton, "Server");
 
@@ -106,13 +107,14 @@ namespace Tankito.Netcode
 
             GameObject inputField = GameObject.Instantiate(inputFieldPrefab, transform.GetChild(0));
             joinCodeInputField = inputField.GetComponent<TMP_InputField>();
+            inputField.GetComponent<JoinCodeField>().OnEnterPressedEvent.AddListener(ClientButton);
         }
 
         void RegionSelection()
         {
             transform.GetChild(1).gameObject.SetActive(true);
 
-            foreach(var reg in m_relayRegions)
+            foreach (var reg in m_relayRegions)
             {
                 Debug.Log($"{reg.desc}: {reg.id}");
                 GameObject buttonRegion = GameObject.Instantiate(buttonPrefab, transform.GetChild(1).GetChild(0).GetChild(0));
@@ -164,12 +166,13 @@ namespace Tankito.Netcode
         async void StartHost()
         {
             await CreateRelayAllocation();
-            TextEditor te = new TextEditor(); te.text = m_joinCode; te.SelectAll(); te.Copy();
+            //TextEditor te = new TextEditor(); te.text = m_joinCode; te.SelectAll(); te.Copy();
+            CopyToClipboard(m_joinCode);
 
             GameManager.Instance.OnSceneLoading();
 
             NetworkManager.Singleton.StartHost();
-            
+
             SceneLoader.Singleton.LoadGameScene();
             GameManager.Instance.joinCode = m_joinCode;
         }
@@ -217,7 +220,7 @@ namespace Tankito.Netcode
                 m_connectionMode = ConnectionMode.Host; await FetchRegions(); return;
             }
         }
-        
+
         async void ServerButton()
         {
             if (m_region != "") StartServer();
@@ -226,7 +229,7 @@ namespace Tankito.Netcode
                 m_connectionMode = ConnectionMode.Server; await FetchRegions(); return;
             }
         }
-        
+
         private void ClientButton()
         {
             m_connectionMode = ConnectionMode.Client;
@@ -253,6 +256,12 @@ namespace Tankito.Netcode
         }
 
         #endregion
+
+        private void CopyToClipboard(string text)
+        {
+            CopyToClipboard copyToClipboard = new CopyToClipboard();
+            copyToClipboard.CopyTextToClipboard(text);
+        }
     }
 }
 

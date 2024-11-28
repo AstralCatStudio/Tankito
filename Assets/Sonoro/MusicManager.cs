@@ -538,6 +538,124 @@ public class MusicManager : MonoBehaviour
 
 
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public void Semaforo0()
+    {
+        PlaySound("snd_sem1");
+    }
+    public void Semaforo1()
+    {
+        PlaySound("snd_sem2");
+    }
+
+    public void InitPartida(int escenario)
+    {
+        // escenario = 0 -> playa
+        // escenario = 1 -> sushi
+        // escenario = 2 -> barco
+
+        switch (escenario)
+        {
+            case 0:
+                SetSong("PLAYA");
+                break;
+            case 1:
+                SetSong("SUSHI");
+                break;
+            case 2:
+                SetSong("BARCO");
+                break;
+            default:
+                Debug.LogWarning($"Escenario desconocido: {escenario}. No se puede inicializar la música.");
+                break;
+        }
+
+    }
+
+
+
+
+
+    public void FasePartida(int jugadoresVivos, int jugadoresTotales)
+    {
+        // ERRORES
+        if (jugadoresTotales < 2 || jugadoresTotales > 4)
+        {
+            Debug.LogError("El número total de jugadores debe estar entre 2 y 4.");
+            return;
+        }
+
+        // Caso especial: si hay 2 jugadores totales, siempre será la fase máxima 5
+        if (jugadoresTotales == 2)
+        {
+            SetPhase(5);
+            return;
+        }
+
+        // Fase mínima por defecto es 1
+        int fase = 1;
+
+        // Fase 1 si todos los jugadores están vivos
+        if (jugadoresVivos == jugadoresTotales)
+        {
+            fase = 1;
+        }
+        else if (jugadoresVivos == 2)
+        {
+            // Fase 5 cuando quedan solo 2 jugadores vivos
+            fase = 5;
+        }
+        else
+        {
+            // Calcular la fase proporcionalmente (1 a 5)
+            float ratioEliminados = (float)(jugadoresTotales - jugadoresVivos) / (jugadoresTotales - 2);
+            fase = Mathf.Clamp(Mathf.RoundToInt(ratioEliminados * 4) + 1, 1, 5);
+        }
+
+        // Llamar a SetPhase con la fase calculada
+        SetPhase(fase);
+        Debug.Log($"FASE DE MUSICA: {fase}");
+    }
+
+
+
+    public void FasePotenciadores()
+    {
+        SetPhase(0);
+    }
+
+
+    public void FinPartida()
+    {
+        SetSong("VICTORY");
+
+        PlaySound("snd_endbattle");
+
+    }
+
+    public void Resultados(int valor)
+    {
+        // 0 - pierde
+        // 1 - gana
+
+        SetPhase(valor);
+    }
+
+
+
+    public void PlayDisparo()
+    {
+        string[] soundNames = {
+        "golpe_aire1", "golpe_aire2", "golpe_aire3",
+        "golpe_aire4", "golpe_aire5", "golpe_aire6",
+        "golpe_aire7", "golpe_aire8", "golpe_aire9"
+        };
+
+        string disparoSound = soundNames[Random.Range(0, soundNames.Length)];
+
+        PlaySound(disparoSound);
+    }
+
 
 
 }
