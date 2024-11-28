@@ -36,7 +36,6 @@ namespace Tankito
 
         [SerializeField] private Rigidbody2D m_tankRB;
         [SerializeField] private Rigidbody2D m_turretRB;
-        [Tooltip("How fast the turret can turn to aim in the specified direction.")]
         [SerializeField] private float m_speed;
         [SerializeField] private float m_rotationSpeed;
         [SerializeField] private float m_aimSpeed = 900f;
@@ -53,7 +52,6 @@ namespace Tankito
 
         [SerializeField] private PlayerState m_playerState = PlayerState.Moving;
 
-        public ITankInput TankInputComponent { get => m_tankInput; set { if (m_tankInput==null) m_tankInput = value; else Debug.LogWarning($"TankInputComponent for {this} was already set!");} }
         [SerializeField] private ITankInput m_tankInput;
         [SerializeField] private bool DEBUG_INPUT_CALLS = false;
         [SerializeField] private bool DEBUG_DASH = false;

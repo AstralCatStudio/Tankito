@@ -11,11 +11,11 @@ namespace Tankito.Netcode.Simulation
     {
         private int INPUT_CACHE_SIZE => SimulationParameters.SNAPSHOT_BUFFER_SIZE;
         private CircularBuffer<InputPayload> m_inputBuffer;
-        private float m_attenuationSeconds = 0.5f;
+        private float m_attenuationSeconds = 0.4f;
         [SerializeField] private int m_attenuationTicks;
         private InputPayload m_currentInput;
         
-        public InputPayload LastInput => m_currentInput;
+        public InputPayload LastInput => m_inputReplayTick==NO_REPLAY ? m_currentInput : m_inputBuffer.Get(m_inputReplayTick);
 
         [SerializeField] private bool DEBUG = false;
 
@@ -39,17 +39,6 @@ namespace Tankito.Netcode.Simulation
 
         public void ReceiveInputWindow(InputPayload[] inputWindow)
         {
-            // int i = Array.FindIndex(inputWindow, m => m.timestamp == m_lastReceivedInput.timestamp); // Esto sencillamente no va a pasar. Por que ibas a tener la marca temporal del ultimo input recibido en la nueva ventana? Hay que asumir que los paquetes no llegan en orden.
-            // if (i == -1) i = 0;
-            // else i++;
-            // for (; i < inputWindow.Length; i++)
-            // {
-            //     m_inputBuffer.Add(inputWindow[i], inputWindow[i].timestamp);
-            // }
-            // if(m_lastReceivedInput.timestamp < inputWindow[i-1].timestamp)
-            // {
-            //     m_lastReceivedInput = inputWindow[i - 1];
-            // }
             if ((SimClock.TickCounter > INPUT_CACHE_SIZE &&
                 inputWindow.First() < (SimClock.TickCounter - INPUT_CACHE_SIZE)) ||
                 inputWindow.Last() > SimClock.TickCounter + INPUT_CACHE_SIZE)
@@ -72,24 +61,31 @@ namespace Tankito.Netcode.Simulation
         public InputPayload GetInput()
         {
             InputPayload newInput;
-            bool inputFound = m_inputBuffer.TryGet(out newInput, SimClock.TickCounter);
+            int inputTick;
 
-            if(inputFound && newInput.timestamp == SimClock.TickCounter)
+            if (m_inputReplayTick == NO_REPLAY)
             {
-                m_currentInput = newInput;
-
-                if (DEBUG) Debug.Log($"[{SimClock.TickCounter}] Tank({ClientId}): Input{m_currentInput}");
+                inputTick = SimClock.TickCounter;
             }
             else
             {
-                m_currentInput = InterpolateInputAt(SimClock.TickCounter);
-            }
-
-            if (m_inputReplayTick != NO_REPLAY)
-            {
+                inputTick =  m_inputReplayTick;
                 // Input Replay Mode
                 m_inputReplayTick++;
             }
+
+            bool inputFound = m_inputBuffer.TryGet(out newInput, inputTick);
+
+            if(inputFound && newInput.timestamp == inputTick)
+            {
+                m_currentInput = newInput;
+            }
+            else
+            {
+                m_currentInput = InterpolateInputAt(inputTick);
+            }
+            
+            if (DEBUG) Debug.Log($"[{SimClock.TickCounter}] Tank({ClientId}): Input{m_currentInput}");
 
             return m_currentInput;
         }

@@ -30,7 +30,7 @@ namespace Tankito.Netcode
         {
             var res = $"(Count={inputWindow.Count}/WindowSize={WINDOW_SIZE})[ ";
             var arr = inputWindow.ToArray();
-            for(int i=0;i<WINDOW_SIZE;i++)
+            for(int i=0;i<arr.Length;i++)
             {
                 res += ((i < arr.Length) ? arr[i].timestamp : "___") + ((i<WINDOW_SIZE-1) ? " | " : " ]");
             }

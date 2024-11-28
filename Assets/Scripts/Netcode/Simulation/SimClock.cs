@@ -22,7 +22,7 @@ namespace Tankito
 
         public bool Active { get => m_active; }
 
-        private int m_throttleInterval = 2;
+        [SerializeField] private int m_throttleInterval = 5;
         private float m_averageThrottleTicks;
         private int m_throttleMessages;
 

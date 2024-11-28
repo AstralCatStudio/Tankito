@@ -18,8 +18,8 @@ namespace Tankito.Netcode
         public static double SNAPSHOT_JITTER_BUFFER_TIME { get => Instance.Client_Jitter_Buffer_Time; }
         public static double WORST_CASE_LATENCY { get => Instance.Worst_Case_Latency; set => Instance.Worst_Case_Latency = value; }
 
-        private int S_Buffer_Size { get => (int)(Worst_Case_Latency/SIM_DELTA_TIME) + 1; }
-        private int C_Buffer_Size { get => (int)(Worst_Case_Latency*3/SIM_DELTA_TIME) + 1; }
+        private int S_Buffer_Size { get => Mathf.CeilToInt((float)(Worst_Case_Latency/SIM_DELTA_TIME)) + 1; }
+        private int C_Buffer_Size { get => Mathf.CeilToInt((float)(Worst_Case_Latency*3/SIM_DELTA_TIME)) + 1; }
         
 
         [SerializeField] double Median_Latency = 0.16;
@@ -76,13 +76,11 @@ namespace Tankito.Netcode
                 
                 if (DEBUG_PARAMS)
                 {
-                    /*
                     Debug.Log($"PARAMS(WorstCase ping={(int)(WORST_CASE_LATENCY*1000)}ms): " +
                                 "\nSNAPSHOT_BUFFER_SIZE: " + SNAPSHOT_BUFFER_SIZE +
                                 "\nCLIENT_INPUT_WINDOW_SIZE: " + CLIENT_INPUT_WINDOW_SIZE +
                                 "\nSERVER_IDEAL_INPUT_BUFFER_SIZE: " + SERVER_IDEAL_INPUT_BUFFER_SIZE +
                                 "\nSNAPSHOT_JITTER_BUFFER_TIME: " + SNAPSHOT_JITTER_BUFFER_TIME);
-                    */
                 }
             }
         }

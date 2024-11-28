@@ -125,8 +125,8 @@ namespace Tankito.Netcode.Messaging
                 case ClockSignalHeader.Sync:
                     if (NetworkManager.Singleton.IsClient && !NetworkManager.Singleton.IsServer)
                     {
-                        int latencyTicks = (int)(SimulationParameters.CURRENT_LATENCY * 2/SimulationParameters.SIM_DELTA_TIME);
-                        if (DEBUG_CLOCK) Debug.Log($"[{SimClock.TickCounter}]Latency Ticks: {latencyTicks}ticks ({(int)(2*SimulationParameters.CURRENT_LATENCY * 1000)}ms(RTT) @{(int)(SimulationParameters.SIM_DELTA_TIME * 1000)}ms(dT)): Setting clock to = {signal.signalTicks+latencyTicks}");
+                        int latencyTicks = Mathf.CeilToInt((float)(SimulationParameters.CURRENT_LATENCY * 2/SimulationParameters.SIM_DELTA_TIME));
+                        if (DEBUG_CLOCK) Debug.Log($"[{SimClock.TickCounter}]Latency Ticks: {latencyTicks}ticks ({Mathf.CeilToInt((float)(2*SimulationParameters.CURRENT_LATENCY) * 1000)}ms(RTT) @{Mathf.CeilToInt((float)(SimulationParameters.SIM_DELTA_TIME * 1000))}ms(dT)): Setting clock to = {signal.signalTicks+latencyTicks}");
                         SimClock.Instance.SetClock(signal.signalTicks + latencyTicks);
                         // Make sure we reset our throttle speed to baseline (NO THROTTLING)
                         SimClock.Instance.ResetThrottle();

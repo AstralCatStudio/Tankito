@@ -18,7 +18,7 @@ namespace Tankito.Utils
         {
             base.Enqueue(value);
             
-            while (Count > Capacity-1)
+            while (Count > Capacity)
             {
                 Dequeue();
             }
