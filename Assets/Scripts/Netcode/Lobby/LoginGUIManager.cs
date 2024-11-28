@@ -259,14 +259,8 @@ namespace Tankito.Netcode
 
         private void CopyToClipboard(string text)
         {
-#if UNITY_WEBGL && !UNITY_EDITOR
-        WebGLCopyAndPaste.CopyText(text);
-#else
-            TextEditor te = new TextEditor();
-            te.text = text;
-            te.SelectAll();
-            te.Copy();
-#endif
+            CopyToClipboard copyToClipboard = new CopyToClipboard();
+            copyToClipboard.CopyTextToClipboard(text);
         }
     }
 }
