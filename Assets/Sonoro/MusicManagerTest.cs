@@ -15,7 +15,8 @@ public class MusicManagerTest : MonoBehaviour
             return;
         }
 
-        MusicManager.Instance.SetSong("VICTORY");
+        //MusicManager.Instance.SetSong("MENU");
+        //MusicManager.Instance.SetPhase(0);
 
         /*
         MusicManager.Instance.SetPhase(0);
@@ -31,7 +32,7 @@ public class MusicManagerTest : MonoBehaviour
 
     void Update()
     {
-        ///*
+        /*
         elapsedTime += Time.deltaTime;
 
         if (elapsedTime >= timeBetweenPhases)
@@ -45,6 +46,99 @@ public class MusicManagerTest : MonoBehaviour
                 MusicManager.Instance.SetPhase(currentPhase);
             }
         }
+        //*/
+
+
+
+        if (Input.GetKeyDown(KeyCode.Alpha1)) // Entra en batalla en la playa
+        {
+            Debug.Log("ENTRA EN BATALLA");
+            MusicManager.Instance.InitPartida(2); // 0 - playa, 1 - sushi, 2 - barco
+            MusicManager.Instance.FasePartida(4,4); 
+        }
+        
+
+        if (Input.GetKeyDown(KeyCode.Alpha2)) // Muere alguien
+        {
+            Debug.Log("MUERE ALGUIEN Y HAY 3");
+            MusicManager.Instance.FasePartida(3, 4); // primero jugadores vivos, despues jugadores totales
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha3)) // Muere alguien
+        {
+            Debug.Log("MUERE ALGUIEN Y HAY 2");
+            MusicManager.Instance.FasePartida(2, 4);
+        }
+        
+        if (Input.GetKeyDown(KeyCode.Alpha4)) // Se eligen potenciadores
+        {
+            Debug.Log("SE ELIGEN POTENCIADORES");
+            MusicManager.Instance.FasePotenciadores();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha5)) // Se terminan de elegir potenciadores
+        {
+            Debug.Log("SE TERMINA DE ELEGIR POTENCIADORES");
+            MusicManager.Instance.FasePartida(4, 4);
+        }
+        
+        if (Input.GetKeyDown(KeyCode.Alpha6)) // Se termina la partida y se pierde
+        {
+            Debug.Log("SE TERMINA LA PARTIDA");
+            MusicManager.Instance.FinPartida();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha7)) //  Se ven los resultados
+        {
+            Debug.Log("SE TERMINA LA PARTIDA");
+            MusicManager.Instance.Resultados(1); // 0 si pierde, 1 si gana
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha9)) // Semaforo1
+        {
+            Debug.Log("SE TERMINA LA PARTIDA");
+            MusicManager.Instance.Semaforo0();
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha0)) // Semaforo
+        {
+            Debug.Log("SE TERMINA LA PARTIDA");
+            MusicManager.Instance.Semaforo1();
+            MusicManager.Instance.InitPartida(1); // 0 - playa, 1 - sushi, 2 - barco
+            MusicManager.Instance.FasePartida(4, 4);
+        }
+
+        /*
+            // Cuenta atrás primeros pip
+            MusicManager.Instance.Semaforo0();
+
+            // Cuenta atrás ultimo pip
+            MusicManager.Instance.Semaforo1();
+
+            MusicManager.Instance.InitPartida(2); // 0 - playa, 1 - sushi, 2 - barco
+            
+            // Cuando se muere alguien
+            MusicManager.Instance.FasePartida(3, 4); // primero jugadores vivos, despues jugadores totales
+         
+            // Cuando se pasa a los potenciadores
+            MusicManager.Instance.FasePotenciadores();
+
+            // Al volver a la partida
+            MusicManager.Instance.FasePartida(4, 4);
+            
+            // Cuando muere el utlimo en la ultima partida
+            MusicManager.Instance.FinPartida();
+
+            // En la pantalla de resultados
+            MusicManager.Instance.Resultados(1); // 0 si pierde, 1 si gana
+            
+         
+         
+         
+         */
+
+
+
+        /////////////////////////////////////
 
         if (Input.GetKeyDown(KeyCode.W))
         {
@@ -64,6 +158,12 @@ public class MusicManagerTest : MonoBehaviour
         {
             Debug.Log("Emitiendo sonido");
             MusicManager.Instance.PlaySoundPitch("snd_parry");
+        }
+
+        if (Input.GetKeyDown(KeyCode.KeypadEnter))
+        {
+            Debug.Log("Emitiendo sonido");
+            MusicManager.Instance.PlayDisparo();
         }
 
         //*/
