@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 
 public class MusicManager : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class MusicManager : MonoBehaviour
     [SerializeField] private AudioClip[] menuClips;
     [SerializeField] private AudioClip[] pveClips;
     [SerializeField] private AudioClip[] victoryClips;
+    [SerializeField] private AudioClip[] loseClips;
 
     [Range(0, 1)] public float volMusic = 1.0f;
     [Range(0, 1)] public float volSounds = 1.0f;
@@ -66,6 +68,7 @@ public class MusicManager : MonoBehaviour
             Debug.LogWarning("No se encontró una AudioReverbZone en el GameObject.");
         }
 
+
         songs["PLAYA"] = playaClips;
         songs["SUSHI"] = sushiClips;
         songs["BARCO"] = barcoClips;
@@ -73,6 +76,7 @@ public class MusicManager : MonoBehaviour
         songs["MENU"] = menuClips;
         songs["PVE"] = pveClips;
         songs["VICTORY"] = victoryClips;
+        songs["LOSE"] = loseClips;
 
         InitializeSoundPool();
     }
@@ -614,12 +618,12 @@ public class MusicManager : MonoBehaviour
 
         // Llamar a SetPhase con la fase calculada
         SetPhase(fase);
-        Debug.Log($"FASE DE MUSICA: {fase}");
+        //Debug.LogError($"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA FASE DE MUSICA: {fase}");
     }
 
 
 
-    public void FasePotenciadores()
+    public void FaseEntrerrondas()
     {
         SetPhase(0);
     }
@@ -627,18 +631,21 @@ public class MusicManager : MonoBehaviour
 
     public void FinPartida()
     {
-        SetSong("VICTORY");
-
         PlaySound("snd_endbattle");
-
     }
 
-    public void Resultados(int valor)
+    public void Resultados(bool resultado)
     {
         // 0 - pierde
         // 1 - gana
-
-        SetPhase(valor);
+        if (resultado==false)
+        {
+            SetSong("LOSE");
+        }
+        else
+        {
+            SetSong("VICTORY");
+        }
     }
 
 

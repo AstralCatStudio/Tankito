@@ -131,4 +131,10 @@ public class ScenarySelector : NetworkBehaviour
             }
         }
     }
+
+    public int GetActiveBiome()
+    {
+        Debug.Log($"ESCENARIO ACTIVO: {_currentScenaryIndex.Value / 2}");
+        return _currentScenaryIndex.Value/2;
+    }
 }

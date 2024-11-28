@@ -73,7 +73,7 @@ public class MusicManagerTest : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha4)) // Se eligen potenciadores
         {
             Debug.Log("SE ELIGEN POTENCIADORES");
-            MusicManager.Instance.FasePotenciadores();
+            MusicManager.Instance.FaseEntrerrondas();
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha5)) // Se terminan de elegir potenciadores
@@ -91,7 +91,7 @@ public class MusicManagerTest : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha7)) //  Se ven los resultados
         {
             Debug.Log("SE TERMINA LA PARTIDA");
-            MusicManager.Instance.Resultados(1); // 0 si pierde, 1 si gana
+            MusicManager.Instance.Resultados(false); // 0 si pierde, 1 si gana
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha9)) // Semaforo1
