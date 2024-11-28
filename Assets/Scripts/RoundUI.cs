@@ -5,6 +5,7 @@ using Tankito;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class RoundUI : Singleton<RoundUI>
 {
@@ -18,6 +19,8 @@ public class RoundUI : Singleton<RoundUI>
     public GameObject EndExitButton;
     public GameObject ScenarySelection;
     public GameObject LobbyInfo;
+    public GameObject SettingsButton;
+    public GameObject SettingsMenu;
 
     #region Ranking
     public void ActivateRankingGUI(bool active)
@@ -117,4 +120,27 @@ public class RoundUI : Singleton<RoundUI>
     }
 
     #endregion
+
+    #region Settings
+
+    public void ActivateSettingsButton(bool active)
+    {
+        SettingsButton.SetActive(active);
+    }
+
+    public void ActivateSettingsMenu(bool active)
+    {
+        SettingsMenu.SetActive(active);
+    }
+
+    public void CloseSettingsButton()
+    {
+        if (RoundManager.Instance.IsGameStarted)
+        {
+            FindObjectOfType<PlayerInput>(true).gameObject.SetActive(true);
+        }
+    }
+
+    #endregion
+
 }
