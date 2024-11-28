@@ -234,7 +234,6 @@ namespace Tankito.Netcode
         {
             m_connectionMode = ConnectionMode.Client;
             m_joinCode = joinCodeInputField.text;
-            joinCodeInputField.GetComponent<JoinCodeField>().OnEnterPressedEvent.RemoveListener(ClientButton);
             StartClient();
         }
 
