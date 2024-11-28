@@ -45,7 +45,7 @@ public class WebGLCopyAndPasteAPI
     [DllImport("__Internal")]
     private static extern void initWebGLCopyAndPaste(StringCallback cutCopyCallback, StringCallback pasteCallback);
     [DllImport("__Internal")]
-    private static extern void passCopyToBrowser(string str);
+    public static extern void passCopyToBrowser(string str);
 
     delegate void StringCallback(string content);
 
