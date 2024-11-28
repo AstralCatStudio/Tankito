@@ -27,22 +27,29 @@ namespace Tankito.Netcode.Simulation
         public int LastDashTick { get => Timestamp - ticksSinceDash; }
         public int LastParryTick { get => Timestamp - ticksSinceParry; }
 
+        public PlayerState PlayerState { get => playerState; }
+        public int TicksSinceFire { get => ticksSinceFire; }
+        public int TicksSinceDash { get => ticksSinceDash; }
+        public int TicksSinceParry { get => ticksSinceParry; }
+
         private Vector2 position;
         private float hullRotation;
         private Vector2 velocity;
         private float turretRotation;
         private TankAction performedAction;
+        private PlayerState playerState;
         private ushort ticksSinceFire;
         private ushort ticksSinceDash;
         private ushort ticksSinceParry;
 
-        public TankSimulationState(Vector2 position, float hullRotation, Vector2 velocity, float turretRotation, TankAction performedAction, ushort ticksSinceFire, ushort ticksSinceDash, ushort ticksSinceParry)
+        public TankSimulationState(Vector2 position, float hullRotation, Vector2 velocity, float turretRotation, TankAction performedAction, PlayerState playerState, ushort ticksSinceFire, ushort ticksSinceDash, ushort ticksSinceParry)
         {
             this.position = position;
             this.hullRotation = hullRotation;
             this.velocity = velocity;
             this.turretRotation = turretRotation;
             this.performedAction = performedAction;
+            this.playerState = playerState;
             this.ticksSinceFire = ticksSinceFire;
             this.ticksSinceDash = ticksSinceDash;
             this.ticksSinceParry = ticksSinceParry;
@@ -55,9 +62,10 @@ namespace Tankito.Netcode.Simulation
                     FastBufferWriter.GetWriteSize(Vector2.one) + // velocity
                     sizeof(float) + // turretRotation
                     sizeof(TankAction) + // performed
+                    sizeof(PlayerState) + // PlayerState
                     sizeof(ushort) + // ticksSinceFire
                     sizeof(ushort) + // ticksSinceDash
-                    sizeof(ushort);
+                    sizeof(ushort); // ticksSinceParry
 
         internal void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
         {

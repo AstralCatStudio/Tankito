@@ -41,7 +41,7 @@ namespace Tankito.Netcode.Simulation
                     FastBufferWriter.GetWriteSize(Vector2.one) + // velocity
                     sizeof(float) + // lifeTime
                     sizeof(int) + // bouncesLeft
-                    sizeof(ushort); // ownerId
+                    sizeof(ulong); // ownerId
                     
 
         internal void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter

@@ -103,17 +103,6 @@ namespace Tankito.Netcode.Simulation
 
         public override ISimulationState GetSimState()
         {
-            PlayerState playerState = m_tankController.PlayerState;
-            int stateInitTick;
-            if(playerState == PlayerState.Moving)
-            {
-                stateInitTick = 0;
-            }
-            else
-            {
-                stateInitTick = m_tankController.StateInitTick;
-            }
-
             return new TankSimulationState
             (
                 m_tankRB.position,
@@ -121,6 +110,7 @@ namespace Tankito.Netcode.Simulation
                 m_tankRB.velocity,
                 m_turretRB.rotation,
                 m_inputComponent.LastInput.action, // <----- Gets the "currently" active input
+                m_tankController.PlayerState,
                 m_tankController.TicksSinceFire,
                 m_tankController.TicksSinceDash,
                 m_tankController.TicksSinceParry
@@ -135,7 +125,10 @@ namespace Tankito.Netcode.Simulation
                 m_tankRB.transform.rotation = Quaternion.AngleAxis(tankState.HullRotation, Vector3.forward);
                 m_turretRB.transform.rotation = Quaternion.AngleAxis(tankState.TurretRotation, Vector3.forward);
                 m_tankRB.velocity = tankState.Velocity;
+                m_tankController.PlayerState = tankState.PlayerState;
                 m_tankController.LastFireTick = tankState.LastFireTick;
+                m_tankController.LastDashTick = tankState.LastDashTick;
+                m_tankController.LastParryTick = tankState.LastParryTick;
             }
             else
             {

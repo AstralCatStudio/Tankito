@@ -76,16 +76,6 @@ namespace Tankito
             m_inputReplayTick = NO_REPLAY;
         }
 
-        private void OnEnable()
-        {
-            m_tankController.OnDashEnd += this.DashEnd;
-        }
-
-        private void OnDisable()
-        {
-            m_tankController.OnDashEnd -= this.DashEnd;
-        }
-
         /// <summary>
         /// Returns <see cref="m_currentInput" />. Unless it is in replay mode (<see cref="m_inputReplayTick"/> == <see cref="NO_REPLAY"/>), this is to enable automatic input replay on rollback.
         /// </summary>
@@ -104,6 +94,12 @@ namespace Tankito
                 InputWindowBuffer.Instance.AddInputToWindow(m_currentInput);
                 
                 gotPayload = m_currentInput;
+                // The internal state of m_currentInput must be reset back to TankAction.None,
+                // in order to avoid continuously posting the same action after all ticks.
+                if (m_currentInput.action == TankAction.Fire || m_currentInput.action == TankAction.Dash || m_currentInput.action == TankAction.Parry)
+                {
+                    m_currentInput.action = TankAction.None;
+                }
             }
             else
             {
@@ -111,13 +107,6 @@ namespace Tankito
                 // Input Replay Mode
                 var replayedInput = m_inputCache.Get(m_inputReplayTick);
                 gotPayload = replayedInput;
-            }
-
-            // The internal state of m_currentInput must be reset back to TankAction.None, in order to avoid
-            // continuously posting the same action after all ticks.
-            if (m_currentInput.action == TankAction.Fire || m_currentInput.action == TankAction.Dash || m_currentInput.action == TankAction.Parry)
-            {
-                m_currentInput.action = TankAction.None;
             }
             
             if (DEBUG)
@@ -147,21 +136,7 @@ namespace Tankito
                 m_currentInput.action = TankAction.None;
             }
         }
-
-        public void OnMove(InputAction.CallbackContext ctx)
-        {           
-            var input = ctx.ReadValue<Vector2>();
-
-            if (input.sqrMagnitude > 1) input.Normalize();
-
-            m_currentInput.moveVector = input;
-            m_currentInput.action = TankAction.None;
-        }
-
-        public void OnDash(InputAction.CallbackContext ctx)
-        {
-            m_currentInput.action = TankAction.Dash; 
-        }
+        
         void Aim()
         {
             Vector2 lookVector;
@@ -177,6 +152,7 @@ namespace Tankito
                 m_currentInput.aimVector = lookVector;
             }
         }
+
         public void OnAim(InputAction.CallbackContext ctx)
         {
             var input = ctx.ReadValue<Vector2>();
@@ -186,10 +162,12 @@ namespace Tankito
             {
                 lookVector = new Vector2(input.x, input.y);
                 mousePosition = null;
+
                 if (lookVector.sqrMagnitude > 1)
                 {
                     lookVector.Normalize();
                 }
+
                 m_currentInput.aimVector = lookVector;
             }
             else
@@ -197,30 +175,29 @@ namespace Tankito
                 // Mouse control fallback/input processing
                 mousePosition = input;
                 Aim();
-                
             }
-
-            
-
-            
-            
         }
 
+        public void OnMove(InputAction.CallbackContext ctx)
+        {           
+            var input = ctx.ReadValue<Vector2>();
+
+            if (input.sqrMagnitude > 1) input.Normalize();
+
+            m_currentInput.moveVector = input;
+            m_currentInput.action = TankAction.None;
+        }
+
+        public void OnDash(InputAction.CallbackContext ctx)
+        {
+            m_currentInput.action = TankAction.Dash; 
+        }
 
         public void OnParry(InputAction.CallbackContext ctx)
         {
-            // CAMBIAR POR CHECKS DE DISPARO?
-            // (comprobar si el valor de ctx.ReadValue == 1
-            // es redundante y ademas entra en conflicto con
-            // el threshold de activacion configurado por el input system,
-            // en otras palabras no activa la accion para controles analogicos como el trigger de un mando)
-
             if (ctx.performed)
             {
-                //m_parrying = true; // Solo se utiliza para la animacion no lo entiendo ????
                 m_currentInput.action = TankAction.Parry;
-                m_turretAnimator.SetTrigger("Parry");
-                m_hullAnimator.SetTrigger("Parry");
             }
             else
             {

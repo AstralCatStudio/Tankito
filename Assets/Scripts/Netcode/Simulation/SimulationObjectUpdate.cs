@@ -64,7 +64,6 @@ namespace Tankito.Netcode.Simulation
                     tankState.NetworkSerialize(serializer);
                     if (serializer.IsReader)
                     {
-                        tankState.Timestamp = m_timestamp;
                         state = tankState;
                     }
                     break;

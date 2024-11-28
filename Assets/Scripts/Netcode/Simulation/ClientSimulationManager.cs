@@ -324,7 +324,7 @@ namespace Tankito.Netcode.Simulation
         [ContextMenu("TestGetSet")]
         public void TestGetSet()
         {
-            ISimulationState stateToCopy = m_simulationObjects[0].GetSimState(); // Explicit casting is not necessary
+            ISimulationState stateToCopy = m_simulationObjects[0].GetSimState();
             m_simulationObjects[1].SetSimState(stateToCopy);
         }
 

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using JetBrains.Annotations;
@@ -8,6 +9,7 @@ using UnityEngine.Windows;
 
 namespace Tankito
 {
+    // realmente esto necesita un nombre mejor
     public enum PlayerState
     {
         Moving,
@@ -43,13 +45,10 @@ namespace Tankito
         [SerializeField] private AnimationCurve m_dashSpeedCurve;
         private float m_dashSpeedMultiplier = 1f;
         private float m_dashDistance;
-
-        private int currentDashReloadTick = CAN_DASH;
         int m_dashTicks;
-        int m_reloadDashTicks;
-        [SerializeField] int m_stateInitTick;
-        const int CAN_DASH = -1;
-
+        int m_dashCooldownTicks;
+        int m_parryTicks;
+        int m_parryCooldownTicks;
 
         [SerializeField] private PlayerState m_playerState = PlayerState.Moving;
 
@@ -57,29 +56,46 @@ namespace Tankito
         [SerializeField] private ITankInput m_tankInput;
         [SerializeField] private bool DEBUG_INPUT_CALLS = false;
         [SerializeField] private bool DEBUG_DASH = false;
-        [SerializeField] private bool DEBUG_FIRE = true;
-
-        private Vector2 dashVec;
-
-        public delegate void DashEnd();
-        public event DashEnd OnDashEnd;
-
-        [SerializeField] private BulletCannon cannon;
+        [SerializeField] private bool DEBUG_FIRE = false;
 
         public PlayerState PlayerState { get => m_playerState; set => m_playerState = value; }
-        public int StateInitTick { get => m_stateInitTick; set => m_stateInitTick = value; }
 
-        //Apaño feo pero que tendrá que funcionar
         [SerializeField] private BulletCannon m_cannon;
+        /// <summary>
+        /// Tick when the fire action was last triggered.
+        /// </summary>
         private int m_lastFireTick;
+        /// <summary>
+        /// Tick when the dash action was last triggered.
+        /// </summary>
+        private int m_lastDashTick;
+        /// <summary>
+        /// Tick when the parry action was last triggered.
+        /// </summary>
+        private int m_lastParryTick;
+
+
+        // Mucho texto, lo siento, pero simplifica el resto del codigo, lo prometo xd
+
         private int FireReloadTick { get => m_lastFireTick + m_cannon.ReloadTicks;
                                      set => m_lastFireTick = value - m_cannon.ReloadTicks; }
-        // El getter no esta expuesto porque no deberia usarse al hacer GetSimState, 
-        public int LastFireTick { set => m_lastFireTick = value; }
-        public ushort TicksSinceFire { get => (ushort)(SimClock.TickCounter-m_lastFireTick); }
+        private int DashReloadTick { get => m_lastDashTick + m_dashCooldownTicks;
+                                     set => m_lastDashTick = value - m_dashCooldownTicks; }
+        private int ParryReloadTick { get => m_lastParryTick + m_parryCooldownTicks;
+                                      set => m_lastParryTick = value - m_parryCooldownTicks; }
+        // El Getter de Last....Tick no esta expuesto porque no deberia usarse al hacer GetSimState, se usa TicksSince.... para poder usar ushorts
+        public int LastFireTick { get => m_lastFireTick; set => m_lastFireTick = value; }
+        public int LastDashTick { get => m_lastDashTick; set => m_lastDashTick = value; }
+        public int LastParryTick { get => m_lastParryTick; set => m_lastParryTick = value; }
 
-        public ushort TicksSinceDash { get; }
-        public ushort TicksSinceParry { get; }
+        /// <summary>
+        /// NOT SAFE FOR INTERNAL USE, because using tick measurements against <see cref="SimClock.TickCounter"/> is not <see cref="ClientSimulationManager.Rollback"/> compatible.
+        /// </summary>
+        public ushort TicksSinceFire { get => (ushort)(SimClock.TickCounter - m_lastFireTick); }
+        /// <inheritdoc cref="TicksSinceFire"/>
+        public ushort TicksSinceDash { get => (ushort)(SimClock.TickCounter - m_lastDashTick); }
+        /// <inheritdoc cref="TicksSinceFire"/>
+        public ushort TicksSinceParry { get => (ushort)(SimClock.TickCounter - m_lastParryTick); }
 
         void Start()
         {
@@ -96,13 +112,10 @@ namespace Tankito
             {
                 Debug.LogWarning("Error tank turret reference not set.");
             }
-
-            m_stateInitTick = 0;
         }
 
         void OnEnable()
         {
-            m_stateInitTick = 0;
             // Subscribe to SimulationObject Kinematics
             var tankSimObj = GetComponent<TankSimulationObject>();
             tankSimObj.OnComputeKinematics += ProcessInput;
@@ -145,19 +158,21 @@ namespace Tankito
                 m_rotationSpeed *= mod.rotationSpeedMultiplier;
                 GetComponent<TankData>().AddHealth(mod.extraHealth);
             }
-            SetParryTicksFromSeconds(mod.extraParryTime, mod.parryCooldownTimeAdded, reset);
+            SetParryTicks(mod.extraParryTime, mod.parryCooldownTimeAdded, reset);
             SetDashParams(mod.dashDistanceMultiplier, mod.dashSpeedMultiplier, mod.dashCooldownTimeAdded, reset);
         }
 
-        private void SetParryTicksFromSeconds(float parryDuration, float parryCooldown, bool overwrite)
+        private void SetParryTicks(float parryDuration, float parryCooldown, bool overwrite)
         {
             if (overwrite)
             {
-
+                m_parryTicks = Mathf.CeilToInt(parryDuration / SimClock.SimDeltaTime);
+                m_parryCooldownTicks = Mathf.CeilToInt(parryCooldown / SimClock.SimDeltaTime);
             }
             else
             {
-
+                m_parryTicks += Mathf.CeilToInt(parryDuration / SimClock.SimDeltaTime);
+                m_parryCooldownTicks += Mathf.CeilToInt(parryCooldown / SimClock.SimDeltaTime);
             }
         }
 
@@ -167,13 +182,13 @@ namespace Tankito
             {
                 m_dashSpeedMultiplier = dashSpeed;
                 m_dashDistance = dashDistance;
-                m_reloadDashTicks = Mathf.CeilToInt(dashCooldown / SimClock.SimDeltaTime);
+                m_dashCooldownTicks = Mathf.CeilToInt(dashCooldown / SimClock.SimDeltaTime);
             }
             else
             {
                 m_dashSpeedMultiplier *= dashSpeed;
                 m_dashDistance += dashDistance;
-                m_reloadDashTicks += Mathf.CeilToInt(dashCooldown / SimClock.SimDeltaTime);
+                m_dashCooldownTicks += Mathf.CeilToInt(dashCooldown / SimClock.SimDeltaTime);
             }
 
             m_dashTicks = Mathf.CeilToInt((m_dashDistance/m_dashSpeedMultiplier) / SimClock.SimDeltaTime);
@@ -191,53 +206,85 @@ namespace Tankito
             ProcessInput(input, deltaTime);
         }
         
-        private void FireTank(Vector2 aimVector, float deltaTime, int inputTick)
-        {
-            if (DEBUG_FIRE) Debug.Log($"[{SimClock.TickCounter}] FireTank({GetComponent<TankSimulationObject>().SimObjId}) called.");
-            Debug.LogWarning("TODO: Pass last fire tick as part of tank state and make getters/setters for it!");
-
-            cannon.Shoot(m_turretRB.position ,aimVector, inputTick);
-            
-            m_lastFireTick = inputTick;
-        }
-        
         private void ProcessInput(InputPayload input, float deltaTime)
         {
+            if (DEBUG_INPUT_CALLS) Debug.Log($"Processing {gameObject} input(PlayerState={m_playerState}): {input}");
             
-            if (DEBUG_INPUT_CALLS) Debug.Log($"Processing {gameObject} input: {input}");
-            if((CheckCanDash() && m_playerState != PlayerState.Parrying && m_playerState != PlayerState.Firing && input.action == TankAction.Dash) || m_playerState == PlayerState.Dashing)
+
+            if (DEBUG_INPUT_CALLS) Debug.Log($"[{SimClock.TickCounter}] Input action: {input.action} | Reloads ticks: Dash({DashReloadTick}) Parry({ParryReloadTick}) Fire({FireReloadTick})");
+            switch (input.action)
             {
-                DashTank(dashVec, input.timestamp, deltaTime);
+
+                case TankAction.None:
+                    m_playerState = PlayerState.Moving;
+                    break;
+
+                case TankAction.Parry:
+                    if (input.timestamp >= ParryReloadTick && m_playerState != PlayerState.Dashing && m_playerState != PlayerState.Firing)
+                    {
+                        m_playerState = PlayerState.Parrying;
+                        m_lastParryTick = input.timestamp;
+                    }
+                    break;
+
+                case TankAction.Dash:
+                    if (input.timestamp >= DashReloadTick && m_playerState != PlayerState.Firing && m_playerState != PlayerState.Parrying)
+                    {
+                        m_playerState = PlayerState.Dashing;
+                        m_lastDashTick = input.timestamp;
+                    }
+                    break;
+
+                case TankAction.Fire:
+                    if (input.timestamp >= FireReloadTick && m_playerState != PlayerState.Dashing && m_playerState != PlayerState.Parrying)
+                    {
+                        m_playerState = PlayerState.Firing;
+                        m_lastFireTick = input.timestamp;
+                    }
+                    break;
+
+                default:
+                    break;
             }
-            else
+
+            switch(m_playerState)
             {
-                switch (input.action)
-                {
-                    case TankAction.None:
-                        break;
+                // Moving the tank must always precede aiming, because opposite aim rotation is applied whenever rotating while moving.
+                case PlayerState.Moving:
+                    MoveTank(input.moveVector, deltaTime);
+                    AimTank(input.aimVector, deltaTime);
+                    break;
 
-                    case TankAction.Dash:
-                        break;           
+                case PlayerState.Firing:
+                    MoveTank(input.moveVector, deltaTime);
+                    AimTank(input.aimVector, deltaTime);
+                    FireTank(input.aimVector, input.timestamp);
+                    break;
 
-                    case TankAction.Parry:
-                        break;
+                case PlayerState.Dashing:
+                    AimTank(input.aimVector, deltaTime);
+                    DashTank(input.moveVector, input.timestamp - m_lastDashTick, deltaTime);
+                    break;
 
-                    case TankAction.Fire:
-                        if (input.timestamp >= FireReloadTick && m_playerState != PlayerState.Dashing && m_playerState != PlayerState.Parrying)
-                        {
-                            FireTank(input.aimVector, deltaTime, input.timestamp);
-                        }
-                        break;
-
-                    default:
-                        break;
-                }
-                MoveTank(input.moveVector, deltaTime);
+                case PlayerState.Parrying:
+                    MoveTank(input.moveVector, deltaTime);
+                    ParryTank(input.timestamp - m_lastParryTick);
+                    break;
             }
-            
-            AimTank(input.aimVector, deltaTime);
+        }
 
+        private void ParryTank(int parryTick)
+        {
+            Debug.LogWarning($"TODO: Implement Parry. progressTicks( {parryTick}/{m_parryTicks} )");
+        }
+
+        private void FireTank(Vector2 aimVector, int inputTick)
+        {
+            if (DEBUG_FIRE) Debug.Log($"[{SimClock.TickCounter}] FireTank({GetComponent<TankSimulationObject>().SimObjId}) called.");
+
+            m_cannon.Shoot(m_turretRB.position, aimVector, inputTick);
             
+            m_lastFireTick = inputTick;
         }
 
         private void MoveTank(Vector2 moveVector, float deltaTime)
@@ -261,26 +308,26 @@ namespace Tankito
             m_tankRB.MovePosition(m_tankRB.position + m_speed * moveVector * deltaTime);
         }
 
-        private void DashTank(Vector2 moveVector, int currentInputDashTick, float deltaTime)
+        /// <summary>
+        /// <paramref name="dashTick"/> is the tick marking the progress of the dash (will be 0 the first tick the dash is being performed).
+        /// </summary>
+        /// <param name="moveVector"></param>
+        /// <param name="deltaTime"></param>
+        /// <param name="dashTick"></param>
+        private void DashTank(Vector2 moveVector, int dashTick, float deltaTime)
         {
-            if (DEBUG_DASH) Debug.Log($"[{SimClock.TickCounter}]: PlayerState : {m_playerState}, VelocidadDash: {m_dashSpeedMultiplier}");
             
-            if (m_playerState != PlayerState.Dashing)
+            if (dashTick == 0)
             {
-                dashVec = moveVector;
-                m_stateInitTick = currentInputDashTick;
                 m_playerState = PlayerState.Dashing;
                 if (DEBUG_DASH) Debug.Log($"[{SimClock.TickCounter}]Comienza el dash");
             }
 
-            //currentAcceleration = Mathf.Lerp(accelerationMultiplier, 0, (currentInputDashTick - (stateInitTick + fullDashTicks)) / (stateInitTick + dashTicks) - (stateInitTick + fullDashTicks));
-            if (DEBUG_DASH) Debug.Log($"[{SimClock.TickCounter}]: m_dashSpeedMultiplier: {m_dashSpeedMultiplier}");
-            if (DEBUG_DASH) Debug.Log($"[{SimClock.TickCounter}]: parámetros dash {currentInputDashTick}, {m_stateInitTick}, {m_dashTicks}");
-            if (DEBUG_DASH) Debug.Log($"[{SimClock.TickCounter}]: curve value: {m_dashSpeedCurve.Evaluate((float)(currentInputDashTick - m_stateInitTick) / m_dashTicks)}");
-            float dashSpeed = m_speed * m_dashSpeedMultiplier * m_dashSpeedCurve.Evaluate((float)(currentInputDashTick-m_stateInitTick)/m_dashTicks);
+            float dashSpeed = m_speed * m_dashSpeedMultiplier * m_dashSpeedCurve.Evaluate((float)dashTick/m_dashTicks);
 
             if(moveVector != Vector2.zero)
             {
+                // CONSIDER REMOVAL TO IMPROVE PREDICTABILITY ?
                 m_tankRB.MovePosition(m_tankRB.position + moveVector * deltaTime * dashSpeed);
             }
             else
@@ -290,16 +337,7 @@ namespace Tankito
 
             if (DEBUG_DASH)
             {
-                Debug.Log($"[{SimClock.TickCounter}] DASH: CurrentDashTick->{currentInputDashTick}. CurrentSpeedMult->{dashSpeed}. TickToEnd->{m_stateInitTick+m_dashTicks - currentInputDashTick}");
-            }
-
-            if (currentInputDashTick >= m_stateInitTick + m_dashTicks)
-            {
-                currentDashReloadTick = 0;
-                OnDashEnd?.Invoke();
-                m_playerState = PlayerState.Moving;
-                m_stateInitTick = 0;
-                if (DEBUG_DASH) Debug.Log("Se termina el dash");
+                Debug.Log($"[{SimClock.TickCounter}] DASH: progressTicks( {dashTick}/{m_dashTicks} )");
             }
         }
 
@@ -321,26 +359,6 @@ namespace Tankito
             // (we only use it for the uniform interface with rotation angle around Z).
 
             m_turretRB.MoveRotation(m_turretRB.rotation + rotDeg);
-        }
-
-        private bool CheckCanDash()
-        { 
-            if (currentDashReloadTick == CAN_DASH) return true;
-            else
-            {
-                if (currentDashReloadTick < m_reloadDashTicks)
-                {
-                    if (SimClock.Instance.Active)   //Este check es para que no se reduzca el cooldown en caso de que se este reconciliando
-                    {
-                        currentDashReloadTick++;
-                    }
-                }
-                else
-                {
-                    currentDashReloadTick = CAN_DASH;
-                }
-                return false;
-            }
         }
 
         #region Modifiers & TankData

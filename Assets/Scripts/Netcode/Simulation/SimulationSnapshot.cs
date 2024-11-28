@@ -46,7 +46,17 @@ namespace Tankito.Netcode.Simulation
 
         public (SimulationObjectType type, ISimulationState state) this[ulong obj]
         {
-            get => objectStates[obj];
+            get
+            {
+                if (objectStates[obj].type == SimulationObjectType.Tank)
+                {
+                    TankSimulationState tankState = (TankSimulationState)objectStates[obj].state;
+                    tankState.Timestamp = timestamp;
+                    return (SimulationObjectType.Tank, tankState);
+                }
+
+                return objectStates[obj];
+            }
             set => objectStates[obj] = value;
         }
 

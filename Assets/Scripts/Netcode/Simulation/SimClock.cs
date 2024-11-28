@@ -112,6 +112,13 @@ namespace Tankito
                 m_averageThrottleTicks = 0;
             }
         }
+
+        internal void ResetThrottle()
+        {
+            m_throttleMessages = 0;
+            m_averageThrottleTicks = 0;
+            m_tickDeltaTime = SimDeltaTime;
+        }
         
         public void AutoPhysics2DUpdate(bool auto)
         {
