@@ -85,11 +85,16 @@ namespace Tankito
 
         public void Shoot(Vector2 originPosition, Vector2 aimVector, int tick)
         {
-            int spawnN = 0;
             float baseAngle = Mathf.Atan2(aimVector.y, aimVector.x) ;
+            Shoot(originPosition, baseAngle, tick);
+        }
+
+        public void Shoot(Vector2 originPosition, float aimAngle, int tick)
+        {
+            int spawnN = 0;
             for (int i = 0; i < BulletDirections.Count; i++)
             {
-                float newAngle = Mathf.Atan2(BulletDirections[i].y, BulletDirections[i].x)+ baseAngle;
+                float newAngle = Mathf.Atan2(BulletDirections[i].y, BulletDirections[i].x)+ aimAngle;
                 Vector2 newAimVector = new Vector2(Mathf.Cos(newAngle), Mathf.Sin(newAngle));
                 for (int j = 0; j < m_bulletAmount; j++)
                 {

@@ -259,7 +259,8 @@ namespace Tankito
                 case PlayerState.Firing:
                     MoveTank(input.moveVector, deltaTime);
                     AimTank(input.aimVector, deltaTime);
-                    FireTank(input.aimVector, input.timestamp);
+                    var aimVector = (input.aimVector.magnitude>0.1) ? input.aimVector : (Vector2)m_turretRB.transform.right;
+                    FireTank(aimVector, input.timestamp);
 
                     // Reset state to movement for next tick (firing is considered to only take 0 ticks right now)
                     m_playerState = PlayerState.Moving;
@@ -305,7 +306,7 @@ namespace Tankito
         {
             if (DEBUG_FIRE) Debug.Log($"[{SimClock.TickCounter}] FireTank({GetComponent<TankSimulationObject>().SimObjId}) called.");
 
-            m_cannon.Shoot(m_turretRB.position, aimVector, inputTick);
+            m_cannon.Shoot(m_turretRB.position, aimVector , inputTick);
             
             m_lastFireTick = inputTick;
         }
@@ -379,7 +380,6 @@ namespace Tankito
 
             // MoveRotation doesn't work because the turretRB is not simulated
             // (we only use it for the uniform interface with rotation angle around Z).
-
             m_turretRB.MoveRotation(m_turretRB.rotation + rotDeg);
         }
 
