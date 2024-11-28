@@ -304,7 +304,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DEBUG: 0
-  m_startingScene: 0
+  m_startingScene: 1
 --- !u!4 &1609486872
 Transform:
   m_ObjectHideFlags: 0
@@ -406,9 +406,12 @@ MonoBehaviour:
   - {fileID: 8300000, guid: b215b8b86426dca48bac831629fd1c70, type: 3}
   victoryClips:
   - {fileID: 8300000, guid: b4c80f1e2e4dab34b9e6bdfe60ccdb62, type: 3}
+  - {fileID: 8300000, guid: b4c80f1e2e4dab34b9e6bdfe60ccdb62, type: 3}
+  loseClips:
   - {fileID: 8300000, guid: 3b235d3344bdad647a1c46286e579547, type: 3}
-  volMusic: 0.3
-  volSounds: 0.5
+  - {fileID: 8300000, guid: 3b235d3344bdad647a1c46286e579547, type: 3}
+  volMusic: 0.76
+  volSounds: 0.8
 --- !u!4 &1875872589
 Transform:
   m_ObjectHideFlags: 0

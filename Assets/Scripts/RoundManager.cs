@@ -144,6 +144,12 @@ namespace Tankito
                 t.AwardPoints(m_players.Count - AliveTanks.Count()); // -1 porque no deberia darte puntos por estar tu mismo muerto
             }
 
+            if (AliveTanks.Count()!=1) // Cuando muere un bicho y no es el ultimo
+            {
+                //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                FasePartidaClientRpc(AliveTanks.Count(), m_players.Count); // primero jugadores vivos, despues jugadores totales
+            }
+
             PlayerListUpdate(true);
             Debug.Log($"Round Manager registered a tank death: Tank[{t.OwnerClientId}]-Points: {t.Points}");
         }
@@ -174,6 +180,11 @@ namespace Tankito
         /// </summary>
         public void StartRoundCountdown()
         {
+            if (m_currentRound == 0)
+            {
+                MusicManager.Instance.MuteSong();
+            }
+
             RoundUI.Instance.SetActiveScenarySelection(false);
             StartRoundCountdown(m_currentRound);
         }
@@ -214,11 +225,17 @@ namespace Tankito
             if (m_currentCountdownTime > 0)
             {
                 SetCountdownGUIClientRpc(m_currentCountdownTime.ToString());
+
+                SemaforoSoundClientRpc(0); ////////////////////////////////////////////////////////////////////////////////////////
+
                 m_currentCountdownTime--;
             }
             else
             {
                 CancelInvoke(nameof(UpdateCountdown));
+
+                SemaforoSoundClientRpc(1); ////////////////////////////////////////////////////////////////////////////////////////
+
                 EndCountdown();
             }
         }
@@ -230,9 +247,51 @@ namespace Tankito
         {
             if (DEBUG) Debug.Log("Fin de cuenta atras");
 
+            if (m_currentRound == 0)
+            {
+                InitPartidaMusicClientRpc(GameObject.FindObjectOfType<ScenarySelector>().GetActiveBiome()); ////////////////////////////////////////////////////////////////////////////////////////
+            }
+            FasePartidaClientRpc(AliveTanks.Count(), m_players.Count); ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            //Debug.Log($"Music manager: {AliveTanks.Count()}, {m_players.Count}");
+
             SetCountdownGUIClientRpc("BATTLE!");
             Invoke(nameof(StartRound), 0.7f);
         }
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
+        [ClientRpc]
+        private void SemaforoSoundClientRpc(int sound)
+        {
+            if (m_currentRound==0)
+            {
+                MusicManager.Instance.MuteSong();
+            }
+
+            if (sound == 0)
+            {
+                MusicManager.Instance.Semaforo0();
+            }
+            else
+            {
+                MusicManager.Instance.Semaforo1();
+            }
+        }
+
+        [ClientRpc]
+        private void InitPartidaMusicClientRpc(int biome)
+        {
+            MusicManager.Instance.InitPartida(biome); // 0 - playa, 1 - sushi, 2 - barco
+        }
+        
+        [ClientRpc]
+        private void FasePartidaClientRpc(int vivos, int totales)
+        {
+            MusicManager.Instance.FasePartida(vivos, totales); // primero jugadores vivos, despues jugadores totales
+            //Debug.Log($"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA Music manager AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA: {vivos}, {totales}");
+        }
+
+
 
         [ClientRpc]
         private void SetCountdownGUIClientRpc(string text)
@@ -350,9 +409,21 @@ namespace Tankito
                 // To avoid SimClocks diverging in the between rounds phase
                 MessageHandlers.Instance.SendSynchronizationSignal();
             }
+            
+            
+
 
             m_startedRound = false;
             m_currentRound++;
+
+            ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            
+            if (m_currentRound==m_maxRounds)
+            {
+                MusicManager.Instance.FinPartida();
+            }
+
+
             if (DEBUG) Debug.Log("NETLESS: Fin de ronda");
             m_localPlayerInputObject.SetActive(false);
             RoundUI.Instance.ActivateAliveTanksGUI(false);
@@ -397,6 +468,9 @@ namespace Tankito
             if (m_currentRound < m_maxRounds)
             {
                 ShowRanking();
+
+                MusicManager.Instance.FaseEntrerrondas();
+
                 Invoke(nameof(StartPowerUpSelection), 3.0f);
 
             }
@@ -449,6 +523,16 @@ namespace Tankito
 
             RoundUI.Instance.ActivateRankingGUI(true);
             RoundUI.Instance.SetRankingText(GenerateRanking());
+
+            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            
+            if (m_currentRound==m_maxRounds)
+            {
+                List<TankData> lista = GetTankOrder();
+                MusicManager.Instance.Resultados(lista[lista.Count - 1].GetComponent<NetworkObject>().OwnerClientId == NetworkManager.Singleton.LocalClientId);
+                //Debug.Log($"Resultados {lista[lista.Count - 1].GetComponent<NetworkObject>().OwnerClientId == NetworkManager.Singleton.LocalClientId}");
+            }
+
         }
 
         [ClientRpc]
@@ -480,6 +564,9 @@ namespace Tankito
                 ShowFinalRanking();
             }
         }
+
+
+
         #endregion
 
 
