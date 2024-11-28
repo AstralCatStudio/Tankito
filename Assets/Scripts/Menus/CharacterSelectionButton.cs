@@ -10,7 +10,8 @@ public class CharacterSelectionButton : MonoBehaviour
     //Character Data
     public Character character;
     //ButtonMedia
-    [SerializeField] private GameObject ownTag;
+    [SerializeField] private GameObject locked;
+    [SerializeField] private GameObject selected;
     [SerializeField] private TextMeshProUGUI textName;
     [SerializeField] private Image characterImage;
     //Animation Data
@@ -22,9 +23,15 @@ public class CharacterSelectionButton : MonoBehaviour
         characterImage.sprite = character.data.sprite;
         textName.text = character.data.characterName;
 
+        ClientData.Instance.onCharacterSelected += SelectCharacter;
+
         if (character.unlocked)
         {
-            ownTag.SetActive(true);
+            if(character.selected)
+            {
+                selected.SetActive(true); 
+            }
+            locked.SetActive(false);
         } else
         {
             ClientData.Instance.onCharacterPurchased += UnlockCharacter;
@@ -47,8 +54,14 @@ public class CharacterSelectionButton : MonoBehaviour
     {
         if (character.unlocked)
         {
-            ownTag.SetActive(true);
+            locked.SetActive(false);
             ClientData.Instance.onCharacterPurchased -= UnlockCharacter;
         }
+    }
+    private void SelectCharacter()
+    {
+        selected.SetActive(false);
+        if(character.selected)
+            selected.SetActive(true);
     }
 }

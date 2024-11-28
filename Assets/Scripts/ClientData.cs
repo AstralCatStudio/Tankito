@@ -25,7 +25,7 @@ public class ClientData : Singleton<ClientData>
     public int numShopContent;
     public string username;
     public accountType accountT;   //Tipo de la cuenta al iniciar sesión
-    public event Action onMoneyChanged, onUsernameChanged, onCharacterPurchased;
+    public event Action onMoneyChanged, onUsernameChanged, onCharacterPurchased, onCharacterSelected;
 
     public bool firstLoad = true;
 
@@ -144,6 +144,7 @@ public class ClientData : Singleton<ClientData>
         if (selectionSkinButton != null)
         {
             selectionSkinButton.sprite = character.data.sprite;
+            onCharacterSelected?.Invoke();
         }
         
     }
