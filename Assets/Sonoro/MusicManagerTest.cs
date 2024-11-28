@@ -98,6 +98,7 @@ public class MusicManagerTest : MonoBehaviour
         {
             Debug.Log("SE TERMINA LA PARTIDA");
             MusicManager.Instance.Semaforo0();
+            MusicManager.Instance.MuteSong();
         }
         if (Input.GetKeyDown(KeyCode.Alpha0)) // Semaforo
         {
@@ -110,6 +111,7 @@ public class MusicManagerTest : MonoBehaviour
         /*
             // Cuenta atrás primeros pip
             MusicManager.Instance.Semaforo0();
+            MusicManager.Instance.MuteSong();
 
             // Cuenta atrás ultimo pip
             MusicManager.Instance.Semaforo1();
