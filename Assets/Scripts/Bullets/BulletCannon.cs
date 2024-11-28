@@ -23,7 +23,7 @@ namespace Tankito
         public ulong ownerID;
     }
 
-    public class BulletCannon : NetworkBehaviour
+    public class BulletCannon : NetworkBehaviour, IBulletCannon
     {
         public BulletProperties m_bulletProperties;
         [SerializeField]
@@ -106,7 +106,7 @@ namespace Tankito
             }
         }
 
-        void ShootBullet(Vector2 position, Vector2 direction, int spawnN)
+        public void ShootBullet(Vector2 position, Vector2 direction, int spawnN)
         {
             
             m_bulletProperties.direction = direction;

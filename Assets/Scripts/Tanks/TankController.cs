@@ -64,7 +64,7 @@ namespace Tankito
         public delegate void DashEnd();
         public event DashEnd OnDashEnd;
 
-        [SerializeField] private BulletCannon cannon;
+        [SerializeField] private IBulletCannon cannon;
 
         public PlayerState PlayerState { get => playerState; set => playerState = value; }
         public int StateInitTick { get => stateInitTick; set => stateInitTick = value; }

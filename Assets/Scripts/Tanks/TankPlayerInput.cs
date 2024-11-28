@@ -68,22 +68,12 @@ namespace Tankito
             m_inputReplayTick = NO_REPLAY;
         }
 
-        private void OnEnable()
-        {
-            m_tankController.OnDashEnd += this.DashEnd;
-        }
-
-        private void OnDisable()
-        {
-            m_tankController.OnDashEnd -= this.DashEnd;
-        }
-
         /// <summary>
         /// Returns <see cref="m_currentInput" />. Unless it is in replay mode (<see cref="m_inputReplayTick"/> == <see cref="NO_REPLAY"/>), this is to enable automatic input replay on rollback.
         /// </summary>
         /// <param name="timestamp"></param>
         /// <returns></returns>
-        public InputPayload GetInput()
+        public virtual InputPayload GetInput()
         {
             
             InputPayload gotPayload;
@@ -119,6 +109,11 @@ namespace Tankito
             return m_currentInput;
         }
 
+        protected void SetCurrentAction(TankAction action)
+        {
+            m_currentInput.action = action;
+        }
+
         public void StartInputReplay(int timestamp)
         {
             m_inputReplayTick = timestamp;
@@ -129,14 +124,6 @@ namespace Tankito
             var lastReplayTick = m_inputReplayTick;
             m_inputReplayTick = NO_REPLAY;
             return lastReplayTick;
-        }
-
-        private void DashEnd()
-        {
-            if(m_currentInput.action == TankAction.Dash)
-            {
-                m_currentInput.action = TankAction.None;
-            }
         }
 
         public void OnMove(InputAction.CallbackContext ctx)
@@ -153,7 +140,7 @@ namespace Tankito
         {
             m_currentInput.action = TankAction.Dash; 
         }
-        void Aim()
+        protected void Aim()
         {
             Vector2 lookVector;
             if (mousePosition != null)
@@ -189,12 +176,7 @@ namespace Tankito
                 mousePosition = input;
                 Aim();
                 
-            }
-
-            
-
-            
-            
+            }            
         }
 
 
