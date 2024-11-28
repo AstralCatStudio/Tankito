@@ -4,7 +4,6 @@ using Tankito;
 using UnityEngine;
 using UnityEngine.UI;
 using WebGLSupport;
-using static System.Net.Mime.MediaTypeNames;
 
 public class CopyJoinCode : MonoBehaviour
 {
