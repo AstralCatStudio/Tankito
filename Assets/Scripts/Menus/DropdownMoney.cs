@@ -3,19 +3,20 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.Video;
+using UnityEngine.Networking;
 
 public class DropdownMoney : MonoBehaviour
 {
     [SerializeField] private GameObject ad;
-    [SerializeField] private string videoUrl = "https://astralcatstudio.github.io/AdVideo/weefagerTrailer.mp4";
+    [SerializeField] private string[] videoNames;
+    [SerializeField] private string url = "https://astralcatstudio.github.io/AdVideo/index.json";
     [SerializeField] private VideoPlayer videoPlayer;
     private IEnumerator videoCoroutine;
 
     private void Start()
     {
-        
+        StartCoroutine(GetVideoNames());
     }
 
     public void PurchaseVirtualMoney(int moneyAmount)
@@ -28,9 +29,11 @@ public class DropdownMoney : MonoBehaviour
     public void WatchAd()
     {
         ad.SetActive(true);
-
+        MusicManager.Instance.MuteSong();
+        MusicManager.Instance.MuteBackground();
         if (videoPlayer)
         {
+            string videoUrl = "https://astralcatstudio.github.io/AdVideo/" + videoNames[Random.Range(0, videoNames.Length)];
             videoPlayer.url = videoUrl;
             videoPlayer.playOnAwake = false;
             videoPlayer.Prepare();
@@ -45,7 +48,6 @@ public class DropdownMoney : MonoBehaviour
     {
         videoPlayer.prepareCompleted -= OnVideoPrepared;
         videoPlayer.Play();
-        //Hacer que la musica pare y no sea interactuable el resto del menú
         videoCoroutine = EndAd();
         StartCoroutine(videoCoroutine);
     }
@@ -55,6 +57,8 @@ public class DropdownMoney : MonoBehaviour
         MusicManager.Instance.enabled = true;
         StopCoroutine(videoCoroutine);
         videoCoroutine = null;
+        MusicManager.Instance.ResumeSong();
+        MusicManager.Instance.ResumeBackground();
         ad.SetActive(false);
     }
 
@@ -67,10 +71,48 @@ public class DropdownMoney : MonoBehaviour
             i += Time.deltaTime;
             yield return null;
         }
+        MusicManager.Instance.ResumeSong();
+        MusicManager.Instance.ResumeBackground();
         ad.SetActive(false);
         int moneyAmount = Random.Range(1, 3);
         ClientData.Instance.ChangeMoney(+moneyAmount);
         MusicManager.Instance.PlaySoundPitch("snd_monedas", 0.2f);  
     }
 
+    IEnumerator GetVideoNames()
+    {
+        UnityWebRequest request = UnityWebRequest.Get(url);
+
+        // Enviar la solicitud
+        yield return request.SendWebRequest();
+
+        if (request.result == UnityWebRequest.Result.Success)
+        {
+            // Parsear el JSON
+            string jsonResponse = request.downloadHandler.text;
+
+            // Crear una clase auxiliar para manejar los datos
+            VideoData videoData = JsonUtility.FromJson<VideoData>(jsonResponse);
+
+            // Obtener los nombres
+            videoNames = videoData.videos;
+
+            // Mostrar los nombres en la consola
+            foreach (string name in videoNames)
+            {
+                Debug.Log("Video encontrado: " + name);
+            }
+        }
+        else
+        {
+            Debug.LogError("Error al obtener los datos: " + request.error);
+        }
+    }
+}
+
+// Clase auxiliar para parsear el JSON
+[System.Serializable]
+public class VideoData
+{
+    public string[] videos;
 }
