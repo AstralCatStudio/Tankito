@@ -1,10 +1,16 @@
-using Nfynt;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Video;
 using UnityEngine.Networking;
+
+// Clase auxiliar para parsear el JSON
+[System.Serializable]
+public class VideoData
+{
+    public string[] videos;
+}
 
 public class DropdownMoney : MonoBehaviour
 {
@@ -90,12 +96,24 @@ public class DropdownMoney : MonoBehaviour
         {
             // Parsear el JSON
             string jsonResponse = request.downloadHandler.text;
+            Debug.Log("Respuesta JSON: " + jsonResponse);
+            if (string.IsNullOrEmpty(jsonResponse))
+            {
+                Debug.LogError("El JSON descargado está vacío.");
+                yield break;
+            }
+            try
+            {
+                // Crear una clase auxiliar para manejar los datos
+                VideoData videoData = JsonUtility.FromJson<VideoData>(jsonResponse);
 
-            // Crear una clase auxiliar para manejar los datos
-            VideoData videoData = JsonUtility.FromJson<VideoData>(jsonResponse);
-
-            // Obtener los nombres
-            videoNames = videoData.videos;
+                // Obtener los nombres
+                videoNames = videoData.videos;
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError("Error al parsear el JSON: " + e.Message);
+            }
 
             // Mostrar los nombres en la consola
             foreach (string name in videoNames)
@@ -110,9 +128,3 @@ public class DropdownMoney : MonoBehaviour
     }
 }
 
-// Clase auxiliar para parsear el JSON
-[System.Serializable]
-public class VideoData
-{
-    public string[] videos;
-}
