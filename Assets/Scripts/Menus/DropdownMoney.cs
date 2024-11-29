@@ -11,7 +11,7 @@ public class DropdownMoney : MonoBehaviour
     [SerializeField] private GameObject ad;
     [SerializeField] private string videoUrl = "https://astralcatstudio.github.io/AdVideo/weefagerTrailer.mp4";
     [SerializeField] private VideoPlayer videoPlayer;
-    private Coroutine videoCoroutine;
+    private IEnumerator videoCoroutine;
 
     private void Start()
     {
@@ -37,35 +37,40 @@ public class DropdownMoney : MonoBehaviour
 
             videoPlayer.prepareCompleted += OnVideoPrepared;
         }
-        //Hacer que la musica pare y no sea interactuable el resto del menú
-        //videoCoroutine = StartCoroutine(EndAd());
+        
         MusicManager.Instance.PlaySound("cancelar");
     }
 
     public void OnVideoPrepared(VideoPlayer source)
     {
+        videoPlayer.prepareCompleted -= OnVideoPrepared;
         videoPlayer.Play();
+        //Hacer que la musica pare y no sea interactuable el resto del menú
+        videoCoroutine = EndAd();
+        StartCoroutine(videoCoroutine);
     }
 
     public void StopAd()
     {
         MusicManager.Instance.enabled = true;
         StopCoroutine(videoCoroutine);
+        videoCoroutine = null;
         ad.SetActive(false);
     }
 
-    //IEnumerator EndAd()
-    //{
-    //    float i = 0;
-    //    while (i < videoclip.length)
-    //    {
-    //        i += Time.deltaTime;
-    //        yield return null;
-    //    }
-    //    ad.SetActive(false);
-    //    int moneyAmount = Random.Range(1, 3);
-    //    ClientData.Instance.ChangeMoney(+moneyAmount);
-    //    MusicManager.Instance.PlaySoundPitch("snd_monedas", 0.2f);
-    //}
+    IEnumerator EndAd()
+    {
+        float i = 0;
+        while (i < videoPlayer.length)
+        {
+
+            i += Time.deltaTime;
+            yield return null;
+        }
+        ad.SetActive(false);
+        int moneyAmount = Random.Range(1, 3);
+        ClientData.Instance.ChangeMoney(+moneyAmount);
+        MusicManager.Instance.PlaySoundPitch("snd_monedas", 0.2f);  
+    }
 
 }
