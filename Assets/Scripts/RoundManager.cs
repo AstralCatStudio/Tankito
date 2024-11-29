@@ -202,6 +202,8 @@ namespace Tankito
             Debug.Log("Inicio ronda " + newRound);
             UpdateRoundCounterGUI();
 
+            DeactivateInitExitButtonClientRpc();
+
             m_startedGame = true;
             m_currentCountdownTime = timeToCountdown;
             ActivateCountdownGUIClientRpc();
@@ -310,6 +312,12 @@ namespace Tankito
         {
             RoundUI.Instance.ActivateCountdownGUI(false);
         }
+
+        [ClientRpc]
+        private void DeactivateInitExitButtonClientRpc()
+        {
+            RoundUI.Instance.ActivateInitExitButton(false);
+        }
         #endregion
 
 
@@ -364,7 +372,7 @@ namespace Tankito
 
             // tank.GetComponent<ITankInput>().SetActive(active);
 
-            if (tank.IsLocalPlayer)
+            if (tank.IsLocalPlayer && !RoundUI.Instance.SettingsMenu.activeSelf)
             {
                 m_localPlayerInputObject.SetActive(active);
             }
@@ -388,7 +396,9 @@ namespace Tankito
             RoundUI.Instance.ActivateCountdownGUI(false);
             //RoundUI.Instance.ActivateInitExitButton(false);
             RoundUI.Instance.ActivateAliveTanksGUI(true);
-            m_localPlayerInputObject.SetActive(true);
+
+            if(!RoundUI.Instance.SettingsMenu.activeSelf) m_localPlayerInputObject.SetActive(true);
+
             PlayerListUpdate();
         }
 
@@ -409,14 +419,19 @@ namespace Tankito
                 // To avoid SimClocks diverging in the between rounds phase
                 MessageHandlers.Instance.SendSynchronizationSignal();
             }
-            
-            
-
 
             m_startedRound = false;
             m_currentRound++;
 
-            ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            if(RoundUI.Instance.SettingsMenu.activeSelf)
+            {
+                RoundUI.Instance.ActivateSettingsMenu(false);
+            }
+
+            if(RoundUI.Instance.SettingsButton.activeSelf)
+            {
+                RoundUI.Instance.ActivateSettingsButton(false);
+            }
             
             if (m_currentRound==m_maxRounds)
             {
@@ -477,7 +492,7 @@ namespace Tankito
             else
             {
                 ShowRanking();
-                Invoke(nameof(EndGame), 5.0f);
+                Invoke(nameof(EndGame), 3.0f);
             }
         }
         #endregion
@@ -586,6 +601,7 @@ namespace Tankito
             }
 
             RoundUI.Instance.SetActivePowerUps(false);
+            RoundUI.Instance.ActivateSettingsButton(true);
             if (IsServer)
             {
                 Invoke(nameof(StartRoundCountdown), 1.0f);
