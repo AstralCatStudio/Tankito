@@ -45,7 +45,7 @@ namespace Tankito
         public List<ABulletModifierEvent> onBounceEvents;
         public List<ABulletModifierEvent> onDetonateEvents;
         public BulletStatsModifier bulletStatsModifier = new BulletStatsModifier(1,Vector2.one,0,0,0,0,0,1,1,0);
-        public void BindBulletEvents(BulletController newBullet)
+        public void BindBulletEvents(ABulletController newBullet)
         {
             newBullet.OnSpawn += OnSpawn;
             newBullet.OnFly += OnFly;
@@ -53,28 +53,28 @@ namespace Tankito
             newBullet.OnBounce += OnBounce;
             newBullet.OnDetonate += OnDetonate;
         }
-        void OnSpawn(BulletController bullet)
+        void OnSpawn(ABulletController bullet)
         {
             foreach (var item in onSpawnEvents)
             {
                 item.StartEvent(bullet);
             }
         }
-        void OnFly(BulletController bullet)
+        void OnFly(ABulletController bullet)
         {
             foreach (var item in onFlyEvents)
             {
                 item.StartEvent(bullet);
             }
         }
-        void OnHit(BulletController bullet)
+        void OnHit(ABulletController bullet)
         {
             foreach (var item in onHitEvents)
             {
                 item.StartEvent(bullet);
             }
         }
-        void OnBounce(BulletController bullet)
+        void OnBounce(ABulletController bullet)
         {
             foreach (var item in onBounceEvents)
             {
@@ -82,7 +82,7 @@ namespace Tankito
 
             }
         }
-        void OnDetonate(BulletController bullet)
+        void OnDetonate(ABulletController bullet)
         {
             foreach (var item in onDetonateEvents)
             {

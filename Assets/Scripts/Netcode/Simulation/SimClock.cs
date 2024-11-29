@@ -12,9 +12,9 @@ namespace Tankito
 {
     public class SimClock : Singleton<SimClock>
     {
-        public static float SimDeltaTime { get => (float)SimulationParameters.SIM_DELTA_TIME; }
+        public static float SimDeltaTime { get => (float) m_tickDeltaTime; }
 
-        [SerializeField] double m_tickDeltaTime; // <---- [SerializeField] FOR INSPECTOR DEBUG
+        [SerializeField] static double m_tickDeltaTime; // <---- [SerializeField] FOR INSPECTOR DEBUG
         double m_tickTimer;
         [SerializeField] private int m_tickCounter;
         public static int TickCounter { get => Instance.m_tickCounter; }
@@ -31,6 +31,8 @@ namespace Tankito
         public delegate void UpdateSimulation();
         public static event UpdateSimulation OnTick;
 
+        private bool isSingle = true;
+
         protected override void Awake()
         {
             base.Awake();
@@ -41,14 +43,22 @@ namespace Tankito
             m_tickTimer = 0;
             m_tickCounter = 0;
             m_active = false;
-            m_tickDeltaTime = SimulationParameters.SIM_DELTA_TIME;
+            if(SimulationParameters.Instance != null)
+            {
+                m_tickDeltaTime = SimulationParameters.SIM_DELTA_TIME;
+            }
+            else
+            {
+                m_tickDeltaTime = Time.fixedDeltaTime;
+            }
+            
         }
 
 
         // Update is called once per frame
         void Update()
         {
-            if (!m_active) return;
+            if (!m_active || isSingle) return;
 
             m_tickTimer += Time.deltaTime;
             if (m_tickTimer >= m_tickDeltaTime)
@@ -57,6 +67,12 @@ namespace Tankito
                 m_tickCounter++;
                 OnTick?.Invoke();
             }
+        }
+
+        private void FixedUpdate()
+        {
+            if(!isSingle) return; 
+            m_tickCounter++;
         }
 
         internal void StartClock()

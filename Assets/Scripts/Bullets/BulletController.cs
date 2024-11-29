@@ -10,24 +10,14 @@ using Tankito.Netcode.Simulation;
 namespace Tankito {
 
     
-    public class BulletController : MonoBehaviour
+    public class BulletController : ABulletController
     {
         BulletSimulationObject m_simObj;
-        public int m_bouncesLeft = 0;
-        public float LifeTime { get => m_lifetime; }
-        public float m_lifetime = 0; // Life Time counter
-        protected Vector2 lastCollisionNormal = Vector2.zero;
-        private Rigidbody2D m_rb;
-        public float selfCollisionTreshold = 0.1f;
-        public Action<BulletController> OnSpawn = (ABullet) => { }, OnFly = (ABullet) => { },
-                                        OnHit = (ABullet) => { }, OnBounce = (ABullet) => { },
-                                        OnDetonate = (ABullet) => { };
-        [SerializeField] private bool PREDICT_DESTRUCTION = true;
-
-        private void Awake()
+        
+        protected override void Awake()
         {
+            base.Awake();
             m_simObj = GetComponent<BulletSimulationObject>();
-            m_rb = GetComponent<Rigidbody2D>();
         }
 
         public void InitializeProperties(bool triggerOnSpawnEvents = true)
@@ -53,12 +43,7 @@ namespace Tankito {
             ResetBulletData();
         }
 
-        private void Update()
-        {
-            transform.rotation = Quaternion.LookRotation(new Vector3(0, 0, 1), m_rb.velocity.normalized);
-        }
-
-        void MoveBullet(float deltaTime)
+        protected override void MoveBullet(float deltaTime)
         {
             if (m_lifetime >= selfCollisionTreshold)
             {
@@ -74,19 +59,7 @@ namespace Tankito {
             }
         }
 
-        protected void ResetBulletData()
-        {
-            gameObject.layer = 8;
-            m_bouncesLeft = int.MaxValue; // int.MaxValue PARA EVITAR Detonate prematuro en colisiones previas a la inicializacion y simulacion de la bala.
-            m_lifetime = 0;
-            OnSpawn = (ABullet) => {};
-            OnFly = (ABullet) => {};
-            OnHit = (ABullet) => {};
-            OnBounce = (ABullet) => {};
-            OnDetonate = (ABullet) => {};
-        }
-
-        public void Detonate(bool lifeTimeOver = false)
+        public override void Detonate(bool lifeTimeOver = false)
         {
             
            OnDetonate.Invoke(this);
@@ -107,7 +80,7 @@ namespace Tankito {
            }
         }   
 
-        private void OnCollisionEnter2D(Collision2D collision)
+        protected override void OnCollisionEnter2D(Collision2D collision)
         {
             lastCollisionNormal = collision.GetContact(0).normal;
             switch (collision.gameObject.tag)

@@ -17,7 +17,7 @@ namespace Tankito
         float totalLifetime = 1f;
         [SerializeField]
         float timeUntilBig = 0.5f;
-        public override void StartEvent(BulletController bullet)
+        public override void StartEvent(ABulletController bullet)
         {
             GameObject explosion = Instantiate<GameObject>(explosionPrefab, bullet.transform.position, bullet.transform.rotation);
             explosion.GetComponent<Explosion>().size *= size;

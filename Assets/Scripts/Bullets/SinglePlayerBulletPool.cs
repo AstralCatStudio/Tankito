@@ -5,73 +5,72 @@ using UnityEngine;
 using UnityEngine.Pool;
 using Unity.Netcode;
 
-namespace Tankito
+namespace Tankito.SinglePlayer
 {
-    // Super facil de generalizar a un pool generico, porfavor a la minima q haga falta hacer otro pool, hagamoslo - Bernat
-    public class SinglePlayerBulletPool : Singleton<BulletPool>
+    // Me ha dado perecita hacerlo genérico sorry, aunque este lo es para GameObjects
+    public class SinglePlayerBulletPool : Singleton<SinglePlayerBulletPool>
     {
-        [SerializeField] private GameObject m_bulletPrefab;
+        [SerializeField] private GameObject m_prefab;
         [SerializeField] private int m_prewarmCount;
-        private ObjectPool<BulletSimulationObject> m_pool;
+        private ObjectPool<GameObject> m_pool;
         private bool DEBUG;
 
         [ContextMenu("InitializePool")]
         public void Start()
         {
-            InitializePool(m_bulletPrefab, m_prewarmCount);
+            InitializePool(m_prefab, m_prewarmCount);
         }
 
-        public void InitializePool(GameObject bulletPrefab, int prewarmCount)
+        public void InitializePool(GameObject prefab, int prewarmCount)
         {
-            BulletSimulationObject CreateFunc()
+            GameObject CreateFunc()
             {
                 // We parent the spawned prefab to our transform, to make sure that it isn't loaded onto another scene (because of additive scene loading);
-                var bullet = Instantiate(bulletPrefab, transform).GetComponent<BulletSimulationObject>();
-                if (DEBUG) Debug.Log($"CreateFunc called on {bulletPrefab}, instantiated {bullet}");
-                return bullet;
+                var pooleableObject = Instantiate(prefab, transform);
+                if (DEBUG) Debug.Log($"CreateFunc called on {prefab}, instantiated {pooleableObject}");
+                return pooleableObject;
             }
 
-            void ActionOnGet(BulletSimulationObject bulletObject)
+            void ActionOnGet(GameObject pooleableObject)
             {
-                if (DEBUG) Debug.Log($"ActionOnGet called on {bulletObject}");
-                bulletObject.gameObject.SetActive(true);
+                if (DEBUG) Debug.Log($"ActionOnGet called on {pooleableObject}");
+                pooleableObject.gameObject.SetActive(true);
             }
 
-            void ActionOnRelease(BulletSimulationObject bulletObject)
+            void ActionOnRelease(GameObject pooleableObject)
             {
-                if (DEBUG) Debug.Log($"ActionOnRelease called on {bulletObject}");
-                bulletObject.gameObject.SetActive(false);
+                if (DEBUG) Debug.Log($"ActionOnRelease called on {pooleableObject}");
+                pooleableObject.gameObject.SetActive(false);
             }
 
-            void ActionOnDestroy(BulletSimulationObject bulletObject)
+            void ActionOnDestroy(GameObject pooleableObject)
             {
-                if (DEBUG) Debug.Log($"ActionOnDestroy called on {bulletObject}");
-                Destroy(bulletObject.gameObject);
+                if (DEBUG) Debug.Log($"ActionOnDestroy called on {pooleableObject}");
+                Destroy(pooleableObject.gameObject);
             }
 
             // Create the pool
-            m_pool = new ObjectPool<BulletSimulationObject>(CreateFunc, ActionOnGet, ActionOnRelease, ActionOnDestroy, defaultCapacity: prewarmCount);
+            m_pool = new ObjectPool<GameObject>(CreateFunc, ActionOnGet, ActionOnRelease, ActionOnDestroy, defaultCapacity: prewarmCount);
 
             // Populate the pool
-            var prewarmBullets = new List<BulletSimulationObject>();
+            var prewarmObjects = new List<GameObject>();
             for (var i = 0; i < prewarmCount; i++)
             {
                 var gotInstance = m_pool.Get();
-                prewarmBullets.Add(gotInstance);
+                prewarmObjects.Add(gotInstance);
             }
 
-            foreach (var bulletObject in prewarmBullets)
+            foreach (var pooleableObject in prewarmObjects)
             {
-                m_pool.Release(bulletObject);
+                m_pool.Release(pooleableObject);
             }
         }
 
 
-        public BulletSimulationObject Get(Vector2 position, Vector2 rotation, ulong ownerId, int tick, int spawnN)
+        public GameObject Get(Vector2 position, Vector2 rotation)
         {
             float rotationDeg = Mathf.Atan2(rotation.x, rotation.y);
-            var simObjId = SimExtensions.HashSimObj(ownerId, tick, spawnN);
-            return Get(position, rotationDeg, ownerId, simObjId);
+            return Get(position, rotationDeg);
         }
 
         /// <summary>
@@ -84,41 +83,17 @@ namespace Tankito
         /// <param name="simObjId"></param>
         /// <param name="autoSpawn"></param>
         /// <returns></returns>
-        public BulletSimulationObject Get(Vector2 position, float rotation, ulong ownerId, ulong simObjId, bool autoSpawn = true)
+        public GameObject Get(Vector2 position, float rotation)
         {
-            if (DEBUG) Debug.Log($"[{SimClock.TickCounter}]Get called, Arguments: position");
+            var poolObj = m_pool.Get();
+            poolObj.transform.SetPositionAndRotation(position, Quaternion.AngleAxis(rotation, Vector3.forward));
 
-
-            var bulletObj = m_pool.Get();
-            var objRB = bulletObj.GetComponent<Rigidbody2D>();
-            bulletObj.SetSimObjId(simObjId);
-            // We dont use rigidbody transformations because they won't be changed until after the next physics update
-            //objRB.transform.position = position;
-            //objRB.rotation = rotation;
-            bulletObj.transform.SetPositionAndRotation(position, Quaternion.AngleAxis(rotation, Vector3.forward));
-
-            bulletObj.SetOwner(ownerId);
-            bulletObj.GetComponent<BulletController>().InitializeProperties();
-
-            if (autoSpawn)
-            {
-                if (NetworkManager.Singleton.IsServer)
-                {
-                    ServerSimulationManager.Instance.QueueForSpawn(bulletObj);
-                }
-                else
-                {
-                    ClientSimulationManager.Instance.QueueForSpawn(bulletObj);
-                }
-            }
-
-            return bulletObj;
+            return poolObj;
         }
 
-        public void Release(BulletSimulationObject bullet)
+        public void Release(GameObject pooleableObj)
         {
-            if (DEBUG) Debug.Log($"[{SimClock.TickCounter}]Release called on {bullet.SimObjId}!");
-            m_pool.Release(bullet);
+            m_pool.Release(pooleableObj);
         }
     }
 }

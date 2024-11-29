@@ -8,17 +8,11 @@ namespace Tankito.SinglePlayer
 {
     public class SinglePlayerBulletCannon : MonoBehaviour, IBulletCannon
     {
-        float coolDown = 1;
+        [SerializeField] float coolDown = 1;
         [SerializeField]
-        float baseInterval = 0.5f;
         float timer = 0;
-        List<GameObject> bulletsShot = new List<GameObject>();
-        private List<Vector2> BulletDirections = new List<Vector2>();
-        public int baseBulletAmount;
-        public int m_bulletAmount;
-        int spawnTickTime = 0;
         [SerializeField]
-        float m_shootRadius, m_shootSpreadAngle, m_scatterAngle;
+        float m_shootRadius;
 
         void Update()
         {
@@ -38,7 +32,8 @@ namespace Tankito.SinglePlayer
 
         public void ShootBullet(Vector2 position, Vector2 direction, int spawnN)
         {
-            var newBullet = BulletPool.Instance.Get(position, direction, OwnerClientId, SimClock.TickCounter, spawnN);
+            var newBullet = SinglePlayerBulletPool.Instance.Get(position, direction);
+            newBullet.GetComponent<SinglePlayerBulletController>().InitializeBullet(position, direction);
         }
 
     }

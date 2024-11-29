@@ -4,13 +4,46 @@ using Tankito;
 using Tankito.Netcode;
 using UnityEngine;
 
-public class TankSinglePlayerInput : TankPlayerInput
+namespace Tankito.SinglePlayer
 {
-    public override InputPayload GetInput()
+    public class TankSinglePlayerInput : TankPlayerInput
     {
-        Aim();
-        InputPayload gotInput = GetCurrentInput();
-        SetCurrentAction(TankAction.None);
-        return gotInput;
+        [SerializeField] TankitoInputActions m_inputActions;
+        private void OnEnable()
+        {
+            m_inputActions.Player.Move.performed += OnMove;
+            m_inputActions.Player.Move.canceled += OnMove;
+            m_inputActions.Player.Look.performed += OnAim;
+            m_inputActions.Player.Look.canceled += OnAim;
+            m_inputActions.Player.Dash.performed += OnDash;
+            m_inputActions.Player.Dash.canceled += OnDash;
+            m_inputActions.Player.Parry.performed += OnParry;
+            m_inputActions.Player.Parry.canceled += OnParry;
+            m_inputActions.Player.Fire.performed += OnFire;
+            m_inputActions.Player.Fire.canceled += OnFire;
+        }
+
+        private void OnDisable()
+        {
+            m_inputActions.Player.Move.performed -= OnMove;
+            m_inputActions.Player.Move.canceled -= OnMove;
+            m_inputActions.Player.Look.performed -= OnAim;
+            m_inputActions.Player.Look.canceled -= OnAim;
+            m_inputActions.Player.Dash.performed -= OnDash;
+            m_inputActions.Player.Dash.canceled -= OnDash;
+            m_inputActions.Player.Parry.performed -= OnParry;
+            m_inputActions.Player.Parry.canceled -= OnParry;
+            m_inputActions.Player.Fire.performed -= OnFire;
+            m_inputActions.Player.Fire.canceled -= OnFire;
+        }
+
+        public override InputPayload GetInput()
+        {
+            Aim();
+            InputPayload gotInput = GetCurrentInput();
+            SetCurrentAction(TankAction.None);
+            return gotInput;
+        }
     }
 }
+

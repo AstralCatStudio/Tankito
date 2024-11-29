@@ -209,7 +209,7 @@ namespace Tankito
             m_inputActions.Player.Look.performed += localTankInput.OnAim;
             m_inputActions.Player.Look.canceled += localTankInput.OnAim;
             m_inputActions.Player.Dash.performed += localTankInput.OnDash;
-            //m_inputActions.Player.Dash.canceled += predictedController.OnDash;
+            m_inputActions.Player.Dash.canceled += localTankInput.OnDash;
             m_inputActions.Player.Parry.performed += localTankInput.OnParry;
             m_inputActions.Player.Parry.canceled += localTankInput.OnParry;
             m_inputActions.Player.Fire.performed += localTankInput.OnFire;
