@@ -9,18 +9,12 @@ using UnityEngine.Video;
 public class DropdownMoney : MonoBehaviour
 {
     [SerializeField] private GameObject ad;
-    [SerializeField] private NVideoPlayer nVideoPlayer;
-    [SerializeField] private VideoClip videoclip;
-    [SerializeField] private AudioClip audioClip;
-    private AudioSource audioSource;
+    [SerializeField] private string videoUrl = "https://astralcatstudio.github.io/AdVideo/weefagerTrailer.mp4";
+    [SerializeField] private VideoPlayer videoPlayer;
     private Coroutine videoCoroutine;
 
     private void Start()
     {
-        nVideoPlayer.Config.VideoSrcPath = Application.dataPath + "/Videos/Weefager.mp4";
-        audioSource = gameObject.AddComponent<AudioSource>();
-        audioSource.clip = audioClip;
-        nVideoPlayer.Config.AudioSource = audioSource;
         
     }
 
@@ -33,12 +27,24 @@ public class DropdownMoney : MonoBehaviour
     }
     public void WatchAd()
     {
-        Debug.Log("hola");
         ad.SetActive(true);
-        
+
+        if (videoPlayer)
+        {
+            videoPlayer.url = videoUrl;
+            videoPlayer.playOnAwake = false;
+            videoPlayer.Prepare();
+
+            videoPlayer.prepareCompleted += OnVideoPrepared;
+        }
         //Hacer que la musica pare y no sea interactuable el resto del menú
-        videoCoroutine = StartCoroutine(EndAd());
+        //videoCoroutine = StartCoroutine(EndAd());
         MusicManager.Instance.PlaySound("cancelar");
+    }
+
+    public void OnVideoPrepared(VideoPlayer source)
+    {
+        videoPlayer.Play();
     }
 
     public void StopAd()
@@ -48,18 +54,18 @@ public class DropdownMoney : MonoBehaviour
         ad.SetActive(false);
     }
 
-    IEnumerator EndAd()
-    {
-        float i = 0;
-        while (i < videoclip.length)
-        {
-            i += Time.deltaTime;
-            yield return null;
-        }
-        ad.SetActive(false);
-        int moneyAmount = Random.Range(1, 3);
-        ClientData.Instance.ChangeMoney(+moneyAmount);
-        MusicManager.Instance.PlaySoundPitch("snd_monedas", 0.2f);
-    }
+    //IEnumerator EndAd()
+    //{
+    //    float i = 0;
+    //    while (i < videoclip.length)
+    //    {
+    //        i += Time.deltaTime;
+    //        yield return null;
+    //    }
+    //    ad.SetActive(false);
+    //    int moneyAmount = Random.Range(1, 3);
+    //    ClientData.Instance.ChangeMoney(+moneyAmount);
+    //    MusicManager.Instance.PlaySoundPitch("snd_monedas", 0.2f);
+    //}
 
 }
