@@ -7,6 +7,7 @@ using UnityEngine.UI;
 using TMPro;
 public class ModifierSelectorScreen : NetworkBehaviour
 {
+    //a
     [SerializeField]
     List<ModifierSelector> modifierSelectors;
     List<Modifier> modifiers;
