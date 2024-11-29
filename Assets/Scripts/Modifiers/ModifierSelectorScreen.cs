@@ -15,8 +15,11 @@ namespace Tankito
         ModifierSelector selectedModifier;
         [SerializeField]
         TextMeshProUGUI playerChoosePowerupText;
+        [SerializeField]
+        GameObject ModdifiersParent;
         int tankorder = 0;
         List<ulong> tanksInOrder = new List<ulong>(4);
+
         public override void OnNetworkSpawn()
         {
             if (!IsServer)
