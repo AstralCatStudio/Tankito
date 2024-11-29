@@ -480,7 +480,7 @@ namespace Tankito
 
         private void BetweenRounds()
         {
-            if (m_currentRound < m_maxRounds)
+            if (m_currentRound < m_maxRounds && m_players.Count > 1)
             {
                 ShowRanking();
 
