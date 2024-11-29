@@ -188,7 +188,6 @@ MonoBehaviour:
   enableTime: 0.5
   disableTime: 1
   delay: 0.1
-  childrenLimit: 1
 --- !u!1 &14269766
 GameObject:
   m_ObjectHideFlags: 0
@@ -3616,7 +3615,6 @@ MonoBehaviour:
   enableTime: 0.5
   disableTime: 1
   delay: 0.2
-  childrenLimit: 1
 --- !u!1 &490272717
 GameObject:
   m_ObjectHideFlags: 0
@@ -3673,7 +3671,6 @@ MonoBehaviour:
   enableTime: 0.5
   disableTime: 1
   delay: 0.1
-  childrenLimit: 1
 --- !u!1 &508687517
 GameObject:
   m_ObjectHideFlags: 0
@@ -4828,7 +4825,6 @@ MonoBehaviour:
   enableTime: 0.5
   disableTime: 1
   delay: 0.1
-  childrenLimit: 1
 --- !u!1 &668254630
 GameObject:
   m_ObjectHideFlags: 0
@@ -4892,7 +4888,6 @@ MonoBehaviour:
   enableTime: 0.5
   disableTime: 1
   delay: 0.1
-  childrenLimit: 1
 --- !u!1 &674292882
 GameObject:
   m_ObjectHideFlags: 0
@@ -5262,7 +5257,6 @@ MonoBehaviour:
   enableTime: 0.5
   disableTime: 1
   delay: 0.1
-  childrenLimit: 1
 --- !u!1 &713372928
 GameObject:
   m_ObjectHideFlags: 0
@@ -6331,7 +6325,6 @@ MonoBehaviour:
   enableTime: 0.5
   disableTime: 1
   delay: 0.1
-  childrenLimit: 1
 --- !u!114 &839094638
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7435,7 +7428,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -607}
+  m_AnchoredPosition: {x: 0, y: -485}
   m_SizeDelta: {x: 800, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &940101725
@@ -9005,7 +8998,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 425}
+  m_AnchoredPosition: {x: 0, y: 410}
   m_SizeDelta: {x: 650, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1228385750
@@ -14884,7 +14877,6 @@ MonoBehaviour:
   enableTime: 0.5
   disableTime: 1
   delay: 0.1
-  childrenLimit: 1
 --- !u!114 &1395563653
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18841,7 +18833,6 @@ MonoBehaviour:
   enableTime: 0.5
   disableTime: 1
   delay: 0.1
-  childrenLimit: 1
 --- !u!225 &2028730314
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -19447,7 +19438,6 @@ MonoBehaviour:
   enableTime: 0.5
   disableTime: 1
   delay: 0.1
-  childrenLimit: 1
 --- !u!1 &2109599603
 GameObject:
   m_ObjectHideFlags: 0
@@ -19975,7 +19965,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 798307263852279288, guid: 940b4ac862e2fcd428c018775c9e20db, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 121.04999
+      value: 121.05
       objectReference: {fileID: 0}
     - target: {fileID: 798307263852279288, guid: 940b4ac862e2fcd428c018775c9e20db, type: 3}
       propertyPath: m_AnchoredPosition.y

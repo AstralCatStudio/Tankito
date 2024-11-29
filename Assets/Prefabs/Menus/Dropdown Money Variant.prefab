@@ -367,7 +367,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3333838517035117355}
   - component: {fileID: 704357946368233508}
-  - component: {fileID: 8484151838926288843}
   m_Layer: 5
   m_Name: Video Player
   m_TagString: Untagged
@@ -412,56 +411,24 @@ VideoPlayer:
   m_TargetMaterialProperty: <noninit>
   m_RenderMode: 2
   m_AspectRatio: 2
-  m_DataSource: 0
+  m_DataSource: 1
   m_TimeUpdateMode: 2
   m_PlaybackSpeed: 1
   m_AudioOutputMode: 2
   m_TargetAudioSources:
   - {fileID: 0}
   m_DirectAudioVolumes:
-  - 1
+  - 0.3
   m_Url: 
   m_EnabledAudioTracks: 01
   m_DirectAudioMutes: 00
   m_ControlledAudioTrackCount: 1
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_SkipOnDrop: 1
   m_Looping: 0
   m_WaitForFirstFrame: 1
   m_FrameReadyEventEnabled: 0
   m_VideoShaders: []
---- !u!114 &8484151838926288843
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4985989526306722805}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f408583d4a9fabc42a3bd751084fa43a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Config:
-    VideoSrcPath: /Videos/Weefager.mp4
-    VideoTextureTarget: {fileID: 8400000, guid: 30bc5622baf52b64c82e659eaeaf3c0f, type: 2}
-    AudioSource: {fileID: 0}
-    PlayOnAwake: 1
-    MuteAsDefault: 0
-    LoopPlayer: 0
-    VideoAspectRatio: 5
-  OnStarted:
-    m_PersistentCalls:
-      m_Calls: []
-  OnStoped:
-    m_PersistentCalls:
-      m_Calls: []
-  OnPaused:
-    m_PersistentCalls:
-      m_Calls: []
-  OnResumed:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1 &5106567718830441605
 GameObject:
   m_ObjectHideFlags: 0
@@ -1376,9 +1343,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ad: {fileID: 7878807859878915835}
-  nVideoPlayer: {fileID: 8484151838926288843}
-  videoclip: {fileID: 32900000, guid: 17cead593c8ff904b8451f4c4577a834, type: 3}
-  audioClip: {fileID: 8300000, guid: 36e36bc13a35fc3429d134bb4fc47c25, type: 3}
+  videos:
+  - weefagerTrailer
+  - mi colega el menos gracioso
+  videoUrl: https://astralcatstudio.github.io/AdVideo/weefagerTrailer.mp4
+  videoPlayer: {fileID: 704357946368233508}
 --- !u!224 &2289336450636049709 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6257167103809963791, guid: 55ce9b0ed337be1429d7845612283adf, type: 3}
