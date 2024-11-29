@@ -3,17 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
-using UnityEngine.UIElements;
+using Unity.Netcode;
 namespace Tankito
 {
-    public class ModifiersUserProfile : MonoBehaviour
+    public class ModifiersUserProfile : NetworkBehaviour
     {
         [SerializeField]
         TextMeshProUGUI userName, pointsText;
         [SerializeField]
-        GameObject characterImage;
+        Image characterImage;
         [SerializeField]
-        List<Sprite> modifierImages;
+        List<Image> modifierImages;
         public void SetUserName(string name)
         {
             userName.text = name;
@@ -24,20 +24,30 @@ namespace Tankito
         }
         public void SetCharacterImage(Sprite sprite)
         {
-            characterImage = sprite;
+            characterImage.sprite = sprite;
         }
         public void SetModifiers(List<int> modifiers)
         {
+            if (modifiers.Count != modifierImages.Count)
+            {
+                modifierImages.Clear();
+                modifierImages = new List<Image>(modifiers.Count);
+            }
             for (int i = 0; i < modifiers.Count; i++)
             {
-                modifierImages[i] = ModifierRegistry.Instance.GetModifier(modifiers[i]).GetSprite();
+                modifierImages[i].sprite = ModifierRegistry.Instance.GetModifier(modifiers[i]).GetSprite();
             }
         }
         public void SetModifiers(List<Modifier> modifiers)
         {
+            if (modifiers.Count != modifierImages.Count)
+            {
+                modifierImages.Clear();
+                modifierImages = new List<Image>(modifiers.Count);
+            }
             for (int i = 0; i < modifiers.Count; i++)
             {
-                modifierImages[i] = modifiers[i].GetSprite();
+                modifierImages[i].sprite = modifiers[i].GetSprite();
             }
         }
     }
