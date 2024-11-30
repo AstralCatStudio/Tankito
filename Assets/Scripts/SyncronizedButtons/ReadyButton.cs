@@ -93,17 +93,10 @@ namespace Tankito.SyncronizedButtons
         {
             if (IsServer)
             {
-                RoundUI.Instance.PanelPowerUps = Instantiate(RoundUI.Instance.PanelPowerUps, GameInstanceParent.Instance.transform);
+                RoundUI.Instance.PanelPowerUps = Instantiate(RoundUI.Instance.PowerUpsPrefab, GameInstanceParent.Instance.transform);
                 RoundUI.Instance.PanelPowerUps.GetComponent<NetworkObject>().Spawn();
                 RoundManager.Instance.StartRoundCountdown();
-                DestroyButtonsClientRpc();
             }
-        }
-
-        [ClientRpc]
-        private void DestroyButtonsClientRpc()
-        {
-            Destroy(gameObject);
         }
 
         #endregion

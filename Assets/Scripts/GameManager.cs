@@ -22,8 +22,6 @@ namespace Tankito
         //[SerializeField]
         private GameObject m_playerPrefab;
 
-        private string m_playerName = "Invited";
-
         // SceneManagementEvents
         public bool m_loadingSceneFlag { get; private set; } = true;
 
@@ -115,21 +113,6 @@ namespace Tankito
                 RoundManager.Instance.AddPlayer(tankData);
                 RoundManager.Instance.UpdateRemoteClientPlayerList();
             }
-            //else
-            //{
-            //    if(clientId != NetworkManager.Singleton.LocalClientId)
-            //    {
-            //        if (RoundManager.Instance == null)
-            //        {
-            //            Debug.Log("ES EL ROUND MANAGER");
-            //        }
-            //        else if (m_playerPrefab.GetComponent<TankData>() == null)
-            //        {
-            //            Debug.Log("ES EL OBJETO");
-            //        }
-            //        RoundManager.Instance.AddPlayer(NetworkManager.LocalClient.PlayerObject.GetComponent<TankData>());
-            //    }
-            //}
 
             if (clientId != NetworkManager.Singleton.LocalClientId) return;
 
@@ -228,18 +211,6 @@ namespace Tankito
             m_inputActions.Player.Parry.canceled -= localTankInput.OnParry;
             m_inputActions.Player.Fire.performed -= localTankInput.OnFire;
             m_inputActions.Player.Fire.canceled -= localTankInput.OnFire;
-        }
-
-
-        public void SetPlayerName(string name)
-        {
-            m_playerName = name;
-            //Debug.Log("GameManager guarda el nombre:" + m_playerName);
-        }
-
-        public string GetPlayerName()
-        {
-            return m_playerName;
         }
 
         public void AutoPhysics2DUpdate(bool auto)

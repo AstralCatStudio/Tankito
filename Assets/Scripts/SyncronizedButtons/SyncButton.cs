@@ -156,6 +156,16 @@ namespace Tankito.SyncronizedButtons
             UpdateLocalText();
         }
 
+        private void ResetButtonState()
+        {
+            for (int i = 0; i < _buttonClickStatusList.Count; i++)
+            {
+                var status = _buttonClickStatusList[i];
+                status.ButtonClicked = false;
+                _buttonClickStatusList[i] = status;
+            }
+        }
+
         protected int CalcClickedCount()
         {
             int clickedCount = 0;
@@ -202,9 +212,29 @@ namespace Tankito.SyncronizedButtons
         protected virtual void FinalFunction()
         {
             Debug.Log("Button final function called");
+            if (IsServer)
+            {
+                ActivateButtonClientRpc(false);
+                ResetButtonState();
+            }
+        }
+
+        [ClientRpc]
+        public void ActivateButtonClientRpc(bool active)
+        {
+            ActivateButton(active);
+        }
+
+        public void ActivateButton(bool active)
+        {
+            _button.gameObject.SetActive(active);
+            _text.gameObject.SetActive(active);
+            GetComponent<CanvasGroup>().blocksRaycasts = active;
+            GetComponent<CanvasGroup>().interactable = active;
         }
 
         #endregion
+
     }
 
 }

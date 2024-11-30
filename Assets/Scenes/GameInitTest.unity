@@ -2654,10 +2654,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1c4f63e78452484f9dc39e3d124d85f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PowerUpsPrefab: {fileID: 1351770429656057191, guid: 5485b165a70100f469f9b15090baaa5a, type: 3}
   PanelRanking: {fileID: 1173639305}
-  PanelPowerUps: {fileID: 1351770429656057191, guid: 5485b165a70100f469f9b15090baaa5a, type: 3}
+  PanelPowerUps: {fileID: 0}
   PanelRankingFinal: {fileID: 1057562067}
-  PanelAlivePlayers: {fileID: 1408602212}
+  CurrentRound: {fileID: 1408602212}
   CountdownText: {fileID: 325967945}
   BackButton: {fileID: 0}
   InitExitButton: {fileID: 1282918640}
@@ -2666,6 +2667,7 @@ MonoBehaviour:
   LobbyInfo: {fileID: 114055698}
   SettingsButton: {fileID: 941482814}
   SettingsMenu: {fileID: 195806120}
+  Ready: {fileID: 2027675639}
   PlayAgain: {fileID: 1864572839}
 --- !u!114 &687075487
 MonoBehaviour:
@@ -6431,7 +6433,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b0a44a3b322a1843a22b17c9791545b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_maxRounds: 1
+  m_maxRounds: 2
   timeToCountdown: 3
   m_startedGame: 0
   m_localPlayerInputObject: {fileID: 0}
@@ -7311,6 +7313,7 @@ GameObject:
   - component: {fileID: 1864572841}
   - component: {fileID: 1864572844}
   - component: {fileID: 1864572845}
+  - component: {fileID: 1864572846}
   m_Layer: 5
   m_Name: PlayAgain
   m_TagString: Untagged
@@ -7411,6 +7414,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _button: {fileID: 896485080}
   _text: {fileID: 2070787602}
+--- !u!225 &1864572846
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1864572839}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
 --- !u!1 &1864697674
 GameObject:
   m_ObjectHideFlags: 0
@@ -8154,6 +8169,7 @@ GameObject:
   - component: {fileID: 2027675641}
   - component: {fileID: 2027675643}
   - component: {fileID: 2027675644}
+  - component: {fileID: 2027675645}
   m_Layer: 5
   m_Name: Ready
   m_TagString: Untagged
@@ -8254,6 +8270,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _button: {fileID: 1960417052}
   _text: {fileID: 664274167}
+--- !u!225 &2027675645
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2027675639}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &2070787600
 GameObject:
   m_ObjectHideFlags: 0

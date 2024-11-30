@@ -109,6 +109,36 @@ namespace Tankito
             // }
         }
 
+        public void ResetGame()
+        {
+            if (IsServer)
+            {
+                RoundUI.Instance.SetActiveScenarySelection(true);
+                ResetGameClientRpc();
+
+                ResetPlayers();
+            }
+        }
+
+        [ClientRpc]
+        private void ResetGameClientRpc()
+        {
+            m_currentRound = 0;
+            m_startedGame = false;
+            m_startedRound = false;
+            RoundUI.Instance.SetCurrentRound(m_currentRound);
+            RoundUI.Instance.ActivateEndExitButton(false);
+            RoundUI.Instance.ActivateRankingGUI(false);
+            RoundUI.Instance.ActivatePlayAgainGUI(false);
+
+            RoundUI.Instance.ActivateInitExitButton(true);
+            RoundUI.Instance.ActivateSettingsButton(true);
+            RoundUI.Instance.ActivateLobbyInfoGUI(true);
+            RoundUI.Instance.ActivateReadyGUI(true);
+            RoundUI.Instance.SetCountdownText("Ready?");
+            RoundUI.Instance.ActivateCountdownGUI(true);
+        }
+
         #region PlayerManagement
         public bool TryAddPlayer(TankData player)
         {

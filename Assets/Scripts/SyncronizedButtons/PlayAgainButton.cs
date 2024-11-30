@@ -10,15 +10,6 @@ namespace Tankito.SyncronizedButtons
 {
     public class PlayAgainButton : SyncButton
     {
-        public void ActivatePlayAgain(bool active)
-        {
-            if (IsClient)
-            {
-                _button.gameObject.SetActive(active);
-                _text.gameObject.SetActive(active);
-            }
-        }
-
         #region Button
 
         protected override void UpdateText()
@@ -60,16 +51,9 @@ namespace Tankito.SyncronizedButtons
         {
             if (IsServer)
             {
-                Debug.LogWarning("Reseting game scene...");
-                //Llamada a scene loader
-                DestroyButtonClientRpc();
+                RoundManager.Instance.ResetGame();
             }
-        }
-
-        [ClientRpc]
-        private void DestroyButtonClientRpc()
-        {
-            Destroy(gameObject);
+            Destroy(RoundUI.Instance.PanelPowerUps);
         }
 
         #endregion
