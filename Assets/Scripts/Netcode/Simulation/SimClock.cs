@@ -33,6 +33,8 @@ namespace Tankito
 
         private bool isSingle = true;
 
+        public bool IsSingle { get => isSingle; set => isSingle = value; }
+
         protected override void Awake()
         {
             base.Awake();

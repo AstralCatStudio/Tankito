@@ -16,7 +16,8 @@ namespace Tankito.SinglePlayer
         protected override void Start()
         {
             base.Start();
-            m_dashTicks = (int)(m_dashTicks / m_dashSpeedMultiplier);
+            float dashTime = (m_dashDistance / m_dashSpeedMultiplier);
+            m_dashTicks = (int)(dashTime / Time.fixedDeltaTime);
             m_reloadDashTicks = (int)(m_dashCooldown / Time.fixedDeltaTime);
         }
 

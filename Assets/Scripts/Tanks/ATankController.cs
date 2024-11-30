@@ -66,6 +66,20 @@ public abstract class ATankController : MonoBehaviour
             Debug.LogWarning("Error tank turret reference not set.");
         }
 
+        Transform cannonTransform = transform.GetChild(1).GetChild(0).GetChild(0);
+        if(cannonTransform != null)
+        {
+            cannon = cannonTransform.gameObject.GetComponent<IBulletCannon>();
+            if(cannon == null)
+            {
+                Debug.LogWarning("Error cannon doesnt have IBulletCannon component");
+            }
+        }
+        else
+        {
+            Debug.LogWarning("Error getting cannon gameObject");
+        }
+
         //ApplyModifierList();
         stateInitTick = 0;
     }
@@ -125,7 +139,7 @@ public abstract class ATankController : MonoBehaviour
         m_tankRB.MovePosition(m_tankRB.position + m_speed * moveVector * deltaTime);
     }
 
-    protected void DashTank(Vector2 moveVector, int currentInputDashTick, float deltaTime)
+    protected virtual void DashTank(Vector2 moveVector, int currentInputDashTick, float deltaTime)
     {
         if (DEBUGDASh) Debug.Log($"[{SimClock.TickCounter}]: PlayerState : {playerState}, VelocidadDash: {m_dashSpeedMultiplier}");
 
@@ -198,7 +212,7 @@ public abstract class ATankController : MonoBehaviour
         {
             if (currentDashReloadTick < m_reloadDashTicks)
             {
-                if (SimClock.Instance.Active)   //Este check es para que no se reduzca el cooldown en caso de que se este reconciliando
+                if (SimClock.Instance.Active || SimClock.Instance.IsSingle)   //Este check es para que no se reduzca el cooldown en caso de que se este reconciliando
                 {
                     currentDashReloadTick++;
                 }
