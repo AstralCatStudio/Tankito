@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Video;
 using UnityEngine.Networking;
+using UnityEngine.UI;
 
 // Clase auxiliar para parsear el JSON
 [System.Serializable]
@@ -15,6 +16,7 @@ public class VideoData
 public class DropdownMoney : MonoBehaviour
 {
     [SerializeField] private GameObject ad;
+    [SerializeField] private Slider slider;
     [SerializeField] private string[] videoNames;
     [SerializeField] private string url = "https://astralcatstudio.github.io/AdVideo/index.json";
     [SerializeField] private VideoPlayer videoPlayer;
@@ -37,6 +39,7 @@ public class DropdownMoney : MonoBehaviour
         ad.SetActive(true);
         MusicManager.Instance.MuteSong();
         MusicManager.Instance.MuteBackground();
+        slider.value = 0;
         if (videoPlayer)
         {
             string videoUrl = "https://astralcatstudio.github.io/AdVideo/" + videoNames[Random.Range(0, videoNames.Length)];
@@ -73,7 +76,7 @@ public class DropdownMoney : MonoBehaviour
         float i = 0;
         while (i < videoPlayer.length)
         {
-
+            slider.value = i/ (float) videoPlayer.length;
             i += Time.deltaTime;
             yield return null;
         }
