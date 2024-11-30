@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Tankito;
 using TMPro;
-using Unity.Netcode;
+using Tankito.SyncronizedButtons;
 using UnityEngine;
 using UnityEngine.InputSystem;
 

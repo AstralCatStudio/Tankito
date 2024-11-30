@@ -7,187 +7,72 @@ using UnityEngine.UI;
 using TMPro;
 using Tankito.Utils;
 
-namespace Tankito
+namespace Tankito.SyncronizedButtons
 {
-    public class ReadyButton : NetworkBehaviour
+    public class ReadyButton : SyncButton
     {
-        [SerializeField] private Button _readyButton;
-        [SerializeField] private TMP_Text _readyPlayersText;
-
-        [Serializable]
-        private struct PlayerReadyStatus : INetworkSerializable, IEquatable<PlayerReadyStatus>
+        protected override void Awake()
         {
-            public ulong ClientId;
-            public bool IsReady;
+            base.Awake();
 
-            public PlayerReadyStatus(ulong clientId, bool isReady)
-            {
-                ClientId = clientId;
-                IsReady = isReady;
-            }
-
-            public bool Equals(PlayerReadyStatus other)
-            {
-                throw new NotImplementedException();
-            }
-
-            public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
-            {
-                serializer.SerializeValue(ref ClientId);
-                serializer.SerializeValue(ref IsReady);
-            }
+            _text.gameObject.SetActive(true);
         }
 
-        private NetworkList<PlayerReadyStatus> _readyStatusList;
-        private void Awake()
+        protected override void Start()
         {
-            _readyStatusList = new NetworkList<PlayerReadyStatus>();
-
-            _readyPlayersText.gameObject.SetActive(true);
-            UpdateReadyPlayersText();
-        }
-
-        private void Update()
-        {
-            //Debug.Log($"Clientes listos en la lista: {CalcReadyCount()} {_readyStatusList.Count}");
-        }
-
-        private void Start()
-        {
+            base.Start();
             if (IsClient)
             {
-                _readyButton.gameObject.SetActive(true);
-                _readyButton.onClick.AddListener(OnReadyClicked);
+                _button.gameObject.SetActive(true);
             }
         }
 
-        public override void OnNetworkSpawn()
-        {
-            base.OnNetworkSpawn();
-            _readyStatusList.OnListChanged += OnReadyCountChanged;
-            if (IsServer)
-            {
-                //Debug.Log("Entro en network spawn");
-                NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
-                NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnected;
+        #region Button
 
-                if (IsClient)
-                {
-                    OnClientConnected(NetworkManager.Singleton.LocalClientId);
-                }
-            }
-        }
-
-        public override void OnDestroy()
-        {
-            if (IsServer)
-            {
-                NetworkManager.Singleton.OnClientConnectedCallback -= OnClientConnected;
-                NetworkManager.Singleton.OnClientDisconnectCallback -= OnClientDisconnected;
-            }
-            base.OnDestroy();
-        }
-
-        #region ClientConnection
-        private void OnClientConnected(ulong clientId)
-        {
-            _readyStatusList.Add(new PlayerReadyStatus { ClientId = clientId, IsReady = false });
-        }
-
-        private void OnClientDisconnected(ulong clientId)
-        {
-            for (int i = 0; i < _readyStatusList.Count; i++)
-            {
-                if (_readyStatusList[i].ClientId == clientId)
-                {
-                    _readyStatusList.RemoveAt(i);
-                    break;
-                }
-            }
-        }
-
-        #endregion
-
-        #region Ready
-        private void OnReadyClicked()
-        {
-            Debug.Log("Pulsaste Ready");
-            SetPlayerReadyServerRpc(NetworkManager.Singleton.LocalClientId);
-        }
-
-        [ServerRpc(RequireOwnership = false)]
-        private void SetPlayerReadyServerRpc(ulong clientId)
-        {
-            // Cambia el estado de "Listo" del cliente en la lista
-            for (int i = 0; i < _readyStatusList.Count; i++)
-            {
-                if (_readyStatusList[i].ClientId == clientId)
-                {
-                    var status = _readyStatusList[i];
-                    status.IsReady = !status.IsReady;
-                    _readyStatusList[i] = status;
-                    break;
-                }
-            }
-        }
-
-        private void OnReadyCountChanged(NetworkListEvent<PlayerReadyStatus> readyCountChanged)
+        protected override void OnClickedCountChanged(NetworkListEvent<ButtonClickStatus> playAgainCountChanged)
         {
             if (IsServer)
             {
                 bool allReady = true;
 
-                foreach (var status in _readyStatusList)
+                foreach (var status in _buttonClickStatusList)
                 {
-                    if (!status.IsReady)
+                    if (!status.ButtonClicked)
                     {
                         allReady = false;
                         break;
                     }
                 }
 
-                if (allReady && _readyStatusList.Count > 1)
+                if (allReady && _buttonClickStatusList.Count > 1)
                 {
-                    StartGame();
+                    FinalFunction();
                 }
             }
 
-            UpdateReadyPlayersText();
-            UpdateLocalReadyText();
+            UpdateText();
+            UpdateLocalText();
         }
 
-        private int CalcReadyCount()
+        protected override void UpdateText()
         {
-            int readyCount = 0;
-            foreach (var status in _readyStatusList)
-            {
-                if (status.IsReady)
-                {
-                    readyCount++;
-                }
-            }
-            return readyCount;
+            _text.text = $"Ready players: {CalcClickedCount()} / {_buttonClickStatusList.Count}";
         }
 
-        private void UpdateReadyPlayersText()
-        {
-            _readyPlayersText.text = $"Ready players: {CalcReadyCount()} / {_readyStatusList.Count}";
-        }
-
-        private void UpdateLocalReadyText()
+        protected override void UpdateLocalText()
         {
             if (IsClient)
             {
                 ulong clientId = NetworkManager.Singleton.LocalClientId;
-                foreach (var status in _readyStatusList)
+                foreach (var status in _buttonClickStatusList)
                 {
                     if (status.ClientId == clientId)
                     {
-                        if(_readyButton.GetComponentInChildren<TextMeshProUGUI>().text != null)
+                        if (_button.GetComponentInChildren<TextMeshProUGUI>().text != null)
                         {
-                            _readyButton.GetComponentInChildren<TextMeshProUGUI>().text = status.IsReady ? "Ready!" : "Not Ready";
+                            _button.GetComponentInChildren<TextMeshProUGUI>().text = status.ButtonClicked ? "Ready!" : "Not ready";
                         }
-                        Debug.Log(status.IsReady ? "Ready!" : "Not Ready");
+                        Debug.Log(status.ButtonClicked ? "Ready!" : "Not ready");
                         break;
                     }
                 }
@@ -196,7 +81,13 @@ namespace Tankito
 
         #endregion
 
-        #region Start
+        #region ButtonFunc
+
+        protected override void FinalFunction()
+        {
+            base.FinalFunction();
+            StartGame();
+        }
 
         private void StartGame()
         {
