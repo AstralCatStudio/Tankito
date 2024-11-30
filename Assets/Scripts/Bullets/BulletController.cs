@@ -36,11 +36,10 @@ namespace Tankito {
             if (triggerOnSpawnEvents) OnSpawn?.Invoke(this);
         }
 
-        private void OnDisable()
+        protected override void OnDisable()
         {
             GetComponent<BulletSimulationObject>().OnComputeKinematics -= MoveBullet;
-            
-            ResetBulletData();
+            base.OnDisable();
         }
 
         protected override void MoveBullet(float deltaTime)

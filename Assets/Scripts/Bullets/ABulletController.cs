@@ -24,6 +24,11 @@ public abstract class ABulletController : MonoBehaviour
         m_rb = GetComponent<Rigidbody2D>();
     }
 
+    protected virtual void OnDisable()
+    {
+        ResetBulletData();
+    }
+
     private void Update()
     {
         transform.rotation = Quaternion.LookRotation(new Vector3(0, 0, 1), m_rb.velocity.normalized);
