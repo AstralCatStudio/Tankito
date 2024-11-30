@@ -43,12 +43,12 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 250
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -121,7 +121,154 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: spr_mejillon_dispara_strip7_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bbad568131574bf4a995b8a1ab9af4da
+      internalID: -1280937580
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_mejillon_dispara_strip7_1
+      rect:
+        serializedVersion: 2
+        x: 450
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d23a536f9a6b3e14caeaa5be5ebe6cd4
+      internalID: -590211527
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_mejillon_dispara_strip7_2
+      rect:
+        serializedVersion: 2
+        x: 900
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d15a3b9fba53bd74189b2ee13e6c0cda
+      internalID: -598746676
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_mejillon_dispara_strip7_3
+      rect:
+        serializedVersion: 2
+        x: 1350
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7f1a200f43f64e346a71ad4b960c74f3
+      internalID: 37860344
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_mejillon_dispara_strip7_4
+      rect:
+        serializedVersion: 2
+        x: 1800
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e231cba36539d4a439c456f9bb6fe6c7
+      internalID: -1355427252
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_mejillon_dispara_strip7_5
+      rect:
+        serializedVersion: 2
+        x: 2250
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1270b4e8566cb19468516ef2f4f01bf8
+      internalID: 844885529
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_mejillon_dispara_strip7_6
+      rect:
+        serializedVersion: 2
+        x: 2700
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1be575443dc5c37418d53063a2e2ffa6
+      internalID: -473408319
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -132,7 +279,14 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      spr_mejillon_dispara_strip7_0: -1280937580
+      spr_mejillon_dispara_strip7_1: -590211527
+      spr_mejillon_dispara_strip7_2: -598746676
+      spr_mejillon_dispara_strip7_3: 37860344
+      spr_mejillon_dispara_strip7_4: -1355427252
+      spr_mejillon_dispara_strip7_5: 844885529
+      spr_mejillon_dispara_strip7_6: -473408319
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

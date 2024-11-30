@@ -43,12 +43,12 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 250
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -121,7 +121,385 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: spr_pez_gota_idle_strip18_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b792936023538b848ba8754e072e6312
+      internalID: 502945325
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_pez_gota_idle_strip18_1
+      rect:
+        serializedVersion: 2
+        x: 450
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 37c2d39fb1bccc7499281408c0d3d67c
+      internalID: 1149276685
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_pez_gota_idle_strip18_2
+      rect:
+        serializedVersion: 2
+        x: 900
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8004684e6391dc84094d51c449d9c2d6
+      internalID: 1110925002
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_pez_gota_idle_strip18_3
+      rect:
+        serializedVersion: 2
+        x: 1350
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 408c4a8faa48a1c4a818438b678eb2d1
+      internalID: 1605705578
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_pez_gota_idle_strip18_4
+      rect:
+        serializedVersion: 2
+        x: 1800
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c5b24cadcba10a245bbf2b890109f24c
+      internalID: -790793039
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_pez_gota_idle_strip18_5
+      rect:
+        serializedVersion: 2
+        x: 2250
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 63e1c67504135c64889c831cd0002e1e
+      internalID: -369991013
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_pez_gota_idle_strip18_6
+      rect:
+        serializedVersion: 2
+        x: 2700
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 810bee19e1425914c812eb719d649bfa
+      internalID: -1890323677
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_pez_gota_idle_strip18_7
+      rect:
+        serializedVersion: 2
+        x: 3150
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 42951f8f9a33ed040b9d1ef14b51d8b5
+      internalID: -1418834335
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_pez_gota_idle_strip18_8
+      rect:
+        serializedVersion: 2
+        x: 3600
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0b10169832c7757409ba6e85ff95f628
+      internalID: 1038666756
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_pez_gota_idle_strip18_9
+      rect:
+        serializedVersion: 2
+        x: 4050
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3decb16fa2754a945b342ecdbdc72434
+      internalID: 1696440839
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_pez_gota_idle_strip18_10
+      rect:
+        serializedVersion: 2
+        x: 4500
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c67e187ab0ed23a438d8fa00115d2027
+      internalID: 1605407865
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_pez_gota_idle_strip18_11
+      rect:
+        serializedVersion: 2
+        x: 4950
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4c55f04f4714c584ca2600c30fe35390
+      internalID: 603865036
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_pez_gota_idle_strip18_12
+      rect:
+        serializedVersion: 2
+        x: 5400
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 49e9fad15666f5d499e3faabe1348781
+      internalID: -1091800582
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_pez_gota_idle_strip18_13
+      rect:
+        serializedVersion: 2
+        x: 5850
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e1073fd7959c8f14cbe43755d11a7c06
+      internalID: -1656041666
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_pez_gota_idle_strip18_14
+      rect:
+        serializedVersion: 2
+        x: 6300
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cbbd310a6b6f32a428f34dfb81b90b40
+      internalID: 272178344
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_pez_gota_idle_strip18_15
+      rect:
+        serializedVersion: 2
+        x: 6750
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: aa146b93b3e267649baf798126527d90
+      internalID: -416349522
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_pez_gota_idle_strip18_16
+      rect:
+        serializedVersion: 2
+        x: 7200
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 336e93db182b8c5498371b6bf63d104a
+      internalID: -99907388
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_pez_gota_idle_strip18_17
+      rect:
+        serializedVersion: 2
+        x: 7650
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7049d0ee45dad2245a39bfb2856d8850
+      internalID: 1792393078
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -132,7 +510,25 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      spr_pez_gota_idle_strip18_0: 502945325
+      spr_pez_gota_idle_strip18_1: 1149276685
+      spr_pez_gota_idle_strip18_10: 1605407865
+      spr_pez_gota_idle_strip18_11: 603865036
+      spr_pez_gota_idle_strip18_12: -1091800582
+      spr_pez_gota_idle_strip18_13: -1656041666
+      spr_pez_gota_idle_strip18_14: 272178344
+      spr_pez_gota_idle_strip18_15: -416349522
+      spr_pez_gota_idle_strip18_16: -99907388
+      spr_pez_gota_idle_strip18_17: 1792393078
+      spr_pez_gota_idle_strip18_2: 1110925002
+      spr_pez_gota_idle_strip18_3: 1605705578
+      spr_pez_gota_idle_strip18_4: -790793039
+      spr_pez_gota_idle_strip18_5: -369991013
+      spr_pez_gota_idle_strip18_6: -1890323677
+      spr_pez_gota_idle_strip18_7: -1418834335
+      spr_pez_gota_idle_strip18_8: 1038666756
+      spr_pez_gota_idle_strip18_9: 1696440839
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

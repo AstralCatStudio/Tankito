@@ -43,12 +43,12 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 250
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -121,7 +121,427 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: spr_mejillon_idle_strip20_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5e923a9ef4887aa49bc13ae8c2116ea7
+      internalID: 898877391
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_mejillon_idle_strip20_1
+      rect:
+        serializedVersion: 2
+        x: 450
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 43f9ad23a0424604887a7103f5e63099
+      internalID: -947471719
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_mejillon_idle_strip20_2
+      rect:
+        serializedVersion: 2
+        x: 900
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1578e37678412a94eb71a41883e79f6b
+      internalID: 1945705156
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_mejillon_idle_strip20_3
+      rect:
+        serializedVersion: 2
+        x: 1350
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5fff6ef36d807354b8a43227a2254903
+      internalID: -1789147622
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_mejillon_idle_strip20_4
+      rect:
+        serializedVersion: 2
+        x: 1800
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e4d67dad7b44a6c43ac6c7386b191e85
+      internalID: -861565408
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_mejillon_idle_strip20_5
+      rect:
+        serializedVersion: 2
+        x: 2250
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f72cd22c42eb0554c91a812ba65ca3ad
+      internalID: 938843745
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_mejillon_idle_strip20_6
+      rect:
+        serializedVersion: 2
+        x: 2700
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1ad5877c327bb96489af6668a1d86960
+      internalID: 1284294092
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_mejillon_idle_strip20_7
+      rect:
+        serializedVersion: 2
+        x: 3150
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bf45ead4db70b664ea004cc9bdda9923
+      internalID: -1283346817
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_mejillon_idle_strip20_8
+      rect:
+        serializedVersion: 2
+        x: 3600
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cb9f5daaf335342438809e766761a744
+      internalID: 57212274
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_mejillon_idle_strip20_9
+      rect:
+        serializedVersion: 2
+        x: 4050
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c574c35f3688fea4bae06bbbc7dd56d8
+      internalID: 336148980
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_mejillon_idle_strip20_10
+      rect:
+        serializedVersion: 2
+        x: 4500
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ea1125ae7f6098049a08810c16be27cd
+      internalID: 274351317
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_mejillon_idle_strip20_11
+      rect:
+        serializedVersion: 2
+        x: 4950
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b2b8d3edc5d65e64b8330cc3cc854e25
+      internalID: -432570016
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_mejillon_idle_strip20_12
+      rect:
+        serializedVersion: 2
+        x: 5400
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 764b45e92e397154a81f5331c41ad83b
+      internalID: 1159884175
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_mejillon_idle_strip20_13
+      rect:
+        serializedVersion: 2
+        x: 5850
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6431257284054a540be8236bc0ddc6ab
+      internalID: -1189001302
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_mejillon_idle_strip20_14
+      rect:
+        serializedVersion: 2
+        x: 6300
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c08ccb99b25e14349b852981053d1e77
+      internalID: -344965734
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_mejillon_idle_strip20_15
+      rect:
+        serializedVersion: 2
+        x: 6750
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c16f55c8fa0fa1149b0d4d79fc063ea3
+      internalID: -1499250807
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_mejillon_idle_strip20_16
+      rect:
+        serializedVersion: 2
+        x: 7200
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 22a036099301b5143b0330f6e43701f6
+      internalID: 331786698
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_mejillon_idle_strip20_17
+      rect:
+        serializedVersion: 2
+        x: 7650
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 073de27ab4832b642860386e48c9f37d
+      internalID: 2108779677
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_mejillon_idle_strip20_18
+      rect:
+        serializedVersion: 2
+        x: 8100
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f028d6e06ab4cb9458cb52999c2832b3
+      internalID: 588157341
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_mejillon_idle_strip20_19
+      rect:
+        serializedVersion: 2
+        x: 8550
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 64772baa1edda8c438953dea86b58fdb
+      internalID: -1608157112
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -132,7 +552,27 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      spr_mejillon_idle_strip20_0: 898877391
+      spr_mejillon_idle_strip20_1: -947471719
+      spr_mejillon_idle_strip20_10: 274351317
+      spr_mejillon_idle_strip20_11: -432570016
+      spr_mejillon_idle_strip20_12: 1159884175
+      spr_mejillon_idle_strip20_13: -1189001302
+      spr_mejillon_idle_strip20_14: -344965734
+      spr_mejillon_idle_strip20_15: -1499250807
+      spr_mejillon_idle_strip20_16: 331786698
+      spr_mejillon_idle_strip20_17: 2108779677
+      spr_mejillon_idle_strip20_18: 588157341
+      spr_mejillon_idle_strip20_19: -1608157112
+      spr_mejillon_idle_strip20_2: 1945705156
+      spr_mejillon_idle_strip20_3: -1789147622
+      spr_mejillon_idle_strip20_4: -861565408
+      spr_mejillon_idle_strip20_5: 938843745
+      spr_mejillon_idle_strip20_6: 1284294092
+      spr_mejillon_idle_strip20_7: -1283346817
+      spr_mejillon_idle_strip20_8: 57212274
+      spr_mejillon_idle_strip20_9: 336148980
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

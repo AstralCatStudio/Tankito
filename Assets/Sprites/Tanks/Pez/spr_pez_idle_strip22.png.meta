@@ -43,12 +43,12 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 250
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -121,7 +121,469 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: spr_pez_idle_strip22_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 50dd81bc70742f242844a55726056e63
+      internalID: -1186444418
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_pez_idle_strip22_1
+      rect:
+        serializedVersion: 2
+        x: 450
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9a29e5de1ddf1ec4595e9fa8e7b498ab
+      internalID: 1612211219
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_pez_idle_strip22_2
+      rect:
+        serializedVersion: 2
+        x: 900
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4b56257f6a5a5a04c8a07409ba2f5e67
+      internalID: 787724469
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_pez_idle_strip22_3
+      rect:
+        serializedVersion: 2
+        x: 1350
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 35b2b9350df062e41b1e9205972cc113
+      internalID: 1313314811
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_pez_idle_strip22_4
+      rect:
+        serializedVersion: 2
+        x: 1800
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4b253a11bcca0a14395bf129c7961a70
+      internalID: -600037108
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_pez_idle_strip22_5
+      rect:
+        serializedVersion: 2
+        x: 2250
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a80ad98c7addd6e43bc6e781cb668d2b
+      internalID: 479346582
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_pez_idle_strip22_6
+      rect:
+        serializedVersion: 2
+        x: 2700
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 99872aa8935cfe64c8e5f3ffa3ac6560
+      internalID: -770267654
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_pez_idle_strip22_7
+      rect:
+        serializedVersion: 2
+        x: 3150
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a24d3f7345ade8047b09ca75aadd4fe9
+      internalID: 1407708063
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_pez_idle_strip22_8
+      rect:
+        serializedVersion: 2
+        x: 3600
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2ea0f15532936ef43b18ee638117a327
+      internalID: -1848434394
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_pez_idle_strip22_9
+      rect:
+        serializedVersion: 2
+        x: 4050
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1956af447cd216845b6134f22d5fbba3
+      internalID: -670808599
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_pez_idle_strip22_10
+      rect:
+        serializedVersion: 2
+        x: 4500
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9145ccd96e8232f4fb9c88c1815b9d7f
+      internalID: -1274072960
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_pez_idle_strip22_11
+      rect:
+        serializedVersion: 2
+        x: 4950
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bcc4603d5c0d49d449043494d25a827a
+      internalID: 1571814963
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_pez_idle_strip22_12
+      rect:
+        serializedVersion: 2
+        x: 5400
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 72121e5a4df5afd4eac299cb55ac550f
+      internalID: -310058820
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_pez_idle_strip22_13
+      rect:
+        serializedVersion: 2
+        x: 5850
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9ae283566175d5f47ab7bdc541ab2cdb
+      internalID: 1633481236
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_pez_idle_strip22_14
+      rect:
+        serializedVersion: 2
+        x: 6300
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8fa4f17145f82b64a83f026e28c92548
+      internalID: 454014300
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_pez_idle_strip22_15
+      rect:
+        serializedVersion: 2
+        x: 6750
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9fd7ad6b9ee000c44a8740b0c6f74c4a
+      internalID: -1146843404
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_pez_idle_strip22_16
+      rect:
+        serializedVersion: 2
+        x: 7200
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3cee3230c55d2134dab119f2e737b79c
+      internalID: 1296039892
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_pez_idle_strip22_17
+      rect:
+        serializedVersion: 2
+        x: 7650
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 045b0a2cd1251474bae72e4348981e53
+      internalID: 397495278
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_pez_idle_strip22_18
+      rect:
+        serializedVersion: 2
+        x: 8100
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e47f3b0e81beccb4798cb0bac7908e40
+      internalID: 487263345
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_pez_idle_strip22_19
+      rect:
+        serializedVersion: 2
+        x: 8550
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 11ec9aba976a2de43b555aac0d9af7b0
+      internalID: -1932323221
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_pez_idle_strip22_20
+      rect:
+        serializedVersion: 2
+        x: 9000
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4b0086cde1586b2499f191777cb03fff
+      internalID: -1329407448
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_pez_idle_strip22_21
+      rect:
+        serializedVersion: 2
+        x: 9450
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e986e058928df504c80256ce06bcdcdf
+      internalID: 1365060163
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -132,7 +594,29 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      spr_pez_idle_strip22_0: -1186444418
+      spr_pez_idle_strip22_1: 1612211219
+      spr_pez_idle_strip22_10: -1274072960
+      spr_pez_idle_strip22_11: 1571814963
+      spr_pez_idle_strip22_12: -310058820
+      spr_pez_idle_strip22_13: 1633481236
+      spr_pez_idle_strip22_14: 454014300
+      spr_pez_idle_strip22_15: -1146843404
+      spr_pez_idle_strip22_16: 1296039892
+      spr_pez_idle_strip22_17: 397495278
+      spr_pez_idle_strip22_18: 487263345
+      spr_pez_idle_strip22_19: -1932323221
+      spr_pez_idle_strip22_2: 787724469
+      spr_pez_idle_strip22_20: -1329407448
+      spr_pez_idle_strip22_21: 1365060163
+      spr_pez_idle_strip22_3: 1313314811
+      spr_pez_idle_strip22_4: -600037108
+      spr_pez_idle_strip22_5: 479346582
+      spr_pez_idle_strip22_6: -770267654
+      spr_pez_idle_strip22_7: 1407708063
+      spr_pez_idle_strip22_8: -1848434394
+      spr_pez_idle_strip22_9: -670808599
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

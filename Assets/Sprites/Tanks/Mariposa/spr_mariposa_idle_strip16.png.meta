@@ -43,12 +43,12 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 250
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -121,7 +121,343 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: spr_mariposa_idle_strip16_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3adf42e8b70da744ba04b097f373ca97
+      internalID: 262743876
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_mariposa_idle_strip16_1
+      rect:
+        serializedVersion: 2
+        x: 450
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 618feb4a64091694d94e22458f2cc084
+      internalID: -622027815
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_mariposa_idle_strip16_2
+      rect:
+        serializedVersion: 2
+        x: 900
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 67928e4d01c750f468d59f943deea25f
+      internalID: -1912528253
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_mariposa_idle_strip16_3
+      rect:
+        serializedVersion: 2
+        x: 1350
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5e6148d42a813044db3aab63da12ec46
+      internalID: -1716476801
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_mariposa_idle_strip16_4
+      rect:
+        serializedVersion: 2
+        x: 1800
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 11aadbc6febc1b741859b31bae94334a
+      internalID: 124391525
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_mariposa_idle_strip16_5
+      rect:
+        serializedVersion: 2
+        x: 2250
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fce8aebe795cc7146a9f7d12ebbe5b18
+      internalID: -328484604
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_mariposa_idle_strip16_6
+      rect:
+        serializedVersion: 2
+        x: 2700
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9b27bd964cd60724192b44d884a0d78d
+      internalID: 640367556
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_mariposa_idle_strip16_7
+      rect:
+        serializedVersion: 2
+        x: 3150
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7866f1d575297ef448922d989d50f2ec
+      internalID: 1840360161
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_mariposa_idle_strip16_8
+      rect:
+        serializedVersion: 2
+        x: 3600
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cac2dd62c9df39c4da61fbb071f951bd
+      internalID: 1907006782
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_mariposa_idle_strip16_9
+      rect:
+        serializedVersion: 2
+        x: 4050
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d883fe1b784962b48858fbe606b7943f
+      internalID: 407057190
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_mariposa_idle_strip16_10
+      rect:
+        serializedVersion: 2
+        x: 4500
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 72b373120bddd6d4b8bff5f9102766a9
+      internalID: 1669796469
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_mariposa_idle_strip16_11
+      rect:
+        serializedVersion: 2
+        x: 4950
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 08a888bf54de2fc4eae39281089c5ea8
+      internalID: -1134834333
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_mariposa_idle_strip16_12
+      rect:
+        serializedVersion: 2
+        x: 5400
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1d2710d5ca147ee4085a06c9b0978058
+      internalID: 1288339794
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_mariposa_idle_strip16_13
+      rect:
+        serializedVersion: 2
+        x: 5850
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ef28e6109e1368841b34f420fef7e5d2
+      internalID: 79802021
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_mariposa_idle_strip16_14
+      rect:
+        serializedVersion: 2
+        x: 6300
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d23d4168c31746449a72ce97770bcda4
+      internalID: 1544757007
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_mariposa_idle_strip16_15
+      rect:
+        serializedVersion: 2
+        x: 6750
+        y: 0
+        width: 450
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d2298725791770c4d8cf1c2864ccc312
+      internalID: -2049970423
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -132,7 +468,23 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      spr_mariposa_idle_strip16_0: 262743876
+      spr_mariposa_idle_strip16_1: -622027815
+      spr_mariposa_idle_strip16_10: 1669796469
+      spr_mariposa_idle_strip16_11: -1134834333
+      spr_mariposa_idle_strip16_12: 1288339794
+      spr_mariposa_idle_strip16_13: 79802021
+      spr_mariposa_idle_strip16_14: 1544757007
+      spr_mariposa_idle_strip16_15: -2049970423
+      spr_mariposa_idle_strip16_2: -1912528253
+      spr_mariposa_idle_strip16_3: -1716476801
+      spr_mariposa_idle_strip16_4: 124391525
+      spr_mariposa_idle_strip16_5: -328484604
+      spr_mariposa_idle_strip16_6: 640367556
+      spr_mariposa_idle_strip16_7: 1840360161
+      spr_mariposa_idle_strip16_8: 1907006782
+      spr_mariposa_idle_strip16_9: 407057190
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
