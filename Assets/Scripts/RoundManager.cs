@@ -632,6 +632,7 @@ namespace Tankito
             m_startedGame = false;
             //RoundUI.Instance.ActivateRankingGUI(false);
             RoundUI.Instance.ActivateEndExitButton(true);
+            RoundUI.Instance.ActivatePlayAgainGUI(true);
         }
 
         [ClientRpc]

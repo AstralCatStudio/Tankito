@@ -21,6 +21,7 @@ public class RoundUI : Singleton<RoundUI>
     public GameObject LobbyInfo;
     public GameObject SettingsButton;
     public GameObject SettingsMenu;
+    public GameObject PlayAgain;
 
     #region Ranking
     public void ActivateRankingGUI(bool active)
@@ -139,6 +140,15 @@ public class RoundUI : Singleton<RoundUI>
         {
             FindObjectOfType<PlayerInput>(true).gameObject.SetActive(true);
         }
+    }
+
+    #endregion
+
+    #region PlayAgain
+
+    public void ActivatePlayAgainGUI(bool active)
+    {
+        PlayAgain.GetComponent<PlayAgainButton>().ActivatePlayAgain(active);
     }
 
     #endregion
