@@ -35,7 +35,7 @@ public class BodyGuardBehaviour : AGenericBehaviour
     }
 
     #region States
-    public Status ProtectAlly()
+    public Status ProtectAllyState()
     {
         Vector2 allyToBulletDir = (bulletToStop.transform.position - allyToProtect.transform.position).normalized;
         Vector2 newPosition = (Vector2)allyToProtect.transform.position + allyToBulletDir * protectDistance;

@@ -586,7 +586,7 @@ MonoBehaviour:
         references:
         - fieldName: Perception
           value:
-            rid: -2
+            rid: 4463991960632033281
           fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
             Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         - fieldName: Action
@@ -606,7 +606,7 @@ MonoBehaviour:
         references:
         - fieldName: Perception
           value:
-            rid: -2
+            rid: 4463991960632033283
           fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
             Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         - fieldName: Action
@@ -626,7 +626,7 @@ MonoBehaviour:
         references:
         - fieldName: Perception
           value:
-            rid: -2
+            rid: 4463991960632033286
           fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
             Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         - fieldName: Action
@@ -660,13 +660,13 @@ MonoBehaviour:
         - 3a644325-9bdc-4e54-adcf-95bd3355e2cc
       - name: POPShoot
         id: 5161a345-bb40-4594-b526-648f988afda2
-        position: {x: 245.6, y: 1476.7999}
+        position: {x: 261.6, y: 1493.6}
         node:
           rid: 1877755449731448848
         references:
         - fieldName: Perception
           value:
-            rid: -2
+            rid: 4463991960632033285
           fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
             Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         - fieldName: Action
@@ -679,13 +679,13 @@ MonoBehaviour:
         childIds: []
       - name: POPAim
         id: 9ca5d9f0-daff-44f2-a892-a65f9eae0e60
-        position: {x: 258.4, y: 1042.3999}
+        position: {x: 273.6, y: 1053.6}
         node:
           rid: 1877755449731448849
         references:
         - fieldName: Perception
           value:
-            rid: -2
+            rid: 4463991960632033284
           fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
             Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         - fieldName: Action
@@ -704,7 +704,7 @@ MonoBehaviour:
         references:
         - fieldName: Perception
           value:
-            rid: -2
+            rid: 4463991960632033280
           fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
             Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         - fieldName: Action
@@ -724,7 +724,7 @@ MonoBehaviour:
         references:
         - fieldName: Perception
           value:
-            rid: -2
+            rid: 4463991960632033282
           fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
             Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         - fieldName: Action
@@ -755,8 +755,8 @@ MonoBehaviour:
           componentName: 
           methodName: 
         update:
-          componentName: 
-          methodName: 
+          componentName: BodyGuardBehaviour
+          methodName: IdleState
         stop:
           componentName: 
           methodName: 
@@ -776,8 +776,8 @@ MonoBehaviour:
           componentName: 
           methodName: 
         update:
-          componentName: 
-          methodName: 
+          componentName: BodyGuardBehaviour
+          methodName: ChaseState
         stop:
           componentName: 
           methodName: 
@@ -797,8 +797,8 @@ MonoBehaviour:
           componentName: 
           methodName: 
         update:
-          componentName: 
-          methodName: 
+          componentName: BodyGuardBehaviour
+          methodName: ProtectAllyState
         stop:
           componentName: 
           methodName: 
@@ -818,8 +818,8 @@ MonoBehaviour:
           componentName: 
           methodName: 
         update:
-          componentName: 
-          methodName: 
+          componentName: BodyGuardBehaviour
+          methodName: AimState
         stop:
           componentName: 
           methodName: 
@@ -839,8 +839,8 @@ MonoBehaviour:
           componentName: 
           methodName: 
         update:
-          componentName: 
-          methodName: 
+          componentName: BodyGuardBehaviour
+          methodName: ShootState
         stop:
           componentName: 
           methodName: 
@@ -853,19 +853,19 @@ MonoBehaviour:
     - rid: 1877755449731448843
       type: {class: StateTransition, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
       data:
-        StatusFlags: 0
+        StatusFlags: -1
     - rid: 1877755449731448844
       type: {class: StateTransition, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
       data:
-        StatusFlags: 0
+        StatusFlags: -1
     - rid: 1877755449731448845
       type: {class: PushTransition, ns: BehaviourAPI.StateMachines.StackFSMs, asm: BehaviourAPI.StateMachines}
       data:
-        StatusFlags: 0
+        StatusFlags: -1
     - rid: 1877755449731448846
       type: {class: PushTransition, ns: BehaviourAPI.StateMachines.StackFSMs, asm: BehaviourAPI.StateMachines}
       data:
-        StatusFlags: 0
+        StatusFlags: -1
     - rid: 1877755449731448847
       type: {class: StateTransition, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
       data:
@@ -873,15 +873,15 @@ MonoBehaviour:
     - rid: 1877755449731448848
       type: {class: PopTransition, ns: BehaviourAPI.StateMachines.StackFSMs, asm: BehaviourAPI.StateMachines}
       data:
-        StatusFlags: 0
+        StatusFlags: -1
     - rid: 1877755449731448849
       type: {class: PopTransition, ns: BehaviourAPI.StateMachines.StackFSMs, asm: BehaviourAPI.StateMachines}
       data:
-        StatusFlags: 0
+        StatusFlags: -1
     - rid: 1877755449731448850
       type: {class: StateTransition, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
       data:
-        StatusFlags: 0
+        StatusFlags: -1
     - rid: 1877755449731448851
       type: {class: StateTransition, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
       data:
@@ -893,8 +893,8 @@ MonoBehaviour:
           componentName: 
           methodName: 
         check:
-          componentName: 
-          methodName: 
+          componentName: BodyGuardBehaviour
+          methodName: CheckIdleToChase
         reset:
           componentName: 
           methodName: 
@@ -911,8 +911,134 @@ MonoBehaviour:
           componentName: 
           methodName: 
         check:
-          componentName: GenericStates
+          componentName: BodyGuardBehaviour
+          methodName: CheckAimToShoot
+        reset:
+          componentName: 
           methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
+    - rid: 4463991960632033280
+      type: {class: CustomPerception, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        init:
+          componentName: 
+          methodName: 
+        check:
+          componentName: BodyGuardBehaviour
+          methodName: CheckChaseToIdle
+        reset:
+          componentName: 
+          methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
+    - rid: 4463991960632033281
+      type: {class: CustomPerception, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        init:
+          componentName: 
+          methodName: 
+        check:
+          componentName: BodyGuardBehaviour
+          methodName: CheckChaseToPortect
+        reset:
+          componentName: 
+          methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
+    - rid: 4463991960632033282
+      type: {class: CustomPerception, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        init:
+          componentName: 
+          methodName: 
+        check:
+          componentName: BodyGuardBehaviour
+          methodName: CheckProtectToChase
+        reset:
+          componentName: 
+          methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
+    - rid: 4463991960632033283
+      type: {class: CustomPerception, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        init:
+          componentName: 
+          methodName: 
+        check:
+          componentName: BodyGuardBehaviour
+          methodName: CheckChaseToAim
+        reset:
+          componentName: 
+          methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
+    - rid: 4463991960632033284
+      type: {class: CustomPerception, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        init:
+          componentName: 
+          methodName: 
+        check:
+          componentName: BodyGuardBehaviour
+          methodName: CheckAimPOP
+        reset:
+          componentName: 
+          methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
+    - rid: 4463991960632033285
+      type: {class: CustomPerception, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        init:
+          componentName: 
+          methodName: 
+        check:
+          componentName: BodyGuardBehaviour
+          methodName: CheckShootPOP
+        reset:
+          componentName: 
+          methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
+    - rid: 4463991960632033286
+      type: {class: CustomPerception, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        init:
+          componentName: 
+          methodName: 
+        check:
+          componentName: BodyGuardBehaviour
+          methodName: CheckChaseToAim
         reset:
           componentName: 
           methodName: 
