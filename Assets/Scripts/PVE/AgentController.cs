@@ -10,12 +10,13 @@ namespace Tankito.SinglePlayer
     public class AgentController : ATankController
     {
         NavMeshAgent agent;
+        [SerializeField] public NpcData npcData;
         protected override void Start()
         {
             base.Start();
             agent = GetComponent<NavMeshAgent>();
-            agent.speed = m_speed;
-            agent.angularSpeed = m_rotationSpeed;
+            agent.speed = npcData.speed;
+            agent.angularSpeed = npcData.angularSpeed;
         }
 
         private void FixedUpdate()

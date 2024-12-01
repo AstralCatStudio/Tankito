@@ -5,16 +5,16 @@ using UnityEngine;
 public class AreaDetection : MonoBehaviour
 {
     [SerializeField] string subjectTag;
-    public delegate void SubjectDetected();
+    public delegate void SubjectDetected(GameObject gameObject);
     public event SubjectDetected OnSubjectDetected;
-    public delegate void SubjectDissapear();
+    public delegate void SubjectDissapear(GameObject gameObject);
     public event SubjectDissapear OnSubjectDissapear;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.gameObject.tag == subjectTag)
         {
-            OnSubjectDetected?.Invoke();
+            OnSubjectDetected?.Invoke(collision.gameObject);
         }
     }
 
@@ -22,7 +22,7 @@ public class AreaDetection : MonoBehaviour
     {
         if (collision.gameObject.tag == subjectTag)
         {
-            OnSubjectDissapear?.Invoke();
+            OnSubjectDissapear?.Invoke(collision.gameObject);
         }
     }
 }

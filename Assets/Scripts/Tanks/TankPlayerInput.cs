@@ -31,7 +31,7 @@ namespace Tankito
         /// </summary>
         /// <returns> Last replayed input tick.</returns>
         int StopInputReplay();
-
+        void SetCurrentInput(InputPayload newCurrentInput);
     }
 
     public class TankPlayerInput : MonoBehaviour, ITankInput
@@ -110,6 +110,11 @@ namespace Tankito
         public InputPayload GetCurrentInput()
         {
             return m_currentInput;
+        }
+
+        public void SetCurrentInput(InputPayload newCurrentInput)
+        {
+            m_currentInput = newCurrentInput;
         }
 
         protected void SetCurrentAction(TankAction action)

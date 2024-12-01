@@ -98,6 +98,11 @@ namespace Tankito.Netcode.Simulation
             return m_currentInput;
         }
 
+        public void SetCurrentInput(InputPayload newCurrentInput)
+        {
+            m_currentInput = newCurrentInput;
+        }
+
         private InputPayload InterpolateInputAt(int tick)
         {
             InputPayload interpInput;

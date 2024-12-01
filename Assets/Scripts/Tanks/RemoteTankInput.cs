@@ -74,6 +74,11 @@ namespace Tankito.Netcode.Simulation
             return m_replayInput;
         }
 
+        public void SetCurrentInput(InputPayload newCurrentInput)
+        {
+            m_replayInput = newCurrentInput;
+        }
+
         public void StartInputReplay(int timestamp) { }
         public int StopInputReplay() { return -1; }
     }
