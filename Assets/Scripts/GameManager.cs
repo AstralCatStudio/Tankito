@@ -99,6 +99,27 @@ namespace Tankito
 
             if (IsServer)
             {
+                // Desconecta al jugador si ya ha empezado la partida
+                if (RoundManager.Instance.IsGameStarted)
+                {
+                    Debug.Log($"Rejecting client {clientId} - Game already in progress");
+                    DisconnectHandler.Instance.DisconnectClientRpc(clientId);
+                    return;
+                }
+
+                // Desconecta al jugador si ya hay 4 jugadores
+                int connectedClients = NetworkManager.Singleton.ConnectedClientsIds.Count;
+                if (connectedClients > 4)
+                {
+                    Debug.Log($"Rejecting client {clientId} - Server full (4 players maximum)");
+                    DisconnectHandler.Instance.DisconnectClientRpc(clientId);
+                    return;
+                }
+            }
+
+
+            if (IsServer)
+            {
                 // IMPORTANTE: Siempre instanciar objetos con la sobrecarga de parentesco para asegurar la escena en la que residen
                 // (evitando su destruccion no intencionada al cargarse sobre escenas aditivas que se descargan posteriormente eg. LA PANTALLA DE CARGA)
                 var newPlayer = Instantiate(m_playerPrefab, GameInstanceParent.Instance.transform).GetComponent<NetworkObject>();
