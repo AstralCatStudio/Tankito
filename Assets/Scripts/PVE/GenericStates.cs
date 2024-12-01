@@ -9,12 +9,11 @@ using UnityEngine.AI;
 
 namespace Tankito.SinglePlayer
 {
-    public class GenericStates : MonoBehaviour
+    public abstract class AGenericStates : MonoBehaviour, ITankInput
     {
         [SerializeField] AgentController agentController;
-        ITankInput npcInput;
         [SerializeField] SinglePlayerBulletCannon cannon;
-        Vector2 nextPosition;
+        InputPayload m_currentInput;
 
         #region TargetList
         List<GameObject>  genericTargets = new List<GameObject>();
@@ -23,11 +22,6 @@ namespace Tankito.SinglePlayer
         #region IdleControllers
         bool patrolPointFound = false;
         #endregion
-
-        private void Start()
-        {
-            npcInput = GetComponent<ITankInput>();    
-        }
 
         private void OnEnable()
         {
@@ -41,22 +35,32 @@ namespace Tankito.SinglePlayer
             transform.GetChild(2).GetComponent<AreaDetection>().OnSubjectDissapear -= OnSubjectDissapear;
         }
 
+        #region TankInputMethods
+        public InputPayload GetInput() { return GetCurrentInput(); }
+
+        public InputPayload GetCurrentInput() {  return m_currentInput; }
+
+        public void SetCurrentInput(InputPayload newCurrentInput) {  m_currentInput = newCurrentInput; }
+
+        public void SetInput(InputPayload input) {  m_currentInput = input; }
+
+        public void StartInputReplay(int timestamp) { }
+
+        public int StopInputReplay() { return 0; }
+        #endregion
+
         #region States
         public Status IdleState()
         {
-            if (new Vector2(transform.position.x, transform.position.y) == nextPosition)
+            if (new Vector2(transform.position.x, transform.position.y) == m_currentInput.moveVector)
             {
                 patrolPointFound = false;
             }
 
             if (!patrolPointFound)
             {
-                nextPosition = PatrolManager.Instance.GetPatrolPoint().position;
+                m_currentInput.moveVector = PatrolManager.Instance.GetPatrolPoint().position;
             }
-
-            InputPayload inputPayload = new InputPayload();
-            inputPayload.moveVector = nextPosition;
-            npcInput.SetCurrentInput(inputPayload);
 
             return Status.Running;
         }
@@ -64,7 +68,12 @@ namespace Tankito.SinglePlayer
         public Status ChaseState()
         {
             Vector2 targetToNpc = transform.position - genericTargets[0].transform.position;
-            if(targetToNpc.magnitude < agentController.npcData.runAwayDistance)
+            Vector2 nextPosition;
+            if (Physics2D.Raycast(genericTargets[0].transform.position, targetToNpc.normalized, targetToNpc.magnitude))
+            {
+                nextPosition = genericTargets[0].transform.position;
+            }
+            else if(targetToNpc.magnitude < agentController.npcData.runAwayDistance)
             {
                 nextPosition = (Vector2)transform.position + targetToNpc.normalized * agentController.npcData.speed;
             }
@@ -78,6 +87,7 @@ namespace Tankito.SinglePlayer
                 nextPosition = closestEdge.position;
                 Debug.Log("Destino ajustado al borde más cercano.");
             }
+            m_currentInput.moveVector = nextPosition;
 
             return Status.Running;
         }
