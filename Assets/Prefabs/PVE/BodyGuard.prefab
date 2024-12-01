@@ -219,7 +219,88 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 2.5
+  m_Radius: 7
+--- !u!1 &3000789042962549272
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1586837793108681955}
+  - component: {fileID: 1430159303257461807}
+  - component: {fileID: 6004854575687995592}
+  m_Layer: 0
+  m_Name: AllyAreaDetection
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1586837793108681955
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3000789042962549272}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 888009893804910289}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!58 &1430159303257461807
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3000789042962549272}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 5
+--- !u!114 &6004854575687995592
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3000789042962549272}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e740d88368a6dec42a3e8c864e05aa55, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  subjectTag: Enemy
 --- !u!1 &4334930600659769314
 GameObject:
   m_ObjectHideFlags: 0
@@ -267,6 +348,7 @@ MonoBehaviour:
   coolDown: 1
   timer: 0
   m_shootRadius: 1
+  m_bulletType: 1
 --- !u!1 &5628852009847825292
 GameObject:
   m_ObjectHideFlags: 0
@@ -278,12 +360,13 @@ GameObject:
   - component: {fileID: 888009893804910289}
   - component: {fileID: 459565616122086013}
   - component: {fileID: 3024964058372513672}
-  - component: {fileID: 4530215511979999629}
-  - component: {fileID: 8406980945491835874}
   - component: {fileID: -1008400128504854972}
+  - component: {fileID: 902194235030755267}
+  - component: {fileID: 1114035891230038398}
+  - component: {fileID: 1506357844035147193}
   m_Layer: 0
   m_Name: BodyGuard
-  m_TagString: Player
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -304,6 +387,7 @@ Transform:
   - {fileID: 1325131283044777444}
   - {fileID: 7280126195782352299}
   - {fileID: 2070551071268552640}
+  - {fileID: 1586837793108681955}
   - {fileID: 9036138512693253537}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -369,91 +453,6 @@ CircleCollider2D:
   m_Offset: {x: -0.35260153, y: 0}
   serializedVersion: 2
   m_Radius: 0.6026015
---- !u!114 &4530215511979999629
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5628852009847825292}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f73756c709b76c346a32499696a44495, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_inputReplayTick: -1
-  m_tankController: {fileID: 8406980945491835874}
-  m_turretAnimator: {fileID: 4784920827817719129}
-  m_hullAnimator: {fileID: 4112212285031908256}
-  m_turretRB: {fileID: 8674285091813138431}
-  DEBUG: 0
---- !u!114 &8406980945491835874
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5628852009847825292}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c8b17a9f4c79034ea0a4c07208b7663, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_tankRB: {fileID: 459565616122086013}
-  m_turretRB: {fileID: 8674285091813138431}
-  m_speed: 3
-  m_rotationSpeed: 360
-  m_aimSpeed: 900
-  m_dashSpeedCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 24.596172
-      outSlope: 24.596172
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 0.08127188
-      value: 1.9989772
-      inSlope: -0.002123253
-      outSlope: -0.002123253
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.26034087
-    - serializedVersion: 3
-      time: 0.8607947
-      value: 1.9965394
-      inSlope: 0.002965081
-      outSlope: 0.002965081
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.5057174
-      outWeight: 1
-    - serializedVersion: 3
-      time: 1.0028714
-      value: -0.0022583008
-      inSlope: -14.068443
-      outSlope: -14.068443
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  m_dashSpeedMultiplier: 3
-  m_dashDistance: 0.5
-  m_reloadDashTicks: 0
-  stateInitTick: 0
-  playerState: 0
-  DEBUGCONT: 0
-  DEBUGDASh: 0
-  m_dashCooldown: 2
 --- !u!114 &-1008400128504854972
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -647,7 +646,7 @@ MonoBehaviour:
         references:
         - fieldName: Perception
           value:
-            rid: -2
+            rid: 1877755454710611968
           fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
             Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         - fieldName: Action
@@ -870,7 +869,7 @@ MonoBehaviour:
     - rid: 1877755449731448847
       type: {class: StateTransition, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
       data:
-        StatusFlags: 0
+        StatusFlags: -1
     - rid: 1877755449731448848
       type: {class: PopTransition, ns: BehaviourAPI.StateMachines.StackFSMs, asm: BehaviourAPI.StateMachines}
       data:
@@ -886,7 +885,7 @@ MonoBehaviour:
     - rid: 1877755449731448851
       type: {class: StateTransition, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
       data:
-        StatusFlags: 0
+        StatusFlags: -1
     - rid: 1877755449731448856
       type: {class: CustomPerception, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
       data:
@@ -905,6 +904,92 @@ MonoBehaviour:
         unpause:
           componentName: 
           methodName: 
+    - rid: 1877755454710611968
+      type: {class: CustomPerception, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        init:
+          componentName: 
+          methodName: 
+        check:
+          componentName: GenericStates
+          methodName: 
+        reset:
+          componentName: 
+          methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
+--- !u!195 &902194235030755267
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5628852009847825292}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.2
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 2
+  m_BaseOffset: 0
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
+--- !u!114 &1114035891230038398
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5628852009847825292}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0ebb401ae137a4498cf28db06882eaa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_tankRB: {fileID: 459565616122086013}
+  m_turretRB: {fileID: 8674285091813138431}
+  m_speed: 0
+  m_rotationSpeed: 0
+  m_aimSpeed: 900
+  m_dashSpeedCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  m_dashSpeedMultiplier: 1
+  m_dashDistance: 0
+  m_reloadDashTicks: 0
+  stateInitTick: 0
+  playerState: 0
+  DEBUGCONT: 0
+  DEBUGDASh: 0
+  npcData: {fileID: 11400000, guid: a0a880d7eb38b3a4393e8ce65c7b5ef7, type: 2}
+--- !u!114 &1506357844035147193
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5628852009847825292}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40fd61720045aa14fb5b0d15e31d80f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  agentController: {fileID: 1114035891230038398}
+  cannon: {fileID: 6267231903324149711}
+  protectDistance: 1
 --- !u!1 &6026416375967643090
 GameObject:
   m_ObjectHideFlags: 0

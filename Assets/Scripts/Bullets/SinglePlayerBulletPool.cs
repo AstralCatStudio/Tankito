@@ -10,18 +10,21 @@ namespace Tankito.SinglePlayer
     // Me ha dado perecita hacerlo genérico sorry, aunque este lo es para GameObjects
     public class SinglePlayerBulletPool : Singleton<SinglePlayerBulletPool>
     {
-        [SerializeField] private GameObject m_prefab;
+        [SerializeField] private List<GameObject> m_list;
         [SerializeField] private int m_prewarmCount;
-        private ObjectPool<GameObject> m_pool;
+        private List<ObjectPool<GameObject>> m_pool;
         private bool DEBUG;
 
         [ContextMenu("InitializePool")]
         public void Start()
         {
-            InitializePool(m_prefab, m_prewarmCount);
+            for(int i = 0; i < m_list.Count; i++)
+            {
+                InitializePool(m_list[i], m_prewarmCount, i);
+            }
         }
 
-        public void InitializePool(GameObject prefab, int prewarmCount)
+        public void InitializePool(GameObject prefab, int prewarmCount, int n)
         {
             GameObject CreateFunc()
             {
@@ -50,27 +53,27 @@ namespace Tankito.SinglePlayer
             }
 
             // Create the pool
-            m_pool = new ObjectPool<GameObject>(CreateFunc, ActionOnGet, ActionOnRelease, ActionOnDestroy, defaultCapacity: prewarmCount);
+            m_pool[n] = new ObjectPool<GameObject>(CreateFunc, ActionOnGet, ActionOnRelease, ActionOnDestroy, defaultCapacity: prewarmCount);
 
             // Populate the pool
             var prewarmObjects = new List<GameObject>();
             for (var i = 0; i < prewarmCount; i++)
             {
-                var gotInstance = m_pool.Get();
+                var gotInstance = m_pool[n].Get();
                 prewarmObjects.Add(gotInstance);
             }
 
             foreach (var pooleableObject in prewarmObjects)
             {
-                m_pool.Release(pooleableObject);
+                m_pool[n].Release(pooleableObject);
             }
         }
 
 
-        public GameObject Get(Vector2 position, Vector2 rotation)
+        public GameObject Get(Vector2 position, Vector2 rotation, int objectTye)
         {
             float rotationDeg = Mathf.Atan2(rotation.x, rotation.y);
-            return Get(position, rotationDeg);
+            return Get(position, rotationDeg, objectTye);
         }
 
         /// <summary>
@@ -83,17 +86,17 @@ namespace Tankito.SinglePlayer
         /// <param name="simObjId"></param>
         /// <param name="autoSpawn"></param>
         /// <returns></returns>
-        public GameObject Get(Vector2 position, float rotation)
+        public GameObject Get(Vector2 position, float rotation, int objectTye)
         {
-            var poolObj = m_pool.Get();
+            var poolObj = m_pool[objectTye].Get();
             poolObj.transform.SetPositionAndRotation(position, Quaternion.AngleAxis(rotation, Vector3.forward));
 
             return poolObj;
         }
 
-        public void Release(GameObject pooleableObj)
+        public void Release(GameObject pooleableObj, int objectTye)
         {
-            m_pool.Release(pooleableObj);
+            m_pool[objectTye].Release(pooleableObj);
         }
     }
 }

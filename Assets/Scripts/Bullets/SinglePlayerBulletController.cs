@@ -9,6 +9,7 @@ namespace Tankito.SinglePlayer
     {
         [SerializeField] float bulletVelocity;
         [SerializeField] float lifeTimeTreshold;
+        [SerializeField] BulletType bulletType;
 
         private void OnEnable()
         {
@@ -47,7 +48,7 @@ namespace Tankito.SinglePlayer
         public override void Detonate(bool lifeTimeOver = false)
         {
             OnDetonate.Invoke(this);
-            SinglePlayerBulletPool.Instance.Release(this.gameObject);
+            SinglePlayerBulletPool.Instance.Release(this.gameObject, (int)bulletType);
         }
 
         protected override void OnCollisionEnter2D(Collision2D collision)
