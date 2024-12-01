@@ -17,6 +17,7 @@ namespace Tankito.SinglePlayer
             agent = GetComponent<NavMeshAgent>();
             agent.speed = npcData.speed;
             agent.angularSpeed = npcData.angularSpeed;
+            m_aimSpeed = npcData.aimSpeed;
         }
 
         private void FixedUpdate()

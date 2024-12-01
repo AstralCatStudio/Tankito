@@ -10,25 +10,33 @@ using System.Linq;
 
 namespace Tankito.SinglePlayer
 {
-    public abstract class AGenericStates : MonoBehaviour, ITankInput
+    public abstract class AGenericBehaviour : MonoBehaviour, ITankInput
     {
-        [SerializeField] AgentController agentController;
+        [SerializeField] protected AgentController agentController;
         [SerializeField] SinglePlayerBulletCannon cannon;
-        InputPayload m_currentInput;
+        protected InputPayload m_currentInput;
 
         #region TargetList
-        List<GameObject>  genericTargets = new List<GameObject>();
+        protected List<GameObject>  genericTargets = new List<GameObject>();
         #endregion
 
         #region Idle_Variables
         bool patrolPointFound = false;
         #endregion
 
-        #region Chase_AimControllers
+        #region Chase_Aim_Controllers
         bool noObstaclesBetween;
         bool cannonReloaded = true;
         float timerShoot = 0;
         bool targetInRange = false;
+        #endregion
+
+        #region Aim_Shoot_Controllers
+        bool turretInPosition = false;
+        #endregion
+
+        #region Shoot_Controllers
+        bool hasShot = false;
         #endregion
 
         private void OnEnable()
@@ -85,34 +93,26 @@ namespace Tankito.SinglePlayer
         public Status ChaseState()
         {
             genericTargets.OrderBy(obj => Vector2.Distance(obj.transform.position, transform.position));
-            Vector2 targetToNpc = transform.position - genericTargets[0].transform.position;
+            Vector3 targetPos = genericTargets[0].transform.position;
+            Vector2 targetToNpc = transform.position - targetPos;
             Vector2 nextPosition;
-            if (Physics2D.Raycast(genericTargets[0].transform.position, targetToNpc.normalized, targetToNpc.magnitude))
+            if (CheckObstacles(targetPos, targetToNpc))
             {
-                nextPosition = genericTargets[0].transform.position;
-                noObstaclesBetween = false;
+                nextPosition = targetPos;
             }
             else
             {
-                noObstaclesBetween = true;
                 if (targetToNpc.magnitude < agentController.npcData.runAwayDistance)
                 {
                     nextPosition = (Vector2)transform.position + targetToNpc.normalized * agentController.npcData.speed;
                 }
                 else
                 {
-                    nextPosition = (Vector2)genericTargets[0].transform.position + targetToNpc.normalized * agentController.npcData.idealDistance;
+                    nextPosition = (Vector2)targetPos + targetToNpc.normalized * agentController.npcData.idealDistance;
                 }
             }
 
-            if(targetToNpc.magnitude <= agentController.npcData.attackRange)
-            {
-                targetInRange = true;
-            }
-            else
-            {
-                targetInRange = false;
-            }
+            CheckTargetInRange(targetToNpc.magnitude, agentController.npcData.attackRange);
             
             NavMeshHit closestEdge;
             if (NavMesh.FindClosestEdge(nextPosition, out closestEdge, NavMesh.AllAreas)) //En caso de que la posicion sea un obstaculo
@@ -124,6 +124,27 @@ namespace Tankito.SinglePlayer
 
             return Status.Running;
         }
+
+        public Status AimState()
+        {
+            Vector2 aimVec = (genericTargets[0].transform.position - transform.position).normalized;
+            Vector2 turretVec = (cannon.transform.position - transform.position).normalized;
+            float angle = Vector2.Angle(aimVec, turretVec);
+            if(angle < agentController.npcData.angleErrorAccepted)
+            {
+                turretInPosition = true;
+            }
+            m_currentInput.aimVector = aimVec;
+            return Status.Running;
+        }
+
+        public Status ShootState()
+        {
+            m_currentInput.action = TankAction.Fire;
+            StartCoroutine(SafeShootCourutine());
+            return Status.Running;
+        }
+
         #endregion
 
         #region Perceptions
@@ -156,6 +177,7 @@ namespace Tankito.SinglePlayer
         {
             if(noObstaclesBetween && cannonReloaded && targetInRange)
             {
+                noObstaclesBetween = false;
                 return true;
             }
             else
@@ -176,24 +198,38 @@ namespace Tankito.SinglePlayer
             }
         }
 
+        public bool CheckAimToShoot()
+        {
+            if (turretInPosition)
+            {
+                turretInPosition = false;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public bool CheckShootPOP()
+        {
+            if(hasShot)
+            {
+                cannonReloaded = false;
+                hasShot = false;
+                m_currentInput.action = TankAction.None;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         #endregion
 
-        public Vector2 AimState()
-        {
-            return Vector2.zero;
-        }
 
-        public bool CheckAimToShoot(Vector2 aimVec)
-        {
-            //if(aimVec == transform.GetChild(1))
-            return false;
-        }
-
-        public TankAction ShootState()
-        {
-            return TankAction.Fire;
-        }
-
+        #region Utilis
         private void OnSubjectDetected(GameObject gameObject)
         {
             genericTargets.Add(gameObject);
@@ -203,6 +239,39 @@ namespace Tankito.SinglePlayer
         {
             genericTargets.Remove(gameObject); 
         }
+
+        protected bool CheckObstacles(Vector3 targetPosition, Vector2 targetToNpc)
+        {
+            if (Physics2D.Raycast(targetPosition, targetToNpc.normalized, targetToNpc.magnitude))
+            {
+                noObstaclesBetween = false;
+            }
+            else
+            {
+                noObstaclesBetween = true;
+            }
+            return !noObstaclesBetween;
+        }
+
+        protected bool CheckTargetInRange(float magnitude, float range)
+        {
+            if(magnitude <= range)
+            {
+                targetInRange = true;
+            }
+            else
+            {
+                targetInRange = false;
+            }
+            return targetInRange;
+        }
+
+        IEnumerator SafeShootCourutine()    //Corutina que asegura que se consume el input
+        {
+            yield return Time.fixedDeltaTime;
+            hasShot = true;
+        }
     }
+    #endregion
 }
 
