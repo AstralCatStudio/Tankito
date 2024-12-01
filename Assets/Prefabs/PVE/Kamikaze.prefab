@@ -69,6 +69,7 @@ GameObject:
   - component: {fileID: 1113473057844878521}
   - component: {fileID: 5334828445911339723}
   - component: {fileID: 5268487039698229890}
+  - component: {fileID: 1415010158793888448}
   m_Layer: 0
   m_Name: Kamikaze
   m_TagString: Enemy
@@ -491,6 +492,18 @@ MonoBehaviour:
       type: {class: StateTransition, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
       data:
         StatusFlags: 0
+--- !u!114 &1415010158793888448
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 828424104354284482}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e39f6090724e4a4a8aadeb042afa2bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1839731227713476812
 GameObject:
   m_ObjectHideFlags: 0

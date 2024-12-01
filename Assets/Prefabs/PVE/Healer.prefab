@@ -562,6 +562,7 @@ GameObject:
   - component: {fileID: 1630509651192671266}
   - component: {fileID: 4562223513298421537}
   - component: {fileID: 827141036351269714}
+  - component: {fileID: 1300666837373070155}
   m_Layer: 0
   m_Name: Healer
   m_TagString: Enemy
@@ -1258,3 +1259,15 @@ MonoBehaviour:
       type: {class: PushTransition, ns: BehaviourAPI.StateMachines.StackFSMs, asm: BehaviourAPI.StateMachines}
       data:
         StatusFlags: 0
+--- !u!114 &1300666837373070155
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9154277127180835340}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e39f6090724e4a4a8aadeb042afa2bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

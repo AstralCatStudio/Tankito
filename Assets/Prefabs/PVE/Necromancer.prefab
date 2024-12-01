@@ -562,6 +562,7 @@ GameObject:
   - component: {fileID: 6347268479215046951}
   - component: {fileID: 7157197457863854575}
   - component: {fileID: 3966425958537101323}
+  - component: {fileID: 3339109910302575834}
   m_Layer: 0
   m_Name: Necromancer
   m_TagString: Enemy
@@ -788,3 +789,15 @@ MonoBehaviour:
     - rid: 4783593595286061117
       type: {class: BehaviourTree, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
       data: 
+--- !u!114 &3339109910302575834
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7977001391670557185}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e39f6090724e4a4a8aadeb042afa2bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

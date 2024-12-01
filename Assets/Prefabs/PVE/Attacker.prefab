@@ -562,6 +562,7 @@ GameObject:
   - component: {fileID: 7090090708690413208}
   - component: {fileID: 6535404514255222803}
   - component: {fileID: 6771944337041376447}
+  - component: {fileID: 91087622903258683}
   m_Layer: 0
   m_Name: Attacker
   m_TagString: Enemy
@@ -1227,3 +1228,15 @@ MonoBehaviour:
       type: {class: PopTransition, ns: BehaviourAPI.StateMachines.StackFSMs, asm: BehaviourAPI.StateMachines}
       data:
         StatusFlags: 0
+--- !u!114 &91087622903258683
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8926018345817467150}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e39f6090724e4a4a8aadeb042afa2bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

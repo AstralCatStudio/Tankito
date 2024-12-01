@@ -418,6 +418,7 @@ GameObject:
   - component: {fileID: 6866319806494830271}
   - component: {fileID: 1416114550839104953}
   - component: {fileID: 6001308960678759924}
+  - component: {fileID: 8108601122068728091}
   m_Layer: 0
   m_Name: Miner
   m_TagString: Enemy
@@ -645,6 +646,18 @@ MonoBehaviour:
       type: {class: UtilitySystem, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
       data:
         Inertia: 1.3
+--- !u!114 &8108601122068728091
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7961667591255896337}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e39f6090724e4a4a8aadeb042afa2bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8714602361156488432
 GameObject:
   m_ObjectHideFlags: 0
