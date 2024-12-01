@@ -110,7 +110,7 @@ namespace Tankito.Netcode.Simulation
             }
             m_addToSimQueue.Clear();
             
-            //Debug.Log($"[{CaptureSnapshotTick}] Calling Physics2D.Simulate on simulation scene");
+            Debug.Log($"[{CaptureSnapshotTick}] Calling Physics2D.Simulate on simulation scene");
             Physics2D.Simulate(SimClock.SimDeltaTime);
 
             foreach (var objId in m_removeFromSimQueue)
@@ -141,7 +141,7 @@ namespace Tankito.Netcode.Simulation
                 newSnapshot[simObj] = (simObj.SimObjType, simObj.GetSimState());
             }
 
-            //Debug.Log($"\t[{CaptureSnapshotTick}] Captured Snapshot: {newSnapshot}");
+            Debug.Log($"\t[{CaptureSnapshotTick}] Captured Snapshot: {newSnapshot}");
             
             return newSnapshot;
         }
