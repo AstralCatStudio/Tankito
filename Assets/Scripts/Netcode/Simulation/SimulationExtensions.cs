@@ -64,7 +64,7 @@ namespace Tankito.Netcode.Simulation
             }
             else if(a is BulletSimulationState bulletStateA && b is BulletSimulationState bulletStateB)
             {
-                Debug.Log($"[{SimClock.TickCounter}] Comparing States: {bulletStateA} ~= {bulletStateB}");
+                //Debug.Log($"[{SimClock.TickCounter}] Comparing States: {bulletStateA} ~= {bulletStateB}");
                 return ComputeBulletStateDelta(in bulletStateA, in bulletStateB);
             }
 
@@ -108,7 +108,7 @@ namespace Tankito.Netcode.Simulation
                                 lastDashTickDiff,
                                 lastParryTickDiff);
 
-            Debug.Log("TankDeltas: " + deltas);
+            //Debug.Log("TankDeltas: " + deltas);
 
             return deltas;
         }
@@ -127,7 +127,7 @@ namespace Tankito.Netcode.Simulation
                                     bouncesLeftDiff,
                                     ownerIdDiff);
 
-            Debug.Log("BulletDeltas: " + deltas);
+            //Debug.Log("BulletDeltas: " + deltas);
 
             return deltas;
         }
