@@ -30,6 +30,7 @@ namespace Tankito
         public static RoundManager Instance { get; private set; }
         public IEnumerable<TankData> AliveTanks { get => m_players.Where(p => p.Value.Alive == true).Select(p => p.Value); }
 
+        public Dictionary<ulong, TankData> Players { get => m_players; }
         private void Awake()
         {
             if (Instance == null)

@@ -8,144 +8,154 @@ using NUnit.Framework;
 using Tankito.Netcode.Simulation;
 using UnityEngine.Rendering;
 
-public class TankData : NetworkBehaviour
+namespace Tankito
 {
-    public delegate void TankDestroyedHandler(TankData tank);
-    public event TankDestroyedHandler OnTankDestroyed = (TankData tank) => { };
-    //public Action<TankData> OnDamaged = (TankData damagedTank) => { };
-    private int m_health;
-    private bool m_isAlive;
-    private int m_points;
-    public int Health => m_health;
-    public bool Alive => m_isAlive;
-    public int Points => m_points;
-
-    void Start()
+    public class TankData : NetworkBehaviour
     {
-        if (IsServer)
+        public delegate void TankDestroyedHandler(TankData tank);
+        public event TankDestroyedHandler OnTankDestroyed = (TankData tank) => { };
+
+        [SerializeField]
+        public Color playerColor;
+        //public Action<TankData> OnDamaged = (TankData damagedTank) => { };
+        private int m_health;
+        private bool m_isAlive;
+        private int m_points;
+        private string m_username;
+        private int m_skinSelected;
+        public int Health => m_health;
+        public bool Alive => m_isAlive;
+        public int Points => m_points;
+        public string Username => m_username;
+        public int SkinSelected => m_skinSelected;
+
+        void Start()
         {
-            m_points = 0;
-        }
-    }
-
-    public void Die()
-    {
-        if (IsServer)
-        {
-            DieClientRpc();
-        }
-
-        OnTankDestroyed.Invoke(this);
-        UnityEngine.Debug.LogWarning("TODO: Trigger tank death animation");
-        gameObject.SetActive(false);
-    }
-
-    [ClientRpc]
-    public void DieClientRpc()
-    {
-        if (!IsServer)
-        {
-            Die();
-        }
-    }
-    private void OnEnable()
-    {
-        OnTankDestroyed += RoundManager.Instance.TankDeath;
-    }
-    private void OnDisable()
-    {
-        OnTankDestroyed -= RoundManager.Instance.TankDeath;
-    }
-
-    private void Update()
-    {
-        //Debug.Log("Vida actual: "+ m_health);
-    }
-    public void TakeDamage(int damage)
-    {
-        //OnDamaged(this);
-        if (IsServer)
-        {
-            m_health -= damage;
-            
-            if (m_health <= 0)
+            if (IsServer)
             {
-                m_isAlive = false;
+                m_points = 0;
+            }
+        }
+
+        public void Die()
+        {
+            if (IsServer)
+            {
+                DieClientRpc();
+            }
+
+            OnTankDestroyed.Invoke(this);
+            UnityEngine.Debug.LogWarning("TODO: Trigger tank death animation");
+            gameObject.SetActive(false);
+        }
+
+        [ClientRpc]
+        public void DieClientRpc()
+        {
+            if (!IsServer)
+            {
                 Die();
             }
         }
-    }
-
-    public void AddHealth(int addedHealth)
-    {
-        if (IsServer)
+        private void OnEnable()
         {
-            m_health += addedHealth;
+            OnTankDestroyed += RoundManager.Instance.TankDeath;
+            if(IsOwner)
+            {
+                m_username = ClientData.Instance.name;
+                m_skinSelected = ClientData.Instance.characters.IndexOf(ClientData.Instance.GetCharacterSelected());
+                SetClientDataServerRpc(m_username, m_skinSelected);
+            }
         }
-        
-    }
-
-    public void SetHealth(int newHealth)
-    {
-        if (IsServer)
+        [ServerRpc]
+        void SetClientDataServerRpc(string username, int skinSelected)
         {
-            m_health = newHealth;
+            if (!IsOwner)
+            {
+                m_username = username;
+                m_skinSelected = skinSelected;
+                SetClientDataClientRpc(username, skinSelected);
+            }
         }
-    }
-
-    public void ResetTank()
-    {
-        //Debug.LogWarning("TODO: maybe play spawn animation?");
-        gameObject.SetActive(true);
-        if (IsServer)
+        [ClientRpc]
+        void SetClientDataClientRpc(string username, int skinSelected)
         {
-            m_isAlive = true;
+            if (!IsOwner && !IsServer)
+            {
+                m_username = username;
+                m_skinSelected = skinSelected;
+            }
         }
-    }
-
-    #region Points
-
-    /// <summary>
-    /// Should Only Be Called  from the server OR as a clientRpc (e.g from the server)
-    /// </summary>
-    /// <param name="awardedPoints"></param>
-    public void AwardPoints(int awardedPoints)
-    {
-        if (IsServer)
+        private void OnDisable()
         {
-            AwardPointsClientRpc(awardedPoints);
+
+            OnTankDestroyed -= RoundManager.Instance.TankDeath;
         }
-        m_points += awardedPoints;
-
-    }
-
-    [ClientRpc]
-    void AwardPointsClientRpc(int awardedPoints)
-    {
-        if (!IsServer)
+        /// <summary>
+        /// Should Only Be Called  from the server OR as a clientRpc (e.g from the server)
+        /// </summary>
+        /// <param name="awardedPoints"></param>
+        public void AwardPoints(int awardedPoints)
         {
-            AwardPoints(awardedPoints);
+            if (IsServer)
+            {
+                AwardPointsClientRpc(awardedPoints);
+            }
+            m_points += awardedPoints;
+
         }
-
-    }
-
-    public void ResetPoints()
-    {
-        if(IsServer)
+        [ClientRpc]
+        void AwardPointsClientRpc(int awardedPoints)
         {
-            ResetPointsClientRpc();
-        }
-        m_points = 0;
-    }
+            if (!IsServer)
+            {
+                AwardPoints(awardedPoints);
+            }
 
-    [ClientRpc]
-    void ResetPointsClientRpc()
-    {
-        if(!IsServer)
+        }
+        private void Update()
         {
-            ResetPoints();
+            //Debug.Log("Vida actual: "+ m_health);
+        }
+        public void TakeDamage(int damage)
+        {
+            //OnDamaged(this);
+            if (IsServer)
+            {
+                m_health -= damage;
+
+                if (m_health <= 0)
+                {
+                    m_isAlive = false;
+                    Die();
+                }
+            }
+        }
+
+        public void AddHealth(int addedHealth)
+        {
+            if (IsServer)
+            {
+                m_health += addedHealth;
+            }
+
+        }
+        public void SetHealth(int newHealth)
+        {
+            if (IsServer)
+            {
+                m_health = newHealth;
+            }
+        }
+
+        public void ResetTank()
+        {
+            //Debug.LogWarning("TODO: maybe play spawn animation?");
+            gameObject.SetActive(true);
+            if (IsServer)
+            {
+                m_isAlive = true;
+            }
         }
     }
-
-    #endregion
 }
