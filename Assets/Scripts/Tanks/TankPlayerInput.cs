@@ -79,38 +79,42 @@ namespace Tankito
         /// <returns></returns>
         public InputPayload GetInput()
         {
-            
-            InputPayload gotPayload;
             if (m_inputReplayTick == NO_REPLAY)
             {
                 // Live Input Mode
-                Aim();
                 m_currentInput.timestamp = SimClock.TickCounter;
                 m_inputCache.Add(m_currentInput, SimClock.TickCounter);
                 InputWindowBuffer.Instance.AddInputToWindow(m_currentInput);
                 
-                gotPayload = m_currentInput;
+                var newInput = m_currentInput;
+                
                 // The internal state of m_currentInput must be reset back to TankAction.None,
                 // in order to avoid continuously posting the same action after all ticks.
                 if (m_currentInput.action == TankAction.Fire || m_currentInput.action == TankAction.Dash || m_currentInput.action == TankAction.Parry)
                 {
                     m_currentInput.action = TankAction.None;
                 }
+
+                if (DEBUG)
+                {
+                    Debug.Log($"GetInput{(m_inputReplayTick != NO_REPLAY ? ("["+m_inputReplayTick+"]") : "")}:" + newInput);
+                }
+
+                return newInput;
             }
             else
             {
-                m_inputReplayTick++;
                 // Input Replay Mode
-                var replayedInput = m_inputCache.Get(m_inputReplayTick);
-                gotPayload = replayedInput;
-            }
-            
-            if (DEBUG)
-            {
-                Debug.Log($"GetInput{(m_inputReplayTick!=NO_REPLAY?("["+m_inputReplayTick+"]") : "")}:" + m_currentInput);
-            }
+                var newInput = m_inputCache.Get(m_inputReplayTick);
+                m_inputReplayTick++;
 
-            return gotPayload;
+                if (DEBUG)
+                {
+                    Debug.Log($"GetInput{(m_inputReplayTick != NO_REPLAY ? ("["+m_inputReplayTick+"]") : "")}:" + newInput);
+                }
+
+                return newInput;
+            }
         }
 
         public void StartInputReplay(int timestamp)

@@ -1585,7 +1585,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c31bd23f6531cae458d32c3c9772362a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DEBUG_INPUT: 0
+  DEBUG_INPUT: 1
   DEBUG_CLOCK: 0
   DEBUG_SNAPSHOTS: 0
 --- !u!4 &675365043
@@ -2216,7 +2216,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77d8b32ced226be40b3f7f2c56f1f036, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DEBUG: 0
+  DEBUG: 1
 --- !u!4 &987082546
 Transform:
   m_ObjectHideFlags: 0
@@ -2664,6 +2664,7 @@ MonoBehaviour:
   m_tickDeltaTime: 0
   m_tickCounter: 0
   m_active: 0
+  m_throttleInterval: 5
   DEBUG: 0
 --- !u!4 &1057322879
 Transform:
@@ -5513,16 +5514,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_tankSimulationTolerance:
-    posDiff: {x: 0.05, y: 0.05}
-    hullRotDiff: 2
+    posDiff: {x: 0.1, y: 0.1}
+    hullRotDiff: 1
     velDiff: {x: 0.1, y: 0.1}
-    turrRotDiff: 180
+    turrRotDiff: 45
     actionDiff: 0
   m_bulletSimulationTolerance:
-    posDiff: {x: 0.05, y: 0.05}
+    posDiff: {x: 0.1, y: 0.1}
     rotDiff: 1
     velDiff: {x: 0.1, y: 0.1}
-  DEBUG: 0
+  DEBUG: 1
 --- !u!114 &1965550685
 MonoBehaviour:
   m_ObjectHideFlags: 0

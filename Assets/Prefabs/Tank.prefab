@@ -392,11 +392,12 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  m_playerState: 0
-  m_turretAnimator: {fileID: 6117245905817614025}
   m_hullAnimator: {fileID: 5873195794702409541}
-  DEBUG_INPUT_CALLS: 0
+  m_turretAnimator: {fileID: 6117245905817614025}
+  m_playerState: 0
+  DEBUG_INPUT_CALLS: 1
   DEBUG_DASH: 0
+  DEBUG_PARRY: 0
   DEBUG_FIRE: 0
   m_cannon: {fileID: 792954130975718086}
 --- !u!114 &5903910165241873950

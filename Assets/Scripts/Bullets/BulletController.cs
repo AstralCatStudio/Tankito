@@ -91,14 +91,14 @@ namespace Tankito {
             
             if (NetworkManager.Singleton.IsServer)
             {
-                    BulletSimulationObject bulletSimObj = GetComponent<BulletSimulationObject>();
-                    ServerSimulationManager.Instance.QueueForDespawn(bulletSimObj.SimObjId);
+                BulletSimulationObject bulletSimObj = GetComponent<BulletSimulationObject>();
+                ServerSimulationManager.Instance.QueueForDespawn(bulletSimObj.SimObjId);
             }
             else if(PREDICT_DESTRUCTION || lifeTimeOver)
             {
-                    // Debug.Log("LifeTimeOver?=>" + lifeTimeOver);
-                    BulletSimulationObject bulletSimObj = GetComponent<BulletSimulationObject>();
-                    ClientSimulationManager.Instance.QueueForDespawn(bulletSimObj.SimObjId);
+                // Debug.Log("LifeTimeOver?=>" + lifeTimeOver);
+                BulletSimulationObject bulletSimObj = GetComponent<BulletSimulationObject>();
+                ClientSimulationManager.Instance.QueueForDespawn(bulletSimObj.SimObjId);
             }
             else
             {

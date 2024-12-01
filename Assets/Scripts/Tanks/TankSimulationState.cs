@@ -74,10 +74,25 @@ namespace Tankito.Netcode.Simulation
             serializer.SerializeValue(ref velocity);
             serializer.SerializeValue(ref turretRotation);
             serializer.SerializeValue(ref performedAction);
+            serializer.SerializeValue(ref playerState);
             serializer.SerializeValue(ref ticksSinceFire);
             serializer.SerializeValue(ref ticksSinceDash);
             serializer.SerializeValue(ref ticksSinceParry);
         }
 
+        public override string ToString()
+        {
+            return "[ " +
+                    $"position: {position} | " +
+                    $"hullRotation: {hullRotation} | " +
+                    $"velocity: {velocity} | " +
+                    $"turretRotation: {turretRotation} | " +
+                    $"performedAction: {performedAction} | " +
+                    $"playerState: {playerState} | " +
+                    $"ticksSinceFire: {ticksSinceFire} | " +
+                    $"ticksSinceDash: {ticksSinceDash} | " +
+                    $"ticksSinceParry: {ticksSinceParry}" + 
+                    " ]";
+        }
     }
 }

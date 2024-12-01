@@ -61,8 +61,8 @@ namespace Tankito.Netcode.Simulation
                 Debug.LogWarning("ClientSimulationManager is network node that is NOT a CLIENT (is server). this should not happen!");
                 Destroy(this);
             }
-            m_tankSimulationTolerance = new TankDelta(new Vector2(0.1f,0.1f), 3f, new Vector2(0.2f,0.2f), 60f, 0);
-            m_bulletSimulationTolerance = new BulletDelta(new Vector2(0.1f,0.1f), 1f, new Vector2(0.1f,0.1f));
+            m_tankSimulationTolerance = new TankDelta(new Vector2(0.1f,0.1f), 3f, new Vector2(0.2f,0.2f), 60f, 0, 0, 0, 0, 0);
+            m_bulletSimulationTolerance = new BulletDelta(new Vector2(0.1f,0.1f), 1f, new Vector2(0.1f,0.1f), 0.05f, 0, 0);
 
             m_snapshotBuffer = new CircularBuffer<SimulationSnapshot>(SNAPSHOT_BUFFER_SIZE);
             m_lastAuthSnapshotTimestamp = NO_SNAPSHOT;
@@ -74,6 +74,7 @@ namespace Tankito.Netcode.Simulation
             // They should only Simulate with server logic, no need for prediciton and/or simulation throttling.
             if (!NetworkManager.Singleton.IsServer)
             {
+                Debug.Log($"[{CaptureSnapshotTick}] Simulating {(m_rollbackTick == NO_ROLLBACK ? "Forward" : "Reconciliating")}");
                 base.Simulate();
             }
             
@@ -133,6 +134,7 @@ namespace Tankito.Netcode.Simulation
                 {
                     foreach (var objId in newAuthSnapshot.IDs)
                     {
+                        if (DEBUG) Debug.Log($"[{SimClock.TickCounter}] Comparing [{objId}] prediction to auth state");
                         if (CheckForDesync(predictedSnapshot[objId].state, newAuthSnapshot[objId].state))
                         {
                             if (DEBUG)
@@ -213,18 +215,14 @@ namespace Tankito.Netcode.Simulation
             //         throw new InvalidOperationException($"[{SimClock.TickCounter}] Present simulation object miss-match! {objId} from authSnapshot[{authSnapshot.timestamp}] is not present in current simulation state! ");
             //     }
             // }
-            
-            // We DON'T have to re-simulate the tick which we are getting as auth,
-            // because it's already simulated. So just advance the counter.
-            m_rollbackTick++;
 
             // We must resimulate all ticks up to (and including) the "present" tick,
             // in order to catch back up to our simlation predictions and not fall back in sim ticks,
             // which would cause a desync.
-            while(m_rollbackTick <= SimClock.TickCounter)
+            while(m_rollbackTick < SimClock.TickCounter)
             {
-                Simulate();
                 m_rollbackTick++;
+                Simulate();
             }
 
             // Set tank's input components back on live input mode
@@ -293,6 +291,12 @@ namespace Tankito.Netcode.Simulation
                         throw new InvalidOperationException($"[{SimClock.TickCounter}]SimulationObjects doesn't contain [{objId}] and it isn't a bullet, feature not implemented!");
                     }
                 }
+                /*
+                else if (snapshotToSet[objId].type == SimulationObjectType.Bullet && (BulletSimulationObject).)
+                {
+                    // Handle the fact that bullets must not exist before simulation when 
+                }
+                */
 
                 if (!deferredSpawning)
                 {

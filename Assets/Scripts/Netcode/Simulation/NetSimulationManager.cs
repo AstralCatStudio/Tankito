@@ -90,26 +90,26 @@ namespace Tankito.Netcode.Simulation
 
 
         /// <summary>
-        /// Advance the simulation forward by 1 simulation tick (simulation tick is determined by <see cref="SimClock.SimDeltaTime" />).
+        /// Advance the simulation forward by 1 simulation tick (simulation tick time is determined by <see cref="SimClock.SimDeltaTime" />).
         /// </summary>
         public virtual void Simulate()
         {
-            //List<ASimulationObject> simulationObjectsSnapshot = m_simulationObjects.Values.ToList<ASimulationObject>();
             foreach (var obj in m_simulationObjects.Values)
             {
+                Debug.Log("computing kinematics for " + obj);
                 obj.ComputeKinematics(SimClock.SimDeltaTime);
             }
 
-            // This is placed here in order to act on SimObj created during the ComputeKinematics phase
+            // This is placed here in order to act on SimObjs created during the ComputeKinematics phase (like bullets)
             foreach(var newObj in m_addToSimQueue)
             {
-                //Debug.Log("Added "+ newObj);
+                Debug.Log("adding " + newObj + " to sim and computing its kinematics");
                 newObj.OnNetworkSpawn();
                 newObj.ComputeKinematics(SimClock.SimDeltaTime);
             }
-            
             m_addToSimQueue.Clear();
-
+            
+            Debug.Log($"[{CaptureSnapshotTick}] Calling Physics2D.Simulate on simulation scene");
             Physics2D.Simulate(SimClock.SimDeltaTime);
 
             foreach (var objId in m_removeFromSimQueue)
@@ -117,7 +117,7 @@ namespace Tankito.Netcode.Simulation
                 var obj = m_simulationObjects[objId];
                 if (obj is BulletSimulationObject bullet)
                 {
-                    //Debug.Log($"[{SimClock.TickCounter}]Called Despawn for {objId}");
+                    Debug.Log("removing " + objId + " from simulation scene");
                     bullet.OnNetworkDespawn();
                 }
                 else

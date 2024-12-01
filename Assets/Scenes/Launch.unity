@@ -155,7 +155,7 @@ MonoBehaviour:
   Median_Latency: 0.16
   Worst_Case_Latency: 0.4
   Client_Jitter_Buffer_Time: 0.008
-  Sim_Tick_Rate: 60
+  Sim_Tick_Rate: 30
   DEBUG_LATENCY: 0
   DEBUG_PARAMS: 0
   m_debugRate: 2
@@ -555,9 +555,9 @@ Transform:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 524099866}
   - {fileID: 1248012081}
   - {fileID: 2079099566}
   - {fileID: 1609486872}
-  - {fileID: 524099866}
   - {fileID: 2080690944}
   - {fileID: 1875872589}

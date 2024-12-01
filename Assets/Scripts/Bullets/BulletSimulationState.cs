@@ -53,6 +53,16 @@ namespace Tankito.Netcode.Simulation
             serializer.SerializeValue(ref bouncesLeft);
             serializer.SerializeValue(ref ownerId);
         }
+
+        public override string ToString()
+        {
+            return "[ " +
+                    "position: " + position + " | " +
+                    "rotation: " +  rotation + " | " +
+                    "velocity: " + velocity + " | " +
+                    "lifeTime: " + bouncesLeft + " | " +
+                    "ownerId: " + ownerId + " | ";
+        }
     }
 }
 

@@ -202,7 +202,7 @@ namespace Tankito
         public void ProcessInput(float deltaTime)
         {
             var input = m_tankInput.GetInput();
-            if (DEBUG_INPUT_CALLS) Debug.Log($"GetInput called, received input: {input}");
+            //if (DEBUG_INPUT_CALLS) Debug.Log($"GetInput called, received input: {input}");
             ProcessInput(input, deltaTime);
         }
         
@@ -211,7 +211,7 @@ namespace Tankito
             if (DEBUG_INPUT_CALLS) Debug.Log($"Processing {gameObject} input(PlayerState={m_playerState}): {input}");
             
 
-            if (DEBUG_INPUT_CALLS) Debug.Log($"[{SimClock.TickCounter}] Input action: {input.action} | Reloads ticks: Dash({DashReloadTick}) Parry({ParryReloadTick}) Fire({FireReloadTick})");
+            //if (DEBUG_INPUT_CALLS) Debug.Log($"[{SimClock.TickCounter}] Input action: {input.action} | Reloads ticks: Dash({DashReloadTick}) Parry({ParryReloadTick}) Fire({FireReloadTick})");
             switch (input.action)
             {
 
@@ -259,6 +259,8 @@ namespace Tankito
                 case PlayerState.Firing:
                     MoveTank(input.moveVector, deltaTime);
                     AimTank(input.aimVector, deltaTime);
+
+                    // Hack para joysticks 😅
                     var aimVector = (input.aimVector.magnitude>0.1) ? input.aimVector : (Vector2)m_turretRB.transform.right;
                     FireTank(aimVector, input.timestamp);
 

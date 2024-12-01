@@ -71,5 +71,10 @@ namespace Tankito.Netcode.Simulation
         /// </summary>
         /// <param name="state"></param>
         public abstract void SetSimState(in ISimulationState state);
+
+        public override string ToString()
+        {
+            return "["+SimObjId.ToString()+"]";
+        }
     }
 }
