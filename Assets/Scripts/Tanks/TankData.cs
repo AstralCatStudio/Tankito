@@ -14,13 +14,20 @@ namespace Tankito
     {
         public delegate void TankDestroyedHandler(TankData tank);
         public event TankDestroyedHandler OnTankDestroyed = (TankData tank) => { };
+
+        [SerializeField]
+        public Color playerColor;
         //public Action<TankData> OnDamaged = (TankData damagedTank) => { };
         private int m_health;
         private bool m_isAlive;
         private int m_points;
+        private string m_username;
+        private int m_skinSelected;
         public int Health => m_health;
         public bool Alive => m_isAlive;
         public int Points => m_points;
+        public string Username => m_username;
+        public int SkinSelected => m_skinSelected;
 
         void Start()
         {
@@ -53,6 +60,31 @@ namespace Tankito
         private void OnEnable()
         {
             OnTankDestroyed += RoundManager.Instance.TankDeath;
+            if(IsOwner)
+            {
+                m_username = ClientData.Instance.name;
+                m_skinSelected = ClientData.Instance.characters.IndexOf(ClientData.Instance.GetCharacterSelected());
+                SetClientDataServerRpc(m_username, m_skinSelected);
+            }
+        }
+        [ServerRpc]
+        void SetClientDataServerRpc(string username, int skinSelected)
+        {
+            if (!IsOwner)
+            {
+                m_username = username;
+                m_skinSelected = skinSelected;
+                SetClientDataClientRpc(username, skinSelected);
+            }
+        }
+        [ClientRpc]
+        void SetClientDataClientRpc(string username, int skinSelected)
+        {
+            if (!IsOwner && !IsServer)
+            {
+                m_username = username;
+                m_skinSelected = skinSelected;
+            }
         }
         private void OnDisable()
         {

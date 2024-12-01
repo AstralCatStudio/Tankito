@@ -15,11 +15,10 @@ namespace Tankito
         ModifierSelector selectedModifier;
         [SerializeField]
         TextMeshProUGUI playerChoosePowerupText;
-        [SerializeField]
-        GameObject ModdifiersParent;
         int tankorder = 0;
         List<ulong> tanksInOrder = new List<ulong>(4);
-
+        [SerializeField]
+        List<ModifiersUserProfile> modifiersUserProfiles;
         public override void OnNetworkSpawn()
         {
             if (!IsServer)
@@ -46,6 +45,20 @@ namespace Tankito
                     tanksInOrder[i] = tankDatasInOrder[i].OwnerClientId;
                 }
                 SetSelectorPlayer(tankorder);
+                foreach (var item in modifiersUserProfiles)
+                {
+                    item.gameObject.SetActive(false);
+                }
+                {
+                    int i = 0;
+                    foreach (var item in RoundManager.Instance.Players)
+                    {
+                        modifiersUserProfiles[i].ownerId = item.Key;
+                        modifiersUserProfiles[i].gameObject.SetActive(true);
+                        modifiersUserProfiles[i].SetValues();
+                        i++;
+                    }
+                }
             }
         }
         void SetSelectorPlayer(int playerOrder)
