@@ -15,6 +15,10 @@ namespace Tankito.Netcode.Simulation
         public float TurretRotation { get => turretRotation; }
         public TankAction PerformedAction { get => performedAction; }
 
+        // VAMOS A ABANDONAR POR EL MOMENTO EL ENCODING RELATIVO AL NUMERO DE TIMESTAMP DEL SNAPSHOT PORQUE ES MAS DIFICIL DE LO QUE PARECE HACERLO BIEN,
+        // y el beneficio tan solo es ahorar unos pocos bytes (int vs ushort) en los snapshots realmente que probablemente se ahorren mejor con algun algoritmo de compresion
+        // como zlib o z standard
+        /*
         /// <summary>
         /// Used to calculate absolute ticks (fire, parry, dash).
         /// <para/>NOT MEANT TO BE SERIALIZED DIRECTLY. Use
@@ -23,14 +27,13 @@ namespace Tankito.Netcode.Simulation
         private int m_timestamp;
         public int Timestamp { private get => (m_timestamp >= 0) ? m_timestamp : throw new InvalidOperationException("m_timestamp is uninitialized");
                                         set => m_timestamp = value; }
-        public int LastFireTick { get => Timestamp - ticksSinceFire; }
-        public int LastDashTick { get => Timestamp - ticksSinceDash; }
-        public int LastParryTick { get => Timestamp - ticksSinceParry; }
+        */
+
+        public int LastFireTick { get => lastFireTick; }
+        public int LastDashTick { get => lastDashTick; }
+        public int LastParryTick { get => lastParryTick; }
 
         public PlayerState PlayerState { get => playerState; }
-        public int TicksSinceFire { get => ticksSinceFire; }
-        public int TicksSinceDash { get => ticksSinceDash; }
-        public int TicksSinceParry { get => ticksSinceParry; }
 
         private Vector2 position;
         private float hullRotation;
@@ -38,11 +41,11 @@ namespace Tankito.Netcode.Simulation
         private float turretRotation;
         private TankAction performedAction;
         private PlayerState playerState;
-        private ushort ticksSinceFire;
-        private ushort ticksSinceDash;
-        private ushort ticksSinceParry;
+        private int lastFireTick;
+        private int lastDashTick;
+        private int lastParryTick;
 
-        public TankSimulationState(Vector2 position, float hullRotation, Vector2 velocity, float turretRotation, TankAction performedAction, PlayerState playerState, ushort ticksSinceFire, ushort ticksSinceDash, ushort ticksSinceParry)
+        public TankSimulationState(Vector2 position, float hullRotation, Vector2 velocity, float turretRotation, TankAction performedAction, PlayerState playerState, int lastFireTick, int lastDashTick, int lastParryTick)
         {
             this.position = position;
             this.hullRotation = hullRotation;
@@ -50,10 +53,9 @@ namespace Tankito.Netcode.Simulation
             this.turretRotation = turretRotation;
             this.performedAction = performedAction;
             this.playerState = playerState;
-            this.ticksSinceFire = ticksSinceFire;
-            this.ticksSinceDash = ticksSinceDash;
-            this.ticksSinceParry = ticksSinceParry;
-            m_timestamp = -1;
+            this.lastFireTick = lastFireTick;
+            this.lastDashTick = lastDashTick;
+            this.lastParryTick = lastParryTick;
         }
 
         public static int SerializedSize =>
@@ -63,9 +65,9 @@ namespace Tankito.Netcode.Simulation
                     sizeof(float) + // turretRotation
                     sizeof(TankAction) + // performed
                     sizeof(PlayerState) + // PlayerState
-                    sizeof(ushort) + // ticksSinceFire
-                    sizeof(ushort) + // ticksSinceDash
-                    sizeof(ushort); // ticksSinceParry
+                    sizeof(int) + // lastFireTick
+                    sizeof(int) + // lastDashTick
+                    sizeof(int); // lastParryTick
 
         internal void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
         {
@@ -75,9 +77,9 @@ namespace Tankito.Netcode.Simulation
             serializer.SerializeValue(ref turretRotation);
             serializer.SerializeValue(ref performedAction);
             serializer.SerializeValue(ref playerState);
-            serializer.SerializeValue(ref ticksSinceFire);
-            serializer.SerializeValue(ref ticksSinceDash);
-            serializer.SerializeValue(ref ticksSinceParry);
+            serializer.SerializeValue(ref lastFireTick);
+            serializer.SerializeValue(ref lastDashTick);
+            serializer.SerializeValue(ref lastParryTick);
         }
 
         public override string ToString()
@@ -89,9 +91,9 @@ namespace Tankito.Netcode.Simulation
                     $"turretRotation: {turretRotation} | " +
                     $"performedAction: {performedAction} | " +
                     $"playerState: {playerState} | " +
-                    $"ticksSinceFire: {ticksSinceFire} | " +
-                    $"ticksSinceDash: {ticksSinceDash} | " +
-                    $"ticksSinceParry: {ticksSinceParry}" + 
+                    $"lastFireTick: {lastFireTick} | " +
+                    $"lastDashTick: {lastDashTick} | " +
+                    $"lastParryTick: {lastParryTick}" + 
                     " ]";
         }
     }

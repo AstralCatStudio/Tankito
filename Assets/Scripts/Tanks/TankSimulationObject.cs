@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace Tankito.Netcode.Simulation
 {
@@ -60,6 +61,7 @@ namespace Tankito.Netcode.Simulation
                 m_inputComponent = playerInput;
                 
                 GameManager.Instance.BindInputActions(playerInput);
+                //ClientSimulationManager.Instance.localInputTanks[OwnerClientId] = (TankPlayerInput)m_inputComponent;
             }
             else if (IsServer)
             {
@@ -83,22 +85,28 @@ namespace Tankito.Netcode.Simulation
         {
             base.OnNetworkDespawn();
 
-            if (IsServer)
-            {
-                ServerSimulationManager.Instance.remoteInputTanks.Remove(NetworkObjectId);
-            }
-
             if (IsLocalPlayer)
             {
                 if (m_inputComponent is TankPlayerInput localTankInput)
                 {
                     GameManager.Instance.UnbindInputActions(localTankInput);
+                    //ClientSimulationManager.Instance.localInputTanks.Remove(OwnerClientId);
                 }
                 else
                 {
                     throw new InvalidOperationException($"Can't unbind inpunt actions because input component is not {typeof(TankPlayerInput)}");
                 }
             }
+            else if (IsClient)
+            {
+                ClientSimulationManager.Instance.emulatedInputTanks.Remove(OwnerClientId);
+            }
+            else if (IsServer)
+            {
+                ServerSimulationManager.Instance.remoteInputTanks.Remove(OwnerClientId);
+            }
+
+            
         }
 
         public override ISimulationState GetSimState()
@@ -111,9 +119,9 @@ namespace Tankito.Netcode.Simulation
                 m_turretRB.rotation,
                 m_inputComponent.LastInput.action, // <----- Gets the "currently" active input
                 m_tankController.PlayerState,
-                m_tankController.TicksSinceFire,
-                m_tankController.TicksSinceDash,
-                m_tankController.TicksSinceParry
+                m_tankController.LastFireTick,
+                m_tankController.LastDashTick,
+                m_tankController.LastParryTick
             );
         }
 

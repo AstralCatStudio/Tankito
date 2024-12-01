@@ -115,7 +115,7 @@ namespace Tankito
             m_bulletProperties.direction = direction;
             m_bulletProperties.startingPosition = position;
             m_bulletProperties.spawnTickTime = tick; // NO se puede usar SimClock.TickCounter porque no funciona durante input replay/Rollback
-            var newBullet = BulletPool.Instance.Get(position, direction, OwnerClientId, tick, spawnN);
+            var newBullet = BulletPool.Instance.Get(position, OwnerClientId, tick, spawnN);
         }
 
         [ContextMenu("TestSpawning")]

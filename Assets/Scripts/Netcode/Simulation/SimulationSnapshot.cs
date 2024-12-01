@@ -48,16 +48,13 @@ namespace Tankito.Netcode.Simulation
         {
             get
             {
-                if (objectStates[obj].type == SimulationObjectType.Tank)
-                {
-                    TankSimulationState tankState = (TankSimulationState)objectStates[obj].state;
-                    tankState.Timestamp = timestamp;
-                    return (SimulationObjectType.Tank, tankState);
-                }
-
                 return objectStates[obj];
             }
-            set => objectStates[obj] = value;
+
+            set
+            {
+                objectStates[obj] = value;
+            }
         }
 
         internal bool ContainsId(ulong obj) { return objectStates.ContainsKey(obj); }
@@ -117,13 +114,13 @@ namespace Tankito.Netcode.Simulation
 
         public override string ToString()
         {
-            var str = $"[Tick({timestamp})|Status({status})|Count({Count})]";
+            var str = $"[Tick({timestamp})|Status({status})|Count({Count})]\n";
 
             foreach(var pair in objectStates)
             {
-                str += $" ({pair.Key}) |";
+                str += $" ({pair.Key}): {pair.Value.state}\n";
             }
-            str += ")";
+            str += $"---- end of snapshot({timestamp}) ----";
 
             return str;
         }

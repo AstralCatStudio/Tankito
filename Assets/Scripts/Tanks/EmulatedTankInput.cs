@@ -11,13 +11,13 @@ namespace Tankito.Netcode.Simulation
     {
         private int INPUT_CACHE_SIZE => SimulationParameters.SNAPSHOT_BUFFER_SIZE;
         private CircularBuffer<InputPayload> m_inputBuffer;
-        private float m_attenuationSeconds = 3f;
+        private float m_attenuationSeconds = 5f;
         [SerializeField] private int m_attenuationTicks;
         private InputPayload m_currentInput;
         
-        public InputPayload LastInput => m_inputReplayTick==NO_REPLAY ? m_currentInput : m_inputBuffer.Get(m_inputReplayTick);
+        public InputPayload LastInput => m_inputReplayTick==NO_REPLAY ? m_inputBuffer.Get(SimClock.TickCounter) : m_inputBuffer.Get(m_inputReplayTick);
 
-        [SerializeField] private bool DEBUG = true;
+        [SerializeField] private bool DEBUG = false;
 
 
         private int m_inputReplayTick = NO_REPLAY;
@@ -68,8 +68,10 @@ namespace Tankito.Netcode.Simulation
             else
             {
                 // Input Replay Mode
-                var newInput = GetInputAt(m_inputReplayTick);
+                // We set the input replay tick as the next from the rollback tick because otherwise we will be replaying ipnut that
+                // is lagged by 1 tick (since we don't have to simulate the incoming snapshot tick).
                 m_inputReplayTick++;
+                var newInput = GetInputAt(m_inputReplayTick);
                 return newInput;
             }
         }
@@ -128,20 +130,28 @@ namespace Tankito.Netcode.Simulation
             if (!havePrevInput && haveNextInput)
             {
                 prevInput.timestamp = nextInput.timestamp - m_attenuationTicks;
+                // Copy aim direction
+                prevInput.aimVector = nextInput.aimVector;
 
                 if (DEBUG) Debug.Log($"[{tick}]EmulatedInput - Interpolation mode: Backwards extrapolation. From {prevInput} to {nextInput}");
             }
             else if (havePrevInput && !haveNextInput)
             {
                 nextInput.timestamp = prevInput.timestamp + m_attenuationTicks;
+                // Copy aim direction
+                nextInput.aimVector = prevInput.aimVector;
 
                 if (DEBUG) Debug.Log($"[{tick}]EmulatedInput - Interpolation mode: Forwards extrapolation. From {prevInput} to {nextInput}");
             }
             else if (!havePrevInput && !haveNextInput)
             {
-                if (DEBUG) Debug.Log($"[{tick}]EmulatedInput - Interpolation mode: NONE (default value): {default(InputPayload)}");
+                InputPayload defaultInput = new();
+                // Copy LATEST aim  direction, this is better than nothing atleast
+                if (m_inputBuffer.Count() > 0) defaultInput.aimVector = m_inputBuffer.Last().aimVector;
 
-                return default;
+                if (DEBUG) Debug.Log($"[{tick}]EmulatedInput - Interpolation mode: NONE (default value): {defaultInput}");
+
+                return defaultInput;
             }
             else
             {
@@ -164,7 +174,7 @@ namespace Tankito.Netcode.Simulation
 
         public int StopInputReplay()
         {
-            var lastReplayTick = m_inputReplayTick;
+            var lastReplayTick = m_inputReplayTick - 1;
             m_inputReplayTick = NO_REPLAY;
             return lastReplayTick;
         }

@@ -89,14 +89,14 @@ namespace Tankito.Netcode.Simulation
         private static TankDelta ComputeTankStateDelta(in TankSimulationState a, in TankSimulationState b)
         {
             Vector2 positionDiff = b.Position - a.Position;
-            float hullRotationDiff = (b.HullRotation % 360) - (a.HullRotation % 360);
+            float hullRotationDiff = Mathf.Repeat(b.HullRotation, 360) - Mathf.Repeat(a.HullRotation, 360);
             Vector2 velocityDiff = b.Velocity - a.Velocity;
-            float turretRotationDiff = (b.TurretRotation % 360) - (a.TurretRotation % 360);
+            float turretRotationDiff = Mathf.Repeat(b.TurretRotation, 360) - Mathf.Repeat(a.TurretRotation, 360);
             int actionDiff = b.PerformedAction - a.PerformedAction;
             int playerStateDiff = b.PlayerState - a.PlayerState;
-            int ticksSinceFireDiff = b.TicksSinceFire - a.TicksSinceFire;
-            int ticksSinceDashDiff = b.TicksSinceDash - a.TicksSinceDash;
-            int ticksSinceParryDiff = b.TicksSinceParry - a.TicksSinceParry;
+            int lastFireTickDiff = b.LastFireTick - a.LastFireTick;
+            int lastDashTickDiff = b.LastDashTick - a.LastDashTick;
+            int lastParryTickDiff = b.LastParryTick - a.LastParryTick;
 
             var deltas = new TankDelta(positionDiff,
                                 hullRotationDiff,
@@ -104,9 +104,9 @@ namespace Tankito.Netcode.Simulation
                                 turretRotationDiff,
                                 (short)actionDiff,
                                 (short)playerStateDiff,
-                                (short)ticksSinceFireDiff,
-                                (short)ticksSinceDashDiff,
-                                (short)ticksSinceParryDiff);
+                                lastFireTickDiff,
+                                lastDashTickDiff,
+                                lastParryTickDiff);
 
             Debug.Log("TankDeltas: " + deltas);
 
@@ -116,14 +116,12 @@ namespace Tankito.Netcode.Simulation
         private static BulletDelta ComputeBulletStateDelta(in BulletSimulationState a, in BulletSimulationState b)
         {
             Vector2 positionDiff = b.Position - a.Position;
-            float rotationDiff = b.Rotation - a.Rotation;
             Vector2 velocityDiff = b.Velocity - a.Velocity;
             float lifeTimeDiff = b.LifeTime - a.LifeTime;
             int bouncesLeftDiff = b.BouncesLeft - a.BouncesLeft;
             long ownerIdDiff = (long)b.OwnerId - (long)a.OwnerId;
 
             var deltas = new BulletDelta(positionDiff,
-                                    rotationDiff,
                                     velocityDiff,
                                     lifeTimeDiff,
                                     bouncesLeftDiff,
@@ -156,9 +154,9 @@ namespace Tankito.Netcode.Simulation
                     Mathf.Abs(a.turrRotDiff) > Mathf.Abs(b.turrRotDiff) ||
                     Mathf.Abs(a.actionDiff) > Mathf.Abs(b.actionDiff) ||
                     Mathf.Abs(a.playerStateDiff) > Mathf.Abs(b.playerStateDiff) ||
-                    Mathf.Abs(a.ticksSinceFireDiff) > Mathf.Abs(b.ticksSinceFireDiff) ||
-                    Mathf.Abs(a.ticksSinceDashDiff) > Mathf.Abs(b.ticksSinceDashDiff) ||
-                    Mathf.Abs(a.ticksSinceParryDiff) > Mathf.Abs(b.ticksSinceParryDiff);
+                    Mathf.Abs(a.lastFireTickDiff) > Mathf.Abs(b.lastFireTickDiff) ||
+                    Mathf.Abs(a.lastDashTickDiff) > Mathf.Abs(b.lastDashTickDiff) ||
+                    Mathf.Abs(a.lastParryTickDiff) > Mathf.Abs(b.lastParryTickDiff);
 
             return  deltaComparison;
         }
@@ -166,7 +164,6 @@ namespace Tankito.Netcode.Simulation
         private static bool CompareBulletStateDeltas(in BulletDelta a, in BulletDelta b)
         {
             return  a.posDiff.sqrMagnitude > b.posDiff.sqrMagnitude ||
-                    a.rotDiff > b.rotDiff ||
                     a.velDiff.sqrMagnitude > b.velDiff.sqrMagnitude ||
                     Mathf.Abs(a.lifeTimeDiff) > Mathf.Abs(b.lifeTimeDiff) ||
                     Mathf.Abs(a.bouncesLeftDiff) > Mathf.Abs(b.bouncesLeftDiff) ||

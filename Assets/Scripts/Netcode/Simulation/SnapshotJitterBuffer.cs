@@ -16,7 +16,6 @@ namespace Tankito.Netcode.Simulation
 
         protected override void Awake()
         {
-            Debug.Log("SnapshotJitterBuffer Awake()");
             if (NetworkManager.Singleton.IsServer)
             {
                 Destroy(this);
@@ -25,6 +24,8 @@ namespace Tankito.Netcode.Simulation
             base.Awake();
 
             m_latestSnapshot = default;
+            m_bufferCount = 0;
+            m_bufferedTime = 0;
         }
 
         void Update()

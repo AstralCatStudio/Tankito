@@ -19,10 +19,15 @@ namespace Tankito.Netcode.Simulation
         /// </summary>
         public Dictionary<ulong, EmulatedTankInput> emulatedInputTanks = new Dictionary<ulong,EmulatedTankInput>();
 
+        // We're leaving it in the back burner, input acknowledgement is too fucking hard for the little benefit of getting better
+        // behaviour while working at the edge of the set Worst Case Latency.
+
+        //public Dictionary<ulong, TankPlayerInput> localInputTanks = new Dictionary<ulong, TankPlayerInput>();
+        
         [SerializeField] private TankDelta m_tankSimulationTolerance;
         [SerializeField] private BulletDelta m_bulletSimulationTolerance;
 
-        [SerializeField] private bool DEBUG = true;
+        [SerializeField] private bool DEBUG = false;
 
         const int NO_ROLLBACK = -1;
         int m_rollbackTick = NO_ROLLBACK;
@@ -56,13 +61,13 @@ namespace Tankito.Netcode.Simulation
 
         void Start()
         {
-            if (!NetworkManager.Singleton.IsClient)
+            if (NetworkManager.Singleton.IsServer)//if (!NetworkManager.Singleton.IsClient)
             {
                 Debug.LogWarning("ClientSimulationManager is network node that is NOT a CLIENT (is server). this should not happen!");
                 Destroy(this);
             }
             m_tankSimulationTolerance = new TankDelta(new Vector2(0.1f,0.1f), 3f, new Vector2(0.2f,0.2f), 60f, 0, 0, 0, 0, 0);
-            m_bulletSimulationTolerance = new BulletDelta(new Vector2(0.1f,0.1f), 1f, new Vector2(0.1f,0.1f), 0.05f, 0, 0);
+            m_bulletSimulationTolerance = new BulletDelta(new Vector2(0.1f,0.1f), new Vector2(0.1f,0.1f), 0.05f, 0, 0);
 
             m_snapshotBuffer = new CircularBuffer<SimulationSnapshot>(SNAPSHOT_BUFFER_SIZE);
             m_lastAuthSnapshotTimestamp = NO_SNAPSHOT;
@@ -74,14 +79,15 @@ namespace Tankito.Netcode.Simulation
             // They should only Simulate with server logic, no need for prediciton and/or simulation throttling.
             if (!NetworkManager.Singleton.IsServer)
             {
-                Debug.Log($"[{CaptureSnapshotTick}] Simulating {(m_rollbackTick == NO_ROLLBACK ? "Forward" : "Reconciliating")}");
+                //Debug.Log($"[{CaptureSnapshotTick}] Simulating {(m_rollbackTick == NO_ROLLBACK ? "Forward" : "Reconciliating")}");
                 base.Simulate();
+
+                // Cache Simulation Snapshot for prediction Rollback
+                SimulationSnapshot newSnapshot = CaptureSnapshot();
+                newSnapshot.status = SnapshotStatus.Predicted;
+                m_snapshotBuffer.Add(newSnapshot, newSnapshot.timestamp);
             }
             
-            // Cache Simulation Snapshot for prediction Rollback
-            SimulationSnapshot newSnapshot = CaptureSnapshot();
-            newSnapshot.status = SnapshotStatus.Predicted;
-            m_snapshotBuffer.Add(newSnapshot, newSnapshot.timestamp);
         }
 
         public void EvaluateForReconciliation(SimulationSnapshot newAuthSnapshot)
@@ -125,8 +131,8 @@ namespace Tankito.Netcode.Simulation
                 bool rolledBack = false;
 
                 SetSimulation(newAuthSnapshot);
-                    // At this point all registered simObjs (e.g simulation objects in scene) should be the
-                    // same as the ones stored on the incoming auth snapshot.
+                // At this point all registered simObjs (e.g simulation objects in scene) should be the
+                // same as the ones stored on the incoming auth snapshot.
 
                 // We skip Delta comparison stage if we had wrongfuly predicted the objects in the snapshot,
                 // if that's the case we force the rollback.
@@ -151,6 +157,7 @@ namespace Tankito.Netcode.Simulation
                 }
                 else
                 {
+                    if (DEBUG) Debug.Log($"[{SimClock.TickCounter}] Rolling back to [{newAuthSnapshot.timestamp}] because: Object Missmatch at predicted snapshot");
                     Rollback(newAuthSnapshot);
                     rolledBack = true;
                 }
@@ -196,8 +203,6 @@ namespace Tankito.Netcode.Simulation
                     // Put Tanks into input replay mode so they pull the correct (past) inputs from their respective buffers.
                     if (m_simulationObjects[objId] is TankSimulationObject tank)
                     {
-                        // We set the input replay tick as the next from the rollback tick because otherwise we will be replaying ipnut that
-                        // is lagged by 1 tick (since we don't have to simulate the incoming snapshot tick).
                         tank.StartInputReplay(m_rollbackTick);
                     }
                 }
@@ -276,7 +281,7 @@ namespace Tankito.Netcode.Simulation
                         if (bulletState.LifeTime >= SimClock.SimDeltaTime*2)
                         {
                             var ownerId =  ((BulletSimulationState)snapshotToSet[objId].state).OwnerId;
-                            var newBullet = BulletPool.Instance.Get(bulletState.Position, bulletState.Rotation, ownerId, objId, autoSpawn:false);
+                            var newBullet = BulletPool.Instance.Get(bulletState.Position, ownerId, objId, autoSpawn:false);
                             //Manually added to simulation, because we require the SimClock to be inactive during set simulation calls.
                             newBullet.OnNetworkSpawn();
                         }
@@ -308,13 +313,15 @@ namespace Tankito.Netcode.Simulation
         private bool CheckForDesync(in ISimulationState simStateA,in ISimulationState simStateB)
         {
             IStateDelta delta = SimExtensions.Delta(simStateA, simStateB);
-            if(simStateA is TankSimulationState && simStateB is TankSimulationState)
+            if(simStateA is TankSimulationState tankStateA && simStateB is TankSimulationState tankStateB)
             {
+                if (DEBUG) Debug.Log($"\t[{CaptureSnapshotTick}] Comparing: {tankStateA} ~= {tankStateB}");
                 TankDelta tankDelta = (TankDelta)delta;
                 return SimExtensions.CompareDeltas(tankDelta, m_tankSimulationTolerance);
             }
-            else if(simStateA is BulletSimulationState && simStateB is BulletSimulationState)
+            else if(simStateA is BulletSimulationState bulletStateA && simStateB is BulletSimulationState bulletStateB)
             {
+                if (DEBUG) Debug.Log($"\t[{CaptureSnapshotTick}] Comparing: {bulletStateA} ~= {bulletStateB}");
                 BulletDelta bulletDelta = (BulletDelta)delta;
                 return SimExtensions.CompareDeltas(bulletDelta, m_bulletSimulationTolerance);
             }

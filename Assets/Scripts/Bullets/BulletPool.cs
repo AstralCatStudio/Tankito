@@ -67,13 +67,12 @@ namespace Tankito
         }
 
 
-        public BulletSimulationObject Get(Vector2 position, Vector2 rotation, ulong ownerId, int tick, int spawnN)
+        public BulletSimulationObject Get(Vector2 position, ulong ownerId, int tick, int spawnN)
         {   
-            if (DEBUG) Debug.Log($"[{SimClock.TickCounter}]Get called, Arguments: pos({position}) | rot({rotation}) | ownerId({ownerId}) | tick({tick}) | spawnN({spawnN})");
+            if (DEBUG) Debug.Log($"[{SimClock.TickCounter}]Get called, Arguments: pos({position}) | ownerId({ownerId}) | tick({tick}) | spawnN({spawnN})");
 
-            float rotationDeg = Mathf.Atan2(rotation.x, rotation.y);
             var simObjId = SimExtensions.HashSimObj(ownerId, tick, spawnN);
-            return Get(position, rotationDeg, ownerId, simObjId);
+            return Get(position, ownerId, simObjId);
         }
 
         /// <summary>
@@ -86,9 +85,9 @@ namespace Tankito
         /// <param name="simObjId"></param>
         /// <param name="autoSpawn"></param>
         /// <returns></returns>
-        public BulletSimulationObject Get(Vector2 position, float rotation, ulong ownerId, ulong simObjId, bool autoSpawn = true)
+        public BulletSimulationObject Get(Vector2 position, ulong ownerId, ulong simObjId, bool autoSpawn = true)
         {   
-            if (DEBUG && !autoSpawn) Debug.Log($"[{SimClock.TickCounter}]Get called, Arguments: pos({position}) | rot({rotation}) | ownerId({ownerId}) | simObjId({simObjId}) | autoSpawn({autoSpawn})");
+            if (DEBUG && !autoSpawn) Debug.Log($"[{SimClock.TickCounter}]Get called, Arguments: pos({position}) | ownerId({ownerId}) | simObjId({simObjId}) | autoSpawn({autoSpawn})");
 
 
             var bulletObj = m_pool.Get();
@@ -97,7 +96,7 @@ namespace Tankito
             // We dont use rigidbody transformations because they won't be changed until after the next physics update
             //objRB.transform.position = position;
             //objRB.rotation = rotation;
-            bulletObj.transform.SetPositionAndRotation(position, Quaternion.AngleAxis(rotation,Vector3.forward));
+            bulletObj.transform.position = position;
 
             bulletObj.SetOwner(ownerId);
             bulletObj.GetComponent<BulletController>().InitializeProperties();

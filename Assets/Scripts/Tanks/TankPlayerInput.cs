@@ -1,3 +1,4 @@
+using System;
 using Tankito.Netcode;
 using Tankito.Utils;
 using Unity.Netcode;
@@ -48,7 +49,7 @@ namespace Tankito
         [SerializeField] private int m_inputReplayTick = NO_REPLAY;
         private const int NO_REPLAY = -1;
 
-        public InputPayload LastInput => m_inputReplayTick==NO_REPLAY ? m_currentInput : m_inputCache.Get(m_inputReplayTick);
+        public InputPayload LastInput => m_inputReplayTick == NO_REPLAY ?  m_inputCache.Get(SimClock.TickCounter) : m_inputCache.Get(m_inputReplayTick);
         private InputPayload m_currentInput;
         [SerializeField]
         private TankController m_tankController;
@@ -105,8 +106,10 @@ namespace Tankito
             else
             {
                 // Input Replay Mode
-                var newInput = m_inputCache.Get(m_inputReplayTick);
+                // We set the input replay tick as the next from the rollback tick because otherwise we will be replaying ipnut that
+                // is lagged by 1 tick (since we don't have to simulate the incoming snapshot tick).
                 m_inputReplayTick++;
+                var newInput = m_inputCache.Get(m_inputReplayTick);
 
                 if (DEBUG)
                 {
@@ -124,7 +127,7 @@ namespace Tankito
         
         public int StopInputReplay()
         {
-            var lastReplayTick = m_inputReplayTick;
+            var lastReplayTick = m_inputReplayTick - 1;
             m_inputReplayTick = NO_REPLAY;
             return lastReplayTick;
         }
@@ -157,6 +160,9 @@ namespace Tankito
         {
             var input = ctx.ReadValue<Vector2>();
             Vector2 lookVector;
+
+            // Avoid sending "null"  inputs
+            if (input.sqrMagnitude < 0.05) return;
 
             if (ctx.control.path != "/Mouse/position")
             {
@@ -217,5 +223,9 @@ namespace Tankito
             }
         }
 
+        internal void RemoveUnacknowledgedInputs(int firstInWindow, int lastInWindow)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

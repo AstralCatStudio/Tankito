@@ -16,6 +16,7 @@ namespace Tankito.Netcode.Messaging
         public static string ClockSignal => "ClockSignal";
         public static string InputWindow => "InputWindow";
         public static string RelayInputWindow => "RelayWindow";
+        //public static string AcnowledgeInputs => "AcnowledgeInputs";
         public static string SimulationSnapshot => "SimulationSnapshot";
     }
 
@@ -218,17 +219,54 @@ namespace Tankito.Netcode.Messaging
                 }
 
                 // Exclude originalSender and Server IDs from relay message targets
+                // UDPATE: We notify the original sender by a new message type to enable input acknowledgement and correction of
+                //          buffers on the client (originalSender) side.
                 var relayTargets = NetworkManager.Singleton.ConnectedClientsIds.Where(id => (id != originalSenderId) && (id != NetworkManager.ServerClientId)).ToArray();
                 NetworkManager.Singleton.CustomMessagingManager.SendNamedMessage(MessageName.RelayInputWindow, relayTargets, relayWriter, NetworkDelivery.Unreliable);
-
+                
                 if (DEBUG_INPUT)
                 {
                     var relayTargetsString = "( ";
                     Array.ForEach(relayTargets, t => relayTargetsString += t.ToString() + ((t != relayTargets.Last()) ? ", " : " )"));
                     Debug.Log($"[{SimClock.TickCounter}]Relaying client[{originalSenderId}]'s inputs to: " + relayTargetsString);
                 }
+
+                /*
+                if (originalSenderId != NetworkManager.ServerClientId)
+                {
+                    // Clear writer buffer to reuse it to send AckSignal
+                    relayWriter.Truncate(0);
+
+                    // We only need first and last to check the range on client side
+                    relayWriter.WriteValueSafe(windowToRelay.First().timestamp);
+                    relayWriter.WriteValueSafe(windowToRelay.Last().timestamp);
+
+                    NetworkManager.Singleton.CustomMessagingManager.SendNamedMessage(MessageName.AcnowledgeInputs, originalSenderId, relayWriter, NetworkDelivery.Unreliable);
+                }
+                */
             }
         }
+
+        /*
+        internal void ReceiveInputAcknowledgement(ulong senderId, FastBufferReader acknowledgementPayload)
+        {
+            if (senderId != NetworkManager.ServerClientId)
+            {
+                Debug.LogException(new InvalidOperationException("Input Acknowledgements are only taken from the server, clients shouldn't be able to emit them."));
+                return;
+            }
+            if (NetworkManager.Singleton.IsServer)
+            {
+                Debug.LogException(new InvalidOperationException("Input mustn't be acknowledged to the server (it already received the input window)."));
+                return;
+            }
+
+            int firstInWindow, lastInWindow;
+            acknowledgementPayload.ReadValueSafe(out firstInWindow);
+            acknowledgementPayload.ReadValueSafe(out lastInWindow);
+            ClientSimulationManager.Instance.localInputTanks[NetworkManager.Singleton.LocalClientId].RemoveUnacknowledgedInputs(firstInWindow, lastInWindow);
+        }
+        */
 
         public void ReceiveRelayedInputWindow(ulong senderId, FastBufferReader inputRelayPayload)
         {

@@ -1,11 +1,7 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using JetBrains.Annotations;
 using Tankito.Netcode;
 using Tankito.Netcode.Simulation;
 using UnityEngine;
-using UnityEngine.Windows;
 
 namespace Tankito
 {
@@ -40,6 +36,17 @@ namespace Tankito
         [SerializeField] private float m_rotationSpeed;
         [SerializeField] private float m_aimSpeed = 900f;
 
+        /// <summary>
+        /// Used to avoid Simulation State dependance on tank controller actions
+        /// (feedback loops in control functions drastically deteriorate prediciton performance)
+        /// </summary>
+        private Vector2 m_lastAimVector;
+        
+        /// <summary>
+        /// <inheritdoc cref="m_lastAimVector"/>
+        /// </summary>
+        private Vector2 m_lastMoveVector;
+
         // Used to calculate dash movement *NOT Animation!
         [SerializeField] private AnimationCurve m_dashSpeedCurve;
         [SerializeField] private Animator m_hullAnimator, m_turretAnimator;
@@ -61,6 +68,9 @@ namespace Tankito
         public PlayerState PlayerState { get => m_playerState; set => m_playerState = value; }
 
         [SerializeField] private BulletCannon m_cannon;
+
+        private int m_currentTick = 0;
+
         /// <summary>
         /// Tick when the fire action was last triggered.
         /// </summary>
@@ -87,15 +97,6 @@ namespace Tankito
         public int LastFireTick { get => m_lastFireTick; set => m_lastFireTick = value; }
         public int LastDashTick { get => m_lastDashTick; set => m_lastDashTick = value; }
         public int LastParryTick { get => m_lastParryTick; set => m_lastParryTick = value; }
-
-        /// <summary>
-        /// NOT SAFE FOR INTERNAL USE, because using tick measurements against <see cref="SimClock.TickCounter"/> is not <see cref="ClientSimulationManager.Rollback"/> compatible.
-        /// </summary>
-        public ushort TicksSinceFire { get => (ushort)(SimClock.TickCounter - m_lastFireTick); }
-        /// <inheritdoc cref="TicksSinceFire"/>
-        public ushort TicksSinceDash { get => (ushort)(SimClock.TickCounter - m_lastDashTick); }
-        /// <inheritdoc cref="TicksSinceFire"/>
-        public ushort TicksSinceParry { get => (ushort)(SimClock.TickCounter - m_lastParryTick); }
 
         void Start()
         {
@@ -208,7 +209,7 @@ namespace Tankito
         
         private void ProcessInput(InputPayload input, float deltaTime)
         {
-            if (DEBUG_INPUT_CALLS) Debug.Log($"Processing {gameObject} input(PlayerState={m_playerState}): {input}");
+            if (DEBUG_INPUT_CALLS) Debug.Log($"\tProcessing [{GetComponent<TankSimulationObject>().SimObjId}] input(PlayerState={m_playerState}): {input}");
             
 
             //if (DEBUG_INPUT_CALLS) Debug.Log($"[{SimClock.TickCounter}] Input action: {input.action} | Reloads ticks: Dash({DashReloadTick}) Parry({ParryReloadTick}) Fire({FireReloadTick})");
@@ -261,7 +262,7 @@ namespace Tankito
                     AimTank(input.aimVector, deltaTime);
 
                     // Hack para joysticks 😅
-                    var aimVector = (input.aimVector.magnitude>0.1) ? input.aimVector : (Vector2)m_turretRB.transform.right;
+                    var aimVector = (input.aimVector.sqrMagnitude > 0.1) ? input.aimVector : m_lastAimVector;
                     FireTank(aimVector, input.timestamp);
 
                     // Reset state to movement for next tick (firing is considered to only take 0 ticks right now)
@@ -308,9 +309,7 @@ namespace Tankito
         {
             if (DEBUG_FIRE) Debug.Log($"[{SimClock.TickCounter}] FireTank({GetComponent<TankSimulationObject>().SimObjId}) called.");
 
-            m_cannon.Shoot(m_turretRB.position, aimVector , inputTick);
-            
-            m_lastFireTick = inputTick;
+            m_cannon.Shoot(m_turretRB.position, aimVector, inputTick);
         }
 
         private void MoveTank(Vector2 moveVector, float deltaTime)
@@ -332,6 +331,8 @@ namespace Tankito
             m_turretRB.MoveRotation(-rotDeg);
 
             m_tankRB.MovePosition(m_tankRB.position + m_speed * moveVector * deltaTime);
+
+            if (moveVector.sqrMagnitude > 0.1) m_lastMoveVector = moveVector;
         }
 
         /// <summary>
@@ -355,19 +356,19 @@ namespace Tankito
 
             float dashSpeed = m_dashSpeedMultiplier * m_dashSpeedCurve.Evaluate((float)dashTick/m_dashTicks);
 
-            if(moveVector != Vector2.zero)
+            if(moveVector.sqrMagnitude > 0.1f)
             {
-                // CONSIDER REMOVAL TO IMPROVE PREDICTABILITY ?
                 m_tankRB.MovePosition(m_tankRB.position + moveVector * deltaTime * dashSpeed);
             }
             else
             {
-                m_tankRB.MovePosition(m_tankRB.position + (Vector2)transform.right * deltaTime * dashSpeed);
+                m_tankRB.MovePosition(m_tankRB.position + m_lastMoveVector * deltaTime * dashSpeed);
             }
         }
 
         private void AimTank(Vector2 aimVector, float deltaTime)
         {
+            // this fucking sucks because of simulation state feedback, we need to change it so it's *less dependant on previous state 
             var targetAngle = Vector2.SignedAngle(m_turretRB.transform.right, aimVector);
             float rotDeg = 0f;
 
@@ -383,6 +384,8 @@ namespace Tankito
             // MoveRotation doesn't work because the turretRB is not simulated
             // (we only use it for the uniform interface with rotation angle around Z).
             m_turretRB.MoveRotation(m_turretRB.rotation + rotDeg);
+
+            if (aimVector.sqrMagnitude > 0.1) m_lastAimVector = aimVector;
         }
 
         #region Modifiers & TankData

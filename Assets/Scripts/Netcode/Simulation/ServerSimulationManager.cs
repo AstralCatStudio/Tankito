@@ -10,7 +10,7 @@ namespace Tankito.Netcode.Simulation
     public class ServerSimulationManager : NetSimulationManager<ServerSimulationManager>
     {
         /// <summary>
-        /// Relates NetworkClientId(ulong) to a specific <see cref="RemoteTankInput"/>.  
+        /// Relates <see cref="NetworkBehaviour.OwnerClientId"/> to a specific <see cref="RemoteTankInput"/>.  
         /// </summary>
         public Dictionary<ulong, RemoteTankInput> remoteInputTanks = new Dictionary<ulong,RemoteTankInput>();
 

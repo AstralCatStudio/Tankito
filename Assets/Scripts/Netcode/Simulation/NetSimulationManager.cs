@@ -94,22 +94,23 @@ namespace Tankito.Netcode.Simulation
         /// </summary>
         public virtual void Simulate()
         {
+            //Debug.Log($"[{CaptureSnapshotTick}] Simulating");
             foreach (var obj in m_simulationObjects.Values)
             {
-                Debug.Log("computing kinematics for " + obj);
+                //Debug.Log("computing kinematics for " + obj);
                 obj.ComputeKinematics(SimClock.SimDeltaTime);
             }
 
             // This is placed here in order to act on SimObjs created during the ComputeKinematics phase (like bullets)
             foreach(var newObj in m_addToSimQueue)
             {
-                Debug.Log("adding " + newObj + " to sim and computing its kinematics");
+                //Debug.Log("adding " + newObj + " to sim and computing its kinematics");
                 newObj.OnNetworkSpawn();
                 newObj.ComputeKinematics(SimClock.SimDeltaTime);
             }
             m_addToSimQueue.Clear();
             
-            Debug.Log($"[{CaptureSnapshotTick}] Calling Physics2D.Simulate on simulation scene");
+            //Debug.Log($"[{CaptureSnapshotTick}] Calling Physics2D.Simulate on simulation scene");
             Physics2D.Simulate(SimClock.SimDeltaTime);
 
             foreach (var objId in m_removeFromSimQueue)
@@ -117,7 +118,7 @@ namespace Tankito.Netcode.Simulation
                 var obj = m_simulationObjects[objId];
                 if (obj is BulletSimulationObject bullet)
                 {
-                    Debug.Log("removing " + objId + " from simulation scene");
+                    //Debug.Log("removing " + objId + " from simulation scene");
                     bullet.OnNetworkDespawn();
                 }
                 else
@@ -128,7 +129,7 @@ namespace Tankito.Netcode.Simulation
             m_removeFromSimQueue.Clear();
         }
 
-        public SimulationSnapshot CaptureSnapshot()
+        public SimulationSnapshot  CaptureSnapshot()
         {
             var newSnapshot = new SimulationSnapshot();
             newSnapshot.Initialize();
@@ -139,6 +140,8 @@ namespace Tankito.Netcode.Simulation
             {
                 newSnapshot[simObj] = (simObj.SimObjType, simObj.GetSimState());
             }
+
+            //Debug.Log($"\t[{CaptureSnapshotTick}] Captured Snapshot: {newSnapshot}");
             
             return newSnapshot;
         }
