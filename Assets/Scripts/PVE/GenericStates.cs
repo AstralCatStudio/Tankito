@@ -6,6 +6,7 @@ using Tankito;
 using BehaviourAPI.Core;
 using static UnityEngine.GraphicsBuffer;
 using UnityEngine.AI;
+using System.Linq;
 
 namespace Tankito.SinglePlayer
 {
@@ -19,8 +20,15 @@ namespace Tankito.SinglePlayer
         List<GameObject>  genericTargets = new List<GameObject>();
         #endregion
 
-        #region IdleControllers
+        #region Idle_Variables
         bool patrolPointFound = false;
+        #endregion
+
+        #region Chase_AimControllers
+        bool noObstaclesBetween;
+        bool cannonReloaded = true;
+        float timerShoot = 0;
+        bool targetInRange = false;
         #endregion
 
         private void OnEnable()
@@ -33,6 +41,15 @@ namespace Tankito.SinglePlayer
         {
             transform.GetChild(2).GetComponent<AreaDetection>().OnSubjectDetected -= OnSubjectDetected;
             transform.GetChild(2).GetComponent<AreaDetection>().OnSubjectDissapear -= OnSubjectDissapear;
+        }
+
+        private void Update()
+        {
+            timerShoot += Time.deltaTime;
+            if(timerShoot >= agentController.npcData.reloadTime) 
+            {
+                cannonReloaded = true;
+            }
         }
 
         #region TankInputMethods
@@ -67,20 +84,36 @@ namespace Tankito.SinglePlayer
 
         public Status ChaseState()
         {
+            genericTargets.OrderBy(obj => Vector2.Distance(obj.transform.position, transform.position));
             Vector2 targetToNpc = transform.position - genericTargets[0].transform.position;
             Vector2 nextPosition;
             if (Physics2D.Raycast(genericTargets[0].transform.position, targetToNpc.normalized, targetToNpc.magnitude))
             {
                 nextPosition = genericTargets[0].transform.position;
-            }
-            else if(targetToNpc.magnitude < agentController.npcData.runAwayDistance)
-            {
-                nextPosition = (Vector2)transform.position + targetToNpc.normalized * agentController.npcData.speed;
+                noObstaclesBetween = false;
             }
             else
             {
-                nextPosition = (Vector2)genericTargets[0].transform.position + targetToNpc.normalized * agentController.npcData.idealDistance;
+                noObstaclesBetween = true;
+                if (targetToNpc.magnitude < agentController.npcData.runAwayDistance)
+                {
+                    nextPosition = (Vector2)transform.position + targetToNpc.normalized * agentController.npcData.speed;
+                }
+                else
+                {
+                    nextPosition = (Vector2)genericTargets[0].transform.position + targetToNpc.normalized * agentController.npcData.idealDistance;
+                }
             }
+
+            if(targetToNpc.magnitude <= agentController.npcData.attackRange)
+            {
+                targetInRange = true;
+            }
+            else
+            {
+                targetInRange = false;
+            }
+            
             NavMeshHit closestEdge;
             if (NavMesh.FindClosestEdge(nextPosition, out closestEdge, NavMesh.AllAreas)) //En caso de que la posicion sea un obstaculo
             {
@@ -99,6 +132,42 @@ namespace Tankito.SinglePlayer
             if (genericTargets.Count > 0)
             {
                 patrolPointFound = false;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public bool CheckChaseToIdle()
+        {
+            if (genericTargets.Count == 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public bool CheckChaseToAim()
+        {
+            if(noObstaclesBetween && cannonReloaded && targetInRange)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public bool CheckAimPOP()
+        {
+            if (!targetInRange)
+            {
                 return true;
             }
             else

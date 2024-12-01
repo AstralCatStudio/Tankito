@@ -12,6 +12,7 @@ namespace Tankito.SinglePlayer
         public float idealDistance;
         public float runAwayDistance;
         public float attackRange;
+        public float reloadTime;
         public string genericTargetTag;
     }
 }
