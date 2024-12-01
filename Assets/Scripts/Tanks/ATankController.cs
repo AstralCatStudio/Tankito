@@ -118,7 +118,7 @@ public abstract class ATankController : MonoBehaviour
         AimTank(input.aimVector, deltaTime);
     }
 
-    protected void MoveTank(Vector2 moveVector, float deltaTime)
+    protected virtual void MoveTank(Vector2 moveVector, float deltaTime)
     {
         var targetAngle = Vector2.SignedAngle(m_tankRB.transform.right, moveVector);
         float rotDeg = 0f;

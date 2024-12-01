@@ -47,6 +47,7 @@ GameObject:
   - component: {fileID: 240048042609391495}
   - component: {fileID: 7623569522324696104}
   - component: {fileID: 8595686840196262978}
+  - component: {fileID: 8229963714806748914}
   m_Layer: 0
   m_Name: Square (8)
   m_TagString: NormalWall
@@ -166,6 +167,22 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &8229963714806748914
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100636967809108709}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9809bf1345abc5648af68b3a82653f08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 1
+  m_Area: 1
+  m_IgnoreFromBuild: 0
+  m_AffectedAgents: ffffffff
 --- !u!1 &146821166668667456
 GameObject:
   m_ObjectHideFlags: 0
@@ -177,6 +194,7 @@ GameObject:
   - component: {fileID: 6460368349311295437}
   - component: {fileID: 5534839890236205325}
   - component: {fileID: 5604275761672901470}
+  - component: {fileID: 4600884731054304521}
   m_Layer: 0
   m_Name: Square
   m_TagString: NormalWall
@@ -296,6 +314,22 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &4600884731054304521
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 146821166668667456}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9809bf1345abc5648af68b3a82653f08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 1
+  m_Area: 1
+  m_IgnoreFromBuild: 0
+  m_AffectedAgents: ffffffff
 --- !u!1 &343517961676644934
 GameObject:
   m_ObjectHideFlags: 0
@@ -307,6 +341,7 @@ GameObject:
   - component: {fileID: 3840101316449608405}
   - component: {fileID: 1387378980732113961}
   - component: {fileID: 8139778207177028198}
+  - component: {fileID: 8927297085987232169}
   m_Layer: 0
   m_Name: Square (1)
   m_TagString: NormalWall
@@ -426,6 +461,22 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &8927297085987232169
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 343517961676644934}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9809bf1345abc5648af68b3a82653f08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 1
+  m_Area: 1
+  m_IgnoreFromBuild: 0
+  m_AffectedAgents: ffffffff
 --- !u!1 &625822735945343452
 GameObject:
   m_ObjectHideFlags: 0
@@ -602,6 +653,7 @@ GameObject:
   - component: {fileID: 2011565194863733536}
   - component: {fileID: 3339824294886584731}
   - component: {fileID: 852683906268860495}
+  - component: {fileID: 5289063569279015261}
   m_Layer: 0
   m_Name: Square (10)
   m_TagString: NormalWall
@@ -721,6 +773,22 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &5289063569279015261
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3261231152045410520}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9809bf1345abc5648af68b3a82653f08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 1
+  m_Area: 1
+  m_IgnoreFromBuild: 0
+  m_AffectedAgents: ffffffff
 --- !u!1 &3451133775733443459
 GameObject:
   m_ObjectHideFlags: 0
@@ -731,14 +799,14 @@ GameObject:
   m_Component:
   - component: {fileID: 6694328144980394599}
   - component: {fileID: 6595468980871411000}
-  - component: {fileID: 6560741091512347357}
   - component: {fileID: 3496474275928388573}
+  - component: {fileID: 8918378616484872662}
   m_Layer: 0
   m_Name: arena
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 40
   m_IsActive: 1
 --- !u!4 &6694328144980394599
 Transform:
@@ -807,37 +875,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &6560741091512347357
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3451133775733443459}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a5ac11cc976e418e8d13136b07e1f52, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_AgentTypeID: 0
-  m_CollectObjects: 0
-  m_Size: {x: 10, y: 10, z: 10}
-  m_Center: {x: 0, y: 2, z: 0}
-  m_LayerMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_UseGeometry: 0
-  m_DefaultArea: 0
-  m_GenerateLinks: 0
-  m_IgnoreNavMeshAgent: 1
-  m_IgnoreNavMeshObstacle: 1
-  m_OverrideTileSize: 0
-  m_TileSize: 256
-  m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.16666667
-  m_MinRegionArea: 2
-  m_NavMeshData: {fileID: 23800000, guid: d9672b507be426041bc406be86c67c55, type: 2}
-  m_BuildHeightMesh: 0
 --- !u!61 &3496474275928388573
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -883,6 +920,22 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.32, y: 0.32}
   m_EdgeRadius: 0
+--- !u!114 &8918378616484872662
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3451133775733443459}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9809bf1345abc5648af68b3a82653f08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 1
+  m_Area: 0
+  m_IgnoreFromBuild: 0
+  m_AffectedAgents: ffffffff
 --- !u!1 &3829326334712368338
 GameObject:
   m_ObjectHideFlags: 0
@@ -950,6 +1003,7 @@ GameObject:
   - component: {fileID: 7221787099895413881}
   - component: {fileID: 2716384790443305758}
   - component: {fileID: 591730021824424538}
+  - component: {fileID: 754644032686381021}
   m_Layer: 0
   m_Name: Square (2)
   m_TagString: NormalWall
@@ -1069,6 +1123,22 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &754644032686381021
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4123613110305361812}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9809bf1345abc5648af68b3a82653f08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 1
+  m_Area: 1
+  m_IgnoreFromBuild: 0
+  m_AffectedAgents: ffffffff
 --- !u!1 &4336509383830348562
 GameObject:
   m_ObjectHideFlags: 0
@@ -1080,6 +1150,7 @@ GameObject:
   - component: {fileID: 2371983563917080594}
   - component: {fileID: 2536812810351047944}
   - component: {fileID: 102563019370450834}
+  - component: {fileID: 7687030216781360886}
   m_Layer: 0
   m_Name: Square (4)
   m_TagString: NormalWall
@@ -1199,6 +1270,22 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &7687030216781360886
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4336509383830348562}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9809bf1345abc5648af68b3a82653f08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 1
+  m_Area: 1
+  m_IgnoreFromBuild: 0
+  m_AffectedAgents: ffffffff
 --- !u!1 &4857049832827661764
 GameObject:
   m_ObjectHideFlags: 0
@@ -1387,6 +1474,7 @@ GameObject:
   - component: {fileID: 1254314719592288514}
   - component: {fileID: 5679189710116162927}
   - component: {fileID: 8357331843310806516}
+  - component: {fileID: 3226566947468454527}
   m_Layer: 0
   m_Name: Square (6)
   m_TagString: NormalWall
@@ -1506,6 +1594,22 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &3226566947468454527
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5422493426174768752}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9809bf1345abc5648af68b3a82653f08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 1
+  m_Area: 1
+  m_IgnoreFromBuild: 0
+  m_AffectedAgents: ffffffff
 --- !u!1 &6872962406369147770
 GameObject:
   m_ObjectHideFlags: 0
@@ -1517,6 +1621,7 @@ GameObject:
   - component: {fileID: 4859646663928169901}
   - component: {fileID: 7187023624593894414}
   - component: {fileID: 4323924224332428460}
+  - component: {fileID: 7964578041439881251}
   m_Layer: 0
   m_Name: Square (5)
   m_TagString: NormalWall
@@ -1636,6 +1741,22 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &7964578041439881251
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6872962406369147770}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9809bf1345abc5648af68b3a82653f08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 1
+  m_Area: 1
+  m_IgnoreFromBuild: 0
+  m_AffectedAgents: ffffffff
 --- !u!1 &7002844783507135043
 GameObject:
   m_ObjectHideFlags: 0
@@ -1831,6 +1952,7 @@ GameObject:
   - component: {fileID: 6306802668525414028}
   - component: {fileID: 1847057817136777689}
   - component: {fileID: 861591773570351059}
+  - component: {fileID: 474621984560584708}
   m_Layer: 0
   m_Name: Square (3)
   m_TagString: NormalWall
@@ -1950,6 +2072,22 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &474621984560584708
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7496416268676965796}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9809bf1345abc5648af68b3a82653f08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 1
+  m_Area: 1
+  m_IgnoreFromBuild: 0
+  m_AffectedAgents: ffffffff
 --- !u!1 &8604982563956158232
 GameObject:
   m_ObjectHideFlags: 0
@@ -1961,6 +2099,7 @@ GameObject:
   - component: {fileID: 4351120723735630192}
   - component: {fileID: 1625262034650909523}
   - component: {fileID: 922760312094198949}
+  - component: {fileID: 3297319282894107710}
   m_Layer: 0
   m_Name: Square (9)
   m_TagString: NormalWall
@@ -2080,6 +2219,22 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &3297319282894107710
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8604982563956158232}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9809bf1345abc5648af68b3a82653f08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 1
+  m_Area: 1
+  m_IgnoreFromBuild: 0
+  m_AffectedAgents: ffffffff
 --- !u!1 &8951707627963755683
 GameObject:
   m_ObjectHideFlags: 0
@@ -2091,6 +2246,7 @@ GameObject:
   - component: {fileID: 3445089892546285317}
   - component: {fileID: 776868904787333608}
   - component: {fileID: 8513670087208137392}
+  - component: {fileID: 5185973291255027254}
   m_Layer: 0
   m_Name: Square (7)
   m_TagString: NormalWall
@@ -2210,6 +2366,22 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &5185973291255027254
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8951707627963755683}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9809bf1345abc5648af68b3a82653f08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 1
+  m_Area: 1
+  m_IgnoreFromBuild: 0
+  m_AffectedAgents: ffffffff
 --- !u!1001 &470395826678563
 PrefabInstance:
   m_ObjectHideFlags: 0
