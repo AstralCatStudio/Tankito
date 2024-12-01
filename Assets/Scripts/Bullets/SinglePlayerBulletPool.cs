@@ -12,12 +12,13 @@ namespace Tankito.SinglePlayer
     {
         [SerializeField] private List<GameObject> m_list;
         [SerializeField] private int m_prewarmCount;
-        private List<ObjectPool<GameObject>> m_pool;
+        private List<ObjectPool<GameObject>> m_pool = new List<ObjectPool<GameObject>>();
         private bool DEBUG;
 
         [ContextMenu("InitializePool")]
         public void Start()
         {
+
             for(int i = 0; i < m_list.Count; i++)
             {
                 InitializePool(m_list[i], m_prewarmCount, i);
@@ -53,7 +54,7 @@ namespace Tankito.SinglePlayer
             }
 
             // Create the pool
-            m_pool[n] = new ObjectPool<GameObject>(CreateFunc, ActionOnGet, ActionOnRelease, ActionOnDestroy, defaultCapacity: prewarmCount);
+            m_pool.Add(new ObjectPool<GameObject>(CreateFunc, ActionOnGet, ActionOnRelease, ActionOnDestroy, defaultCapacity: prewarmCount));
 
             // Populate the pool
             var prewarmObjects = new List<GameObject>();

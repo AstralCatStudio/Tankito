@@ -51,6 +51,11 @@ namespace Tankito.SinglePlayer
             transform.GetChild(2).GetComponent<AreaDetection>().OnSubjectDissapear -= OnSubjectDissapear;
         }
 
+        void Start()
+        {
+            transform.position = new Vector3(transform.position.x, transform.position.y, 0);
+        }
+
         private void Update()
         {
             timerShoot += Time.deltaTime;

@@ -14,6 +14,7 @@ namespace Tankito.SinglePlayer
         protected override void Start()
         {
             base.Start();
+            m_tankInput = GetComponent<ITankInput>();
             agent = GetComponent<NavMeshAgent>();
             agent.speed = npcData.speed;
             agent.angularSpeed = npcData.angularSpeed;

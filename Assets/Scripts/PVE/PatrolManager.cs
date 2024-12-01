@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PatrolManager : Singleton<PatrolManager>
 {
-    List<Transform> patrolPoints = new List<Transform>();
+    [SerializeField] List<Transform> patrolPoints = new List<Transform>();
 
     public Transform GetPatrolPoint()
     {
