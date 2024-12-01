@@ -60,18 +60,6 @@ namespace Tankito
         public void UpdateRemoteClientPlayerList()
         {
             if (!IsServer) return;
-            //Debug.LogWarning($"Jugadores conectados: {m_players.Count}");
-            //ulong[] clientIds = new ulong[m_players.Count];
-            //int i = 0;
-            //foreach (ulong id in m_players.Keys)
-            //{
-            //    clientIds[i] = id;
-            //    Debug.LogWarning($"id anadido al array {clientIds[i]}");
-            //    i++;
-            //}
-            //Debug.LogWarning($"i: {i}");
-            //Debug.LogWarning($"Array complete: {clientIds.Length}");
-            //NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(NetworkManager.Singleton.LocalClientId, out var playerObject);
             NetworkBehaviourReference[] tankDataRefs = m_players.Values.Select(td => new NetworkBehaviourReference(td)).ToArray();
             InitPlayersDictionaryClientRpc(tankDataRefs);
         }
@@ -86,27 +74,6 @@ namespace Tankito
                 TryAddPlayer(tankData);
             }
             Debug.Log(m_players.Count);
-            // Debug.LogWarning($"AAAA: {ids.Length}");
-            // if (serverObject.TryGet(out var targetObject))
-            // {
-            //     if (!m_players.ContainsKey(ids[0]))
-            //     {
-            //         AddPlayer(targetObject.GetComponent<TankData>());
-            //     }
-            // }
-            //     
-            // for (int i = 0; i < ids.Length; i++)
-            // {
-            //     Debug.LogWarning($"EEEEE: {ids[i]}");
-            //     if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(ids[i], out var playerObject))
-            //     {
-            //         Debug.LogWarning($"Anade {ids[i]}");
-            //         if (!m_players.ContainsKey(ids[i]))
-            //         {
-            //             AddPlayer(playerObject.GetComponent<TankData>());
-            //         }
-            //     }
-            // }
         }
 
         #region PlayerManagement
@@ -626,12 +593,17 @@ namespace Tankito
             if (IsServer)
             {
                 EndGameClientRpc();
+
+                ClockSignal signal = new ClockSignal();
+                signal.header = ClockSignalHeader.Stop;
+                MessageHandlers.Instance.SendClockSignal(signal);
             }
 
             if (DEBUG) Debug.Log("Fin de la partida");
             m_startedGame = false;
             //RoundUI.Instance.ActivateRankingGUI(false);
             RoundUI.Instance.ActivateEndExitButton(true);
+            RoundUI.Instance.ActivatePlayAgainGUI(true);
         }
 
         [ClientRpc]
@@ -644,7 +616,55 @@ namespace Tankito
         }
         #endregion
 
+        #region GameReset
 
+        public void ResetGame()
+        {
+            if (IsServer)
+            {
+                RoundUI.Instance.SetActiveScenarySelection(true);
+                ResetGameClientRpc();
+
+                foreach (var clientId in NetworkManager.Singleton.ConnectedClientsIds)
+                {
+                    ResetTanksModifiersClientRpc(clientId);
+                }
+
+                foreach(var tank in m_players)
+                {
+                    tank.Value.ResetPoints();
+                }
+
+                ResetPlayers();
+            }
+        }
+
+        [ClientRpc]
+        private void ResetGameClientRpc()
+        {
+            m_currentRound = 0;
+            m_startedGame = false;
+            m_startedRound = false;
+            RoundUI.Instance.SetCurrentRound(m_currentRound);
+            RoundUI.Instance.ActivateEndExitButton(false);
+            RoundUI.Instance.ActivateRankingGUI(false);
+            RoundUI.Instance.ActivatePlayAgainGUI(false);
+
+            RoundUI.Instance.ActivateInitExitButton(true);
+            RoundUI.Instance.ActivateSettingsButton(true);
+            RoundUI.Instance.ActivateLobbyInfoGUI(true);
+            RoundUI.Instance.ActivateReadyGUI(true);
+            RoundUI.Instance.SetCountdownText("Ready?");
+            RoundUI.Instance.ActivateCountdownGUI(true);
+        }
+
+        [ClientRpc]
+        private void ResetTanksModifiersClientRpc(ulong clientId)
+        {
+            BulletCannonRegistry.Instance[clientId].transform.parent.parent.parent.GetComponent<ModifiersController>().ResetModifiers();
+        }
+
+        #endregion
 
         #region DEBUG Methods
         [ContextMenu("TestDamageLocalPlayer")]

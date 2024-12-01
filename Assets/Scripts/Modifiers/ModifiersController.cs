@@ -18,6 +18,17 @@ public class ModifiersController : MonoBehaviour
         modifiers.Add(modifier);
         ApplyModifiers();
     }
+
+    public void ResetModifiers()
+    {
+        for (int i = modifiers.Count - 1; i > 0; i--)
+        {
+            Debug.LogWarning("Eliminando modifier "+i);
+            modifiers.RemoveAt(i);
+        }
+        ApplyModifiers();
+    }
+
     void ApplyModifiers()
     {
         //Debug.Log("aplicando modificadores");
@@ -30,7 +41,7 @@ public class ModifiersController : MonoBehaviour
                 m_bulletCannon.Modifiers.Add(bulletModifier);
             }
 
-            foreach(HullModifier hullMod in modifier.hullModifiers)
+            foreach (HullModifier hullMod in modifier.hullModifiers)
             {
                 m_tankController.Modifiers.Add(hullMod);
             }
@@ -38,5 +49,4 @@ public class ModifiersController : MonoBehaviour
         m_bulletCannon.ApplyModifierProperties();
         m_tankController.ApplyModifierList();
     }
-
 }

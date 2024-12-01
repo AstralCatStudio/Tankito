@@ -99,8 +99,8 @@ namespace Tankito.Netcode
             GameObject buttonHost = GameObject.Instantiate(buttonPrefab, transform.GetChild(0));
             ConfigButton(buttonHost, HostButton, "Host");
 
-            GameObject buttonServer = GameObject.Instantiate(buttonPrefab, transform.GetChild(0));
-            ConfigButton(buttonServer, ServerButton, "Server");
+            /*GameObject buttonServer = GameObject.Instantiate(buttonPrefab, transform.GetChild(0));
+            ConfigButton(buttonServer, ServerButton, "Server");*/
 
             GameObject buttonClient = GameObject.Instantiate(buttonPrefab, transform.GetChild(0));
             ConfigButton(buttonClient, ClientButton, "Client");

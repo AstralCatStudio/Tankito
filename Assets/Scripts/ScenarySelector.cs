@@ -75,7 +75,7 @@ public class ScenarySelector : NetworkBehaviour
         if (IsServer)
         {
             // Volver a asignar spawns
-            SpawnManager spawnManager = GameObject.FindObjectOfType<SpawnManager>();
+            SpawnManager spawnManager = _scenaries[newIndex].GetComponentInChildren<SpawnManager>();
             if(spawnManager != null)
             {
                 spawnManager.RecalculateSpawnPoints();
