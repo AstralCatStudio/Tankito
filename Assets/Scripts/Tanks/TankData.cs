@@ -62,7 +62,7 @@ namespace Tankito
             OnTankDestroyed += RoundManager.Instance.TankDeath;
             if(IsOwner)
             {
-                m_username = ClientData.Instance.name;
+                m_username = ClientData.Instance.username;
                 m_skinSelected = ClientData.Instance.characters.IndexOf(ClientData.Instance.GetCharacterSelected());
                 SetClientDataServerRpc(m_username, m_skinSelected);
             }
