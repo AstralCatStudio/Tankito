@@ -433,7 +433,6 @@ GameObject:
   - component: {fileID: 5612070492609626259}
   - component: {fileID: 8946953550615755186}
   - component: {fileID: 3729957977216864695}
-  - component: {fileID: 8267289774596509161}
   m_Layer: 5
   m_Name: Confirm Button
   m_TagString: Untagged
@@ -555,30 +554,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 8267289774596509161}
-        m_TargetAssemblyTypeName: CallSounds, Assembly-CSharp
-        m_MethodName: CallSound
-        m_Mode: 5
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: aceptar2
-          m_BoolArgument: 0
-        m_CallState: 2
---- !u!114 &8267289774596509161
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3444237902055036632}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f833e28b224f9a54bb3451bb6d05fda8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &7410069213665623517
 GameObject:
   m_ObjectHideFlags: 0
