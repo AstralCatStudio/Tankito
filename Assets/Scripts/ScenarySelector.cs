@@ -85,6 +85,35 @@ public class ScenarySelector : NetworkBehaviour
                 Debug.LogWarning("ScenarySelector: No se encontro spawnManager");
             }
         }
+
+        ///////////////////////////////////////////////////////////////////// Background sound
+        switch(GetActiveBiome())
+        {
+            case 0:
+                MusicManager.Instance.PlayBackgroundSound("amb_beach");
+                MusicManager.Instance.SetReverbZone(1, 5f, 20f);
+                break;
+
+            case 1:
+                MusicManager.Instance.PlayBackgroundSound("amb_sushi");
+                MusicManager.Instance.SetReverbZone(4, 5f, 20f);
+                break;
+
+            case 2:
+                MusicManager.Instance.PlayBackgroundSound("amb_barco");
+                MusicManager.Instance.SetReverbZone(0, 5f, 20f);
+                break;
+
+            default:
+                MusicManager.Instance.PlayBackgroundSound("amb_beach");
+                MusicManager.Instance.SetReverbZone(1, 5f, 20f);
+                break;
+        }
+        ///////////////////////////////////////////////////////////////////// sound effect
+        MusicManager.Instance.PlaySound("bip");
+
+
+
     }
 
     public void NextScenary()

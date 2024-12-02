@@ -52,6 +52,9 @@ namespace Tankito.SyncronizedButtons
 
             UpdateText();
             UpdateLocalText();
+
+            ///////////////////////////////////////////////////////////////////// sound effect
+            MusicManager.Instance.PlaySound("aceptar");
         }
 
         protected override void UpdateText()
