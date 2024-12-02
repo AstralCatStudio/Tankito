@@ -101,6 +101,9 @@ public class RoundUI : Singleton<RoundUI>
     {
         Debug.Log("Pulsaste Exit");
 
+        ///////////////////////////////////////////////////////////////////// sound effect
+        MusicManager.Instance.PlaySound("aceptar2");
+
         DisconnectHandler.Instance.ExitGame();
     }
 
@@ -137,6 +140,9 @@ public class RoundUI : Singleton<RoundUI>
 
     public void ActivateSettingsMenu(bool active)
     {
+        ///////////////////////////////////////////////////////////////////// sound effect
+        MusicManager.Instance.PlaySound("aceptar");
+
         SettingsMenu.SetActive(active);
     }
 
@@ -144,6 +150,9 @@ public class RoundUI : Singleton<RoundUI>
     {
         if (RoundManager.Instance.IsGameStarted)
         {
+            ///////////////////////////////////////////////////////////////////// sound effect
+            MusicManager.Instance.PlaySound("aceptar2");
+
             FindObjectOfType<PlayerInput>(true).gameObject.SetActive(true);
         }
     }
