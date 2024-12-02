@@ -12,8 +12,9 @@ public class AreaDetection : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.gameObject.tag == subjectTag)
+        if(collision.tag == subjectTag)
         {
+            Debug.Log("Se detecta el objeto " + collision.tag);
             OnSubjectDetected?.Invoke(collision.gameObject);
         }
     }

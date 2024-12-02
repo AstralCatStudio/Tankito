@@ -12,26 +12,30 @@ public class BodyGuardBehaviour : AGenericBehaviour
     private float maxCast;
     GameObject bulletToStop;
     GameObject allyToProtect;
+    [SerializeField] AreaDetection allyAreaDetection;
+    [SerializeField] AreaDetection bulletAreaDetection;
     #region TargetList
     List<GameObject> alliesInRange = new List<GameObject>();
     List<GameObject> bulletsInRange = new List<GameObject>();
     #endregion
 
-    private void OnEnable()
+    protected override void Start()
     {
-        maxCast = transform.GetChild(3).GetComponent<CircleCollider2D>().radius * 2;
-        transform.GetChild(3).GetComponent<AreaDetection>().OnSubjectDetected += OnAllyDetected;
-        transform.GetChild(3).GetComponent<AreaDetection>().OnSubjectDissapear += OnAllyDissapear;
-        transform.GetChild(4).GetComponent<AreaDetection>().OnSubjectDetected += OnBulletDetected;
-        transform.GetChild(4).GetComponent<AreaDetection>().OnSubjectDissapear += OnBulletDissapear;
+        base.Start();
+        maxCast = allyAreaDetection.gameObject.GetComponent<CircleCollider2D>().radius * 2;
+        allyAreaDetection.OnSubjectDetected += OnAllyDetected;
+        allyAreaDetection.OnSubjectDissapear += OnAllyDissapear;
+        bulletAreaDetection.OnSubjectDetected += OnBulletDetected;
+        bulletAreaDetection.OnSubjectDissapear += OnBulletDissapear;
     }
 
-    private void OnDisable()
+    protected override void OnDisable()
     {
-        transform.GetChild(3).GetComponent<AreaDetection>().OnSubjectDetected -= OnAllyDetected;
-        transform.GetChild(3).GetComponent<AreaDetection>().OnSubjectDissapear -= OnAllyDissapear;
-        transform.GetChild(4).GetComponent<AreaDetection>().OnSubjectDetected -= OnBulletDetected;
-        transform.GetChild(4).GetComponent<AreaDetection>().OnSubjectDissapear -= OnBulletDissapear;
+        base.OnDisable();
+        allyAreaDetection.OnSubjectDetected -= OnAllyDetected;
+        allyAreaDetection.OnSubjectDissapear -= OnAllyDissapear;
+        bulletAreaDetection.OnSubjectDetected -= OnBulletDetected;
+        bulletAreaDetection.OnSubjectDissapear -= OnBulletDissapear;
     }
 
     #region States

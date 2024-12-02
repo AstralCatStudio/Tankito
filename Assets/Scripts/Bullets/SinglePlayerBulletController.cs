@@ -47,6 +47,7 @@ namespace Tankito.SinglePlayer
 
         public override void Detonate(bool lifeTimeOver = false)
         {
+            Debug.Log("Detonacioooon");
             OnDetonate.Invoke(this);
             SinglePlayerBulletPool.Instance.Release(this.gameObject, (int)bulletType);
         }
@@ -54,30 +55,64 @@ namespace Tankito.SinglePlayer
         protected override void OnCollisionEnter2D(Collision2D collision)
         {
             lastCollisionNormal = collision.GetContact(0).normal;
-            switch (collision.gameObject.tag)
+            switch (bulletType)
             {
-                case "NormalWall":
-                    if (m_bouncesLeft <= 0)
+                case BulletType.Player:
+                    switch (collision.gameObject.tag)
                     {
-                        Detonate();
+                        case "NormalWall":
+                            if (m_bouncesLeft <= 0)
+                            {
+                                Detonate();
+                            }
+                            else
+                            {
+                                m_bouncesLeft--;
+                            }
+                            break;
+                        case "BouncyWall":
+
+                            break;
+
+                        case "Player":
+                            Detonate();
+                            break;
+
+                        default:
+                            Detonate();
+                            break;
                     }
-                    else
+                    break;
+                case BulletType.Enemy:
+                    Debug.Log("Fue " + collision.gameObject.tag);
+                    switch (collision.gameObject.tag)
                     {
-                        m_bouncesLeft--;
+                        case "NormalWall":
+                            if (m_bouncesLeft <= 0)
+                            {
+                                Detonate();
+                            }
+                            else
+                            {
+                                m_bouncesLeft--;
+                            }
+                            break;
+                        case "BouncyWall":
+                            break;
+                        case "Enemy":
+                            break;
+
+                        case "Player":
+                            Detonate();
+                            break;
+
+                        default:
+                            Detonate();
+                            break;
                     }
-                    break;
-                case "BouncyWall":
-
-                    break;
-
-                case "Player":
-                    Detonate();
-                    break;
-
-                default:
-                    Detonate();
                     break;
             }
+            
         }
     }
 }

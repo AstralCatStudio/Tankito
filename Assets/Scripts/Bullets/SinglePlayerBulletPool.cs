@@ -73,6 +73,7 @@ namespace Tankito.SinglePlayer
 
         public GameObject Get(Vector2 position, Vector2 rotation, int objectTye)
         {
+            Debug.Log("Se obtiene un gameObject");
             float rotationDeg = Mathf.Atan2(rotation.x, rotation.y);
             return Get(position, rotationDeg, objectTye);
         }
@@ -97,6 +98,7 @@ namespace Tankito.SinglePlayer
 
         public void Release(GameObject pooleableObj, int objectTye)
         {
+            Debug.Log("Se hace release de un gameObject");
             m_pool[objectTye].Release(pooleableObj);
         }
     }

@@ -7,6 +7,7 @@ using BehaviourAPI.Core;
 using static UnityEngine.GraphicsBuffer;
 using UnityEngine.AI;
 using System.Linq;
+using UnityEngine.Splines;
 
 namespace Tankito.SinglePlayer
 {
@@ -15,49 +16,50 @@ namespace Tankito.SinglePlayer
         [SerializeField] protected AgentController agentController;
         [SerializeField] SinglePlayerBulletCannon cannon;
         protected InputPayload m_currentInput;
+        [SerializeField] AreaDetection genericAreaDetection;
+        [SerializeField] LayerMask wallLayer;
+        [SerializeField] GameObject debugPosition;
+
+        [SerializeField] protected bool DEBUG = true;
 
         #region TargetList
-        protected List<GameObject>  genericTargets = new List<GameObject>();
+        [SerializeField] protected List<GameObject>  genericTargets = new List<GameObject>();
         #endregion
 
         #region Idle_Variables
-        bool patrolPointFound = false;
+        [SerializeField] bool patrolPointFound = false;
         #endregion
 
         #region Chase_Aim_Controllers
-        bool noObstaclesBetween;
-        bool cannonReloaded = true;
-        float timerShoot = 0;
-        bool targetInRange = false;
+        [SerializeField] bool noObstaclesBetween;
+        [SerializeField] bool cannonReloaded = true;
+        [SerializeField] float timerShoot = 0;
+        [SerializeField] bool targetInRange = false;
         #endregion
 
         #region Aim_Shoot_Controllers
-        bool turretInPosition = false;
+        [SerializeField] bool turretInPosition = false;
         #endregion
 
         #region Shoot_Controllers
-        bool hasShot = false;
+        [SerializeField] bool hasShot = false;
         #endregion
 
-        private void OnEnable()
+        protected virtual void Start()
         {
-            transform.GetChild(2).GetComponent<AreaDetection>().OnSubjectDetected += OnSubjectDetected;
-            transform.GetChild(2).GetComponent<AreaDetection>().OnSubjectDissapear += OnSubjectDissapear;
+            genericAreaDetection.OnSubjectDetected += OnSubjectDetected;
+            genericAreaDetection.OnSubjectDissapear += OnSubjectDissapear;
         }
 
-        private void OnDisable()
+        protected virtual void OnDisable()
         {
-            transform.GetChild(2).GetComponent<AreaDetection>().OnSubjectDetected -= OnSubjectDetected;
-            transform.GetChild(2).GetComponent<AreaDetection>().OnSubjectDissapear -= OnSubjectDissapear;
-        }
-
-        void Start()
-        {
-            transform.position = new Vector3(transform.position.x, transform.position.y, 0);
+            genericAreaDetection.OnSubjectDetected -= OnSubjectDetected;
+            genericAreaDetection.OnSubjectDissapear -= OnSubjectDissapear;
         }
 
         private void Update()
         {
+            Debug.Log("HOLA HOLA HOLA");
             timerShoot += Time.deltaTime;
             if(timerShoot >= agentController.npcData.reloadTime) 
             {
@@ -66,7 +68,13 @@ namespace Tankito.SinglePlayer
         }
 
         #region TankInputMethods
-        public InputPayload GetInput() { return GetCurrentInput(); }
+        public InputPayload GetInput() 
+        { 
+            InputPayload newInput = m_currentInput;
+            m_currentInput.action = TankAction.None;
+            debugPosition.transform.position = newInput.moveVector;
+            return newInput;
+        }
 
         public InputPayload GetCurrentInput() {  return m_currentInput; }
 
@@ -82,6 +90,7 @@ namespace Tankito.SinglePlayer
         #region States
         public Status IdleState()
         {
+            if (DEBUG) Debug.Log("IDLESTATE");
             if (new Vector2(transform.position.x, transform.position.y) == m_currentInput.moveVector)
             {
                 patrolPointFound = false;
@@ -97,56 +106,71 @@ namespace Tankito.SinglePlayer
 
         public Status ChaseState()
         {
-            genericTargets.OrderBy(obj => Vector2.Distance(obj.transform.position, transform.position));
-            Vector3 targetPos = genericTargets[0].transform.position;
-            Vector2 targetToNpc = transform.position - targetPos;
-            Vector2 nextPosition;
-            if (CheckObstacles(targetPos, targetToNpc))
+            if (DEBUG) Debug.Log("CHASESTATE");
+            if(genericTargets.Count > 0) 
             {
-                nextPosition = targetPos;
-            }
-            else
-            {
-                if (targetToNpc.magnitude < agentController.npcData.runAwayDistance)
+                genericTargets.OrderBy(obj => Vector2.Distance(obj.transform.position, transform.position));
+                Vector3 targetPos = genericTargets[0].transform.position;
+                Vector2 targetToNpc = transform.position - targetPos;
+                Vector2 nextPosition;
+                if (CheckObstacles(targetPos, targetToNpc))
                 {
-                    nextPosition = (Vector2)transform.position + targetToNpc.normalized * agentController.npcData.speed;
+                    if (DEBUG)
+                    Debug.Log("Se han encontrado obstaculos. Se va a " + targetPos);
+                    nextPosition = targetPos;
                 }
                 else
                 {
-                    nextPosition = (Vector2)targetPos + targetToNpc.normalized * agentController.npcData.idealDistance;
+                    if (targetToNpc.magnitude < agentController.npcData.runAwayDistance)
+                    {
+                        nextPosition = (Vector2)transform.position + targetToNpc.normalized * agentController.npcData.speed * agentController.agent.speed;
+                    }
+                    else
+                    {
+                        nextPosition = (Vector2)targetPos + targetToNpc.normalized * agentController.npcData.idealDistance;
+                    }
                 }
-            }
 
-            CheckTargetInRange(targetToNpc.magnitude, agentController.npcData.attackRange);
+                CheckTargetInRange(targetToNpc.magnitude, agentController.npcData.attackRange);
+
+                /*if (DEBUG)*/ 
+                NavMeshHit closestEdge;
+                if (NavMesh.FindClosestEdge(nextPosition, out closestEdge, wallLayer)) //En caso de que la posicion sea un obstaculo
+                {
+                    nextPosition = closestEdge.position;
+                    if(DEBUG) Debug.Log("Destino ajustado al borde más cercano.");
+                }
+                m_currentInput.moveVector = nextPosition;
+            }
             
-            NavMeshHit closestEdge;
-            if (NavMesh.FindClosestEdge(nextPosition, out closestEdge, NavMesh.AllAreas)) //En caso de que la posicion sea un obstaculo
-            {
-                nextPosition = closestEdge.position;
-                Debug.Log("Destino ajustado al borde más cercano.");
-            }
-            m_currentInput.moveVector = nextPosition;
-
             return Status.Running;
         }
 
         public Status AimState()
         {
-            Vector2 aimVec = (genericTargets[0].transform.position - transform.position).normalized;
-            Vector2 turretVec = (cannon.transform.position - transform.position).normalized;
-            float angle = Vector2.Angle(aimVec, turretVec);
-            if(angle < agentController.npcData.angleErrorAccepted)
+            if (DEBUG) Debug.Log("AIMSTATE");
+            if(genericTargets.Count > 0)
             {
-                turretInPosition = true;
-            }
-            m_currentInput.aimVector = aimVec;
+                Vector2 aimVec = genericTargets[0].transform.position - transform.position;
+                Vector2 aimDir = aimVec.normalized;
+                Vector2 turretVec = (cannon.transform.position - transform.position).normalized;
+                float angle = Vector2.Angle(aimDir, turretVec);
+                if (DEBUG) Debug.Log(angle);
+                if (angle < agentController.npcData.angleErrorAccepted)
+                {
+                    turretInPosition = true;
+                }
+                m_currentInput.aimVector = aimVec;
+                CheckTargetInRange(aimVec.magnitude, agentController.npcData.attackRange);
+            }   
             return Status.Running;
         }
 
         public Status ShootState()
         {
+            if (DEBUG) Debug.Log("SHOOTSTATE");
             m_currentInput.action = TankAction.Fire;
-            StartCoroutine(SafeShootCourutine());
+            hasShot = true;
             return Status.Running;
         }
 
@@ -222,7 +246,7 @@ namespace Tankito.SinglePlayer
             {
                 cannonReloaded = false;
                 hasShot = false;
-                m_currentInput.action = TankAction.None;
+                timerShoot = 0;
                 return true;
             }
             else
@@ -237,17 +261,19 @@ namespace Tankito.SinglePlayer
         #region Utilis
         private void OnSubjectDetected(GameObject gameObject)
         {
+            if (DEBUG) Debug.Log("Se añade un objeto generico a la lista");
             genericTargets.Add(gameObject);
         }
 
         private void OnSubjectDissapear(GameObject gameObject)
         {
+            if (DEBUG) Debug.Log("Se elimina un elemento generico de la lista");
             genericTargets.Remove(gameObject); 
         }
 
         protected bool CheckObstacles(Vector3 targetPosition, Vector2 targetToNpc)
         {
-            if (Physics2D.Raycast(targetPosition, targetToNpc.normalized, targetToNpc.magnitude))
+            if (Physics2D.Raycast(targetPosition, targetToNpc.normalized, targetToNpc.magnitude, wallLayer))
             {
                 noObstaclesBetween = false;
             }
@@ -269,12 +295,6 @@ namespace Tankito.SinglePlayer
                 targetInRange = false;
             }
             return targetInRange;
-        }
-
-        IEnumerator SafeShootCourutine()    //Corutina que asegura que se consume el input
-        {
-            yield return Time.fixedDeltaTime;
-            hasShot = true;
         }
     }
     #endregion
