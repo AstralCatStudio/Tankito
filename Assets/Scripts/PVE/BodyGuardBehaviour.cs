@@ -15,8 +15,8 @@ public class BodyGuardBehaviour : AGenericBehaviour
     [SerializeField] AreaDetection allyAreaDetection;
     [SerializeField] AreaDetection bulletAreaDetection;
     #region TargetList
-    List<GameObject> alliesInRange = new List<GameObject>();
-    List<GameObject> bulletsInRange = new List<GameObject>();
+    [SerializeField] List<GameObject> alliesInRange = new List<GameObject>();
+    [SerializeField] List<GameObject> bulletsInRange = new List<GameObject>();
     #endregion
 
     protected override void Start()

@@ -182,7 +182,6 @@ public abstract class ATankController : MonoBehaviour
 
     private void FireTank(Vector2 aimVector, float deltaTime)
     {
-        Debug.Log("FUEGOOOOOO");
         cannon.Shoot(aimVector);
     }
 

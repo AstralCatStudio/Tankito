@@ -28,7 +28,8 @@ namespace Tankito.SinglePlayer
                 timer = 0;
                 float angle = Mathf.Atan2(aimVector.y, aimVector.x);
                 Vector2 direction = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
-                ShootBullet((Vector2)transform.parent.parent.parent.position + m_shootRadius * aimVector, direction, 1);
+                ShootBullet((Vector2)transform.parent.parent.parent.position + m_shootRadius * aimVector.normalized, direction, 1);
+                Debug.Log($"LA POSICION DEL CAÑON ES {transform.position} y la del padre {transform.parent.parent.parent.position}");
             }
         }
 
@@ -36,6 +37,7 @@ namespace Tankito.SinglePlayer
         {
             var newBullet = SinglePlayerBulletPool.Instance.Get(position, direction, (int)m_bulletType);
             newBullet.GetComponent<SinglePlayerBulletController>().InitializeBullet(position, direction);
+            Debug.Log($"CAÑON DISPARA BALA POSICION: {position}, DIRECCION: {direction}");
         }
 
     }

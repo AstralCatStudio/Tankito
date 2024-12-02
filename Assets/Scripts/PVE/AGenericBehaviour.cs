@@ -160,7 +160,7 @@ namespace Tankito.SinglePlayer
                 {
                     turretInPosition = true;
                 }
-                m_currentInput.aimVector = aimVec;
+                m_currentInput.aimVector = aimDir;
                 CheckTargetInRange(aimVec.magnitude, agentController.npcData.attackRange);
             }   
             return Status.Running;
