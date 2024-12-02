@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,6 +14,8 @@ public class ShellAnimation : MonoBehaviour
     [SerializeField] private float degrees = 30;
     [SerializeField] private float waitTime = 0.5f;
     [SerializeField] private float animationTime = 0.5f;
+
+    public Action onAnimationFinished;
     
     private void OnEnable()
     {   
@@ -59,5 +62,6 @@ public class ShellAnimation : MonoBehaviour
         gameObject.GetComponent<Image>().sprite = shellOpened;
         description.SetActive(true);
         modifier.SetActive(true);
+        onAnimationFinished?.Invoke();
     }
 }

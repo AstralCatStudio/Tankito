@@ -59,12 +59,23 @@ public class AnimatedModifiers : MonoBehaviour
                 shells.Add(instance);
         }
 
+        foreach(PlayerTest player in players)
+        {
+            player.score += Random.Range(0, 4);
+        }
+
+
+
         LeanTween.scale(panelRT, Vector2.zero, 0f);
     }
+
+
 
     private void OnEnable()
     {
         LeanTween.scale(panelRT, Vector2.one, popupTime).setEase(LeanTweenType.easeOutElastic);
+        shells[0].GetComponent<ShellAnimation>().onAnimationFinished += StartChoose;
+
         //for (int i = 0; i < players.Count; i++)  //numero de jugadores
         //{
         //    players[i].score += Random.Range(0, 4); //Añadir puntuación
@@ -72,6 +83,11 @@ public class AnimatedModifiers : MonoBehaviour
         //Invoke("AnimateShells", waitTime);
     }
     #endregion
+
+    private void StartChoose()
+    {
+
+    }
 
     public void Disappear()
     {
@@ -82,5 +98,6 @@ public class AnimatedModifiers : MonoBehaviour
     private void Disable()
     {
         gameObject.SetActive(false);
+        shells[0].GetComponent<ShellAnimation>().onAnimationFinished -= StartChoose;
     }
 }
