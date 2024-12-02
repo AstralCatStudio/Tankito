@@ -89,22 +89,27 @@ namespace Tankito {
         public void Detonate(bool lifeTimeOver = false)
         {
             
-           OnDetonate.Invoke(this);
-           if (NetworkManager.Singleton.IsServer)
-           {
+            OnDetonate.Invoke(this);
+
+            if (SimClock.Instance.Active && NetworkManager.Singleton.IsClient)
+                MusicManager.Instance.PlayBulletDestroy();
+
+
+            if (NetworkManager.Singleton.IsServer)
+            {
                 BulletSimulationObject bulletSimObj = GetComponent<BulletSimulationObject>();
                 ServerSimulationManager.Instance.QueueForDespawn(bulletSimObj.SimObjId);
-           }
-           else if(PREDICT_DESTRUCTION || lifeTimeOver)
-           {
+            }
+            else if(PREDICT_DESTRUCTION || lifeTimeOver)
+            {
                 //Debug.Log("LifeTimeOver?=>" + lifeTimeOver);
                 BulletSimulationObject bulletSimObj = GetComponent<BulletSimulationObject>();
                 ClientSimulationManager.Instance.QueueForDespawn(bulletSimObj.SimObjId);
-           }
-           else
-           {
-               //gameObject.GetComponent<SpriteRenderer>().enabled = false;
-           }
+            }
+            else
+            {
+                //gameObject.GetComponent<SpriteRenderer>().enabled = false;
+            }
         }   
 
         private void OnCollisionEnter2D(Collision2D collision)
