@@ -59,7 +59,7 @@ namespace Tankito.SinglePlayer
 
         private void Update()
         {
-            Debug.Log("HOLA HOLA HOLA");
+            //Debug.Log("HOLA HOLA HOLA");
             timerShoot += Time.deltaTime;
             if(timerShoot >= agentController.npcData.reloadTime) 
             {

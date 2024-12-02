@@ -65,10 +65,10 @@ GameObject:
   - component: {fileID: 1261847421609429294}
   - component: {fileID: 3418804191855900915}
   - component: {fileID: 177634207827767431}
-  - component: {fileID: 5658621827150571473}
-  - component: {fileID: 1113473057844878521}
-  - component: {fileID: 5334828445911339723}
   - component: {fileID: 5268487039698229890}
+  - component: {fileID: 5334828445911339723}
+  - component: {fileID: 6756425380511693037}
+  - component: {fileID: 2063260200714059806}
   - component: {fileID: 1415010158793888448}
   m_Layer: 0
   m_Name: Kamikaze
@@ -94,6 +94,7 @@ Transform:
   - {fileID: 8923973848098948632}
   - {fileID: 8809720968174819374}
   - {fileID: 8963193965033186055}
+  - {fileID: 8202197497248756228}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!50 &3418804191855900915
@@ -158,113 +159,6 @@ CircleCollider2D:
   m_Offset: {x: -0.35260153, y: 0}
   serializedVersion: 2
   m_Radius: 0.6026015
---- !u!114 &5658621827150571473
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 828424104354284482}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f73756c709b76c346a32499696a44495, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_inputReplayTick: -1
-  m_tankController: {fileID: 1113473057844878521}
-  m_turretAnimator: {fileID: 6669778966259452927}
-  m_hullAnimator: {fileID: 3367818034188912104}
-  m_turretRB: {fileID: 4966370635937094931}
-  DEBUG: 0
---- !u!114 &1113473057844878521
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 828424104354284482}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c8b17a9f4c79034ea0a4c07208b7663, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_tankRB: {fileID: 3418804191855900915}
-  m_turretRB: {fileID: 4966370635937094931}
-  m_speed: 3
-  m_rotationSpeed: 360
-  m_aimSpeed: 900
-  m_dashSpeedCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 24.596172
-      outSlope: 24.596172
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 0.08127188
-      value: 1.9989772
-      inSlope: -0.002123253
-      outSlope: -0.002123253
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.26034087
-    - serializedVersion: 3
-      time: 0.8607947
-      value: 1.9965394
-      inSlope: 0.002965081
-      outSlope: 0.002965081
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.5057174
-      outWeight: 1
-    - serializedVersion: 3
-      time: 1.0028714
-      value: -0.0022583008
-      inSlope: -14.068443
-      outSlope: -14.068443
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  m_dashSpeedMultiplier: 3
-  m_dashDistance: 0.5
-  m_reloadDashTicks: 0
-  stateInitTick: 0
-  playerState: 0
-  DEBUGCONT: 0
-  DEBUGDASh: 0
-  m_dashCooldown: 2
---- !u!195 &5334828445911339723
-NavMeshAgent:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 828424104354284482}
-  m_Enabled: 1
-  m_AgentTypeID: 0
-  m_Radius: 0.2
-  m_Speed: 3.5
-  m_Acceleration: 8
-  avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 0
-  m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
-  m_AutoRepath: 1
-  m_Height: 2
-  m_BaseOffset: 0
-  m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
 --- !u!114 &5268487039698229890
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -297,7 +191,7 @@ MonoBehaviour:
         references:
         - fieldName: Action
           value:
-            rid: -2
+            rid: 4783593604421779458
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         parentIds:
@@ -312,7 +206,7 @@ MonoBehaviour:
         references:
         - fieldName: Action
           value:
-            rid: -2
+            rid: 4783593604421779459
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         parentIds:
@@ -329,7 +223,7 @@ MonoBehaviour:
         references:
         - fieldName: Action
           value:
-            rid: -2
+            rid: 4783593604421779461
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         parentIds:
@@ -345,7 +239,7 @@ MonoBehaviour:
         references:
         - fieldName: Action
           value:
-            rid: -2
+            rid: 4783593604421779460
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         parentIds:
@@ -353,13 +247,13 @@ MonoBehaviour:
         childIds: []
       - name: IdleToFollow
         id: 6ace5ff7-0b8b-41ae-b165-611f108ff5fb
-        position: {x: 708, y: 456}
+        position: {x: 724, y: 476.8}
         node:
           rid: 4783593595286061087
         references:
         - fieldName: Perception
           value:
-            rid: -2
+            rid: 4783593604421779462
           fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
             Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         - fieldName: Action
@@ -379,7 +273,7 @@ MonoBehaviour:
         references:
         - fieldName: Perception
           value:
-            rid: -2
+            rid: 4783593604421779463
           fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
             Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         - fieldName: Action
@@ -399,7 +293,7 @@ MonoBehaviour:
         references:
         - fieldName: Perception
           value:
-            rid: -2
+            rid: 4783593604421779468
           fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
             Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         - fieldName: Action
@@ -419,7 +313,7 @@ MonoBehaviour:
         references:
         - fieldName: Perception
           value:
-            rid: -2
+            rid: 4783593604421779472
           fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
             Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         - fieldName: Action
@@ -439,7 +333,7 @@ MonoBehaviour:
         references:
         - fieldName: Perception
           value:
-            rid: -2
+            rid: 4783593604421779476
           fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
             Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         - fieldName: Action
@@ -475,23 +369,394 @@ MonoBehaviour:
     - rid: 4783593595286061087
       type: {class: StateTransition, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
       data:
-        StatusFlags: 0
+        StatusFlags: -1
     - rid: 4783593595286061089
       type: {class: StateTransition, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
       data:
-        StatusFlags: 0
+        StatusFlags: -1
     - rid: 4783593595286061090
       type: {class: StateTransition, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
       data:
-        StatusFlags: 0
+        StatusFlags: -1
     - rid: 4783593595286061091
       type: {class: StateTransition, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
       data:
-        StatusFlags: 0
+        StatusFlags: -1
     - rid: 4783593595286061093
       type: {class: StateTransition, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
       data:
-        StatusFlags: 0
+        StatusFlags: -1
+    - rid: 4783593604421779458
+      type: {class: CustomAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        start:
+          componentName: 
+          methodName: 
+        update:
+          componentName: KamikazeBehaviour
+          methodName: IdleState
+        stop:
+          componentName: 
+          methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
+    - rid: 4783593604421779459
+      type: {class: CustomAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        start:
+          componentName: 
+          methodName: 
+        update:
+          componentName: KamikazeBehaviour
+          methodName: FollowPlayerState
+        stop:
+          componentName: 
+          methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
+    - rid: 4783593604421779460
+      type: {class: CustomAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        start:
+          componentName: 
+          methodName: 
+        update:
+          componentName: KamikazeBehaviour
+          methodName: ExplodeState
+        stop:
+          componentName: 
+          methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
+    - rid: 4783593604421779461
+      type: {class: CustomAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        start:
+          componentName: 
+          methodName: 
+        update:
+          componentName: KamikazeBehaviour
+          methodName: ParryState
+        stop:
+          componentName: 
+          methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
+    - rid: 4783593604421779462
+      type: {class: CustomPerception, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        init:
+          componentName: 
+          methodName: 
+        check:
+          componentName: KamikazeBehaviour
+          methodName: DetectPlayer
+        reset:
+          componentName: 
+          methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
+    - rid: 4783593604421779463
+      type: {class: CompoundPerceptionWrapper, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        compoundPerception:
+          rid: 4783593604421779464
+        subPerceptions:
+        - perception:
+            rid: 4783593604421779466
+        - perception:
+            rid: 4783593604421779467
+    - rid: 4783593604421779464
+      type: {class: OrPerception, ns: BehaviourAPI.Core.Perceptions, asm: BehaviourAPI.Core}
+      data: 
+    - rid: 4783593604421779466
+      type: {class: CustomPerception, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        init:
+          componentName: 
+          methodName: 
+        check:
+          componentName: KamikazeBehaviour
+          methodName: IsPlayerReached
+        reset:
+          componentName: 
+          methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
+    - rid: 4783593604421779467
+      type: {class: CustomPerception, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        init:
+          componentName: 
+          methodName: 
+        check:
+          componentName: KamikazeBehaviour
+          methodName: HasCollided
+        reset:
+          componentName: 
+          methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
+    - rid: 4783593604421779468
+      type: {class: CompoundPerceptionWrapper, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        compoundPerception:
+          rid: 4783593604421779469
+        subPerceptions:
+        - perception:
+            rid: 4783593604421779470
+        - perception:
+            rid: 4783593604421779471
+    - rid: 4783593604421779469
+      type: {class: AndPerception, ns: BehaviourAPI.Core.Perceptions, asm: BehaviourAPI.Core}
+      data: 
+    - rid: 4783593604421779470
+      type: {class: CustomPerception, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        init:
+          componentName: 
+          methodName: 
+        check:
+          componentName: KamikazeBehaviour
+          methodName: DetectProjectile
+        reset:
+          componentName: 
+          methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
+    - rid: 4783593604421779471
+      type: {class: CustomPerception, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        init:
+          componentName: 
+          methodName: 
+        check:
+          componentName: KamikazeBehaviour
+          methodName: '!HasBlocked'
+        reset:
+          componentName: 
+          methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
+    - rid: 4783593604421779472
+      type: {class: CompoundPerceptionWrapper, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        compoundPerception:
+          rid: 4783593604421779473
+        subPerceptions:
+        - perception:
+            rid: 4783593604421779474
+        - perception:
+            rid: 4783593604421779475
+    - rid: 4783593604421779473
+      type: {class: AndPerception, ns: BehaviourAPI.Core.Perceptions, asm: BehaviourAPI.Core}
+      data: 
+    - rid: 4783593604421779474
+      type: {class: CustomPerception, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        init:
+          componentName: 
+          methodName: 
+        check:
+          componentName: KamikazeBehaviour
+          methodName: HasBlocked
+        reset:
+          componentName: 
+          methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
+    - rid: 4783593604421779475
+      type: {class: CustomPerception, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        init:
+          componentName: 
+          methodName: 
+        check:
+          componentName: KamikazeBehaviour
+          methodName: DetectPlayer
+        reset:
+          componentName: 
+          methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
+    - rid: 4783593604421779476
+      type: {class: CompoundPerceptionWrapper, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        compoundPerception:
+          rid: 4783593604421779477
+        subPerceptions:
+        - perception:
+            rid: 4783593604421779478
+        - perception:
+            rid: 4783593604421779479
+    - rid: 4783593604421779477
+      type: {class: AndPerception, ns: BehaviourAPI.Core.Perceptions, asm: BehaviourAPI.Core}
+      data: 
+    - rid: 4783593604421779478
+      type: {class: CustomPerception, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        init:
+          componentName: 
+          methodName: 
+        check:
+          componentName: KamikazeBehaviour
+          methodName: HasBlocked
+        reset:
+          componentName: 
+          methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
+    - rid: 4783593604421779479
+      type: {class: CustomPerception, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        init:
+          componentName: 
+          methodName: 
+        check:
+          componentName: KamikazeBehaviour
+          methodName: '!DetectPlayer'
+        reset:
+          componentName: 
+          methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
+--- !u!195 &5334828445911339723
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 828424104354284482}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.2
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 2
+  m_BaseOffset: 0
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
+--- !u!114 &6756425380511693037
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 828424104354284482}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0ebb401ae137a4498cf28db06882eaa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_tankRB: {fileID: 3418804191855900915}
+  m_turretRB: {fileID: 4966370635937094931}
+  m_speed: 0
+  m_rotationSpeed: 0
+  m_aimSpeed: 900
+  m_dashSpeedCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  m_dashSpeedMultiplier: 1
+  m_dashDistance: 0
+  m_reloadDashTicks: 0
+  stateInitTick: 0
+  playerState: 0
+  DEBUGCONT: 0
+  DEBUGDASh: 0
+  agent: {fileID: 5334828445911339723}
+  npcData: {fileID: 11400000, guid: 9a03f38c27b916345bceecf3f257f3e0, type: 2}
+--- !u!114 &2063260200714059806
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 828424104354284482}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5a4f2bf9355f1647ade6543c0766b2b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  agentController: {fileID: 6756425380511693037}
+  cannon: {fileID: 1567447245479635594}
+  genericAreaDetection: {fileID: 5215437267008997893}
+  wallLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  debugPosition: {fileID: 6727511633682504703}
+  DEBUG: 0
+  genericTargets: []
+  patrolPointFound: 0
+  noObstaclesBetween: 0
+  cannonReloaded: 1
+  timerShoot: 0
+  targetInRange: 0
+  turretInPosition: 0
+  hasShot: 0
+  explosionRange: 1
+  detectionRange: 5
+  speed: 2
 --- !u!114 &1415010158793888448
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -777,6 +1042,90 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!1 &6727511633682504703
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8202197497248756228}
+  - component: {fileID: 1412879710534976755}
+  m_Layer: 0
+  m_Name: Circle
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8202197497248756228
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6727511633682504703}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1261847421609429294}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!212 &1412879710534976755
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6727511633682504703}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 20
+  m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
+  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 1, y: 1}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_MaskInteraction: 0
+  m_SpriteSortPoint: 0
 --- !u!1 &7784675892565440274
 GameObject:
   m_ObjectHideFlags: 0
