@@ -59,7 +59,9 @@ public class ShellAnimation : MonoBehaviour
 
     private void Enable()
     {
-        gameObject.GetComponent<Image>().sprite = shellOpened;
+        GetComponent<Image>().sprite = shellOpened;
+        GetComponent<Button>().enabled = true;
+        GetComponent<HoverButton>().enabled = true;
         description.SetActive(true);
         modifier.SetActive(true);
         onAnimationFinished?.Invoke();

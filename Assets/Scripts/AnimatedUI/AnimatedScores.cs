@@ -1,16 +1,35 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEditor.Experimental.RestService;
 using UnityEngine;
 using UnityEngine.UI;
 
 //Clase para probar 
-public class PlayerTest
+public class PlayerTest : IComparable
 {
     public string name;
     public Color color;
     public Sprite icon;
     public int score;
+    public int position;
+    public List<Sprite> modifiers = new();
+    public GameObject playerInfo = new();
+
+    //Sort method
+    public int CompareTo(object obj)
+    {
+        var a = this;
+        var b = obj as PlayerTest;
+
+        if (a.score < b.score)
+            return 1;
+        else if (a.score > b.score)
+            return -1;
+
+        return 0;
+    }
 }
 
 public class AnimatedScores : MonoBehaviour
@@ -65,7 +84,7 @@ public class AnimatedScores : MonoBehaviour
         LeanTween.scale(panelRT, Vector2.one, popupTime).setEase(LeanTweenType.easeOutElastic);
         for (int i = 0; i < players.Count; i++)  //numero de jugadores
         {
-            players[i].score += Random.Range(0, 4); //Añadir puntuación
+            players[i].score += UnityEngine.Random.Range(0, 4); //Añadir puntuación
         }
         Invoke("AnimateScores", waitTime);
     }
