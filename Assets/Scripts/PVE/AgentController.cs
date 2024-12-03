@@ -10,7 +10,15 @@ namespace Tankito.SinglePlayer
     public class AgentController : ATankController
     {
         public NavMeshAgent agent;
+        Vector2 lastDestiny;
         [SerializeField] public NpcData npcData;
+        [SerializeField] float updateDesTimer = 0;
+        [SerializeField] float updateTime = 0.5f;
+        [SerializeField] float minDesDelta = 1f;
+        [SerializeField] float maxDesDelta = 10f;
+        [SerializeField] float posTolerance = 0.5f;
+        private bool importantDestinyFlag = false;
+        public bool ImportantDestiny { get => importantDestinyFlag; set => importantDestinyFlag = value; }
         protected override void Start()
         {
             base.Start();
@@ -23,8 +31,9 @@ namespace Tankito.SinglePlayer
             m_aimSpeed = npcData.aimSpeed;
         }
 
-        private void FixedUpdate()
+        private void Update()
         {
+            updateDesTimer += Time.deltaTime;
             InputPayload newInput = m_tankInput.GetInput();
             ProcessInput(newInput, Time.fixedDeltaTime);
         }
@@ -33,7 +42,24 @@ namespace Tankito.SinglePlayer
                                                                                //el agente. No creamos una nueva función para aprovechar el ProcessInput de la clase padre, que
                                                                                //se encarga de gestionar que hacer con cada accion
         {
-            agent.SetDestination(moveVector);
+            float destinyDelta = Vector2.Distance(lastDestiny, moveVector);
+            if((updateDesTimer >= updateTime && destinyDelta > minDesDelta) || destinyDelta >= maxDesDelta || ImportantDestiny)
+            {
+                agent.SetDestination(moveVector);
+                lastDestiny = moveVector;
+                updateDesTimer = 0;
+                ImportantDestiny = false;
+            }
+
+            float posDesDelta = Vector2.Distance(lastDestiny, transform.position);
+            if (posDesDelta <= posTolerance)
+            {
+                agent.speed = 0;
+            }
+            else
+            {
+                agent.speed = npcData.speed;
+            }
         }
     }
 }

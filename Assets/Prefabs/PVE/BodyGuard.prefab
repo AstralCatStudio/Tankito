@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4784920827817719129}
   m_Layer: 0
   m_Name: TurretAnimator
-  m_TagString: Enemy
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -67,7 +67,7 @@ GameObject:
   - component: {fileID: 3958688014814522498}
   m_Layer: 0
   m_Name: HullSprite
-  m_TagString: Enemy
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -152,7 +152,7 @@ GameObject:
   - component: {fileID: 6069775335416330031}
   m_Layer: 0
   m_Name: BulletAreaDetection
-  m_TagString: Enemy
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -233,7 +233,7 @@ GameObject:
   - component: {fileID: 6004854575687995592}
   m_Layer: 0
   m_Name: AllyAreaDetection
-  m_TagString: Enemy
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -313,7 +313,7 @@ GameObject:
   - component: {fileID: 6267231903324149711}
   m_Layer: 0
   m_Name: Cannon
-  m_TagString: Enemy
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1104,7 +1104,10 @@ MonoBehaviour:
   DEBUGDASh: 0
   agent: {fileID: 0}
   npcData: {fileID: 11400000, guid: a0a880d7eb38b3a4393e8ce65c7b5ef7, type: 2}
-  bulletCannon: {fileID: 6267231903324149711}
+  updateDesTimer: 0
+  updateTime: 0.5
+  minDesDelta: 1
+  maxDesDelta: 10
 --- !u!114 &1506357844035147193
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1136,6 +1139,8 @@ MonoBehaviour:
   protectDistance: 1
   allyAreaDetection: {fileID: 6004854575687995592}
   bulletAreaDetection: {fileID: 6069775335416330031}
+  alliesInRange: []
+  bulletsInRange: []
 --- !u!114 &4763442505822864343
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1160,7 +1165,7 @@ GameObject:
   - component: {fileID: 1274825606477642659}
   m_Layer: 0
   m_Name: TurretSprite
-  m_TagString: Enemy
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1244,7 +1249,7 @@ GameObject:
   - component: {fileID: 4112212285031908256}
   m_Layer: 0
   m_Name: HullAnimator
-  m_TagString: Enemy
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1298,7 +1303,7 @@ GameObject:
   - component: {fileID: 1232326285620457375}
   m_Layer: 0
   m_Name: Circle
-  m_TagString: Enemy
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1382,7 +1387,7 @@ GameObject:
   - component: {fileID: 8674285091813138431}
   m_Layer: 0
   m_Name: Turret
-  m_TagString: Enemy
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1443,7 +1448,7 @@ GameObject:
   - component: {fileID: 6777299634144385463}
   m_Layer: 0
   m_Name: PlayerAreaDetection
-  m_TagString: Enemy
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
