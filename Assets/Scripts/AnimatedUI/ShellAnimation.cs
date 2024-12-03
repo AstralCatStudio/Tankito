@@ -8,12 +8,13 @@ public class ShellAnimation : MonoBehaviour
 {
     [SerializeField] private Sprite shellOpened;
     [SerializeField] private Sprite shellClosed;
-    [SerializeField] private GameObject description;
-    [SerializeField] private GameObject modifier;
     [SerializeField] private int numOfTurns = 2;
     [SerializeField] private float degrees = 30;
     [SerializeField] private float waitTime = 0.5f;
     [SerializeField] private float animationTime = 0.5f;
+
+    public GameObject description;
+    public GameObject modifier;
 
     public Action onAnimationFinished;
     
@@ -54,16 +55,29 @@ public class ShellAnimation : MonoBehaviour
             yield return new WaitForSeconds(animationTime / (numOfTurns * 2));
         }
         LeanTween.rotateAroundLocal(rt, Vector3.forward, -degrees/2, animationTime / (numOfTurns * 2));
-        Invoke("Enable", animationTime / 2);
+        Invoke("InvokeAnimationWhenFinished", animationTime / 2);
     }
 
-    private void Enable()
+    private void InvokeAnimationWhenFinished()
+    {
+        onAnimationFinished?.Invoke();
+    }
+
+    public void Enable()
     {
         GetComponent<Image>().sprite = shellOpened;
         GetComponent<Button>().enabled = true;
         GetComponent<HoverButton>().enabled = true;
         description.SetActive(true);
         modifier.SetActive(true);
-        onAnimationFinished?.Invoke();
+    }
+
+    public void Disable()
+    {
+        GetComponent<Image>().sprite = shellClosed;
+        GetComponent<Button>().enabled = false;
+        GetComponent<HoverButton>().enabled = false;
+        description.SetActive(false);
+        modifier.SetActive(false);
     }
 }

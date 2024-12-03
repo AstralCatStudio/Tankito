@@ -9,19 +9,18 @@ public class AnimatedModifiers : MonoBehaviour
 {
     [Header("Params")]
     #region parameters
-    [SerializeField] private float popupTime = 0.5f;
-    [SerializeField] private float waitTime = 0.5f;
-    [SerializeField] private float shellTime = 0.5f;
-    [SerializeField] private float playerTransitionTime = 0.5f;
-    [SerializeField] private float playerScale = 1.5f;
+    [SerializeField, Range(0, 2)] private float popupTime = 0.5f;
+    [SerializeField, Range(0, 2)] private float waitTime = 0.5f;
+    [SerializeField, Range(0, 2)] private float shellTime = 0.5f;
+    [SerializeField, Range(0, 2)] private float playerTransitionTime = 0.5f;
+    [SerializeField, Range(0, 2)] private float playerScale = 1.5f;
     [SerializeField, Range(2, 4)] private int numPlayers = 2;
+    private int turn = -1;
 
     [SerializeField] private RectTransform panelRT;
     [SerializeField] private GameObject shellPrefab;
     
     [SerializeField] private RectTransform playerChoosingPosition;
-    [SerializeField] private GameObject playerCurrentModifiers;
-
     [SerializeField] private GameObject otherPlayerPrefab;
     [SerializeField] private GameObject otherPlayersPanel;
 
@@ -29,7 +28,7 @@ public class AnimatedModifiers : MonoBehaviour
     [SerializeField] private Transform row2;
     [SerializeField] private List<GameObject> shells;
 
-    private ModifierList modifierList;
+    public ModifierList modifierList;
     #endregion
 
     #region removeThis
@@ -160,7 +159,8 @@ public class AnimatedModifiers : MonoBehaviour
 
     private void StartChoose()
     {
-        AnimatePlayer(players[3]);
+        turn = numPlayers - 1;
+        AnimatePlayer(players[turn]);
     }
 
     private void AnimatePlayer(PlayerTest player)
@@ -169,8 +169,40 @@ public class AnimatedModifiers : MonoBehaviour
         player.playerInfo.transform.SetParent(playerChoosingPosition);
         LeanTween.move(playerRT, playerChoosingPosition.anchoredPosition, playerTransitionTime).setEase(LeanTweenType.easeInOutCubic);
         LeanTween.scale(playerRT, Vector3.one * playerScale, playerTransitionTime).setEase(LeanTweenType.easeInOutCubic);
+
+        ShellAnimation shellAnimation;
+        //Para que los modificadores puedan ser seleccionables, llamamos a Enable
+        foreach(GameObject shell in shells)
+        {
+            shellAnimation = shell.GetComponent<ShellAnimation>();
+            shellAnimation.Enable();
+        }
     }
     
+    public void NextTurn()
+    {
+        GameObject shellSelected = CheckSelected();
+        if (shellSelected == null)
+        {
+            Debug.LogWarning("You didn´t choose any modifier");
+        } else
+        {
+            shellSelected.GetComponent<ShellAnimation>().Disable();
+        }
+    }
+    private GameObject CheckSelected()
+    {
+        ShellSelection selection;
+        foreach(GameObject shell in shells)
+        {
+            selection = shell.GetComponent<ShellSelection>();
+            if (selection.selected)
+            {
+                return shell;
+            }
+        }
+        return null;
+    }
 
     public void DeselectAllModifiers()
     {
