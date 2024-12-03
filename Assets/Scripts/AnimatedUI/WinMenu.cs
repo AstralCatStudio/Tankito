@@ -20,6 +20,8 @@ public class WinMenu : MonoBehaviour
     public GameObject puesto3;
     public GameObject puesto4;
 
+    public GameObject exitButton;
+
     public float offsetY = 50f;
 
     public float animDuration = 0.5f;
@@ -27,7 +29,6 @@ public class WinMenu : MonoBehaviour
 
     void Start()
     {
-
         StartCoroutine(AnimateSprites());
     }
 
@@ -68,5 +69,11 @@ public class WinMenu : MonoBehaviour
             marcadorRectTransform.localScale = Vector3.zero;
             LeanTween.scale(marcadorRectTransform, Vector3.one, scaleDuration).setEase(LeanTweenType.easeOutBack);
         }
+
+
+        exitButton.SetActive(true);
+        RectTransform exitButtonTransform = exitButton.GetComponent<RectTransform>();
+        exitButtonTransform.localScale = Vector3.zero;
+        LeanTween.scale(exitButtonTransform, Vector3.one, scaleDuration).setEase(LeanTweenType.easeOutBack);
     }
 }
