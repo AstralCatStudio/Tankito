@@ -2,18 +2,24 @@ using BehaviourAPI.Core;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Tankito.Netcode;
 using Tankito.SinglePlayer;
 using UnityEngine;
 using static AreaDetection;
 
 public class BodyGuardBehaviour : AGenericBehaviour
 {
+    const float SPEED_MULTIPLIER = 3;
+
     [SerializeField] float protectDistance = 1.0f;
     private float maxCast;
     GameObject bulletToStop;
     GameObject allyToProtect;
     [SerializeField] AreaDetection allyAreaDetection;
     [SerializeField] AreaDetection bulletAreaDetection;
+    [SerializeField] bool DEBUG_BG = true;
+    [SerializeField] LayerMask enemyLayer;
+    bool importantPos = false;
     #region TargetList
     [SerializeField] List<GameObject> alliesInRange = new List<GameObject>();
     [SerializeField] List<GameObject> bulletsInRange = new List<GameObject>();
@@ -38,6 +44,15 @@ public class BodyGuardBehaviour : AGenericBehaviour
         bulletAreaDetection.OnSubjectDissapear -= OnBulletDissapear;
     }
 
+    public override InputPayload GetInput()
+    {
+        if (importantPos)
+        {
+            agentController.ImportantDestiny = true;
+        }
+        return base.GetInput();
+    }
+
     #region States
     public Status ProtectAllyState()
     {
@@ -58,30 +73,49 @@ public class BodyGuardBehaviour : AGenericBehaviour
     #region Perceptions
     public bool CheckChaseToProtect()
     {
-        return CheckBulletRoute();
+        if (CheckBulletRoute())
+        {
+            agentController.agent.speed *= SPEED_MULTIPLIER;
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     public bool CheckProtectToChase()
     {
-        return !CheckBulletRoute();
+        if (!CheckBulletRoute())
+        {
+            agentController.agent.speed /= SPEED_MULTIPLIER;
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
     #endregion
 
     #region Utilis
     private bool CheckBulletRoute()
     {
+        if (DEBUG_BG) Debug.Log("SE CHEQUEA LA RUTA DE BALA");
         bulletsInRange.OrderBy(obj => bulletsInRange.OrderBy(obj => Vector2.Distance(obj.transform.position, transform.position)));
         for (int i = 0; i < bulletsInRange.Count; i++)
         {
             var targetBullet = bulletsInRange[i];
             Vector2 bulletVec = targetBullet.GetComponent<Rigidbody2D>().velocity.normalized;
-            RaycastHit2D hit = Physics2D.Raycast(targetBullet.transform.position, bulletVec, maxCast);
+            RaycastHit2D hit = Physics2D.Raycast(targetBullet.transform.position, bulletVec, maxCast, enemyLayer);
             if(hit.collider != null && hit.collider.gameObject == this.gameObject)
             {
+                if (DEBUG_BG) Debug.Log("LA BALA VA A COLISIONAR CON EL BODUGUARD");
                 hit = Physics2D.Raycast(transform.position, bulletVec, maxCast);
             }
             if (hit.collider != null && alliesInRange.Contains(hit.collider.gameObject))
             {
+                if (DEBUG_BG) Debug.Log("LA BALA VA A COLISIONAS CON UN ALIADO");
                 bulletToStop = targetBullet;
                 allyToProtect = hit.collider.gameObject;
                 return true;

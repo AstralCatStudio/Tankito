@@ -84,7 +84,6 @@ namespace Tankito.SinglePlayer
                     }
                     break;
                 case BulletType.Enemy:
-                    Debug.Log("Fue " + collision.gameObject.tag);
                     switch (collision.gameObject.tag)
                     {
                         case "NormalWall":

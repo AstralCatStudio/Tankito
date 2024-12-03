@@ -563,7 +563,7 @@ GameObject:
   - component: {fileID: 7157197457863854575}
   - component: {fileID: 3966425958537101323}
   - component: {fileID: 3339109910302575834}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Necromancer
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -601,7 +601,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 10
+  m_Mass: 1000
   m_LinearDrag: 0
   m_AngularDrag: 0
   m_GravityScale: 0

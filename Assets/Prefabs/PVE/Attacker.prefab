@@ -563,7 +563,7 @@ GameObject:
   - component: {fileID: 6535404514255222803}
   - component: {fileID: 6771944337041376447}
   - component: {fileID: 91087622903258683}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Attacker
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -601,7 +601,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 10
+  m_Mass: 1000
   m_LinearDrag: 0
   m_AngularDrag: 0
   m_GravityScale: 0

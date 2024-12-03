@@ -68,7 +68,7 @@ namespace Tankito.SinglePlayer
         }
 
         #region TankInputMethods
-        public InputPayload GetInput() 
+        public virtual InputPayload GetInput() 
         { 
             InputPayload newInput = m_currentInput;
             m_currentInput.action = TankAction.None;
