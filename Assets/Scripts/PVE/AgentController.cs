@@ -16,7 +16,6 @@ namespace Tankito.SinglePlayer
         [SerializeField] float updateTime = 0.5f;
         [SerializeField] float minDesDelta = 1f;
         [SerializeField] float maxDesDelta = 10f;
-        [SerializeField] float posTolerance = 0.5f;
         private bool importantDestinyFlag = false;
         public bool ImportantDestiny { get => importantDestinyFlag; set => importantDestinyFlag = value; }
         protected override void Start()
@@ -51,7 +50,7 @@ namespace Tankito.SinglePlayer
                 ImportantDestiny = false;
             }
 
-            float posDesDelta = Vector2.Distance(lastDestiny, transform.position);
+            /*float posDesDelta = Vector2.Distance(lastDestiny, transform.position);
             if (posDesDelta <= posTolerance)
             {
                 agent.speed = 0;
@@ -59,7 +58,7 @@ namespace Tankito.SinglePlayer
             else
             {
                 agent.speed = npcData.speed;
-            }
+            }*/
         }
     }
 }
