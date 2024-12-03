@@ -73,28 +73,24 @@ public class BodyGuardBehaviour : AGenericBehaviour
     #region Perceptions
     public bool CheckChaseToProtect()
     {
-        if (CheckBulletRoute())
-        {
-            agentController.agent.speed *= SPEED_MULTIPLIER;
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        return CheckBulletRoute();
+    }
+
+    public Status ActionChaseToProtect()
+    {
+        agentController.agent.speed *= SPEED_MULTIPLIER;
+        return Status.Success;
     }
 
     public bool CheckProtectToChase()
     {
-        if (!CheckBulletRoute())
-        {
-            agentController.agent.speed /= SPEED_MULTIPLIER;
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        return !CheckBulletRoute();
+    }
+
+    public Status ActionProtectToChase()
+    {
+        agentController.agent.speed /= SPEED_MULTIPLIER;
+        return Status.Success;
     }
     #endregion
 

@@ -176,83 +176,61 @@ namespace Tankito.SinglePlayer
 
         #endregion
 
-        #region Perceptions
+        #region Perceptions_Actions
         public bool CheckIdleToChase()
         {
-            if (genericTargets.Count > 0)
-            {
-                patrolPointFound = false;
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return genericTargets.Count > 0;
+        }
+
+        public Status ActionIdleToChase()
+        {
+            patrolPointFound = false;
+            return Status.Success;
         }
 
         public bool CheckChaseToIdle()
         {
-            if (genericTargets.Count == 0)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return genericTargets.Count == 0;
         }
 
         public bool CheckChaseToAim()
         {
-            if(noObstaclesBetween && cannonReloaded && targetInRange)
-            {
-                noObstaclesBetween = false;
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return noObstaclesBetween && cannonReloaded && targetInRange;
+        }
+
+        public Status ActionChaseToAim()
+        {
+            noObstaclesBetween = false;
+            return Status.Success;
         }
 
         public bool CheckAimPOP()
         {
-            if (!targetInRange)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return !targetInRange;
         }
 
         public bool CheckAimToShoot()
         {
-            if (turretInPosition)
-            {
-                turretInPosition = false;
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return turretInPosition;
+        }
+
+        public Status ActionAimToShoot()
+        {
+            turretInPosition = false;
+            return Status.Success;
         }
 
         public bool CheckShootPOP()
         {
-            if(hasShot)
-            {
-                cannonReloaded = false;
-                hasShot = false;
-                timerShoot = 0;
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return hasShot;
+        }
+
+        public Status ActionShootPOP()
+        {
+            cannonReloaded = false;
+            hasShot = false;
+            timerShoot = 0;
+            return Status.Success;
         }
 
         #endregion
