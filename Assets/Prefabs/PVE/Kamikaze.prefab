@@ -195,12 +195,12 @@ MonoBehaviour:
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         parentIds:
-        - 44fcfe88-84cf-4d79-b17b-69c1962e448c
+        - 8e376e52-9cd1-4381-bd1d-b57668281ce2
         childIds:
         - 6ace5ff7-0b8b-41ae-b165-611f108ff5fb
-      - name: FollowPlayer
+      - name: ChasePlayer
         id: 3b33ba94-7112-4663-aa3b-546d95ecc659
-        position: {x: 708, y: 692}
+        position: {x: 696.8, y: 708.8}
         node:
           rid: 4783593595286061084
         references:
@@ -215,9 +215,10 @@ MonoBehaviour:
         childIds:
         - fffa5aa9-d5a5-4dda-93f2-f50c2eb1de91
         - 36294d59-e3c5-462f-8fb4-d66a43ec8e4a
+        - 8e376e52-9cd1-4381-bd1d-b57668281ce2
       - name: Parry
         id: 04672df0-6a1e-485b-8e05-c9c70fec9447
-        position: {x: 1288, y: 708}
+        position: {x: 1432, y: 723.2}
         node:
           rid: 4783593595286061085
         references:
@@ -230,7 +231,6 @@ MonoBehaviour:
         - 36294d59-e3c5-462f-8fb4-d66a43ec8e4a
         childIds:
         - 045c449b-17c9-4889-a953-ef8b4489ec4a
-        - 44fcfe88-84cf-4d79-b17b-69c1962e448c
       - name: Blow
         id: 31cda6e3-cfe1-47fe-9bfb-a2662c47c0e8
         position: {x: 708, y: 1078.3999}
@@ -245,9 +245,9 @@ MonoBehaviour:
         parentIds:
         - fffa5aa9-d5a5-4dda-93f2-f50c2eb1de91
         childIds: []
-      - name: IdleToFollow
+      - name: IdleToChase
         id: 6ace5ff7-0b8b-41ae-b165-611f108ff5fb
-        position: {x: 724, y: 476.8}
+        position: {x: 576.8, y: 472.8}
         node:
           rid: 4783593595286061087
         references:
@@ -265,15 +265,15 @@ MonoBehaviour:
         - 28bffddf-ac72-4ed3-9ad6-23750a6f9146
         childIds:
         - 3b33ba94-7112-4663-aa3b-546d95ecc659
-      - name: FollowToBlow
+      - name: ChaseToBlow
         id: fffa5aa9-d5a5-4dda-93f2-f50c2eb1de91
-        position: {x: 708, y: 875.2}
+        position: {x: 704.8, y: 882.4}
         node:
           rid: 4783593595286061089
         references:
         - fieldName: Perception
           value:
-            rid: 4783593604421779463
+            rid: 4463992004299980802
           fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
             Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         - fieldName: Action
@@ -285,15 +285,15 @@ MonoBehaviour:
         - 3b33ba94-7112-4663-aa3b-546d95ecc659
         childIds:
         - 31cda6e3-cfe1-47fe-9bfb-a2662c47c0e8
-      - name: FollowToParry
+      - name: ChaseToParry
         id: 36294d59-e3c5-462f-8fb4-d66a43ec8e4a
-        position: {x: 1008, y: 589.60004}
+        position: {x: 1074.4, y: 607.2}
         node:
           rid: 4783593595286061090
         references:
         - fieldName: Perception
           value:
-            rid: 4783593604421779468
+            rid: 4463992004299980800
           fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
             Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         - fieldName: Action
@@ -313,7 +313,7 @@ MonoBehaviour:
         references:
         - fieldName: Perception
           value:
-            rid: 4783593604421779472
+            rid: 4463992004299980801
           fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
             Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         - fieldName: Action
@@ -325,15 +325,15 @@ MonoBehaviour:
         - 04672df0-6a1e-485b-8e05-c9c70fec9447
         childIds:
         - 3b33ba94-7112-4663-aa3b-546d95ecc659
-      - name: ParryToIdle
-        id: 44fcfe88-84cf-4d79-b17b-69c1962e448c
-        position: {x: 1294.4, y: 255.2}
+      - name: ChaseToIdle
+        id: 8e376e52-9cd1-4381-bd1d-b57668281ce2
+        position: {x: 847.2, y: 480.8}
         node:
-          rid: 4783593595286061093
+          rid: 4463991999476793361
         references:
         - fieldName: Perception
           value:
-            rid: 4783593604421779476
+            rid: 4463991999476793362
           fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
             Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         - fieldName: Action
@@ -342,7 +342,7 @@ MonoBehaviour:
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         parentIds:
-        - 04672df0-6a1e-485b-8e05-c9c70fec9447
+        - 3b33ba94-7112-4663-aa3b-546d95ecc659
         childIds:
         - 28bffddf-ac72-4ed3-9ad6-23750a6f9146
     pushPerceptions: []
@@ -351,6 +351,82 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
+    - rid: 4463991999476793361
+      type: {class: StateTransition, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
+      data:
+        StatusFlags: -1
+    - rid: 4463991999476793362
+      type: {class: CustomPerception, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        init:
+          componentName: 
+          methodName: 
+        check:
+          componentName: KamikazeBehaviour
+          methodName: CheckChaseToIdle
+        reset:
+          componentName: 
+          methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
+    - rid: 4463992004299980800
+      type: {class: CustomPerception, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        init:
+          componentName: 
+          methodName: 
+        check:
+          componentName: KamikazeBehaviour
+          methodName: CheckChaseToParry
+        reset:
+          componentName: 
+          methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
+    - rid: 4463992004299980801
+      type: {class: CustomPerception, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        init:
+          componentName: 
+          methodName: 
+        check:
+          componentName: KamikazeBehaviour
+          methodName: CheckParryToChase
+        reset:
+          componentName: 
+          methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
+    - rid: 4463992004299980802
+      type: {class: CustomPerception, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        init:
+          componentName: 
+          methodName: 
+        check:
+          componentName: KamikazeBehaviour
+          methodName: CheckChaseToBlow
+        reset:
+          componentName: 
+          methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
     - rid: 4783593595286061082
       type: {class: FSM, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
       data: 
@@ -382,10 +458,6 @@ MonoBehaviour:
       type: {class: StateTransition, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
       data:
         StatusFlags: -1
-    - rid: 4783593595286061093
-      type: {class: StateTransition, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
-      data:
-        StatusFlags: -1
     - rid: 4783593604421779458
       type: {class: CustomAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
       data:
@@ -412,7 +484,7 @@ MonoBehaviour:
           methodName: 
         update:
           componentName: KamikazeBehaviour
-          methodName: FollowPlayerState
+          methodName: ChaseState
         stop:
           componentName: 
           methodName: 
@@ -430,7 +502,7 @@ MonoBehaviour:
           methodName: 
         update:
           componentName: KamikazeBehaviour
-          methodName: ExplodeState
+          methodName: BlowState
         stop:
           componentName: 
           methodName: 
@@ -466,203 +538,7 @@ MonoBehaviour:
           methodName: 
         check:
           componentName: KamikazeBehaviour
-          methodName: DetectPlayer
-        reset:
-          componentName: 
-          methodName: 
-        pause:
-          componentName: 
-          methodName: 
-        unpause:
-          componentName: 
-          methodName: 
-    - rid: 4783593604421779463
-      type: {class: CompoundPerceptionWrapper, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
-      data:
-        compoundPerception:
-          rid: 4783593604421779464
-        subPerceptions:
-        - perception:
-            rid: 4783593604421779466
-        - perception:
-            rid: 4783593604421779467
-    - rid: 4783593604421779464
-      type: {class: OrPerception, ns: BehaviourAPI.Core.Perceptions, asm: BehaviourAPI.Core}
-      data: 
-    - rid: 4783593604421779466
-      type: {class: CustomPerception, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
-      data:
-        init:
-          componentName: 
-          methodName: 
-        check:
-          componentName: KamikazeBehaviour
-          methodName: IsPlayerReached
-        reset:
-          componentName: 
-          methodName: 
-        pause:
-          componentName: 
-          methodName: 
-        unpause:
-          componentName: 
-          methodName: 
-    - rid: 4783593604421779467
-      type: {class: CustomPerception, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
-      data:
-        init:
-          componentName: 
-          methodName: 
-        check:
-          componentName: KamikazeBehaviour
-          methodName: HasCollided
-        reset:
-          componentName: 
-          methodName: 
-        pause:
-          componentName: 
-          methodName: 
-        unpause:
-          componentName: 
-          methodName: 
-    - rid: 4783593604421779468
-      type: {class: CompoundPerceptionWrapper, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
-      data:
-        compoundPerception:
-          rid: 4783593604421779469
-        subPerceptions:
-        - perception:
-            rid: 4783593604421779470
-        - perception:
-            rid: 4783593604421779471
-    - rid: 4783593604421779469
-      type: {class: AndPerception, ns: BehaviourAPI.Core.Perceptions, asm: BehaviourAPI.Core}
-      data: 
-    - rid: 4783593604421779470
-      type: {class: CustomPerception, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
-      data:
-        init:
-          componentName: 
-          methodName: 
-        check:
-          componentName: KamikazeBehaviour
-          methodName: DetectProjectile
-        reset:
-          componentName: 
-          methodName: 
-        pause:
-          componentName: 
-          methodName: 
-        unpause:
-          componentName: 
-          methodName: 
-    - rid: 4783593604421779471
-      type: {class: CustomPerception, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
-      data:
-        init:
-          componentName: 
-          methodName: 
-        check:
-          componentName: KamikazeBehaviour
-          methodName: '!HasBlocked'
-        reset:
-          componentName: 
-          methodName: 
-        pause:
-          componentName: 
-          methodName: 
-        unpause:
-          componentName: 
-          methodName: 
-    - rid: 4783593604421779472
-      type: {class: CompoundPerceptionWrapper, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
-      data:
-        compoundPerception:
-          rid: 4783593604421779473
-        subPerceptions:
-        - perception:
-            rid: 4783593604421779474
-        - perception:
-            rid: 4783593604421779475
-    - rid: 4783593604421779473
-      type: {class: AndPerception, ns: BehaviourAPI.Core.Perceptions, asm: BehaviourAPI.Core}
-      data: 
-    - rid: 4783593604421779474
-      type: {class: CustomPerception, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
-      data:
-        init:
-          componentName: 
-          methodName: 
-        check:
-          componentName: KamikazeBehaviour
-          methodName: HasBlocked
-        reset:
-          componentName: 
-          methodName: 
-        pause:
-          componentName: 
-          methodName: 
-        unpause:
-          componentName: 
-          methodName: 
-    - rid: 4783593604421779475
-      type: {class: CustomPerception, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
-      data:
-        init:
-          componentName: 
-          methodName: 
-        check:
-          componentName: KamikazeBehaviour
-          methodName: DetectPlayer
-        reset:
-          componentName: 
-          methodName: 
-        pause:
-          componentName: 
-          methodName: 
-        unpause:
-          componentName: 
-          methodName: 
-    - rid: 4783593604421779476
-      type: {class: CompoundPerceptionWrapper, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
-      data:
-        compoundPerception:
-          rid: 4783593604421779477
-        subPerceptions:
-        - perception:
-            rid: 4783593604421779478
-        - perception:
-            rid: 4783593604421779479
-    - rid: 4783593604421779477
-      type: {class: AndPerception, ns: BehaviourAPI.Core.Perceptions, asm: BehaviourAPI.Core}
-      data: 
-    - rid: 4783593604421779478
-      type: {class: CustomPerception, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
-      data:
-        init:
-          componentName: 
-          methodName: 
-        check:
-          componentName: KamikazeBehaviour
-          methodName: HasBlocked
-        reset:
-          componentName: 
-          methodName: 
-        pause:
-          componentName: 
-          methodName: 
-        unpause:
-          componentName: 
-          methodName: 
-    - rid: 4783593604421779479
-      type: {class: CustomPerception, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
-      data:
-        init:
-          componentName: 
-          methodName: 
-        check:
-          componentName: KamikazeBehaviour
-          methodName: '!DetectPlayer'
+          methodName: CheckIdleToChase
         reset:
           componentName: 
           methodName: 
@@ -759,6 +635,10 @@ MonoBehaviour:
   turretInPosition: 0
   hasShot: 0
   explosionRange: 1
+  autoDestructDistance: 2
+  parryDistance: 1
+  bulletsInRange: []
+  bulletAreaDetection: {fileID: 4310168333349874508}
 --- !u!114 &1415010158793888448
 MonoBehaviour:
   m_ObjectHideFlags: 0

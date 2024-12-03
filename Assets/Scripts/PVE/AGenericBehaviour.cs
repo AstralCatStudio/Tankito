@@ -104,7 +104,7 @@ namespace Tankito.SinglePlayer
             return Status.Running;
         }
 
-        public Status ChaseState()
+        public virtual Status ChaseState()
         {
             if (DEBUG) Debug.Log("CHASESTATE");
             if(genericTargets.Count > 0) 
