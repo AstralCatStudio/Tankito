@@ -290,6 +290,7 @@ GameObject:
   - component: {fileID: 4135548637098975456}
   - component: {fileID: 1084779661946943147}
   - component: {fileID: -4046168514714881870}
+  - component: {fileID: 4966372300544870120}
   m_Layer: 0
   m_Name: SinglePlayerTank
   m_TagString: Player
@@ -461,6 +462,19 @@ MonoBehaviour:
   DEBUGCONT: 0
   DEBUGDASh: 0
   m_dashCooldown: 2
+--- !u!114 &4966372300544870120
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6566823166743344974}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a3efa43f7aa87542a4551d1036930df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_maxHealth: 4
 --- !u!1 &7271102851290112516
 GameObject:
   m_ObjectHideFlags: 0
