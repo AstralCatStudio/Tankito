@@ -4,6 +4,7 @@ using UnityEngine;
 public class WinMenu : MonoBehaviour
 {
     public int m_num_players = 0;
+    public int m_max_players = 4;
 
     public GameObject marcadorJugador1;
     public GameObject marcadorJugador2;
@@ -29,6 +30,10 @@ public class WinMenu : MonoBehaviour
 
     void Start()
     {
+    }
+
+    private void OnEnable()
+    {
         StartCoroutine(AnimateSprites());
     }
 
@@ -39,7 +44,7 @@ public class WinMenu : MonoBehaviour
         GameObject[] puestos = { puesto4, puesto3, puesto2, puesto1 };
         string[] soundNames = { "WinTankitoSounds1", "WinTankitoSounds2", "WinTankitoSounds3", "WinTankitoSounds4" };
 
-        for (int i = 0; i < m_num_players; i++)
+        for (int i = m_max_players - m_num_players; i < m_max_players; i++)
         {
             GameObject sprite = sprites[i];
             GameObject marcador = marcadores[i];
