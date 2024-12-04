@@ -245,16 +245,19 @@ namespace Tankito.SinglePlayer
             return nextPos;
         }
 
-        private void OnSubjectDetected(GameObject gameObject)
+        protected virtual void OnSubjectDetected(GameObject gameObject)
         {
             if (DEBUG) Debug.Log("Se añade un objeto generico a la lista");
             genericTargets.Add(gameObject);
         }
 
-        private void OnSubjectDissapear(GameObject gameObject)
+        protected virtual void OnSubjectDissapear(GameObject gameObject)
         {
             if (DEBUG) Debug.Log("Se elimina un elemento generico de la lista");
-            genericTargets.Remove(gameObject); 
+            if (genericTargets.Contains(gameObject))
+            {
+                genericTargets.Remove(gameObject);
+            }  
         }
 
         protected bool CheckObstacles(Vector2 targetPosition, Vector2 targetToNpc)

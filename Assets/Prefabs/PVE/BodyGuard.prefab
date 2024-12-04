@@ -472,7 +472,7 @@ GameObject:
   - component: {fileID: 1114035891230038398}
   - component: {fileID: 1506357844035147193}
   - component: {fileID: 4763442505822864343}
-  m_Layer: 10
+  m_Layer: 11
   m_Name: BodyGuard
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -1245,7 +1245,7 @@ MonoBehaviour:
   playerState: 0
   DEBUGCONT: 0
   DEBUGDASh: 0
-  agent: {fileID: 0}
+  agent: {fileID: 902194235030755267}
   npcData: {fileID: 11400000, guid: a0a880d7eb38b3a4393e8ce65c7b5ef7, type: 2}
   updateDesTimer: 0
   updateTime: 0.5
@@ -1286,6 +1286,7 @@ MonoBehaviour:
   enemyLayer:
     serializedVersion: 2
     m_Bits: 1024
+  bulletRadius: 0.6
   alliesInRange: []
   bulletsInRange: []
 --- !u!114 &4763442505822864343

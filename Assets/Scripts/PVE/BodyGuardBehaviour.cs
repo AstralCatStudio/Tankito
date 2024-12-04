@@ -19,6 +19,7 @@ public class BodyGuardBehaviour : AGenericBehaviour
     [SerializeField] AreaDetection bulletAreaDetection;
     [SerializeField] bool DEBUG_BG = true;
     [SerializeField] LayerMask enemyLayer;
+    [SerializeField] float bulletRadius = 0.6f;
     bool importantPos = false;
     #region TargetList
     [SerializeField] List<GameObject> alliesInRange = new List<GameObject>();
@@ -109,12 +110,13 @@ public class BodyGuardBehaviour : AGenericBehaviour
         {
             var targetBullet = bulletsInRange[i];
             Vector2 bulletVec = targetBullet.GetComponent<Rigidbody2D>().velocity.normalized;
-            RaycastHit2D hit = Physics2D.Raycast(targetBullet.transform.position, bulletVec, maxCast, enemyLayer);
-            if(hit.collider != null && hit.collider.gameObject == this.gameObject)
+            RaycastHit2D hit = Physics2D.CircleCast(targetBullet.transform.position, bulletRadius, bulletVec, maxCast, enemyLayer);
+            /*if (hit.collider != null && hit.collider.gameObject == this.gameObject)
             {
                 if (DEBUG_BG) Debug.Log("LA BALA VA A COLISIONAR CON EL BODUGUARD");
-                hit = Physics2D.Raycast(transform.position, bulletVec, maxCast);
-            }
+                Vector2 initRayPost = (GetComponent<CircleCollider2D>().radius * bulletVec + (Vector2)transform.position) * 1.1f;
+                hit = Physics2D.Raycast(initRayPost, bulletVec, maxCast, enemyLayer);
+            }*/
             if (hit.collider != null && alliesInRange.Contains(hit.collider.gameObject))
             {
                 if (DEBUG_BG) Debug.Log("LA BALA VA A COLISIONAS CON UN ALIADO");

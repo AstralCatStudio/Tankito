@@ -57,12 +57,14 @@ namespace Tankito.SinglePlayer
         public override Status ChaseState()
         {
             base.ChaseState();
-            if (player != null)
+            if (player != null && genericTargets.Count > 0)
             {
                 Vector2 nextPos = m_currentInput.moveVector;
                 Vector2 playerToHealer = transform.position - player.transform.position;
                 Vector2 playerToHealerDir = playerToHealer.normalized;
-                if (Vector2.Distance(nextPos, player.transform.position) < Vector2.Distance(genericTargets[0].transform.position, player.transform.position))
+                if (nextPos != (Vector2)genericTargets[0].transform.position && 
+                    Vector2.Distance(nextPos, player.transform.position) < 
+                    Vector2.Distance(genericTargets[0].transform.position, player.transform.position))
                 {
                     
                     while (Vector2.Distance(nextPos, genericTargets[0].transform.position) < agentController.npcData.attackRange)
@@ -71,7 +73,6 @@ namespace Tankito.SinglePlayer
                     }
                     m_currentInput.moveVector = nextPos;
                 }
-                Debug.Log(playerToHealer.magnitude);
                 if(playerToHealer.magnitude <= minDisFromPlayer)
                 {
                     playerTooClose = true;
@@ -153,6 +154,13 @@ namespace Tankito.SinglePlayer
         #endregion
 
         #region Utilities
+        protected override void OnSubjectDetected(GameObject gameObject)
+        {
+            if(gameObject.GetComponent<HealerBehaviour>() == null) base.OnSubjectDetected(gameObject);
+
+        }
+
+
         private void OnPlayerDetected(GameObject gameObject)
         {
             player = gameObject;
