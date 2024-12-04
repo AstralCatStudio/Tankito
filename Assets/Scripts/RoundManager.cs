@@ -297,7 +297,15 @@ namespace Tankito
         private void ResetPlayers()
         {
             RespawnTanks();
-            FindObjectOfType<SpawnManager>().ResetSpawnPoints();
+            ScenarySelector scenarySelector = FindObjectOfType<ScenarySelector>();
+            if(scenarySelector != null)
+            {
+                scenarySelector.SetRandomMap();
+            }
+            else
+            {
+                Debug.LogWarning("Selector de escenario no encontrado");
+            }
         }
 
         private void RespawnTanks()

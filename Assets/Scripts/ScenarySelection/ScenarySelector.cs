@@ -94,29 +94,15 @@ namespace Tankito.ScenarySelection
 
             SetRandomMap();
 
-            if (IsServer)
-            {
-                // Volver a asignar spawns
-                SpawnManager spawnManager = _scenaries[newIndex].GetComponentInChildren<SpawnManager>();
-                if (spawnManager != null)
-                {
-                    spawnManager.RecalculateSpawnPoints();
-                }
-                else
-                {
-                    Debug.LogWarning("ScenarySelector: No se encontro spawnManager");
-                }
-            }
-
             UpdateScenaryMusic();
         }
 
         #endregion
 
-        
+
 
         #region ScenaryChange
-        
+
         private void ActivateScenary(int index, bool active)
         {
             if (active)
@@ -158,7 +144,7 @@ namespace Tankito.ScenarySelection
             ActivateMap(currentScenary, currentMap, true);
         }
 
-        public void SetRandomMap(/*bool startedGame*/)
+        public void SetRandomMap()
         {
             if (!IsServer) return;
 
@@ -166,23 +152,25 @@ namespace Tankito.ScenarySelection
             Debug.LogWarning($"Mapa aleatorio: {_currentMapIndex.Value}");
             ActivateCurrentMapClientRpc(_currentScenaryIndex.Value, _currentMapIndex.Value);
 
-            //if(startedGame)
-            //{
-            //    if (IsServer)
-            //    {
-            //        // Volver a asignar spawns
-            //        SpawnManager spawnManager = _scenaries[_currentScenaryIndex.Value].GetComponentInChildren<SpawnManager>();
-            //        if (spawnManager != null)
-            //        {
-            //            spawnManager.RecalculateSpawnPoints();
-            //        }
-            //        else
-            //        {
-            //            Debug.LogWarning("ScenarySelector: No se encontro spawnManager");
-            //        }
-            //    }
-            //}
+            RecalculateSpawnPoints();
         }
+
+        private void RecalculateSpawnPoints()
+        {
+            if (!IsServer) return;
+
+            // Volver a asignar spawns
+            SpawnManager spawnManager = _scenaries[_currentScenaryIndex.Value].GetComponentInChildren<SpawnManager>();
+            if (spawnManager != null)
+            {
+                spawnManager.RecalculateSpawnPoints();
+            }
+            else
+            {
+                Debug.LogWarning("ScenarySelector: No se encontro spawnManager");
+            }
+        }
+
         #endregion
 
 
