@@ -47,7 +47,6 @@ namespace Tankito.SinglePlayer
 
         public override void Detonate(bool lifeTimeOver = false)
         {
-            Debug.Log("Detonacioooon");
             OnDetonate.Invoke(this);
             SinglePlayerBulletPool.Instance.Release(this.gameObject, (int)bulletType);
         }
@@ -99,6 +98,34 @@ namespace Tankito.SinglePlayer
                         case "BouncyWall":
                             break;
                         case "Enemy":
+                            break;
+
+                        case "Player":
+                            Detonate();
+                            break;
+
+                        default:
+                            Detonate();
+                            break;
+                    }
+                    break;
+                case BulletType.Healer:
+                    switch (collision.gameObject.tag)
+                    {
+                        case "NormalWall":
+                            if (m_bouncesLeft <= 0)
+                            {
+                                Detonate();
+                            }
+                            else
+                            {
+                                m_bouncesLeft--;
+                            }
+                            break;
+                        case "BouncyWall":
+                            break;
+                        case "Enemy":
+                            Detonate();
                             break;
 
                         case "Player":

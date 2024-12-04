@@ -99,6 +99,7 @@ namespace Tankito.SinglePlayer
 
         #region Utilities
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
         private void OnCollisionEnter2D(Collision2D collision)
         {
             if (collision.gameObject.CompareTag("Player") || collision.gameObject.CompareTag("Bullet"))

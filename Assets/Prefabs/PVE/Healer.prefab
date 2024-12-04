@@ -477,7 +477,7 @@ CircleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -646,6 +646,7 @@ GameObject:
   - component: {fileID: 827141036351269714}
   - component: {fileID: 1300666837373070155}
   - component: {fileID: 8885848087315704193}
+  - component: {fileID: 1585427249922852338}
   m_Layer: 10
   m_Name: Healer
   m_TagString: Enemy
@@ -783,7 +784,7 @@ MonoBehaviour:
       nodes:
       - name: Idle
         id: a652c7e3-7204-4e9a-bdb6-63982dbb89ab
-        position: {x: 754.4, y: 196.8}
+        position: {x: 771.2, y: 214.40001}
         node:
           rid: 4783593595286061061
         references:
@@ -811,7 +812,6 @@ MonoBehaviour:
             Culture=neutral, PublicKeyToken=null
         parentIds:
         - 8d3246e5-e230-4d9c-bb3a-4d2beb83c1ab
-        - 6b551d75-55e4-4f81-8e07-1b932917e368
         childIds:
         - e2ec7330-e5a7-4e62-97b2-7108ed94fb99
         - 6f0a8e3b-c242-4431-9eec-8da79f0c3bfc
@@ -855,7 +855,7 @@ MonoBehaviour:
         references:
         - fieldName: Action
           value:
-            rid: -2
+            rid: 4463992010294165512
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         parentIds:
@@ -863,7 +863,6 @@ MonoBehaviour:
         childIds:
         - 591b4f5b-f993-4bcf-8e24-4d799a3c66f0
         - da98aded-474e-47d7-96be-f634d5468dab
-        - 6b551d75-55e4-4f81-8e07-1b932917e368
       - name: AimPlayer
         id: d1c130b6-90c8-4865-90a5-39075769516b
         position: {x: 326.4, y: 978.39996}
@@ -872,7 +871,7 @@ MonoBehaviour:
         references:
         - fieldName: Action
           value:
-            rid: -2
+            rid: 4463992010294165515
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         parentIds:
@@ -889,7 +888,7 @@ MonoBehaviour:
         references:
         - fieldName: Action
           value:
-            rid: -2
+            rid: 4463992010294165518
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         parentIds:
@@ -898,18 +897,18 @@ MonoBehaviour:
         - be2e5d3c-20ec-4a02-a38a-4f1df583c48e
       - name: IdleToFlee
         id: cedadbfc-f7e7-42d8-854c-d077b5a30fc2
-        position: {x: 465.6, y: 344.8}
+        position: {x: 484, y: 360.8}
         node:
           rid: 4783593595286061068
         references:
         - fieldName: Perception
           value:
-            rid: -2
+            rid: 4463992010294165504
           fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
             Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         - fieldName: Action
           value:
-            rid: -2
+            rid: 4463992010294165506
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         parentIds:
@@ -924,7 +923,7 @@ MonoBehaviour:
         references:
         - fieldName: Perception
           value:
-            rid: -2
+            rid: 4463992010294165507
           fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
             Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         - fieldName: Action
@@ -958,7 +957,7 @@ MonoBehaviour:
         - a652c7e3-7204-4e9a-bdb6-63982dbb89ab
       - name: IdleToChase
         id: 8d3246e5-e230-4d9c-bb3a-4d2beb83c1ab
-        position: {x: 1265.6, y: 180.8}
+        position: {x: 1281.6, y: 196.8}
         node:
           rid: 4783593595286061071
         references:
@@ -989,7 +988,7 @@ MonoBehaviour:
             Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         - fieldName: Action
           value:
-            rid: -2
+            rid: 4463992010294165508
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         parentIds:
@@ -998,7 +997,7 @@ MonoBehaviour:
         - 95b0dbd5-93e4-4bf4-9e6b-417a844da3e5
       - name: POPAimAlly
         id: 054b9a32-4d00-45fc-810b-bd5bd0057022
-        position: {x: 904.8, y: 949.60004}
+        position: {x: 917.6, y: 965.60004}
         node:
           rid: 4783593595286061073
         references:
@@ -1028,7 +1027,7 @@ MonoBehaviour:
             Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         - fieldName: Action
           value:
-            rid: -2
+            rid: 4463992010294165511
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         parentIds:
@@ -1042,12 +1041,12 @@ MonoBehaviour:
         references:
         - fieldName: Perception
           value:
-            rid: -2
+            rid: 4463992010294165519
           fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
             Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         - fieldName: Action
           value:
-            rid: -2
+            rid: 4463992010294165520
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         parentIds:
@@ -1061,7 +1060,7 @@ MonoBehaviour:
         references:
         - fieldName: Perception
           value:
-            rid: -2
+            rid: 4463992010294165517
           fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
             Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         - fieldName: Action
@@ -1101,7 +1100,7 @@ MonoBehaviour:
         references:
         - fieldName: Perception
           value:
-            rid: -2
+            rid: 4463992010294165516
           fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
             Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         - fieldName: Action
@@ -1120,39 +1119,19 @@ MonoBehaviour:
         references:
         - fieldName: Perception
           value:
-            rid: -2
+            rid: 4463992010294165513
           fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
             Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         - fieldName: Action
           value:
-            rid: -2
+            rid: 4463992010294165514
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         parentIds:
         - 28a8cf80-ab9c-4ada-b485-4facd2a66922
         childIds:
         - d1c130b6-90c8-4865-90a5-39075769516b
-      - name: FleeToChase
-        id: 6b551d75-55e4-4f81-8e07-1b932917e368
-        position: {x: 730.4, y: 505.60004}
-        node:
-          rid: 4783593595286061080
-        references:
-        - fieldName: Perception
-          value:
-            rid: -2
-          fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
-            Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-        - fieldName: Action
-          value:
-            rid: -2
-          fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
-        parentIds:
-        - 28a8cf80-ab9c-4ada-b485-4facd2a66922
-        childIds:
-        - 71748d72-102c-437e-9295-6166ea80b4c4
-      - name: FollowAllyToAimPlayer
+      - name: ChaseAllyToAimPlayer
         id: 6f0a8e3b-c242-4431-9eec-8da79f0c3bfc
         position: {x: 746.4, y: 714.4}
         node:
@@ -1160,12 +1139,12 @@ MonoBehaviour:
         references:
         - fieldName: Perception
           value:
-            rid: -2
+            rid: 4463992010294165509
           fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
             Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         - fieldName: Action
           value:
-            rid: -2
+            rid: 4463992010294165510
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         parentIds:
@@ -1364,6 +1343,222 @@ MonoBehaviour:
         unpause:
           componentName: 
           methodName: 
+    - rid: 4463992010294165504
+      type: {class: CustomPerception, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        init:
+          componentName: 
+          methodName: 
+        check:
+          componentName: HealerBehaviour
+          methodName: CheckIdleToFlee
+        reset:
+          componentName: 
+          methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
+    - rid: 4463992010294165506
+      type: {class: SimpleAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        method:
+          componentName: HealerBehaviour
+          methodName: ActionIdleToChase
+    - rid: 4463992010294165507
+      type: {class: CustomPerception, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        init:
+          componentName: 
+          methodName: 
+        check:
+          componentName: HealerBehaviour
+          methodName: CheckFleeToIdle
+        reset:
+          componentName: 
+          methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
+    - rid: 4463992010294165508
+      type: {class: SimpleAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        method:
+          componentName: HealerBehaviour
+          methodName: ActionChaseToAimAlly
+    - rid: 4463992010294165509
+      type: {class: CustomPerception, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        init:
+          componentName: 
+          methodName: 
+        check:
+          componentName: HealerBehaviour
+          methodName: CheckChaseToAimPlayer
+        reset:
+          componentName: 
+          methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
+    - rid: 4463992010294165510
+      type: {class: SimpleAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        method:
+          componentName: HealerBehaviour
+          methodName: ActionChaseToAimPlayer
+    - rid: 4463992010294165511
+      type: {class: SimpleAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        method:
+          componentName: HealerBehaviour
+          methodName: ActionHealAllyPOP
+    - rid: 4463992010294165512
+      type: {class: CustomAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        start:
+          componentName: 
+          methodName: 
+        update:
+          componentName: HealerBehaviour
+          methodName: FleeState
+        stop:
+          componentName: 
+          methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
+    - rid: 4463992010294165513
+      type: {class: CustomPerception, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        init:
+          componentName: 
+          methodName: 
+        check:
+          componentName: HealerBehaviour
+          methodName: CheckFleeToAimPlayer
+        reset:
+          componentName: 
+          methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
+    - rid: 4463992010294165514
+      type: {class: SimpleAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        method:
+          componentName: HealerBehaviour
+          methodName: ActionFleeToAimPlayer
+    - rid: 4463992010294165515
+      type: {class: CustomAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        start:
+          componentName: 
+          methodName: 
+        update:
+          componentName: HealerBehaviour
+          methodName: AimState
+        stop:
+          componentName: 
+          methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
+    - rid: 4463992010294165516
+      type: {class: CustomPerception, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        init:
+          componentName: 
+          methodName: 
+        check:
+          componentName: HealerBehaviour
+          methodName: CheckAimPOP
+        reset:
+          componentName: 
+          methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
+    - rid: 4463992010294165517
+      type: {class: CustomPerception, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        init:
+          componentName: 
+          methodName: 
+        check:
+          componentName: HealerBehaviour
+          methodName: CheckAimToShoot
+        reset:
+          componentName: 
+          methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
+    - rid: 4463992010294165518
+      type: {class: CustomAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        start:
+          componentName: 
+          methodName: 
+        update:
+          componentName: HealerBehaviour
+          methodName: ShootState
+        stop:
+          componentName: 
+          methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
+    - rid: 4463992010294165519
+      type: {class: CustomPerception, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        init:
+          componentName: 
+          methodName: 
+        check:
+          componentName: HealerBehaviour
+          methodName: CheckShootPOP
+        reset:
+          componentName: 
+          methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
+    - rid: 4463992010294165520
+      type: {class: SimpleAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        method:
+          componentName: HealerBehaviour
+          methodName: ActionShootPOP
     - rid: 4783593595286061056
       type: {class: StackFSM, ns: BehaviourAPI.StateMachines.StackFSMs, asm: BehaviourAPI.StateMachines}
       data: 
@@ -1391,11 +1586,11 @@ MonoBehaviour:
     - rid: 4783593595286061068
       type: {class: StateTransition, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
       data:
-        StatusFlags: 0
+        StatusFlags: -1
     - rid: 4783593595286061069
       type: {class: StateTransition, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
       data:
-        StatusFlags: 0
+        StatusFlags: -1
     - rid: 4783593595286061070
       type: {class: StateTransition, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
       data:
@@ -1419,11 +1614,11 @@ MonoBehaviour:
     - rid: 4783593595286061075
       type: {class: PopTransition, ns: BehaviourAPI.StateMachines.StackFSMs, asm: BehaviourAPI.StateMachines}
       data:
-        StatusFlags: 0
+        StatusFlags: -1
     - rid: 4783593595286061076
       type: {class: StateTransition, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
       data:
-        StatusFlags: 0
+        StatusFlags: -1
     - rid: 4783593595286061077
       type: {class: StateTransition, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
       data:
@@ -1431,19 +1626,15 @@ MonoBehaviour:
     - rid: 4783593595286061078
       type: {class: PopTransition, ns: BehaviourAPI.StateMachines.StackFSMs, asm: BehaviourAPI.StateMachines}
       data:
-        StatusFlags: 0
+        StatusFlags: -1
     - rid: 4783593595286061079
       type: {class: PushTransition, ns: BehaviourAPI.StateMachines.StackFSMs, asm: BehaviourAPI.StateMachines}
       data:
-        StatusFlags: 0
-    - rid: 4783593595286061080
-      type: {class: StateTransition, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
-      data:
-        StatusFlags: 0
+        StatusFlags: -1
     - rid: 4783593595286061081
       type: {class: PushTransition, ns: BehaviourAPI.StateMachines.StackFSMs, asm: BehaviourAPI.StateMachines}
       data:
-        StatusFlags: 0
+        StatusFlags: -1
 --- !u!114 &1300666837373070155
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1468,8 +1659,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0ebb401ae137a4498cf28db06882eaa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_tankRB: {fileID: 0}
-  m_turretRB: {fileID: 0}
+  m_tankRB: {fileID: 2822117529371101859}
+  m_turretRB: {fileID: 8121392476532854674}
   m_speed: 0
   m_rotationSpeed: 0
   m_aimSpeed: 900
@@ -1492,3 +1683,38 @@ MonoBehaviour:
   updateTime: 0.5
   minDesDelta: 1
   maxDesDelta: 10
+--- !u!114 &1585427249922852338
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9154277127180835340}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc5d7c468f68de347ac91864fcd223b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  agentController: {fileID: 8885848087315704193}
+  cannon: {fileID: 8579740154918381968}
+  genericAreaDetection: {fileID: 1103806512239411869}
+  wallLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  debugPosition: {fileID: 5102606635492426459}
+  DEBUG: 1
+  genericTargets: []
+  patrolPointFound: 0
+  noObstaclesBetween: 0
+  cannonReloaded: 1
+  timerShoot: 0
+  targetInRange: 0
+  turretInPosition: 0
+  hasShot: 0
+  player: {fileID: 0}
+  playerAreaDetection: {fileID: 1233278039609621871}
+  healReloadTime: 10
+  healTimer: 0
+  healReloaded: 1
+  minDisFromPlayer: 2
+  idealFleeDistance: 5

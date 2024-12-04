@@ -1172,10 +1172,10 @@ MonoBehaviour:
   targetInRange: 0
   turretInPosition: 0
   hasShot: 0
-  protectDistance: 1
+  protectDistance: 2
   allyAreaDetection: {fileID: 6004854575687995592}
   bulletAreaDetection: {fileID: 6069775335416330031}
-  DEBUG_BG: 1
+  DEBUG_BG: 0
   enemyLayer:
     serializedVersion: 2
     m_Bits: 1024

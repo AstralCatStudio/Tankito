@@ -54,6 +54,13 @@ public class BodyGuardBehaviour : AGenericBehaviour
     }
 
     #region States
+    public override Status ChaseState()
+    {
+        base.ChaseState();
+        m_currentInput.moveVector = CheckNewPosition(m_currentInput.moveVector);
+        return Status.Running;
+    }
+
     public Status ProtectAllyState()
     {
         Vector2 allyToBulletDir = (bulletToStop.transform.position - allyToProtect.transform.position).normalized;
@@ -70,16 +77,16 @@ public class BodyGuardBehaviour : AGenericBehaviour
     }
     #endregion
 
-    #region Perceptions
+    #region Perceptions_Actions
     public bool CheckChaseToProtect()
     {
         return CheckBulletRoute();
     }
 
-    public Status ActionChaseToProtect()
+    public void ActionChaseToProtect()
     {
+        importantPos = true;
         agentController.agent.speed *= SPEED_MULTIPLIER;
-        return Status.Success;
     }
 
     public bool CheckProtectToChase()
@@ -87,10 +94,9 @@ public class BodyGuardBehaviour : AGenericBehaviour
         return !CheckBulletRoute();
     }
 
-    public Status ActionProtectToChase()
+    public void ActionProtectToChase()
     {
         agentController.agent.speed /= SPEED_MULTIPLIER;
-        return Status.Success;
     }
     #endregion
 

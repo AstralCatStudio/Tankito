@@ -6,7 +6,7 @@ using static UnityEngine.RuleTile.TilingRuleOutput;
 
 namespace Tankito.SinglePlayer
 {
-    internal enum BulletType { Player = 0, Enemy = 1 }
+    internal enum BulletType { Player = 0, Enemy = 1, Healer = 2 }
     public class SinglePlayerBulletCannon : MonoBehaviour, IBulletCannon
     {
         [SerializeField] float coolDown = 1;
@@ -15,6 +15,7 @@ namespace Tankito.SinglePlayer
         [SerializeField]
         float m_shootRadius;
         [SerializeField] BulletType m_bulletType;
+        internal BulletType BulletType { get => m_bulletType; set => m_bulletType = value; }
 
         void Update()
         {
@@ -37,6 +38,5 @@ namespace Tankito.SinglePlayer
             var newBullet = SinglePlayerBulletPool.Instance.Get(position, direction, (int)m_bulletType);
             newBullet.GetComponent<SinglePlayerBulletController>().InitializeBullet(position, direction);
         }
-
     }
 }

@@ -14,13 +14,24 @@ namespace Tankito.SinglePlayer
     public abstract class AGenericBehaviour : MonoBehaviour, ITankInput
     {
         [SerializeField] protected AgentController agentController;
-        [SerializeField] SinglePlayerBulletCannon cannon;
+        [SerializeField] protected SinglePlayerBulletCannon cannon;
         protected InputPayload m_currentInput;
         [SerializeField] AreaDetection genericAreaDetection;
         [SerializeField] LayerMask wallLayer;
         [SerializeField] GameObject debugPosition;
+        protected GameObject target;
 
         [SerializeField] protected bool DEBUG = true;
+
+        protected virtual Comparer<GameObject> GenericListOrder()
+        {
+            return Comparer<GameObject>.Create((obj1, obj2) =>
+            {
+                float d1 = Vector2.Distance(obj1.transform.position, transform.position);
+                float d2 = Vector2.Distance(obj2.transform.position, transform.position);
+                return d1.CompareTo(d2);
+            });
+        }
 
         #region TargetList
         [SerializeField] protected List<GameObject>  genericTargets = new List<GameObject>();
@@ -31,10 +42,10 @@ namespace Tankito.SinglePlayer
         #endregion
 
         #region Chase_Aim_Controllers
-        [SerializeField] bool noObstaclesBetween;
-        [SerializeField] bool cannonReloaded = true;
-        [SerializeField] float timerShoot = 0;
-        [SerializeField] bool targetInRange = false;
+        [SerializeField] protected bool noObstaclesBetween;
+        [SerializeField] protected bool cannonReloaded = true;
+        [SerializeField] protected float timerShoot = 0;
+        [SerializeField] protected bool targetInRange = false;
         #endregion
 
         #region Aim_Shoot_Controllers
@@ -42,13 +53,14 @@ namespace Tankito.SinglePlayer
         #endregion
 
         #region Shoot_Controllers
-        [SerializeField] bool hasShot = false;
+        [SerializeField] protected bool hasShot = false;
         #endregion
 
         protected virtual void Start()
         {
             genericAreaDetection.OnSubjectDetected += OnSubjectDetected;
             genericAreaDetection.OnSubjectDissapear += OnSubjectDissapear;
+            var genericOrder = GenericListOrder();
         }
 
         protected virtual void OnDisable()
@@ -57,7 +69,7 @@ namespace Tankito.SinglePlayer
             genericAreaDetection.OnSubjectDissapear -= OnSubjectDissapear;
         }
 
-        private void Update()
+        protected virtual void Update()
         {
             //Debug.Log("HOLA HOLA HOLA");
             timerShoot += Time.deltaTime;
@@ -109,9 +121,9 @@ namespace Tankito.SinglePlayer
             if (DEBUG) Debug.Log("CHASESTATE");
             if(genericTargets.Count > 0) 
             {
-                genericTargets.OrderBy(obj => Vector2.Distance(obj.transform.position, transform.position));
-                Vector3 targetPos = genericTargets[0].transform.position;
-                Vector2 targetToNpc = transform.position - targetPos;
+                var orderedList = new List<GameObject>(genericTargets.OrderBy(obj => obj, GenericListOrder()));
+                Vector2 targetPos = orderedList[0].transform.position;
+                Vector2 targetToNpc = (Vector2)transform.position - targetPos;
                 Vector2 nextPosition;
                 if (CheckObstacles(targetPos, targetToNpc))
                 {
@@ -121,25 +133,11 @@ namespace Tankito.SinglePlayer
                 }
                 else
                 {
-                    if (targetToNpc.magnitude < agentController.npcData.runAwayDistance)
-                    {
-                        nextPosition = (Vector2)transform.position + targetToNpc.normalized * agentController.npcData.speed * agentController.agent.speed;
-                    }
-                    else
-                    {
-                        nextPosition = (Vector2)targetPos + targetToNpc.normalized * agentController.npcData.idealDistance;
-                    }
+                    nextPosition = targetPos + targetToNpc.normalized * agentController.npcData.idealDistance;
                 }
 
                 CheckTargetInRange(targetToNpc.magnitude, agentController.npcData.attackRange);
-
-                /*if (DEBUG)*/ 
-                NavMeshHit closestEdge;
-                if (NavMesh.FindClosestEdge(nextPosition, out closestEdge, wallLayer)) //En caso de que la posicion sea un obstaculo
-                {
-                    nextPosition = closestEdge.position;
-                    if(DEBUG) Debug.Log("Destino ajustado al borde más cercano.");
-                }
+              
                 m_currentInput.moveVector = nextPosition;
             }
             
@@ -149,9 +147,9 @@ namespace Tankito.SinglePlayer
         public Status AimState()
         {
             if (DEBUG) Debug.Log("AIMSTATE");
-            if(genericTargets.Count > 0)
+            if(target != null)
             {
-                Vector2 aimVec = genericTargets[0].transform.position - transform.position;
+                Vector2 aimVec = target.transform.position - transform.position;
                 Vector2 aimDir = aimVec.normalized;
                 Vector2 turretVec = (cannon.transform.position - transform.position).normalized;
                 float angle = Vector2.Angle(aimDir, turretVec);
@@ -182,10 +180,9 @@ namespace Tankito.SinglePlayer
             return genericTargets.Count > 0;
         }
 
-        public Status ActionIdleToChase()
+        public void ActionIdleToChase()
         {
             patrolPointFound = false;
-            return Status.Success;
         }
 
         public bool CheckChaseToIdle()
@@ -198,10 +195,10 @@ namespace Tankito.SinglePlayer
             return noObstaclesBetween && cannonReloaded && targetInRange;
         }
 
-        public Status ActionChaseToAim()
+        public void ActionChaseToAim()
         {
             noObstaclesBetween = false;
-            return Status.Success;
+            target = genericTargets[0];
         }
 
         public bool CheckAimPOP()
@@ -214,10 +211,9 @@ namespace Tankito.SinglePlayer
             return turretInPosition;
         }
 
-        public Status ActionAimToShoot()
+        public void ActionAimToShoot()
         {
             turretInPosition = false;
-            return Status.Success;
         }
 
         public bool CheckShootPOP()
@@ -225,18 +221,30 @@ namespace Tankito.SinglePlayer
             return hasShot;
         }
 
-        public Status ActionShootPOP()
+        public void ActionShootPOP()
         {
             cannonReloaded = false;
             hasShot = false;
             timerShoot = 0;
-            return Status.Success;
         }
 
         #endregion
 
 
         #region Utilis
+
+        public Vector2 CheckNewPosition(Vector2 nextPos)
+        {
+            /*if (DEBUG)*/
+            NavMeshHit closestEdge;
+            if (NavMesh.FindClosestEdge(nextPos, out closestEdge, wallLayer)) //En caso de que la posicion sea un obstaculo
+            {
+                nextPos = closestEdge.position;
+                if (DEBUG) Debug.Log("Destino ajustado al borde más cercano.");
+            }
+            return nextPos;
+        }
+
         private void OnSubjectDetected(GameObject gameObject)
         {
             if (DEBUG) Debug.Log("Se añade un objeto generico a la lista");
@@ -249,7 +257,7 @@ namespace Tankito.SinglePlayer
             genericTargets.Remove(gameObject); 
         }
 
-        protected bool CheckObstacles(Vector3 targetPosition, Vector2 targetToNpc)
+        protected bool CheckObstacles(Vector2 targetPosition, Vector2 targetToNpc)
         {
             if (Physics2D.Raycast(targetPosition, targetToNpc.normalized, targetToNpc.magnitude, wallLayer))
             {
