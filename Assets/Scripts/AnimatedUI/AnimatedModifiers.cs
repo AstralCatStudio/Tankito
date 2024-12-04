@@ -24,7 +24,6 @@ public class AnimatedModifiers : MonoBehaviour
     [SerializeField] private RectTransform playerChoosingPosition;
     [SerializeField] private GameObject otherPlayerPrefab;
     [SerializeField] private GameObject otherPlayersPanel;
-    [SerializeField] private GameObject emptySpace;
     private Vector2 originalPlayerPosition;
 
     [SerializeField] private Transform row1;
@@ -167,9 +166,6 @@ public class AnimatedModifiers : MonoBehaviour
     {
         originalPlayerPosition = player.playerInfo.GetComponent<RectTransform>().anchoredPosition;
         RectTransform playerRT = player.playerInfo.GetComponent<RectTransform>();
-        player.playerInfo.transform.SetParent(playerChoosingPosition);
-        emptySpace.gameObject.SetActive(true);  //es un espacio en blanco para rellenar el hueco que el jugador deja al cambiar su padre
-        emptySpace.transform.SetSiblingIndex(turn);
         LeanTween.move(playerRT, playerChoosingPosition.anchoredPosition, playerTransitionTime).setEase(LeanTweenType.easeInOutCubic);
         LeanTween.scale(playerRT, Vector3.one * playerScale, playerTransitionTime).setEase(LeanTweenType.easeInOutCubic);
 
@@ -187,9 +183,6 @@ public class AnimatedModifiers : MonoBehaviour
     {
         DisableButtonsModifiers();
         RectTransform playerRT = player.playerInfo.GetComponent<RectTransform>();
-        player.playerInfo.transform.SetParent(otherPlayersPanel.transform);
-        player.playerInfo.transform.SetSiblingIndex(turn);
-        emptySpace.gameObject.SetActive(false);
         LeanTween.move(playerRT, originalPlayerPosition, playerTransitionTime).setEase(LeanTweenType.easeInOutCubic);
         LeanTween.scale(playerRT, Vector3.one, playerTransitionTime).setEase(LeanTweenType.easeInOutCubic);
 

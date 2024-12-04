@@ -291,41 +291,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 107346525}
   m_CullTransparentMesh: 1
---- !u!1 &124446608
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 124446609}
-  m_Layer: 5
-  m_Name: EmptySpace
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!224 &124446609
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 124446608}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 412591277}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 400, y: 180}
-  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &198444988
 GameObject:
   m_ObjectHideFlags: 0
@@ -434,14 +399,13 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 124446609}
+  m_Children: []
   m_Father: {fileID: 198444989}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 220, y: 380}
-  m_SizeDelta: {x: 400, y: 720}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 220, y: 10}
+  m_SizeDelta: {x: 400, y: -20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &412591278
 MonoBehaviour:
@@ -1714,7 +1678,6 @@ MonoBehaviour:
   playerChoosingPosition: {fileID: 1876219491}
   otherPlayerPrefab: {fileID: 6525036104982364894, guid: 81586fcc09ed5f1449fb674dc2948fef, type: 3}
   otherPlayersPanel: {fileID: 412591276}
-  emptySpace: {fileID: 124446608}
   row1: {fileID: 502019989}
   row2: {fileID: 1626000450}
   shells: []
@@ -2309,7 +2272,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 320, y: -120}
+  m_AnchoredPosition: {x: 320, y: -100}
   m_SizeDelta: {x: 600, y: 270}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1001 &5799627302569932252
