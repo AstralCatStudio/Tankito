@@ -45,6 +45,7 @@ namespace Tankito
             }
 
             OnTankDestroyed.Invoke(this);
+            MusicManager.Instance.PlaySound("snd_muere");
             UnityEngine.Debug.LogWarning("TODO: Trigger tank death animation");
             gameObject.SetActive(false);
         }
@@ -99,6 +100,10 @@ namespace Tankito
         public void TakeDamage(int damage)
         {
             //OnDamaged(this);
+
+            if (SimClock.Instance.Active && NetworkManager.Singleton.IsClient)
+                MusicManager.Instance.PlayDamage();
+
             if (IsServer)
             {
                 m_health -= damage;
