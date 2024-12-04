@@ -291,6 +291,41 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 107346525}
   m_CullTransparentMesh: 1
+--- !u!1 &124446608
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 124446609}
+  m_Layer: 5
+  m_Name: EmptySpace
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!224 &124446609
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 124446608}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 412591277}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 400, y: 180}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &198444988
 GameObject:
   m_ObjectHideFlags: 0
@@ -399,7 +434,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 124446609}
   m_Father: {fileID: 198444989}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -1314,7 +1350,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1446390485}
         m_TargetAssemblyTypeName: AnimatedModifiers, Assembly-CSharp
-        m_MethodName: Disappear
+        m_MethodName: TryNextTurn
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1667,16 +1703,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   popupTime: 0.5
-  waitTime: 0.5
+  waitTime: 0.3
   shellTime: 0.5
   playerTransitionTime: 1
   playerScale: 1.5
   numPlayers: 4
   panelRT: {fileID: 198444989}
   shellPrefab: {fileID: 8972821688880926834, guid: 1eef944e91af3b947be395fdaf78b89e, type: 3}
+  modifierPrefab: {fileID: 6272916998491305265, guid: 9e638a6c5635d3b40b40674dc33992ee, type: 3}
   playerChoosingPosition: {fileID: 1876219491}
   otherPlayerPrefab: {fileID: 6525036104982364894, guid: 81586fcc09ed5f1449fb674dc2948fef, type: 3}
   otherPlayersPanel: {fileID: 412591276}
+  emptySpace: {fileID: 124446608}
   row1: {fileID: 502019989}
   row2: {fileID: 1626000450}
   shells: []

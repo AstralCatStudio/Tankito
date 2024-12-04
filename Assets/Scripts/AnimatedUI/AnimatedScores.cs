@@ -47,7 +47,7 @@ public class AnimatedScores : MonoBehaviour
 
     #region removeThis
     [Header("Remove this params")]
-    [SerializeField] private List<PlayerTest> players = new();  //Esto se podrá eliminar
+    private List<PlayerTest> players = new();  //Esto se podrá eliminar
     private Color[] colors = { Color.blue, Color.red, Color.green, Color.yellow };
     [SerializeField] private Sprite[] icons;
     #endregion

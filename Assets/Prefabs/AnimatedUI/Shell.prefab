@@ -267,7 +267,7 @@ MonoBehaviour:
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
-  m_fontSizeMin: 30
+  m_fontSizeMin: 20
   m_fontSizeMax: 72
   m_fontStyle: 0
   m_HorizontalAlignment: 2
@@ -337,7 +337,6 @@ GameObject:
   - component: {fileID: 8746198833614384758}
   - component: {fileID: 2705726433099299422}
   - component: {fileID: 4812175881254841009}
-  - component: {fileID: 1701245388039399768}
   - component: {fileID: 5473242441239580890}
   m_Layer: 5
   m_Name: Shell
@@ -449,8 +448,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1701245388039399768}
-        m_TargetAssemblyTypeName: ShellSelection, Assembly-CSharp
+      - m_Target: {fileID: 2705726433099299422}
+        m_TargetAssemblyTypeName: ShellAnimation, Assembly-CSharp
         m_MethodName: Select
         m_Mode: 1
         m_Arguments:
@@ -475,12 +474,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shellOpened: {fileID: 21300000, guid: fc35b0df97691b649a2c60641631d675, type: 3}
   shellClosed: {fileID: 21300000, guid: b7bcbc9926b9e6f46ba11d8d89328277, type: 3}
-  description: {fileID: 7698967967731314826}
-  modifier: {fileID: 3282515692001931051}
   numOfTurns: 4
   degrees: 30
   waitTime: 0.5
   animationTime: 0.5
+  selected: 0
+  alreadyTaken: 0
+  modifier: {fileID: 3282515692001931051}
+  potenciadoresGameObject: {fileID: 0}
+  description: {fileID: 7698967967731314826}
+  modifierObject: {fileID: 3282515692001931051}
 --- !u!114 &4812175881254841009
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -495,23 +498,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scale: 1.2
   time: 0.5
---- !u!114 &1701245388039399768
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8972821688880926834}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3f9fe33616a04374ea2a367a416a688c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  selected: 0
-  alreadyTaken: 0
-  modifier: {fileID: 0}
-  modifiersObject: {fileID: 0}
-  modifierIcon: {fileID: 5736706158212224367}
 --- !u!114 &5473242441239580890
 MonoBehaviour:
   m_ObjectHideFlags: 0

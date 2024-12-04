@@ -19,10 +19,13 @@ public class AnimatedModifiers : MonoBehaviour
 
     [SerializeField] private RectTransform panelRT;
     [SerializeField] private GameObject shellPrefab;
+    [SerializeField] private GameObject modifierPrefab;
     
     [SerializeField] private RectTransform playerChoosingPosition;
     [SerializeField] private GameObject otherPlayerPrefab;
     [SerializeField] private GameObject otherPlayersPanel;
+    [SerializeField] private GameObject emptySpace;
+    private Vector2 originalPlayerPosition;
 
     [SerializeField] private Transform row1;
     [SerializeField] private Transform row2;
@@ -33,7 +36,7 @@ public class AnimatedModifiers : MonoBehaviour
 
     #region removeThis
     [Header("Remove this params")]
-    [SerializeField] private List<PlayerTest> players = new();  //Esto se podrá eliminar
+    private List<PlayerTest> players = new();  //Esto se podrá eliminar
     private Color[] colors = { Color.blue, Color.red, Color.green, Color.yellow };
     [SerializeField] private Sprite[] icons;
     #endregion
@@ -108,13 +111,9 @@ public class AnimatedModifiers : MonoBehaviour
             UpdateValues(player);
         }
 
-            LeanTween.scale(panelRT, Vector2.one, popupTime).setEase(LeanTweenType.easeOutElastic);
-        shells[0].GetComponent<ShellAnimation>().onAnimationFinished += StartChoose;
-        
-        //for (int i = 0; i < players.Count; i++)  //numero de jugadores
-        //{
-        //    players[i].score += Random.Range(0, 4); //Añadir puntuación
-        //}
+        LeanTween.scale(panelRT, Vector2.one, popupTime).setEase(LeanTweenType.easeOutElastic);
+        shells[0].GetComponent<ShellAnimation>().onAnimationFinished += StartChoosing;
+  
     }
     #endregion
 
@@ -157,45 +156,146 @@ public class AnimatedModifiers : MonoBehaviour
         }
     }
 
-    private void StartChoose()
+    private void StartChoosing()
     {
-        turn = numPlayers - 1;
-        AnimatePlayer(players[turn]);
+        turn = 0;
+        int currentIndex = (numPlayers - 1) - turn;
+        AnimatePlayerEnable(players[currentIndex]);
     }
 
-    private void AnimatePlayer(PlayerTest player)
+    private void AnimatePlayerEnable(PlayerTest player)
     {
+        originalPlayerPosition = player.playerInfo.GetComponent<RectTransform>().anchoredPosition;
         RectTransform playerRT = player.playerInfo.GetComponent<RectTransform>();
         player.playerInfo.transform.SetParent(playerChoosingPosition);
+        emptySpace.gameObject.SetActive(true);  //es un espacio en blanco para rellenar el hueco que el jugador deja al cambiar su padre
+        emptySpace.transform.SetSiblingIndex(turn);
         LeanTween.move(playerRT, playerChoosingPosition.anchoredPosition, playerTransitionTime).setEase(LeanTweenType.easeInOutCubic);
         LeanTween.scale(playerRT, Vector3.one * playerScale, playerTransitionTime).setEase(LeanTweenType.easeInOutCubic);
 
+        Invoke("EnableButtonsModifiers", playerTransitionTime);
+    }
+
+    private void AnimateModifierAppearingInPlayer(GameObject instance)
+    {
+        RectTransform rt = instance.GetComponent<RectTransform>();
+        LeanTween.scale(rt, Vector2.zero, 0);
+        LeanTween.scale(rt, Vector2.one, waitTime).setEase(LeanTweenType.easeOutBack);
+    }
+
+    private void AnimatePlayerDisable(PlayerTest player)
+    {
+        DisableButtonsModifiers();
+        RectTransform playerRT = player.playerInfo.GetComponent<RectTransform>();
+        player.playerInfo.transform.SetParent(otherPlayersPanel.transform);
+        player.playerInfo.transform.SetSiblingIndex(turn);
+        emptySpace.gameObject.SetActive(false);
+        LeanTween.move(playerRT, originalPlayerPosition, playerTransitionTime).setEase(LeanTweenType.easeInOutCubic);
+        LeanTween.scale(playerRT, Vector3.one, playerTransitionTime).setEase(LeanTweenType.easeInOutCubic);
+
+        Invoke("ChangeTurn", playerTransitionTime);
+    }
+
+    /// <summary>
+    /// Activa los modificadores y hace que se vea el sprite de la concha abierto.
+    /// </summary>
+    public void EnableModifiers()
+    {
         ShellAnimation shellAnimation;
         //Para que los modificadores puedan ser seleccionables, llamamos a Enable
-        foreach(GameObject shell in shells)
+        foreach (GameObject shell in shells)
         {
             shellAnimation = shell.GetComponent<ShellAnimation>();
             shellAnimation.Enable();
         }
     }
-    
-    public void NextTurn()
+
+    /// <summary>
+    /// Activa la funcionalidad de los botones de los modificadores
+    /// </summary>
+    public void EnableButtonsModifiers()
+    {
+        ShellAnimation shellAnimation;
+        //Para que los modificadores puedan ser seleccionables, llamamos a Enable
+        foreach (GameObject shell in shells)
+        {
+            shellAnimation = shell.GetComponent<ShellAnimation>();
+            shellAnimation.EnableButton();
+        }
+    }
+
+    /// <summary>
+    /// Desactiva la funcionalidad de los botones de los modificadores
+    /// </summary>
+    public void DisableButtonsModifiers()
+    {
+        ShellAnimation shellAnimation;
+        //Para que los modificadores puedan ser seleccionables, llamamos a Enable
+        foreach (GameObject shell in shells)
+        {
+            shellAnimation = shell.GetComponent<ShellAnimation>();
+            shellAnimation.DisableButton();
+        }
+    }
+
+    /// <summary>
+    /// Desactiva los modificadores y hace que se vea el sprite de la concha abierto.
+    /// </summary>
+    public void DisableModifiers()
+    {
+        ShellAnimation shellAnimation;
+        //Para que los modificadores puedan ser seleccionables, llamamos a Enable
+        foreach (GameObject shell in shells)
+        {
+            shellAnimation = shell.GetComponent<ShellAnimation>();
+            shellAnimation.Disable();
+        }
+    }
+
+    /// <summary>
+    /// Primero comprueba cual es el modificador seleccionado. Si el jugador no ha elegido ninguno, no hace nada. En caso de que lo haya elegido, da pie a las animaciones correspondientes.
+    /// </summary>
+    public void TryNextTurn()
     {
         GameObject shellSelected = CheckSelected();
+        
         if (shellSelected == null)
         {
             Debug.LogWarning("You didn´t choose any modifier");
         } else
         {
-            shellSelected.GetComponent<ShellAnimation>().Disable();
+            shellSelected.GetComponent<ShellAnimation>().SetAlreadyTaken(true);
+            shellSelected.GetComponent<ShellAnimation>().Disable(); //desactiva el potenciador elegido
+            int currentIndex = (numPlayers - 1) - turn;
+            GameObject parent = players[currentIndex].playerInfo.GetComponent<OtherP_LoadInfo>().modifiers;
+            GameObject instance = Instantiate(modifierPrefab, parent.transform);
+            instance.GetComponent<Image>().sprite = shellSelected.GetComponent<ShellAnimation>().modifier.GetSprite();
+            DeselectAllModifiers();
+            AnimateModifierAppearingInPlayer(instance);
+            AnimatePlayerDisable(players[currentIndex]);
         }
     }
+
+    private void ChangeTurn()
+    {
+        turn++;
+        if(turn >= numPlayers)
+        {
+            Disappear();
+        }
+        else
+        {
+            int currentIndex = (numPlayers - 1) - turn;
+            AnimatePlayerEnable(players[currentIndex]);
+        }
+    }
+
     private GameObject CheckSelected()
     {
-        ShellSelection selection;
+        ShellAnimation selection;
         foreach(GameObject shell in shells)
         {
-            selection = shell.GetComponent<ShellSelection>();
+            selection = shell.GetComponent<ShellAnimation>();
             if (selection.selected)
             {
                 return shell;
@@ -208,7 +308,7 @@ public class AnimatedModifiers : MonoBehaviour
     {
         foreach(GameObject s in shells)
         {
-            s.GetComponent<ShellSelection>().selected = false;
+            s.GetComponent<ShellAnimation>().selected = false;
             s.GetComponent<Outline>().enabled = false;
         }
     }
@@ -221,6 +321,7 @@ public class AnimatedModifiers : MonoBehaviour
         {
             s.GetComponent<Button>().enabled = false;
             s.GetComponent<HoverButton>().enabled = false;
+            s.GetComponent<ShellAnimation>().SetAlreadyTaken(false);
         }
         Invoke("Disable", popupTime);
     }
@@ -228,8 +329,7 @@ public class AnimatedModifiers : MonoBehaviour
     private void Disable()
     {
         gameObject.SetActive(false);
-        shells[0].GetComponent<ShellAnimation>().onAnimationFinished -= StartChoose;
+        shells[0].GetComponent<ShellAnimation>().onAnimationFinished -= StartChoosing;
     }
 
-    
 }
