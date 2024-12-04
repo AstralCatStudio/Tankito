@@ -23,8 +23,8 @@ namespace Tankito.Netcode.Simulation
         private int m_inputReplayTick = NO_REPLAY;
         private const int NO_REPLAY = -1;
 
-        public ulong ClientId { get => ClientSimulationManager.Instance.emulatedInputTanks.First(compIdPair => compIdPair.Value == this).Key; }
-
+        public ulong ClientId { get => ClientSimulationManager.Instance.emulatedInputTankComponents.First(compIdPair => compIdPair.Value == this).Key; }
+        
 
 
         void Awake()
@@ -57,6 +57,11 @@ namespace Tankito.Netcode.Simulation
             {
                 Debug.Log($"[{SimClock.TickCounter}]EmulatedTankInputBuffer({ClientId}): [{m_inputBuffer.MinBy(i => i.timestamp).timestamp}-{m_inputBuffer.MaxBy(i => i.timestamp).timestamp}]");
             }
+        }
+
+        public bool HasPayload(int atTick)
+        {
+            return m_inputBuffer.Select(input => input.timestamp).Contains(atTick);
         }
 
         public InputPayload GetInput()

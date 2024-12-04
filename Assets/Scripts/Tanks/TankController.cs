@@ -332,7 +332,7 @@ namespace Tankito
 
             m_tankRB.MovePosition(m_tankRB.position + m_speed * moveVector * deltaTime);
 
-            if (moveVector.sqrMagnitude > 0.1) m_lastMoveVector = moveVector;
+            //if (moveVector.sqrMagnitude > 0.1) m_lastMoveVector = moveVector; // Queda un poco raro para cuando intentas dashear luego
         }
 
         /// <summary>
@@ -362,7 +362,8 @@ namespace Tankito
             }
             else
             {
-                m_tankRB.MovePosition(m_tankRB.position + m_lastMoveVector * deltaTime * dashSpeed);
+                //m_tankRB.MovePosition(m_tankRB.position + m_lastMoveVector * deltaTime * dashSpeed); // Queda raro el dash asi en teclado
+                m_tankRB.MovePosition(m_tankRB.position + (Vector2)m_tankRB.transform.right * deltaTime * dashSpeed);
             }
         }
 

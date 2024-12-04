@@ -54,7 +54,8 @@ namespace Tankito.Netcode.Simulation
             return "[ " +
                     "position: " + position + " | " +
                     "velocity: " + velocity + " | " +
-                    "lifeTime: " + bouncesLeft + " | " +
+                    "lifeTime: " + lifeTime + " | " +
+                    "bouncesLeft: " + bouncesLeft + " | " +
                     "ownerId: " + ownerId + " | ";
         }
     }

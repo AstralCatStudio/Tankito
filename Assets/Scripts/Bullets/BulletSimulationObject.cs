@@ -44,7 +44,7 @@ namespace Tankito.Netcode.Simulation
             return new BulletSimulationState(
                 m_rigidbody.position,
                 m_rigidbody.velocity,
-                m_bulletController.m_lifetime,
+                m_bulletController.LifeTime,
                 m_bulletController.m_bouncesLeft,
                 OwnerId
             );
@@ -54,10 +54,10 @@ namespace Tankito.Netcode.Simulation
         {
             if (state is BulletSimulationState bulletState)
             {
-                //Debug.Log($"SetSimState to: pos({bulletState.Position}), rot({bulletState.Rotation}), vel({bulletState.Velocity}), LifeTime({bulletState.LifeTime}), BouncesLeft({bulletState.BouncesLeft})");
+                Debug.Log($"SetSimState to: pos({bulletState.Position}), vel({bulletState.Velocity}), LifeTime({bulletState.LifeTime}), BouncesLeft({bulletState.BouncesLeft})");
                 transform.position = bulletState.Position;
                 m_rigidbody.velocity = bulletState.Velocity;
-                m_bulletController.m_lifetime = bulletState.LifeTime;
+                m_bulletController.LifeTime = bulletState.LifeTime;
                 m_bulletController.m_bouncesLeft = bulletState.BouncesLeft;
             }
             else

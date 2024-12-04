@@ -68,14 +68,14 @@ namespace Tankito.Netcode.Simulation
                 Destroy(playerInput);
 
                 m_inputComponent = gameObject.AddComponent<RemoteTankInput>();
-                ServerSimulationManager.Instance.remoteInputTanks[OwnerClientId] = (RemoteTankInput)m_inputComponent;
+                ServerSimulationManager.Instance.remoteInputTankComponents[OwnerClientId] = (RemoteTankInput)m_inputComponent;
             }
             else if (IsClient)
             {
                 Destroy(playerInput);
 
                 m_inputComponent = gameObject.AddComponent<EmulatedTankInput>();
-                ClientSimulationManager.Instance.emulatedInputTanks[OwnerClientId] = (EmulatedTankInput)m_inputComponent;
+                ClientSimulationManager.Instance.emulatedInputTankComponents[OwnerClientId] = (EmulatedTankInput)m_inputComponent;
             }
 
             GetComponent<TankController>().BindInputSource(m_inputComponent);
@@ -99,11 +99,11 @@ namespace Tankito.Netcode.Simulation
             }
             else if (IsClient)
             {
-                ClientSimulationManager.Instance.emulatedInputTanks.Remove(OwnerClientId);
+                ClientSimulationManager.Instance.emulatedInputTankComponents.Remove(OwnerClientId);
             }
             else if (IsServer)
             {
-                ServerSimulationManager.Instance.remoteInputTanks.Remove(OwnerClientId);
+                ServerSimulationManager.Instance.remoteInputTankComponents.Remove(OwnerClientId);
             }
 
             

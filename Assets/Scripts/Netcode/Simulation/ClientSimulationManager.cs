@@ -12,12 +12,13 @@ namespace Tankito.Netcode.Simulation
     public class ClientSimulationManager : NetSimulationManager<ClientSimulationManager>
     {
         int SNAPSHOT_BUFFER_SIZE { get => SimulationParameters.SNAPSHOT_BUFFER_SIZE; }
+        int MAX_DESYNC_COUNT { get => SimulationParameters.MAX_DESYNC_COUNT; }
         CircularBuffer<SimulationSnapshot> m_snapshotBuffer;
 
         /// <summary>
         /// Relates NetworkClientId(ulong) to a specific <see cref="EmulatedTankInput"/>.  
         /// </summary>
-        public Dictionary<ulong, EmulatedTankInput> emulatedInputTanks = new Dictionary<ulong,EmulatedTankInput>();
+        public Dictionary<ulong, EmulatedTankInput> emulatedInputTankComponents = new Dictionary<ulong,EmulatedTankInput>();
 
         // We're leaving it in the back burner, input acknowledgement is too fucking hard for the little benefit of getting better
         // behaviour while working at the edge of the set Worst Case Latency.
@@ -33,9 +34,11 @@ namespace Tankito.Netcode.Simulation
         int m_rollbackTick = NO_ROLLBACK;
         const int NO_SNAPSHOT = -1;
         private int m_lastAuthSnapshotTimestamp;//Por como funciona el rollback, igual esto no hace falta y unicamente podemos necesitar 
-                                                //que se guarde el timestamp. EDIT: Vale, en efecto, lo estoy cambiando para desligar
-                                                //el tamaño del snapshot buffer de nuestra capacidad de recordar el último AuthSnapshot
-                                                //recibido (o al menos su timestamp que es realmente lo único que nos interesa).
+        private int m_desyncCounter = 0;
+
+        //que se guarde el timestamp. EDIT: Vale, en efecto, lo estoy cambiando para desligar
+        //el tamaño del snapshot buffer de nuestra capacidad de recordar el último AuthSnapshot
+        //recibido (o al menos su timestamp que es realmente lo único que nos interesa).
         //{
         //    get
         //    {
@@ -90,6 +93,25 @@ namespace Tankito.Netcode.Simulation
             
         }
 
+        /// <summary>
+        /// This is used to check when we have all of client's inputs at any given tick,
+        /// to trigger Rollback early and improve responsiveness.
+        /// </summary>
+        public void EvaluateEarlyInputReconciliation(int firstTick ,int lastTick)
+        {
+            for (int tick = lastTick; tick >= firstTick; tick--)
+            {
+                // Only trigger early input reconciliation if we have ALL of the user's inputs
+                if (emulatedInputTankComponents.Values.Where(i => i.HasPayload(tick)).Count() == emulatedInputTankComponents.Values.Count())
+                {
+                    // Solo es necesario hacer rollback al tick mas reciente que cumpla la condicion de early rollback
+                    Rollback(tick);
+                    return;
+                }
+            }
+            
+        }
+
         public void EvaluateForReconciliation(SimulationSnapshot newAuthSnapshot)
         {
             if ((newAuthSnapshot.timestamp <= m_lastAuthSnapshotTimestamp) ||
@@ -99,6 +121,15 @@ namespace Tankito.Netcode.Simulation
                                     $"Oldest predicted snapshot[{m_snapshotBuffer.First}]."+
                                     $"Newest auth snapshot[{m_lastAuthSnapshotTimestamp}]."+
                                     $"Snapshot Buff Size: {m_snapshotBuffer.Capacity}");
+                
+                // Desync detection, sort of a patch but meh
+                m_desyncCounter++;
+                if (m_desyncCounter > MAX_DESYNC_COUNT)
+                {
+                    MessageHandlers.Instance.RequestSync();
+                    m_desyncCounter = 0;
+                }
+
                 return;
             }
 
@@ -128,11 +159,6 @@ namespace Tankito.Netcode.Simulation
             if (!predictedSnapshot.Equals(default(SimulationSnapshot)))
             {
                 bool predictedObjectsMissMatch = predictedSnapshot.IDs.Except(newAuthSnapshot.IDs).Union(newAuthSnapshot.IDs.Except(predictedSnapshot.IDs)).Count() > 0;
-                bool rolledBack = false;
-
-                SetSimulation(newAuthSnapshot);
-                // At this point all registered simObjs (e.g simulation objects in scene) should be the
-                // same as the ones stored on the incoming auth snapshot.
 
                 // We skip Delta comparison stage if we had wrongfuly predicted the objects in the snapshot,
                 // if that's the case we force the rollback.
@@ -150,7 +176,6 @@ namespace Tankito.Netcode.Simulation
                             }
                             
                             Rollback(newAuthSnapshot);
-                            rolledBack = true;
                             break;
                         }
                     }
@@ -158,15 +183,10 @@ namespace Tankito.Netcode.Simulation
                 else
                 {
                     if (DEBUG) Debug.Log($"[{SimClock.TickCounter}] Rolling back to [{newAuthSnapshot.timestamp}] because: Object Missmatch at predicted snapshot");
+                    
                     Rollback(newAuthSnapshot);
-                    rolledBack = true;
                 }
 
-                if (rolledBack == false)
-                {
-                    // Reset simulation state back to last cached state
-                    SetSimulation(m_snapshotBuffer.Last);
-                }
                 m_snapshotBuffer.Add(newAuthSnapshot, newAuthSnapshot.timestamp);
             }
             else
@@ -178,6 +198,18 @@ namespace Tankito.Netcode.Simulation
             SimClock.Instance.ResumeClock();
         }
 
+        private void Rollback(int tick)
+        {
+            if (m_snapshotBuffer.Any(s => s.timestamp == tick))
+            {
+                Rollback(m_snapshotBuffer.First(s => s.timestamp == tick));
+            }
+            else
+            {
+                Debug.LogWarning($"Tick [{tick}] out of snapshot buffer bounds (snapshot with such timestamp not saved)");
+            }
+        }
+
         /// <summary>
         /// Strict setting of the simulation state to the auth is a pre-requisite of rollback.
         /// This also implies which simulationObjects are registered/present in the simulation (because Simulate is a global action).
@@ -186,11 +218,15 @@ namespace Tankito.Netcode.Simulation
         /// </summary>
         /// <param name="authSnapshot"></param>
         /// <exception cref="InvalidOperationException"></exception>
-        public void Rollback(SimulationSnapshot authSnapshot)
+        private void Rollback(SimulationSnapshot authSnapshot)
         {
             if (SimClock.Instance.Active) throw new InvalidOperationException($"[{SimClock.TickCounter}]The {SimClock.Instance} must be stopped while calling Rollback");
 
             m_rollbackTick = authSnapshot.timestamp;
+
+            SetSimulation(authSnapshot);
+            // At this point all registered simObjs (e.g simulation objects in scene) should be the
+            // same as the ones stored on the incoming auth snapshot.
 
             // Iterate over the simulation objects, they should already only be those present in the
             // incoming state and set input components into replay mode for resimulation purposes.

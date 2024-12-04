@@ -15,8 +15,9 @@ namespace Tankito.Netcode
         public static int SNAPSHOT_BUFFER_SIZE { get => Instance.C_Buffer_Size; }
         public static int CLIENT_INPUT_WINDOW_SIZE { get => Instance.S_Buffer_Size; }
         public static int SERVER_IDEAL_INPUT_BUFFER_SIZE { get => Instance.S_Buffer_Size; }
-        public static double SNAPSHOT_JITTER_BUFFER_TIME { get => Instance.Client_Jitter_Buffer_Time; }
         public static double WORST_CASE_LATENCY { get => Instance.Worst_Case_Latency; set => Instance.Worst_Case_Latency = value; }
+        public static double SNAPSHOT_JITTER_BUFFER_TIME { get => Instance.Client_Jitter_Buffer_Time; }
+        public static int MAX_DESYNC_COUNT { get => Instance.Client_Max_Desync_Count; }
 
         private int S_Buffer_Size { get => Mathf.CeilToInt((float)(Worst_Case_Latency/SIM_DELTA_TIME)) + 1; }
         private int C_Buffer_Size { get => Mathf.CeilToInt((float)(Worst_Case_Latency*3/SIM_DELTA_TIME)) + 1; }
@@ -27,6 +28,7 @@ namespace Tankito.Netcode
         [SerializeField] double Worst_Case_Latency = 0.400;
         public double WorstCaseLatency => Worst_Case_Latency;
         [SerializeField] double Client_Jitter_Buffer_Time = 0.02;
+        [SerializeField] int Client_Max_Desync_Count = 5;
         [SerializeField] int Sim_Tick_Rate = 30;
         public int SimTickRate => Sim_Tick_Rate;
 

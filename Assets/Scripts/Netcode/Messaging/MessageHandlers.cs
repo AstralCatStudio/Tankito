@@ -44,12 +44,11 @@ namespace Tankito.Netcode.Messaging
 
         public void SendClockSignal(ClockSignal signal, NetworkDelivery delivery = NetworkDelivery.ReliableSequenced, ulong[] recipients = null)
         {
-            if (!NetworkManager.Singleton.IsServer)
+            if (!NetworkManager.Singleton.IsServer && signal.header != ClockSignalHeader.SyncRequest)
             {
-                Debug.LogException(new InvalidOperationException("Client's can't send clock signals"));
+                Debug.LogException(new InvalidOperationException("Client's can't send clock signals (except for sync requests)"));
                 return;
             }
-            
             
             var customMessagingManager = NetworkManager.Singleton.CustomMessagingManager;
             var writer = new FastBufferWriter(FastBufferWriter.GetWriteSize(signal), Allocator.Temp);
@@ -60,6 +59,11 @@ namespace Tankito.Netcode.Messaging
                 if (recipients == null)
                 {
                     customMessagingManager.SendNamedMessageToAll(MessageName.ClockSignal, writer, delivery);
+                }
+                else if (signal.header == ClockSignalHeader.SyncRequest)
+                {
+                    // REQUEST SYNC SIGNAL (from client to server)
+                    customMessagingManager.SendNamedMessage(MessageName.ClockSignal, NetworkManager.ServerClientId, writer, delivery);
                 }
                 else
                 {
@@ -75,35 +79,33 @@ namespace Tankito.Netcode.Messaging
         {
             if (!NetworkManager.Singleton.IsServer) return;
             
-            int throttleTicks = (SimClock.TickCounter + SimulationParameters.SERVER_IDEAL_INPUT_BUFFER_SIZE - 1) - ServerSimulationManager.Instance.remoteInputTanks[clientId].Last;
+            int throttleTicks = (SimClock.TickCounter + SimulationParameters.SERVER_IDEAL_INPUT_BUFFER_SIZE - 1) - ServerSimulationManager.Instance.remoteInputTankComponents[clientId].Last;
             var throttleSignal = new ClockSignal(ClockSignalHeader.Throttle, throttleTicks);
             
             ulong[] target = new ulong[] {clientId};
             SendClockSignal(throttleSignal, NetworkDelivery.Unreliable, target);
         }
 
-        public void SendSynchronizationSignal()
+        public void SendSynchronizationSignal(ulong[] recipients = null)
         {
             if (!NetworkManager.Singleton.IsServer) return;
 
             int syncTick = SimClock.TickCounter + SimulationParameters.SERVER_IDEAL_INPUT_BUFFER_SIZE + 1;
             var syncSignal = new ClockSignal(ClockSignalHeader.Sync, syncTick);
 
-            SendClockSignal(syncSignal, NetworkDelivery.ReliableSequenced);
+            SendClockSignal(syncSignal, NetworkDelivery.ReliableSequenced, recipients);
         }
 
-        public void ReceiveClockSignal(ulong serverId, FastBufferReader payload)
+        public void ReceiveClockSignal(ulong senderId, FastBufferReader payload)
         {
-            if (NetworkManager.Singleton.IsServer && !NetworkManager.Singleton.IsClient) return;
-            
-            if (serverId != NetworkManager.ServerClientId)
+            ClockSignal signal;
+            payload.ReadValue(out signal);
+
+            if (senderId != NetworkManager.ServerClientId && signal.header != ClockSignalHeader.SyncRequest)
             {
                 Debug.LogWarning("Can only receive clock signal messages from the server!");
                 return;
             }
-
-            ClockSignal signal;
-            payload.ReadValue(out signal);
 
             switch(signal.header)
             {
@@ -131,6 +133,13 @@ namespace Tankito.Netcode.Messaging
                         SimClock.Instance.SetClock(signal.signalTicks + latencyTicks);
                         // Make sure we reset our throttle speed to baseline (NO THROTTLING)
                         SimClock.Instance.ResetThrottle();
+                    }
+                    break;
+
+                case ClockSignalHeader.SyncRequest:
+                    if (NetworkManager.Singleton.IsServer)
+                    {
+                        SendSynchronizationSignal(new ulong[]{senderId});
                     }
                     break;
 
@@ -197,7 +206,7 @@ namespace Tankito.Netcode.Messaging
             if (senderId != NetworkManager.Singleton.LocalClientId)
             {
                 // Store inputWindow
-                ServerSimulationManager.Instance.remoteInputTanks[senderId].AddInput(receivedInputWindow.ToArray());
+                ServerSimulationManager.Instance.remoteInputTankComponents[senderId].AddInput(receivedInputWindow.ToArray());
             }
 
             if (DEBUG_INPUT)
@@ -303,7 +312,8 @@ namespace Tankito.Netcode.Messaging
             }
 
             // Store RelayedInputWindow to emulated input remote clients
-            ClientSimulationManager.Instance.emulatedInputTanks[originalSenderId].ReceiveInputWindow(relayedInputWindow.ToArray());
+            ClientSimulationManager.Instance.emulatedInputTankComponents[originalSenderId].ReceiveInputWindow(relayedInputWindow.ToArray());
+            ClientSimulationManager.Instance.EvaluateEarlyInputReconciliation(relayedInputWindow.First().timestamp, relayedInputWindow.Last().timestamp);
 
             if (DEBUG_INPUT)
             {
@@ -384,6 +394,18 @@ namespace Tankito.Netcode.Messaging
             //ClientSimulationManager.Instance.SetSimulation(snapshot);
 
             if (DEBUG_SNAPSHOTS) Debug.Log($"[{SimClock.TickCounter}]Received snapshot[{snapshot.timestamp}] from server.");
+        }
+
+        internal void RequestSync()
+        {
+            if (!NetworkManager.Singleton.IsClient || NetworkManager.Singleton.IsServer)
+            {
+                throw new InvalidOperationException();
+            }
+
+            ClockSignal syncRequest = new ClockSignal();
+            syncRequest.header = ClockSignalHeader.SyncRequest;
+            SendClockSignal(syncRequest, recipients: new ulong[]{NetworkManager.ServerClientId});
         }
     }
 }

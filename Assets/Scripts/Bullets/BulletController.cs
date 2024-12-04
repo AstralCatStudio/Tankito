@@ -15,8 +15,8 @@ namespace Tankito {
     {
         BulletSimulationObject m_simObj;
         public int m_bouncesLeft = 0;
-        public float LifeTime { get => m_lifetime; }
-        public float m_lifetime = 0; // Life Time counter
+        public float LifeTime { get => m_lifetime; set => m_lifetime = value; }
+        private float m_lifetime = 0; // Life Time counter
         protected Vector2 lastCollisionNormal = Vector2.zero;
         private Rigidbody2D m_rb;
         public float selfCollisionTreshold = 0.1f;

@@ -12,7 +12,7 @@ namespace Tankito.Netcode.Simulation
         /// <summary>
         /// Relates <see cref="NetworkBehaviour.OwnerClientId"/> to a specific <see cref="RemoteTankInput"/>.  
         /// </summary>
-        public Dictionary<ulong, RemoteTankInput> remoteInputTanks = new Dictionary<ulong,RemoteTankInput>();
+        public Dictionary<ulong, RemoteTankInput> remoteInputTankComponents = new Dictionary<ulong,RemoteTankInput>();
 
         protected override int CaptureSnapshotTick { get => SimClock.TickCounter; }
 
