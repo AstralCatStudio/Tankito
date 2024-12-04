@@ -16,7 +16,6 @@ public class MenuAnimations : MonoBehaviour
     [SerializeField] private float enableTime = 1f;
     [SerializeField] private float disableTime = 1f;
     [SerializeField] private float delay = 0.1f;
-    [SerializeField] private int childrenLimit = 1;
 
     private Coroutine disableCoroutine, enablingInteractable;
 

@@ -91,28 +91,7 @@ namespace Tankito
 
             OnTankDestroyed -= RoundManager.Instance.TankDeath;
         }
-        /// <summary>
-        /// Should Only Be Called  from the server OR as a clientRpc (e.g from the server)
-        /// </summary>
-        /// <param name="awardedPoints"></param>
-        public void AwardPoints(int awardedPoints)
-        {
-            if (IsServer)
-            {
-                AwardPointsClientRpc(awardedPoints);
-            }
-            m_points += awardedPoints;
-
-        }
-        [ClientRpc]
-        void AwardPointsClientRpc(int awardedPoints)
-        {
-            if (!IsServer)
-            {
-                AwardPoints(awardedPoints);
-            }
-
-        }
+        
         private void Update()
         {
             //Debug.Log("Vida actual: "+ m_health);
@@ -157,5 +136,48 @@ namespace Tankito
                 m_isAlive = true;
             }
         }
+
+        #region Points
+        /// <summary>
+        /// Should Only Be Called  from the server OR as a clientRpc (e.g from the server)
+        /// </summary>
+        /// <param name="awardedPoints"></param>
+        public void AwardPoints(int awardedPoints)
+        {
+            if (IsServer)
+            {
+                AwardPointsClientRpc(awardedPoints);
+            }
+            m_points += awardedPoints;
+
+        }
+        [ClientRpc]
+        void AwardPointsClientRpc(int awardedPoints)
+        {
+            if (!IsServer)
+            {
+                AwardPoints(awardedPoints);
+            }
+
+        }
+
+        public void ResetPoints()
+        {
+            if (IsServer)
+            {
+                ResetPointsClientRpc();
+            }
+            m_points = 0;
+        }
+
+        [ClientRpc]
+        void ResetPointsClientRpc()
+        {
+            if (!IsServer)
+            {
+                ResetPoints();
+            }
+        }
+        #endregion
     }
 }

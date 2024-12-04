@@ -34,5 +34,7 @@ namespace Tankito
         {
             moneyText.text = ClientData.Instance.money.ToString();
         }
+
+
     }
 }

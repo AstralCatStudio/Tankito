@@ -75,7 +75,7 @@ public class ScenarySelector : NetworkBehaviour
         if (IsServer)
         {
             // Volver a asignar spawns
-            SpawnManager spawnManager = GameObject.FindObjectOfType<SpawnManager>();
+            SpawnManager spawnManager = _scenaries[newIndex].GetComponentInChildren<SpawnManager>();
             if(spawnManager != null)
             {
                 spawnManager.RecalculateSpawnPoints();
@@ -130,5 +130,11 @@ public class ScenarySelector : NetworkBehaviour
                 Debug.LogWarning("ScenarySelector: RoundUI no se encontró");
             }
         }
+    }
+
+    public int GetActiveBiome()
+    {
+        Debug.Log($"ESCENARIO ACTIVO: {_currentScenaryIndex.Value / 2}");
+        return _currentScenaryIndex.Value/2;
     }
 }
