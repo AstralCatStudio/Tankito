@@ -562,8 +562,8 @@ GameObject:
   - component: {fileID: 2130622910456628769}
   - component: {fileID: 6347268479215046951}
   - component: {fileID: 7157197457863854575}
-  - component: {fileID: 3966425958537101323}
   - component: {fileID: 3339109910302575834}
+  - component: {fileID: 8698367701476498979}
   m_Layer: 10
   m_Name: Necromancer
   m_TagString: Enemy
@@ -759,7 +759,19 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &3966425958537101323
+--- !u!114 &3339109910302575834
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7977001391670557185}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e39f6090724e4a4a8aadeb042afa2bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &8698367701476498979
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -779,29 +791,309 @@ MonoBehaviour:
   data:
     graphs:
     - name: NecromancerBehaviour
-      id: 746513eb-5617-4310-a7f1-70d60332d04b
+      id: 93a78313-a932-43e8-b19b-2bfcdec49ea5
       graph:
-        rid: 4783593595286061117
-      nodes: []
+        rid: 4783593673473654784
+      nodes:
+      - name: 
+        id: 1aa05ee2-dd33-4dc5-ac5a-e23b96f29ca1
+        position: {x: 593.6, y: 82.399994}
+        node:
+          rid: 4783593673473654785
+        references: []
+        parentIds: []
+        childIds:
+        - 5dcd57a9-7e52-47fc-9c2b-e8641174908d
+      - name: Revivir
+        id: e4d1fd5b-c4a7-44fb-8987-498039f06282
+        position: {x: -368.8, y: 832.8}
+        node:
+          rid: 4783593673473654788
+        references:
+        - fieldName: Action
+          value:
+            rid: -2
+          fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+        parentIds:
+        - e2f3f913-08d0-4679-9233-2df807da0be1
+        childIds: []
+      - name: Huir
+        id: 8f21e99b-e049-4d05-8096-970305a24601
+        position: {x: 700.8, y: 1210.3999}
+        node:
+          rid: 4783593673473654789
+        references:
+        - fieldName: Action
+          value:
+            rid: -2
+          fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+        parentIds:
+        - 0cb398b2-6ca4-419d-8b40-dacf4b85d4ef
+        childIds: []
+      - name: Seguir Cuerpo
+        id: 63aa282c-1107-41c8-9c15-30fcf6bc20bf
+        position: {x: 115.2, y: 1218.3999}
+        node:
+          rid: 4783593673473654790
+        references:
+        - fieldName: Action
+          value:
+            rid: -2
+          fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+        parentIds:
+        - 86851f62-5f75-4cf1-94c1-6429abb9c934
+        childIds: []
+      - name: Golpear
+        id: 9d01bc10-dd48-42e3-be9d-e63f7497b2fe
+        position: {x: 1118.4, y: 945.60004}
+        node:
+          rid: 4783593673473654791
+        references:
+        - fieldName: Action
+          value:
+            rid: -2
+          fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+        parentIds:
+        - 987479f7-e5d5-4e65-a879-0e6bcb15dfc7
+        childIds: []
+      - name: Idle
+        id: cfc51d5f-5ed6-45eb-8878-2044dfa7e9bb
+        position: {x: 1682.4, y: 961.60004}
+        node:
+          rid: 4783593673473654792
+        references:
+        - fieldName: Action
+          value:
+            rid: -2
+          fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+        parentIds:
+        - 67787262-fd06-4ee2-9025-1ef46b988023
+        childIds: []
+      - name: 
+        id: e2f3f913-08d0-4679-9233-2df807da0be1
+        position: {x: -484, y: 605.60004}
+        node:
+          rid: 4783593673473654793
+        references: []
+        parentIds:
+        - 5dcd57a9-7e52-47fc-9c2b-e8641174908d
+        childIds:
+        - e4d1fd5b-c4a7-44fb-8987-498039f06282
+        - d3c6a9db-09ce-4e6e-b2c2-54ce96c09d94
+      - name: 
+        id: 6ed7ca3d-3a79-400d-b7a4-481578d24363
+        position: {x: 280.8, y: 621.60004}
+        node:
+          rid: 4783593673473654794
+        references: []
+        parentIds:
+        - 5dcd57a9-7e52-47fc-9c2b-e8641174908d
+        childIds:
+        - 86851f62-5f75-4cf1-94c1-6429abb9c934
+        - 0cb398b2-6ca4-419d-8b40-dacf4b85d4ef
+      - name: 
+        id: 86851f62-5f75-4cf1-94c1-6429abb9c934
+        position: {x: -24, y: 953.60004}
+        node:
+          rid: 4783593673473654795
+        references: []
+        parentIds:
+        - 6ed7ca3d-3a79-400d-b7a4-481578d24363
+        childIds:
+        - 63aa282c-1107-41c8-9c15-30fcf6bc20bf
+        - eadce3dd-71ac-4521-9843-d73294785ef7
+      - name: 
+        id: 0cb398b2-6ca4-419d-8b40-dacf4b85d4ef
+        position: {x: 577.6, y: 961.60004}
+        node:
+          rid: 4783593673473654796
+        references: []
+        parentIds:
+        - 6ed7ca3d-3a79-400d-b7a4-481578d24363
+        childIds:
+        - 8f21e99b-e049-4d05-8096-970305a24601
+        - 9f08c8bd-f137-4a4a-9597-0d5c5ebf1e87
+      - name: 
+        id: 5dcd57a9-7e52-47fc-9c2b-e8641174908d
+        position: {x: 613.6, y: 237.59999}
+        node:
+          rid: 4783593673473654797
+        references: []
+        parentIds:
+        - 1aa05ee2-dd33-4dc5-ac5a-e23b96f29ca1
+        childIds:
+        - e2f3f913-08d0-4679-9233-2df807da0be1
+        - 6ed7ca3d-3a79-400d-b7a4-481578d24363
+        - 987479f7-e5d5-4e65-a879-0e6bcb15dfc7
+        - 67787262-fd06-4ee2-9025-1ef46b988023
+      - name: 
+        id: 987479f7-e5d5-4e65-a879-0e6bcb15dfc7
+        position: {x: 979.2, y: 621.60004}
+        node:
+          rid: 4783593673473654798
+        references: []
+        parentIds:
+        - 5dcd57a9-7e52-47fc-9c2b-e8641174908d
+        childIds:
+        - 9d01bc10-dd48-42e3-be9d-e63f7497b2fe
+        - 861937b9-647a-4f44-a502-d14f02a1eba2
+      - name: 
+        id: 67787262-fd06-4ee2-9025-1ef46b988023
+        position: {x: 1559.2, y: 629.60004}
+        node:
+          rid: 4783593673473654800
+        references: []
+        parentIds:
+        - 5dcd57a9-7e52-47fc-9c2b-e8641174908d
+        childIds:
+        - cfc51d5f-5ed6-45eb-8878-2044dfa7e9bb
+        - 97aeef3b-0d04-4369-b73e-2b7a0a8d4ea7
+      - name: 
+        id: d3c6a9db-09ce-4e6e-b2c2-54ce96c09d94
+        position: {x: -615.2, y: 848.8}
+        node:
+          rid: 4783593673473654802
+        references:
+        - fieldName: Perception
+          value:
+            rid: -2
+          fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
+            Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        parentIds:
+        - e2f3f913-08d0-4679-9233-2df807da0be1
+        childIds: []
+      - name: 
+        id: eadce3dd-71ac-4521-9843-d73294785ef7
+        position: {x: -139.2, y: 1226.3999}
+        node:
+          rid: 4783593673473654803
+        references:
+        - fieldName: Perception
+          value:
+            rid: -2
+          fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
+            Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        parentIds:
+        - 86851f62-5f75-4cf1-94c1-6429abb9c934
+        childIds: []
+      - name: 
+        id: 9f08c8bd-f137-4a4a-9597-0d5c5ebf1e87
+        position: {x: 428, y: 1226.3999}
+        node:
+          rid: 4783593673473654804
+        references:
+        - fieldName: Perception
+          value:
+            rid: -2
+          fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
+            Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        parentIds:
+        - 0cb398b2-6ca4-419d-8b40-dacf4b85d4ef
+        childIds: []
+      - name: 
+        id: 861937b9-647a-4f44-a502-d14f02a1eba2
+        position: {x: 887.2, y: 945.60004}
+        node:
+          rid: 4783593673473654805
+        references:
+        - fieldName: Perception
+          value:
+            rid: -2
+          fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
+            Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        parentIds:
+        - 987479f7-e5d5-4e65-a879-0e6bcb15dfc7
+        childIds: []
+      - name: 
+        id: 97aeef3b-0d04-4369-b73e-2b7a0a8d4ea7
+        position: {x: 1428, y: 953.60004}
+        node:
+          rid: 4783593673473654806
+        references:
+        - fieldName: Perception
+          value:
+            rid: -2
+          fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
+            Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        parentIds:
+        - 67787262-fd06-4ee2-9025-1ef46b988023
+        childIds: []
     pushPerceptions: []
   references:
     version: 2
     RefIds:
-    - rid: 4783593595286061117
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 4783593673473654784
       type: {class: BehaviourTree, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
       data: 
---- !u!114 &3339109910302575834
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7977001391670557185}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7e39f6090724e4a4a8aadeb042afa2bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+    - rid: 4783593673473654785
+      type: {class: LoopNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
+      data:
+        Iterations: -1
+    - rid: 4783593673473654788
+      type: {class: LeafNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
+      data: 
+    - rid: 4783593673473654789
+      type: {class: LeafNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
+      data: 
+    - rid: 4783593673473654790
+      type: {class: LeafNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
+      data: 
+    - rid: 4783593673473654791
+      type: {class: LeafNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
+      data: 
+    - rid: 4783593673473654792
+      type: {class: LeafNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
+      data: 
+    - rid: 4783593673473654793
+      type: {class: SequencerNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
+      data:
+        IsRandomized: 0
+    - rid: 4783593673473654794
+      type: {class: SelectorNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
+      data:
+        IsRandomized: 0
+    - rid: 4783593673473654795
+      type: {class: SequencerNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
+      data:
+        IsRandomized: 0
+    - rid: 4783593673473654796
+      type: {class: SequencerNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
+      data:
+        IsRandomized: 0
+    - rid: 4783593673473654797
+      type: {class: SelectorNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
+      data:
+        IsRandomized: 0
+    - rid: 4783593673473654798
+      type: {class: SequencerNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
+      data:
+        IsRandomized: 0
+    - rid: 4783593673473654800
+      type: {class: SequencerNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
+      data:
+        IsRandomized: 0
+    - rid: 4783593673473654802
+      type: {class: ConditionNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
+      data: 
+    - rid: 4783593673473654803
+      type: {class: ConditionNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
+      data: 
+    - rid: 4783593673473654804
+      type: {class: ConditionNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
+      data: 
+    - rid: 4783593673473654805
+      type: {class: ConditionNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
+      data: 
+    - rid: 4783593673473654806
+      type: {class: ConditionNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
+      data: 
 --- !u!1 &8544809212635256772
 GameObject:
   m_ObjectHideFlags: 0
