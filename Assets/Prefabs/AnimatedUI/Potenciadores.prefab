@@ -723,13 +723,14 @@ GameObject:
   m_Component:
   - component: {fileID: 3205212836600641851}
   - component: {fileID: 2325009643765973636}
+  - component: {fileID: 1364309221012699538}
   m_Layer: 5
   m_Name: Potenciadores
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &3205212836600641851
 RectTransform:
   m_ObjectHideFlags: 0
@@ -783,6 +784,26 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 2249e6241017e5e41861f33d937595ee, type: 3}
   - {fileID: 21300000, guid: 5ddb0a56c2f1b3443916407d3913cb9c, type: 3}
   - {fileID: 21300000, guid: 8d3a922e579949d47971ee44926515c3, type: 3}
+--- !u!114 &1364309221012699538
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6910362864633734801}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 951099334
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!1 &6957676081508734888
 GameObject:
   m_ObjectHideFlags: 0

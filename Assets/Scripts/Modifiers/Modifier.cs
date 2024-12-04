@@ -9,7 +9,9 @@ namespace Tankito
     public class Modifier : ScriptableObject
     {
         [SerializeField]
-        private Sprite logo;
+        private Sprite icon;
+        [SerializeField]
+        private Sprite iconNoBackground;
         [SerializeField]
         private string title;
         [SerializeField]
@@ -22,7 +24,11 @@ namespace Tankito
 
         public Sprite GetSprite()
         {
-            return logo;
+            return icon;
+        }
+        public Sprite GetSpriteNoBackground()
+        {
+            return iconNoBackground;
         }
         public string GetDescription()
         {

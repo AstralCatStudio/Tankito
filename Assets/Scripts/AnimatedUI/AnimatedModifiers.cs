@@ -2,10 +2,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Tankito;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class AnimatedModifiers : MonoBehaviour
+public class AnimatedModifiers : NetworkBehaviour
 {
     [Header("Params")]
     #region parameters

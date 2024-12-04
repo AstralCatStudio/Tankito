@@ -23,6 +23,10 @@ public class TankSkinController : NetworkBehaviour
             SetSkin(ClientData.Instance.characters.IndexOf(ClientData.Instance.GetCharacterSelected()));
         }
     }
+    public int GetOwnedSkin()
+    {
+        return ClientData.Instance.characters.IndexOf(ClientData.Instance.GetCharacterSelected());
+    }
     void SetSkin(int index)
     {
         CharacterData data = ClientData.Instance.characters[index].data;
