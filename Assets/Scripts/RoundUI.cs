@@ -6,6 +6,7 @@ using TMPro;
 using Tankito.SyncronizedButtons;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Tankito.ScenarySelection;
 
 public class RoundUI : Singleton<RoundUI>
 {
@@ -119,6 +120,16 @@ public class RoundUI : Singleton<RoundUI>
     public void SetScenaryText(string newText)
     {
         ScenarySelection.GetComponentInChildren<TextMeshProUGUI>().text = newText;
+    }
+
+    public void NextScenary()
+    {
+        ScenarySelector.Instance.NextScenary();
+    }
+    
+    public void PreviousScenary()
+    {
+        ScenarySelector.Instance.PreviousScenary();
     }
 
     #endregion

@@ -2,8 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
-using UnityEngine.UI;
-using UnityEditor.Rendering.LookDev;
 
 namespace Tankito.ScenarySelection
 {
@@ -15,10 +13,21 @@ namespace Tankito.ScenarySelection
 
         [SerializeField] private int MapsPerScenary;
 
+        public static ScenarySelector Instance { get; private set; }
+
         #region NetworkBehaviour
 
         private void Awake()
         {
+            if (Instance == null)
+            {
+                Instance = this;
+            }
+            else
+            {
+                Destroy(this);
+            }
+
             // Obtener los hijos (escenarios) y añadirlos a la lista
             foreach (Transform child in transform)
             {

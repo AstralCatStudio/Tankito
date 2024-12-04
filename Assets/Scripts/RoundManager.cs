@@ -219,7 +219,7 @@ namespace Tankito
 
             if (m_currentRound == 0)
             {
-                InitPartidaMusicClientRpc(GameObject.FindObjectOfType<ScenarySelector>().GetActiveBiome()); ////////////////////////////////////////////////////////////////////////////////////////
+                InitPartidaMusicClientRpc(ScenarySelector.Instance.GetActiveBiome()); ////////////////////////////////////////////////////////////////////////////////////////
             }
             FasePartidaClientRpc(AliveTanks.Count(), m_players.Count); ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             //Debug.Log($"Music manager: {AliveTanks.Count()}, {m_players.Count}");
@@ -297,10 +297,10 @@ namespace Tankito
         private void ResetPlayers()
         {
             RespawnTanks();
-            ScenarySelector scenarySelector = FindObjectOfType<ScenarySelector>();
-            if(scenarySelector != null)
+            //ScenarySelector scenarySelector = FindObjectOfType<ScenarySelector>();
+            if(ScenarySelector.Instance != null)
             {
-                scenarySelector.SetRandomMap();
+                ScenarySelector.Instance.SetRandomMap();
             }
             else
             {
