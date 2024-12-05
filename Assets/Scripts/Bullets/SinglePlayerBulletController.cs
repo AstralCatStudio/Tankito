@@ -16,9 +16,9 @@ namespace Tankito.SinglePlayer
             m_bouncesLeft = 0;
         }
 
-        public void InitializeBullet(Vector2 postion, Vector2 direction, bool triggerOnSpawnEvents = true)
+        public void InitializeBullet(Vector2 position, Vector2 direction, bool triggerOnSpawnEvents = true)
         {
-            transform.position = postion;
+            transform.position = position;
             m_rb.velocity = direction.normalized * bulletVelocity;
             transform.rotation = Quaternion.LookRotation(new Vector3(0, 0, 1), m_rb.velocity.normalized);
 
@@ -69,12 +69,18 @@ namespace Tankito.SinglePlayer
                                 m_bouncesLeft--;
                             }
                             break;
-                        case "BouncyWall":
 
+                        case "BouncyWall":
                             break;
 
                         case "Player":
                             Detonate();
+                            collision.gameObject.GetComponent<PVECharacterData>().TakeDamage(1);
+                            break;
+
+                        case "Enemy":
+                            Detonate();
+                            collision.gameObject.GetComponent<PVEEnemyData>().TakeDamage(1);
                             break;
 
                         default:
@@ -82,7 +88,8 @@ namespace Tankito.SinglePlayer
                             break;
                     }
                     break;
-                case BulletType.Enemy:
+
+                case BulletType.BodyGuard:
                     switch (collision.gameObject.tag)
                     {
                         case "NormalWall":
@@ -95,13 +102,16 @@ namespace Tankito.SinglePlayer
                                 m_bouncesLeft--;
                             }
                             break;
+
                         case "BouncyWall":
                             break;
+
                         case "Enemy":
                             break;
 
                         case "Player":
                             Detonate();
+                            collision.gameObject.GetComponent<PVECharacterData>().TakeDamage(1);
                             break;
 
                         default:
@@ -122,14 +132,51 @@ namespace Tankito.SinglePlayer
                                 m_bouncesLeft--;
                             }
                             break;
+
                         case "BouncyWall":
                             break;
+
                         case "Enemy":
                             Detonate();
+                            collision.gameObject.GetComponent<PVEEnemyData>().AddHealth(1);
                             break;
 
                         case "Player":
                             Detonate();
+                            collision.gameObject.GetComponent<PVECharacterData>().AddHealth(1);
+                            break;
+
+                        default:
+                            Detonate();
+                            break;
+                    }
+                    break;
+                case BulletType.Attacker:
+                    switch (collision.gameObject.tag)
+                    {
+                        case "NormalWall":
+                            if (m_bouncesLeft <= 0)
+                            {
+                                Detonate();
+                            }
+                            else
+                            {
+                                m_bouncesLeft--;
+                            }
+                            break;
+
+                        case "BouncyWall":
+                            break;
+
+                        case "Enemy":
+                            break;
+
+                        case "Player":
+                            Detonate();
+                            collision.gameObject.GetComponent<PVECharacterData>().TakeDamage(1);
+                            break;
+
+                        case "Bullet":
                             break;
 
                         default:
