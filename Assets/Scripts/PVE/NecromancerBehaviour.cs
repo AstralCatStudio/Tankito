@@ -13,8 +13,7 @@ namespace Tankito.SinglePlayer
     {
         [SerializeField] float resurrectTimer = 0f;
         [SerializeField] AreaDetection playerAreaDetection;
-        [SerializeField] float resurrectDistance = 1.5f;
-        [SerializeField] float hitDistance = 1f;
+        [SerializeField] float resurrectDistance = 1f;
 
         GameObject player;
 
@@ -33,7 +32,7 @@ namespace Tankito.SinglePlayer
         }
 
         #region Nodes
-        public bool ConditionDeadNpc()
+        public bool ConditionResurrection()
         {
             if(genericTargets.Count > 0 &&
                 Vector2.Distance(genericTargets[0].transform.position, transform.position) <= resurrectDistance)
@@ -58,8 +57,8 @@ namespace Tankito.SinglePlayer
             return Status.Success;
         }
 
-        public Status GoToDeathBody()
-        {
+        public Status GoToDeathTank()
+        { 
             genericTargets.OrderBy(obj => obj, GenericListOrder());
             Vector2 deathToNecroVec = (genericTargets[0].transform.position - transform.position).normalized;
             m_currentInput.moveVector = (Vector2)genericTargets[0].transform.position + deathToNecroVec * agentController.npcData.idealDistance;
@@ -68,7 +67,8 @@ namespace Tankito.SinglePlayer
 
         public bool ConditionHit()
         {
-            return player != null && Vector2.Distance(player.transform.position, transform.position) <= hitDistance;
+            return player != null && 
+                Vector2.Distance(player.transform.position, transform.position) <= agentController.npcData.attackRange;
         }
 
         public Status Hit()

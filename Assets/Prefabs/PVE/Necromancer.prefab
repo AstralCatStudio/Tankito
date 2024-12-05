@@ -397,7 +397,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 10
+  m_Radius: 7
 --- !u!114 &1497368850164391874
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -479,7 +479,7 @@ GameObject:
   - component: {fileID: 4720613917934008817}
   - component: {fileID: 6905300913598621728}
   m_Layer: 0
-  m_Name: BulletAreaDetection
+  m_Name: DeathTankAreaDetection
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -512,7 +512,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e740d88368a6dec42a3e8c864e05aa55, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  subjectTag: Bullet
+  subjectTag: DeathTank
 --- !u!58 &6905300913598621728
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -547,7 +547,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 2.5
+  m_Radius: 15
 --- !u!1 &7977001391670557185
 GameObject:
   m_ObjectHideFlags: 0
@@ -563,6 +563,8 @@ GameObject:
   - component: {fileID: 3339109910302575834}
   - component: {fileID: 8698367701476498979}
   - component: {fileID: 4843055890111847316}
+  - component: {fileID: 1733209558801626374}
+  - component: {fileID: 996433374662104813}
   m_Layer: 10
   m_Name: Necromancer
   m_TagString: Enemy
@@ -585,8 +587,9 @@ Transform:
   m_Children:
   - {fileID: 5500065544314034081}
   - {fileID: 1647731754003312328}
-  - {fileID: 5585477575663566039}
   - {fileID: 3473241235268489675}
+  - {fileID: 5585477575663566039}
+  - {fileID: 540920418459607863}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!50 &2693683879002014824
@@ -709,240 +712,331 @@ MonoBehaviour:
       graph:
         rid: 4783593673473654784
       nodes:
-      - name: 
+      - name: MainLoopNode
         id: 1aa05ee2-dd33-4dc5-ac5a-e23b96f29ca1
-        position: {x: 593.6, y: 82.399994}
+        position: {x: 450, y: 0}
         node:
           rid: 4783593673473654785
         references: []
         parentIds: []
         childIds:
         - 5dcd57a9-7e52-47fc-9c2b-e8641174908d
-      - name: Revivir
+      - name: Resurrect
         id: e4d1fd5b-c4a7-44fb-8987-498039f06282
-        position: {x: -368.8, y: 832.8}
+        position: {x: -583.2, y: 593.60004}
         node:
           rid: 4783593673473654788
         references:
         - fieldName: Action
           value:
-            rid: -2
+            rid: 4463992033904689156
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         parentIds:
-        - e2f3f913-08d0-4679-9233-2df807da0be1
+        - d3c6a9db-09ce-4e6e-b2c2-54ce96c09d94
         childIds: []
-      - name: Huir
+      - name: Flee
         id: 8f21e99b-e049-4d05-8096-970305a24601
-        position: {x: 700.8, y: 1210.3999}
+        position: {x: 888.8, y: 632}
         node:
           rid: 4783593673473654789
         references:
         - fieldName: Action
           value:
-            rid: -2
+            rid: 4463992033904689162
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         parentIds:
-        - 0cb398b2-6ca4-419d-8b40-dacf4b85d4ef
+        - 9f08c8bd-f137-4a4a-9597-0d5c5ebf1e87
         childIds: []
-      - name: Seguir Cuerpo
+      - name: GoToDeathTank
         id: 63aa282c-1107-41c8-9c15-30fcf6bc20bf
-        position: {x: 115.2, y: 1218.3999}
+        position: {x: -12, y: 616}
         node:
           rid: 4783593673473654790
         references:
         - fieldName: Action
           value:
-            rid: -2
+            rid: 4463992033904689158
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         parentIds:
-        - 86851f62-5f75-4cf1-94c1-6429abb9c934
-        childIds: []
-      - name: Golpear
-        id: 9d01bc10-dd48-42e3-be9d-e63f7497b2fe
-        position: {x: 1118.4, y: 945.60004}
-        node:
-          rid: 4783593673473654791
-        references:
-        - fieldName: Action
-          value:
-            rid: -2
-          fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
-        parentIds:
-        - 987479f7-e5d5-4e65-a879-0e6bcb15dfc7
+        - eadce3dd-71ac-4521-9843-d73294785ef7
         childIds: []
       - name: Idle
         id: cfc51d5f-5ed6-45eb-8878-2044dfa7e9bb
-        position: {x: 1682.4, y: 961.60004}
+        position: {x: 1500, y: 400}
         node:
           rid: 4783593673473654792
         references:
         - fieldName: Action
           value:
-            rid: -2
+            rid: 4463992033904689163
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         parentIds:
-        - 67787262-fd06-4ee2-9025-1ef46b988023
+        - 5dcd57a9-7e52-47fc-9c2b-e8641174908d
         childIds: []
-      - name: 
-        id: e2f3f913-08d0-4679-9233-2df807da0be1
-        position: {x: -484, y: 605.60004}
-        node:
-          rid: 4783593673473654793
-        references: []
-        parentIds:
-        - 5dcd57a9-7e52-47fc-9c2b-e8641174908d
-        childIds:
-        - e4d1fd5b-c4a7-44fb-8987-498039f06282
-        - d3c6a9db-09ce-4e6e-b2c2-54ce96c09d94
-      - name: 
-        id: 6ed7ca3d-3a79-400d-b7a4-481578d24363
-        position: {x: 280.8, y: 621.60004}
-        node:
-          rid: 4783593673473654794
-        references: []
-        parentIds:
-        - 5dcd57a9-7e52-47fc-9c2b-e8641174908d
-        childIds:
-        - 86851f62-5f75-4cf1-94c1-6429abb9c934
-        - 0cb398b2-6ca4-419d-8b40-dacf4b85d4ef
-      - name: 
-        id: 86851f62-5f75-4cf1-94c1-6429abb9c934
-        position: {x: -24, y: 953.60004}
-        node:
-          rid: 4783593673473654795
-        references: []
-        parentIds:
-        - 6ed7ca3d-3a79-400d-b7a4-481578d24363
-        childIds:
-        - 63aa282c-1107-41c8-9c15-30fcf6bc20bf
-        - eadce3dd-71ac-4521-9843-d73294785ef7
-      - name: 
-        id: 0cb398b2-6ca4-419d-8b40-dacf4b85d4ef
-        position: {x: 577.6, y: 961.60004}
-        node:
-          rid: 4783593673473654796
-        references: []
-        parentIds:
-        - 6ed7ca3d-3a79-400d-b7a4-481578d24363
-        childIds:
-        - 8f21e99b-e049-4d05-8096-970305a24601
-        - 9f08c8bd-f137-4a4a-9597-0d5c5ebf1e87
-      - name: 
+      - name: MainSelectorNode
         id: 5dcd57a9-7e52-47fc-9c2b-e8641174908d
-        position: {x: 613.6, y: 237.59999}
+        position: {x: 450, y: 200}
         node:
           rid: 4783593673473654797
         references: []
         parentIds:
         - 1aa05ee2-dd33-4dc5-ac5a-e23b96f29ca1
         childIds:
-        - e2f3f913-08d0-4679-9233-2df807da0be1
-        - 6ed7ca3d-3a79-400d-b7a4-481578d24363
-        - 987479f7-e5d5-4e65-a879-0e6bcb15dfc7
-        - 67787262-fd06-4ee2-9025-1ef46b988023
-      - name: 
-        id: 987479f7-e5d5-4e65-a879-0e6bcb15dfc7
-        position: {x: 979.2, y: 621.60004}
-        node:
-          rid: 4783593673473654798
-        references: []
-        parentIds:
-        - 5dcd57a9-7e52-47fc-9c2b-e8641174908d
-        childIds:
-        - 9d01bc10-dd48-42e3-be9d-e63f7497b2fe
-        - 861937b9-647a-4f44-a502-d14f02a1eba2
-      - name: 
-        id: 67787262-fd06-4ee2-9025-1ef46b988023
-        position: {x: 1559.2, y: 629.60004}
-        node:
-          rid: 4783593673473654800
-        references: []
-        parentIds:
-        - 5dcd57a9-7e52-47fc-9c2b-e8641174908d
-        childIds:
         - cfc51d5f-5ed6-45eb-8878-2044dfa7e9bb
-        - 97aeef3b-0d04-4369-b73e-2b7a0a8d4ea7
-      - name: 
+        - d3c6a9db-09ce-4e6e-b2c2-54ce96c09d94
+        - eadce3dd-71ac-4521-9843-d73294785ef7
+        - 15a1ea40-238b-4cce-bc42-fcb590c2cfe6
+        - 9f08c8bd-f137-4a4a-9597-0d5c5ebf1e87
+      - name: ConditionResurrection
         id: d3c6a9db-09ce-4e6e-b2c2-54ce96c09d94
-        position: {x: -615.2, y: 848.8}
+        position: {x: -591.2, y: 400}
         node:
           rid: 4783593673473654802
         references:
         - fieldName: Perception
           value:
-            rid: -2
+            rid: 4463992033904689155
           fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
             Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         parentIds:
-        - e2f3f913-08d0-4679-9233-2df807da0be1
-        childIds: []
-      - name: 
+        - 5dcd57a9-7e52-47fc-9c2b-e8641174908d
+        childIds:
+        - e4d1fd5b-c4a7-44fb-8987-498039f06282
+      - name: ConditionGoToDeath
         id: eadce3dd-71ac-4521-9843-d73294785ef7
-        position: {x: -139.2, y: 1226.3999}
+        position: {x: -22.4, y: 416}
         node:
           rid: 4783593673473654803
         references:
         - fieldName: Perception
           value:
-            rid: -2
+            rid: 4463992033904689157
           fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
             Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         parentIds:
-        - 86851f62-5f75-4cf1-94c1-6429abb9c934
-        childIds: []
-      - name: 
+        - 5dcd57a9-7e52-47fc-9c2b-e8641174908d
+        childIds:
+        - 63aa282c-1107-41c8-9c15-30fcf6bc20bf
+      - name: ConditionFlee
         id: 9f08c8bd-f137-4a4a-9597-0d5c5ebf1e87
-        position: {x: 428, y: 1226.3999}
+        position: {x: 900.8, y: 416}
         node:
           rid: 4783593673473654804
         references:
         - fieldName: Perception
           value:
-            rid: -2
+            rid: 4463992033904689161
           fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
             Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         parentIds:
-        - 0cb398b2-6ca4-419d-8b40-dacf4b85d4ef
-        childIds: []
-      - name: 
-        id: 861937b9-647a-4f44-a502-d14f02a1eba2
-        position: {x: 887.2, y: 945.60004}
+        - 5dcd57a9-7e52-47fc-9c2b-e8641174908d
+        childIds:
+        - 8f21e99b-e049-4d05-8096-970305a24601
+      - name: Hit
+        id: f77bbf27-3b8d-40fc-83e0-f13937659e29
+        position: {x: 440, y: 620.8}
         node:
-          rid: 4783593673473654805
+          rid: 4463992033904689152
+        references:
+        - fieldName: Action
+          value:
+            rid: 4463992033904689160
+          fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+        parentIds:
+        - 15a1ea40-238b-4cce-bc42-fcb590c2cfe6
+        childIds: []
+      - name: ConditionHit
+        id: 15a1ea40-238b-4cce-bc42-fcb590c2cfe6
+        position: {x: 450.4, y: 416}
+        node:
+          rid: 4463992033904689154
         references:
         - fieldName: Perception
           value:
-            rid: -2
+            rid: 4463992033904689159
           fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
             Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         parentIds:
-        - 987479f7-e5d5-4e65-a879-0e6bcb15dfc7
-        childIds: []
-      - name: 
-        id: 97aeef3b-0d04-4369-b73e-2b7a0a8d4ea7
-        position: {x: 1428, y: 953.60004}
-        node:
-          rid: 4783593673473654806
-        references:
-        - fieldName: Perception
-          value:
-            rid: -2
-          fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
-            Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-        parentIds:
-        - 67787262-fd06-4ee2-9025-1ef46b988023
-        childIds: []
+        - 5dcd57a9-7e52-47fc-9c2b-e8641174908d
+        childIds:
+        - f77bbf27-3b8d-40fc-83e0-f13937659e29
     pushPerceptions: []
   references:
     version: 2
     RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
+    - rid: 4463992033904689152
+      type: {class: LeafNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
+      data: 
+    - rid: 4463992033904689154
+      type: {class: ConditionNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
+      data: 
+    - rid: 4463992033904689155
+      type: {class: CustomPerception, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        init:
+          componentName: 
+          methodName: 
+        check:
+          componentName: NecromancerBehaviour
+          methodName: ConditionResurrection
+        reset:
+          componentName: 
+          methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
+    - rid: 4463992033904689156
+      type: {class: CustomAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        start:
+          componentName: 
+          methodName: 
+        update:
+          componentName: NecromancerBehaviour
+          methodName: Resurrect
+        stop:
+          componentName: 
+          methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
+    - rid: 4463992033904689157
+      type: {class: CustomPerception, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        init:
+          componentName: 
+          methodName: 
+        check:
+          componentName: NecromancerBehaviour
+          methodName: CheckIdleToChase
+        reset:
+          componentName: 
+          methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
+    - rid: 4463992033904689158
+      type: {class: CustomAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        start:
+          componentName: 
+          methodName: 
+        update:
+          componentName: NecromancerBehaviour
+          methodName: GoToDeathTank
+        stop:
+          componentName: 
+          methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
+    - rid: 4463992033904689159
+      type: {class: CustomPerception, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        init:
+          componentName: 
+          methodName: 
+        check:
+          componentName: NecromancerBehaviour
+          methodName: ConditionHit
+        reset:
+          componentName: 
+          methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
+    - rid: 4463992033904689160
+      type: {class: CustomAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        start:
+          componentName: 
+          methodName: 
+        update:
+          componentName: NecromancerBehaviour
+          methodName: Hit
+        stop:
+          componentName: 
+          methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
+    - rid: 4463992033904689161
+      type: {class: CustomPerception, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        init:
+          componentName: 
+          methodName: 
+        check:
+          componentName: NecromancerBehaviour
+          methodName: ConditionFlee
+        reset:
+          componentName: 
+          methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
+    - rid: 4463992033904689162
+      type: {class: CustomAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        start:
+          componentName: 
+          methodName: 
+        update:
+          componentName: NecromancerBehaviour
+          methodName: Flee
+        stop:
+          componentName: 
+          methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
+    - rid: 4463992033904689163
+      type: {class: CustomAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        start:
+          componentName: 
+          methodName: 
+        update:
+          componentName: NecromancerBehaviour
+          methodName: IdleState
+        stop:
+          componentName: 
+          methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
     - rid: 4783593673473654784
       type: {class: BehaviourTree, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
       data: 
@@ -959,38 +1053,11 @@ MonoBehaviour:
     - rid: 4783593673473654790
       type: {class: LeafNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
       data: 
-    - rid: 4783593673473654791
-      type: {class: LeafNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
-      data: 
     - rid: 4783593673473654792
       type: {class: LeafNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
       data: 
-    - rid: 4783593673473654793
-      type: {class: SequencerNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
-      data:
-        IsRandomized: 0
-    - rid: 4783593673473654794
-      type: {class: SelectorNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
-      data:
-        IsRandomized: 0
-    - rid: 4783593673473654795
-      type: {class: SequencerNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
-      data:
-        IsRandomized: 0
-    - rid: 4783593673473654796
-      type: {class: SequencerNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
-      data:
-        IsRandomized: 0
     - rid: 4783593673473654797
       type: {class: SelectorNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
-      data:
-        IsRandomized: 0
-    - rid: 4783593673473654798
-      type: {class: SequencerNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
-      data:
-        IsRandomized: 0
-    - rid: 4783593673473654800
-      type: {class: SequencerNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
       data:
         IsRandomized: 0
     - rid: 4783593673473654802
@@ -1000,12 +1067,6 @@ MonoBehaviour:
       type: {class: ConditionNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
       data: 
     - rid: 4783593673473654804
-      type: {class: ConditionNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
-      data: 
-    - rid: 4783593673473654805
-      type: {class: ConditionNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
-      data: 
-    - rid: 4783593673473654806
       type: {class: ConditionNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
       data: 
 --- !u!114 &4843055890111847316
@@ -1023,6 +1084,73 @@ MonoBehaviour:
   m_maxHealth: 0
   m_health: 0
   m_isAlive: 0
+--- !u!114 &1733209558801626374
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7977001391670557185}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33f2c82f6132f8a4ba125bc93fa47e9f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  agentController: {fileID: 996433374662104813}
+  cannon: {fileID: 3438079698645263086}
+  genericAreaDetection: {fileID: 4720613917934008817}
+  wallLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  debugPosition: {fileID: 8836122588437294826}
+  DEBUG: 1
+  genericTargets: []
+  patrolPointFound: 0
+  noObstaclesBetween: 0
+  cannonReloaded: 1
+  timerShoot: 0
+  targetInRange: 0
+  turretInPosition: 0
+  hasShot: 0
+  resurrectTimer: 0
+  playerAreaDetection: {fileID: 1497368850164391874}
+  resurrectDistance: 1
+--- !u!114 &996433374662104813
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7977001391670557185}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0ebb401ae137a4498cf28db06882eaa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_tankRB: {fileID: 2693683879002014824}
+  m_turretRB: {fileID: 5706699329963222631}
+  m_speed: 0
+  m_rotationSpeed: 0
+  m_aimSpeed: 900
+  m_dashSpeedCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  m_dashSpeedMultiplier: 1
+  m_dashDistance: 0
+  m_reloadDashTicks: 0
+  stateInitTick: 0
+  playerState: 0
+  DEBUGCONT: 0
+  DEBUGDASh: 0
+  agent: {fileID: 7157197457863854575}
+  npcData: {fileID: 11400000, guid: 9a5fdeebb35830841aa211d888206dfa, type: 2}
+  updateDesTimer: 0
+  updateTime: 1
+  minDesDelta: 1
+  maxDesDelta: 10
 --- !u!1 &8544809212635256772
 GameObject:
   m_ObjectHideFlags: 0
@@ -1129,3 +1257,87 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!1 &8836122588437294826
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 540920418459607863}
+  - component: {fileID: 5288403011268620861}
+  m_Layer: 0
+  m_Name: Circle
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &540920418459607863
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8836122588437294826}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6891667976942997188}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!212 &5288403011268620861
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8836122588437294826}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
+  m_Color: {r: 0.18867922, g: 0.18867922, b: 0.18867922, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 1, y: 1}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_MaskInteraction: 0
+  m_SpriteSortPoint: 0
