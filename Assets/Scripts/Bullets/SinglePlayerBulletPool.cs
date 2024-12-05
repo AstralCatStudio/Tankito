@@ -71,10 +71,10 @@ namespace Tankito.SinglePlayer
         }
 
 
-        public GameObject Get(Vector2 position, Vector2 rotation, int objectTye)
+        public GameObject Get(Vector2 position, Vector2 rotation, int objectType)
         {
             float rotationDeg = Mathf.Atan2(rotation.x, rotation.y);
-            return Get(position, rotationDeg, objectTye);
+            return Get(position, rotationDeg, objectType);
         }
 
         /// <summary>

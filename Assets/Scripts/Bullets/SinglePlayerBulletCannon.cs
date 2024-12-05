@@ -6,7 +6,7 @@ using static UnityEngine.RuleTile.TilingRuleOutput;
 
 namespace Tankito.SinglePlayer
 {
-    internal enum BulletType { Player = 0, Enemy = 1, Healer = 2 }
+    internal enum BulletType { Player = 0, BodyGuard = 1, Healer = 2, Attacker = 3 }
     public class SinglePlayerBulletCannon : MonoBehaviour, IBulletCannon
     {
         [SerializeField] float coolDown = 1;
@@ -29,7 +29,7 @@ namespace Tankito.SinglePlayer
                 timer = 0;
                 float angle = Mathf.Atan2(aimVector.y, aimVector.x);
                 Vector2 direction = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
-                ShootBullet((Vector2)transform.parent.parent.parent.position + m_shootRadius * aimVector.normalized, direction, 1);              
+                ShootBullet((Vector2)transform.parent.parent.parent.position + m_shootRadius * aimVector.normalized, direction, 1);
             }
         }
 

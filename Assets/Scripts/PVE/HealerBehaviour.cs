@@ -119,7 +119,7 @@ namespace Tankito.SinglePlayer
         {
             noObstaclesBetween = false;
             target = player;
-            cannon.BulletType = BulletType.Enemy;
+            cannon.BulletType = BulletType.BodyGuard;
             playerTooClose = false;
         }
 
@@ -142,7 +142,7 @@ namespace Tankito.SinglePlayer
         {
             noObstaclesBetween = false;
             target = player;
-            cannon.BulletType = BulletType.Enemy;
+            cannon.BulletType = BulletType.BodyGuard;
         }
 
         public void ActionHealAllyPOP()

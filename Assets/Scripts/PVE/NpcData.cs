@@ -7,6 +7,7 @@ namespace Tankito.SinglePlayer
     [CreateAssetMenu(menuName = "Npc/NpcData", order = 2, fileName = "New NpcData")]
     public class NpcData : ScriptableObject
     {
+        public int health;
         public float speed;
         public float aimSpeed;
         public float angularSpeed;
