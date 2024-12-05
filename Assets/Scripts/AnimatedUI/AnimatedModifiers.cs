@@ -42,8 +42,15 @@ public class AnimatedModifiers : NetworkBehaviour
     #endregion
 
     #region UnityFunctions
-    private void Awake()
+    public override void OnNetworkSpawn()
     {
+        transform.SetParent(RoundUI.Instance.transform);
+        if (!IsServer)
+        {
+            RoundUI.Instance.PanelPowerUps = gameObject;
+            
+        }
+        gameObject.SetActive(false);
         //-------------------------
         //Esto habrá que eliminarlo
         for (int i = 0; i < numPlayers; i++)
@@ -121,8 +128,8 @@ public class AnimatedModifiers : NetworkBehaviour
     {
         OtherP_LoadInfo otherP = player.playerInfo.GetComponent<OtherP_LoadInfo>();
         otherP.icon.sprite = player.icon;
-        otherP.name.text = player.name;
-        otherP.name.color = player.color;
+        otherP.username.text = player.name;
+        otherP.username.color = player.color;
         otherP.score.text = player.score.ToString();
         otherP.position.text = player.position.ToString() + ".";
     }
@@ -136,6 +143,7 @@ public class AnimatedModifiers : NetworkBehaviour
 
     private void SortPlayers()
     {
+        Debug.Log("sorting" + players.Count);
         players.Sort();
 
         for(int i = 0; i < numPlayers; i++)
