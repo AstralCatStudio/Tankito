@@ -8,7 +8,7 @@ namespace Tankito.Netcode.Simulation
     public class SnapshotJitterBuffer : Singleton<SnapshotJitterBuffer>
     {
         private int m_bufferCount;
-        public int SnapshotTimestamp { get => m_latestSnapshot.timestamp; }
+        public int SnapshotTimestamp { get => m_latestSnapshot.Timestamp; }
         private SimulationSnapshot m_latestSnapshot;
         private double m_bufferedTime;
         private double TimeToBuffer { get => SimulationParameters.SNAPSHOT_JITTER_BUFFER_TIME; }
@@ -45,7 +45,7 @@ namespace Tankito.Netcode.Simulation
 
         public bool AddSnapshot(SimulationSnapshot newSnapshot)
         {
-            if (!newSnapshot.Equals(default) && newSnapshot.timestamp > m_latestSnapshot.timestamp)
+            if (!newSnapshot.Equals(default) && newSnapshot.Timestamp > m_latestSnapshot.Timestamp)
             {
                 m_bufferCount++;
                 m_latestSnapshot = newSnapshot;

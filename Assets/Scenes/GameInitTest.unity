@@ -5516,9 +5516,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_tankSimulationTolerance:
     posDiff: {x: 0.05, y: 0.05}
-    hullRotDiff: 360
+    hullRotDiff: 0.5
     velDiff: {x: 0.05, y: 0.05}
-    turrRotDiff: 360
+    turrRotDiff: 0.5
     actionDiff: 0
     playerStateDiff: 0
     lastFireTickDiff: 0

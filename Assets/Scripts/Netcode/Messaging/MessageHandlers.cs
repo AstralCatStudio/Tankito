@@ -334,7 +334,7 @@ namespace Tankito.Netcode.Messaging
                 return;
             }
 
-            snapshot.status = SnapshotStatus.Authoritative;
+            snapshot.SetStatus(SnapshotStatus.Authoritative);
 
             var writer = new FastBufferWriter(snapshot.GetSerializedSize(), Allocator.Temp);
             var customMessagingManager = NetworkManager.Singleton.CustomMessagingManager;
@@ -351,7 +351,7 @@ namespace Tankito.Netcode.Messaging
             }
             
 
-            if (DEBUG_SNAPSHOTS) Debug.Log($"[{SimClock.TickCounter}]Sent snapshot[{snapshot.timestamp}] to ALL clients.");
+            if (DEBUG_SNAPSHOTS) Debug.Log($"[{SimClock.TickCounter}]Sent snapshot[{snapshot.Timestamp}] to ALL clients.");
         }
 
         public void ReceiveSimulationSnapshot(ulong serverId, FastBufferReader snapshotPayload)
@@ -378,22 +378,22 @@ namespace Tankito.Netcode.Messaging
                 Debug.Log($"[{SimClock.TickCounter}]Received Snapshot:{snapshot}");
             }
 
-            if (snapshot.status == SnapshotStatus.Authoritative)
+            if (snapshot.Status == SnapshotStatus.Authoritative)
             {
                 if (SnapshotJitterBuffer.Instance.AddSnapshot(snapshot))
                 {
-                    if (DEBUG_SNAPSHOTS) Debug.Log($"Snapshot [{snapshot.timestamp}] added to JitterBuffer");
+                    if (DEBUG_SNAPSHOTS) Debug.Log($"Snapshot [{snapshot.Timestamp}] added to JitterBuffer");
                 }
                 else
                 {
-                    if (DEBUG_SNAPSHOTS) Debug.Log($"Snapshot [{snapshot.timestamp}] rejected. JitterBuffer contains snapshot[{SnapshotJitterBuffer.Instance.SnapshotTimestamp}]");
+                    if (DEBUG_SNAPSHOTS) Debug.Log($"Snapshot [{snapshot.Timestamp}] rejected. JitterBuffer contains snapshot[{SnapshotJitterBuffer.Instance.SnapshotTimestamp}]");
                 }
             }
 
             // TESTING !!!!
             //ClientSimulationManager.Instance.SetSimulation(snapshot);
 
-            if (DEBUG_SNAPSHOTS) Debug.Log($"[{SimClock.TickCounter}]Received snapshot[{snapshot.timestamp}] from server.");
+            if (DEBUG_SNAPSHOTS) Debug.Log($"[{SimClock.TickCounter}]Received snapshot[{snapshot.Timestamp}] from server.");
         }
 
         internal void RequestSync()

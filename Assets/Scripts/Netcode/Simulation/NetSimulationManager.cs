@@ -133,7 +133,7 @@ namespace Tankito.Netcode.Simulation
         {
             var newSnapshot = new SimulationSnapshot();
             newSnapshot.Initialize();
-            newSnapshot.timestamp = CaptureSnapshotTick;
+            newSnapshot.SetTimestamp(CaptureSnapshotTick);
 
             //Debug.Log(m_simulationObjects.Values.Count);
             foreach(var simObj in m_simulationObjects.Values)

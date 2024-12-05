@@ -12,52 +12,62 @@ namespace Tankito.Netcode.Simulation
         Predicted = 1,
 
         /// <summary>
+        /// Prediction of aut state calculated with full knowledge of players' inputs.
+        /// </summary>
+        CompletePrediction = 2,
+
+        /// <summary>
         /// When the snapshot has been certified against the server's simulation.
         /// This happens when we receive server snapshots and we confirm our predictions were correct,
         /// or when we replace a miss prediction with an Authoritative snapshot. 
         /// </summary>
-        Authoritative = 2
+        Authoritative = 3,
     }
 
     public struct SimulationSnapshot : INetworkSerializable
     {
-        public int timestamp;
-        public SnapshotStatus status;
-        private Dictionary<ulong, (SimulationObjectType type, ISimulationState state)> objectStates;
+        private int m_timestamp;
+        private SnapshotStatus m_status;
+        private Dictionary<ulong, (SimulationObjectType type, ISimulationState state)> m_objectStates;
 
         //const int MAX_TANKS_IN_LOBBY = 4;
         //const int MAX_PROJECTILES_IN_LOBBY = 20;
         //public const int MAX_SERIALIZED_SIZE = TankSimulationState.MAX_SERIALIZED_SIZE*MAX_TANKS_IN_LOBBY + BulletSimulationState.MAX_SERIALIZED_SIZE*MAX_PROJECTILES_IN_LOBBY;
 
-        public IEnumerable<ulong> IDs { get => objectStates.Keys; }
-        public IEnumerable<(SimulationObjectType type, ISimulationState state)> States { get => objectStates.Values; }
-        public int Count { get => objectStates.Count; }
+        public IEnumerable<ulong> IDs { get => m_objectStates.Keys; }
+        public IEnumerable<(SimulationObjectType type, ISimulationState state)> States { get => m_objectStates.Values; }
+        public int Count { get => m_objectStates.Count; }
+        public SnapshotStatus Status { get => m_status; }
+        public int Timestamp { get => m_timestamp; }
+
+        public void SetTimestamp(int newTimestamp) { m_timestamp = newTimestamp; }
+        public void SetStatus(SnapshotStatus newStatus) { m_status = newStatus; }
 
         public void Initialize()
         {
-            objectStates = new Dictionary<ulong, (SimulationObjectType type, ISimulationState state)>();
+            m_objectStates = new Dictionary<ulong, (SimulationObjectType type, ISimulationState state)>();
         }
 
         public (SimulationObjectType type, ISimulationState state) this[ASimulationObject obj]
         {
-            get => objectStates[obj.SimObjId];
-            set => objectStates[obj.SimObjId] = value;
+            get => m_objectStates[obj.SimObjId];
+            set => m_objectStates[obj.SimObjId] = value;
         }
 
         public (SimulationObjectType type, ISimulationState state) this[ulong obj]
         {
             get
             {
-                return objectStates[obj];
+                return m_objectStates[obj];
             }
 
             set
             {
-                objectStates[obj] = value;
+                m_objectStates[obj] = value;
             }
         }
 
-        internal bool ContainsId(ulong obj) { return objectStates.ContainsKey(obj); }
+        internal bool ContainsId(ulong obj) { return m_objectStates.ContainsKey(obj); }
 
         /// <summary>
         /// Returns the size of the struct after serializing it with <see cref="NetworkSerialize"/> 
@@ -71,7 +81,7 @@ namespace Tankito.Netcode.Simulation
                         sizeof(ushort); // number of objects
             
             // SimulationObjectUpdate
-            foreach(var objState in objectStates.Values)
+            foreach(var objState in m_objectStates.Values)
             {
                 bytes += SimulationObjectUpdate.GetSerializedSize(in objState.state);
             }
@@ -83,44 +93,44 @@ namespace Tankito.Netcode.Simulation
         {
             ushort nObjects = default;
 
-            serializer.SerializeValue(ref timestamp);
+            serializer.SerializeValue(ref m_timestamp);
 
-            serializer.SerializeValue(ref status);
+            serializer.SerializeValue(ref m_status);
 
-            if (serializer.IsWriter) nObjects = (ushort)objectStates.Keys.Count;
+            if (serializer.IsWriter) nObjects = (ushort)m_objectStates.Keys.Count;
 
             serializer.SerializeValue(ref nObjects);
             
             if (serializer.IsWriter)
             {
-                foreach(var objStatePair in objectStates)
+                foreach(var objStatePair in m_objectStates)
                 {
-                    SimulationObjectUpdate simObjUpdate = new SimulationObjectUpdate(objStatePair.Key, objStatePair.Value, timestamp);
+                    SimulationObjectUpdate simObjUpdate = new SimulationObjectUpdate(objStatePair.Key, objStatePair.Value, Timestamp);
                     simObjUpdate.NetworkSerialize(serializer);
                 }
             }
             else if (serializer.IsReader)
             {
-                objectStates = new();
+                m_objectStates = new();
                 for(int i=0; i < nObjects; i++)
                 {
                     SimulationObjectUpdate simObjUpdate = new();
                     simObjUpdate.NetworkSerialize(serializer);
 
-                    objectStates.Add(simObjUpdate.ID, (simObjUpdate.type, simObjUpdate.state));
+                    m_objectStates.Add(simObjUpdate.ID, (simObjUpdate.type, simObjUpdate.state));
                 }
             }
         }
 
         public override string ToString()
         {
-            var str = $"[Tick({timestamp})|Status({status})|Count({Count})]\n";
+            var str = $"[Tick({Timestamp})|Status({Status})|Count({Count})]\n";
 
-            foreach(var pair in objectStates)
+            foreach(var pair in m_objectStates)
             {
                 str += $" ({pair.Key}): {pair.Value.state}\n";
             }
-            str += $"---- end of snapshot({timestamp}) ----";
+            str += $"---- end of snapshot({Timestamp}) ----";
 
             return str;
         }

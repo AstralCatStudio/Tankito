@@ -87,8 +87,8 @@ namespace Tankito.Netcode.Simulation
 
                 // Cache Simulation Snapshot for prediction Rollback
                 SimulationSnapshot newSnapshot = CaptureSnapshot();
-                newSnapshot.status = SnapshotStatus.Predicted;
-                m_snapshotBuffer.Add(newSnapshot, newSnapshot.timestamp);
+                newSnapshot.SetStatus(SnapshotStatus.Predicted);
+                m_snapshotBuffer.Add(newSnapshot, newSnapshot.Timestamp);
             }
             
         }
@@ -99,13 +99,24 @@ namespace Tankito.Netcode.Simulation
         /// </summary>
         public void EvaluateEarlyInputReconciliation(int firstTick ,int lastTick)
         {
-            for (int tick = lastTick; tick >= firstTick; tick--)
+            if (lastTick > m_lastAuthSnapshotTimestamp ||
+                m_snapshotBuffer.Last.Timestamp > lastTick ||
+                m_snapshotBuffer.First.Timestamp < firstTick)
             {
-                // Only trigger early input reconciliation if we have ALL of the user's inputs
-                if (emulatedInputTankComponents.Values.Where(i => i.HasPayload(tick)).Count() == emulatedInputTankComponents.Values.Count())
+                return;
+            for (int tick = firstTick; tick < lastTick; tick++)
+            {
+                // Only trigger early input reconciliation if we have ALL of the user's inputs at that tick
+                if (m_snapshotBuffer[tick].Status == SnapshotStatus.Predicted &&
+                    emulatedInputTankComponents.Values.Where(i => i.HasPayload(tick)).Count() == emulatedInputTankComponents.Values.Count())
                 {
+                    Debug.Log($"[{SimClock.TickCounter}] Early Rollback to tick [{tick}]");
+
                     // Solo es necesario hacer rollback al tick mas reciente que cumpla la condicion de early rollback
-                    Rollback(tick);
+                    SimClock.Instance.StopClock();
+                    Rollback(tick-1);
+                    m_snapshotBuffer[tick].SetStatus(SnapshotStatus.CompletePrediction);
+                    SimClock.Instance.ResumeClock();
                     return;
                 }
             }
@@ -114,10 +125,10 @@ namespace Tankito.Netcode.Simulation
 
         public void EvaluateForReconciliation(SimulationSnapshot newAuthSnapshot)
         {
-            if ((newAuthSnapshot.timestamp <= m_lastAuthSnapshotTimestamp) ||
-                (newAuthSnapshot.timestamp < m_snapshotBuffer.First.timestamp))
+            if ((newAuthSnapshot.Timestamp <= m_lastAuthSnapshotTimestamp) ||
+                (newAuthSnapshot.Timestamp < m_snapshotBuffer.First.Timestamp))
             {
-                if (DEBUG) Debug.Log($"NOT Reconciling with snapshot[{newAuthSnapshot.timestamp}] (Too OLD)."+
+                if (DEBUG) Debug.Log($"NOT Reconciling with snapshot[{newAuthSnapshot.Timestamp}] (Too OLD)."+
                                     $"Oldest predicted snapshot[{m_snapshotBuffer.First}]."+
                                     $"Newest auth snapshot[{m_lastAuthSnapshotTimestamp}]."+
                                     $"Snapshot Buff Size: {m_snapshotBuffer.Capacity}");
@@ -133,28 +144,28 @@ namespace Tankito.Netcode.Simulation
                 return;
             }
 
-            m_lastAuthSnapshotTimestamp = newAuthSnapshot.timestamp;
+            m_lastAuthSnapshotTimestamp = newAuthSnapshot.Timestamp;
 
             SimClock.Instance.StopClock();
 
             // Jump forward in time to future sim state received in auth snapshot
-            if (newAuthSnapshot.timestamp >= SimClock.TickCounter)
+            if (newAuthSnapshot.Timestamp >= SimClock.TickCounter)
             {
-                if (DEBUG) Debug.Log($"[{SimClock.TickCounter}]Jumping forward to future state[{newAuthSnapshot.timestamp}]");
+                if (DEBUG) Debug.Log($"[{SimClock.TickCounter}]Jumping forward to future state[{newAuthSnapshot.Timestamp}]");
                 
-                SimClock.Instance.SetClock(newAuthSnapshot.timestamp);
+                SimClock.Instance.SetClock(newAuthSnapshot.Timestamp);
                 SetSimulation(newAuthSnapshot);
-                m_snapshotBuffer.Add(newAuthSnapshot, newAuthSnapshot.timestamp);
+                m_snapshotBuffer.Add(newAuthSnapshot, newAuthSnapshot.Timestamp);
 
                 SimClock.Instance.ResumeClock();
                 return;
             }
 
 
-            if (DEBUG) Debug.Log("["+SimClock.TickCounter+"]"+"Evaluating Desync for: "+ m_snapshotBuffer.Get(newAuthSnapshot.timestamp));
+            if (DEBUG) Debug.Log("["+SimClock.TickCounter+"]"+"Evaluating Desync for: "+ m_snapshotBuffer.Get(newAuthSnapshot.Timestamp));
 
-            SimulationSnapshot predictedSnapshot = m_snapshotBuffer.Where(s => s.timestamp == newAuthSnapshot.timestamp 
-                                                                    && s.status == SnapshotStatus.Predicted).FirstOrDefault();
+            SimulationSnapshot predictedSnapshot = m_snapshotBuffer.Where(s => s.Timestamp == newAuthSnapshot.Timestamp 
+                                                                    && s.Status == SnapshotStatus.Predicted).FirstOrDefault();
 
             if (!predictedSnapshot.Equals(default(SimulationSnapshot)))
             {
@@ -171,7 +182,7 @@ namespace Tankito.Netcode.Simulation
                         {
                             if (DEBUG)
                             {
-                                Debug.Log($"[{SimClock.TickCounter}]Rolling back to [{newAuthSnapshot.timestamp}]"+
+                                Debug.Log($"[{SimClock.TickCounter}]Rolling back to [{newAuthSnapshot.Timestamp}]"+
                                 $"\nBecause {objId} dind't meet the delta Thresholds");
                             }
                             
@@ -182,31 +193,36 @@ namespace Tankito.Netcode.Simulation
                 }
                 else
                 {
-                    if (DEBUG) Debug.Log($"[{SimClock.TickCounter}] Rolling back to [{newAuthSnapshot.timestamp}] because: Object Missmatch at predicted snapshot");
+                    if (DEBUG) Debug.Log($"[{SimClock.TickCounter}] Rolling back to [{newAuthSnapshot.Timestamp}] because: Object Missmatch at predicted snapshot");
                     
                     Rollback(newAuthSnapshot);
                 }
 
-                m_snapshotBuffer.Add(newAuthSnapshot, newAuthSnapshot.timestamp);
+                m_snapshotBuffer.Add(newAuthSnapshot, newAuthSnapshot.Timestamp);
             }
             else
             {
                 // To make sure it's marked as auth for the future
-                m_snapshotBuffer.Add(newAuthSnapshot, newAuthSnapshot.timestamp);
+                m_snapshotBuffer.Add(newAuthSnapshot, newAuthSnapshot.Timestamp);
             }
             
             SimClock.Instance.ResumeClock();
         }
 
+        /// <summary>
+        /// WARNING!!! Calling this function is only safe when the <see cref="SimClock"/> is NOT active (stopped).
+        /// It is recommended that calls to it are done between <see cref="SimClock.StopClock"/> and <see cref="SimClock.ResumeClock"/>.
+        /// </summary>
+        /// <param name="tick"></param>
         private void Rollback(int tick)
         {
-            if (m_snapshotBuffer.Any(s => s.timestamp == tick))
+            if (m_snapshotBuffer.Any(s => s.Timestamp == tick))
             {
-                Rollback(m_snapshotBuffer.First(s => s.timestamp == tick));
+                Rollback(m_snapshotBuffer[tick]);
             }
             else
             {
-                Debug.LogWarning($"Tick [{tick}] out of snapshot buffer bounds (snapshot with such timestamp not saved)");
+                //Debug.LogWarning($"Tick [{tick}] out of snapshot buffer bounds (snapshot with such timestamp not saved)");
             }
         }
 
@@ -222,7 +238,7 @@ namespace Tankito.Netcode.Simulation
         {
             if (SimClock.Instance.Active) throw new InvalidOperationException($"[{SimClock.TickCounter}]The {SimClock.Instance} must be stopped while calling Rollback");
 
-            m_rollbackTick = authSnapshot.timestamp;
+            m_rollbackTick = authSnapshot.Timestamp;
 
             SetSimulation(authSnapshot);
             // At this point all registered simObjs (e.g simulation objects in scene) should be the
@@ -244,7 +260,7 @@ namespace Tankito.Netcode.Simulation
                 }
                 else
                 {
-                    throw new InvalidOperationException($"[{SimClock.TickCounter}] Present simulation object miss-match! {objId} is not present in authSnapshot[{authSnapshot.timestamp}]");
+                    throw new InvalidOperationException($"[{SimClock.TickCounter}] Present simulation object miss-match! {objId} is not present in authSnapshot[{authSnapshot.Timestamp}]");
                 }
             }
 
@@ -260,7 +276,7 @@ namespace Tankito.Netcode.Simulation
             // We must resimulate all ticks up to (and including) the "present" tick,
             // in order to catch back up to our simlation predictions and not fall back in sim ticks,
             // which would cause a desync.
-            while(m_rollbackTick < SimClock.TickCounter)
+             while(m_rollbackTick <= SimClock.TickCounter)
             {
                 m_rollbackTick++;
                 Simulate();
@@ -324,7 +340,7 @@ namespace Tankito.Netcode.Simulation
                         else
                         {
                             deferredSpawning = true;
-                            if (DEBUG) Debug.Log($"[{SimClock.TickCounter}]Handing spawning attempt over to reconciliation (remote client input replay) because {objId}'s lifetime is lower than 2 ticks (it was spawned on tick[{snapshotToSet.timestamp}])");
+                            if (DEBUG) Debug.Log($"[{SimClock.TickCounter}]Handing spawning attempt over to reconciliation (remote client input replay) because {objId}'s lifetime is lower than 2 ticks (it was spawned on tick[{snapshotToSet.Timestamp}])");
                         }
                     }
                     else
@@ -436,7 +452,7 @@ namespace Tankito.Netcode.Simulation
         public void TestRollback()
         {
             SimulationSnapshot testSnapShot = m_snapshotBuffer.Get(SimClock.TickCounter - 50);
-            testSnapShot.timestamp -= 50;
+            testSnapShot.SetTimestamp(testSnapShot.Timestamp-50);
             EvaluateForReconciliation(testSnapShot);
         }
 

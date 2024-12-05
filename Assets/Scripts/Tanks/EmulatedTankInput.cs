@@ -11,7 +11,7 @@ namespace Tankito.Netcode.Simulation
     {
         private int INPUT_CACHE_SIZE => SimulationParameters.SNAPSHOT_BUFFER_SIZE;
         private CircularBuffer<InputPayload> m_inputBuffer;
-        private float m_attenuationSeconds = 0f;
+        private float m_attenuationSeconds = 5f;
         [SerializeField] private int m_attenuationTicks;
         private InputPayload m_currentInput;
         
@@ -89,8 +89,19 @@ namespace Tankito.Netcode.Simulation
             }
             else
             {
+                InputPayload onlyActionReplay = new();
+                onlyActionReplay.action =  m_inputBuffer.Last.action;
+                return onlyActionReplay;
+            }
+
+            /*if (SimClock.Instance.Active)
+            {
                 return InterpolateInputAt(tick);
             }
+            else
+            {
+                return default;
+            }*/
         }
 
 

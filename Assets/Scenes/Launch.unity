@@ -153,8 +153,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Median_Latency: 0.16
-  Worst_Case_Latency: 0.6
+  Worst_Case_Latency: 0.25
   Client_Jitter_Buffer_Time: 0.016
+  Client_Max_Desync_Count: 30
   Sim_Tick_Rate: 60
   DEBUG_LATENCY: 0
   DEBUG_PARAMS: 0
@@ -205,8 +206,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_ProtocolType: 1
-  m_UseWebSockets: 1
-  m_UseEncryption: 1
+  m_UseWebSockets: 0
+  m_UseEncryption: 0
   m_MaxPacketQueueSize: 256
   m_MaxPayloadSize: 6144
   m_HeartbeatTimeoutMS: 500
