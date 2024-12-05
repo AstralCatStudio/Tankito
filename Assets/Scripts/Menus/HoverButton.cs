@@ -26,8 +26,6 @@ public class HoverButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         MusicManager.Instance.PlaySoundPitch("bip",0.1f);
     }
 
-    
-
     public void OnPointerExit(PointerEventData eventData)
     {
         LeanTween.cancel(gameObject, tweenId.id);
