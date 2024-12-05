@@ -221,7 +221,7 @@ namespace Tankito.SinglePlayer
             return hasShot;
         }
 
-        public void ActionShootPOP()
+        public virtual void ActionShootPOP()
         {
             cannonReloaded = false;
             hasShot = false;
@@ -273,7 +273,7 @@ namespace Tankito.SinglePlayer
             return !noObstaclesBetween;
         }
 
-        protected bool CheckTargetInRange(float magnitude, float range)
+        protected virtual bool CheckTargetInRange(float magnitude, float range)
         {
             if(magnitude <= range)
             {
