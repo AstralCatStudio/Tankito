@@ -10,6 +10,7 @@ namespace Tankito.SinglePlayer
         [SerializeField] protected int m_health;
         [SerializeField] protected bool m_isAlive;
 
+        public int Max_Health => m_maxHealth;
         public int Health => m_health;
         public bool Alive => m_isAlive;
 

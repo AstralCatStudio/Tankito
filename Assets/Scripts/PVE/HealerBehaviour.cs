@@ -23,6 +23,12 @@ namespace Tankito.SinglePlayer
             return Comparer<GameObject>.Create((obj1, obj2) =>
             {
                 /*COMPARACION DE VIDA*/
+                PVEEnemyData npcData1 = obj1.GetComponent<PVEEnemyData>();
+                PVEEnemyData npcData2 = obj2.GetComponent<PVEEnemyData>();
+                float hp1 = npcData1.Health / npcData1.Max_Health;
+                float hp2 = npcData2.Health / npcData2.Max_Health;
+                int hpComparation = hp1.CompareTo(hp2);
+                if (hpComparation != 0) return hpComparation;
                 float d1 = Vector2.Distance(obj1.transform.position, transform.position);
                 float d2 = Vector2.Distance(obj2.transform.position, transform.position);
                 return d1.CompareTo(d2);
@@ -101,7 +107,12 @@ namespace Tankito.SinglePlayer
         #region Perceptions_Actions
         public bool CheckChaseToAimAlly()
         {
-            return noObstaclesBetween && healReloaded && targetInRange /*&& genericTargets[0].Vida != genericTargets[0].FullVida*/;
+            if(genericTargets.Count > 0)
+            {
+                PVEEnemyData targetData = genericTargets[0].GetComponent<PVEEnemyData>();
+                return noObstaclesBetween && healReloaded && targetInRange && targetData.Health != targetData.Max_Health;
+            }
+            return false;
         }
 
         public void ActionChaseToAimAlly()
@@ -165,8 +176,9 @@ namespace Tankito.SinglePlayer
             player = gameObject;
         }
 
-        private void OnPlayerDissapear(GameObject player)
+        private void OnPlayerDissapear(GameObject gameObject)
         {
+            if (DEBUG) Debug.Log("SE TIENE QUE QUITAR EL PLAYER");
             player = null;
         }
         #endregion

@@ -38,7 +38,7 @@ namespace Tankito.SinglePlayer
         #endregion
 
         #region Idle_Variables
-        [SerializeField] bool patrolPointFound = false;
+        [SerializeField] protected bool patrolPointFound = false;
         #endregion
 
         #region Chase_Aim_Controllers
@@ -106,7 +106,12 @@ namespace Tankito.SinglePlayer
             if (DEBUG) Debug.Log("IDLESTATE");
             if (new Vector2(transform.position.x, transform.position.y) == m_currentInput.moveVector)
             {
-                m_currentInput.moveVector = PatrolManager.Instance.GetPatrolPoint().position; ;
+                patrolPointFound = false;        
+            }
+            if(!patrolPointFound)
+            {
+                m_currentInput.moveVector = PatrolManager.Instance.GetPatrolPoint().position;
+                patrolPointFound = true;
             }
             return Status.Running;
         }

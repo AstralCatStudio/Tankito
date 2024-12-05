@@ -14,7 +14,7 @@ public class AreaDetection : MonoBehaviour
     {
         if(collision.tag == subjectTag)
         {
-            Debug.Log("Se detecta el objeto " + collision.tag);
+            //Debug.Log("Se detecta el objeto " + collision.tag);
             OnSubjectDetected?.Invoke(collision.gameObject);
         }
     }
@@ -23,6 +23,7 @@ public class AreaDetection : MonoBehaviour
     {
         if (collision.gameObject.tag == subjectTag)
         {
+            Debug.Log("Desaparece el objeto " + collision.tag);
             OnSubjectDissapear?.Invoke(collision.gameObject);
         }
     }

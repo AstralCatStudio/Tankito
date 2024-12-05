@@ -85,7 +85,7 @@ namespace Tankito.SinglePlayer
 
         public Status Flee()
         {
-            Vector2 playerToNecroVec = (player.transform.position - transform.position).normalized;
+            Vector2 playerToNecroVec = (transform.position - player.transform.position).normalized;
             m_currentInput.moveVector = (Vector2)transform.position + playerToNecroVec * agentController.agent.speed;
             return Status.Success;
         }
@@ -96,9 +96,9 @@ namespace Tankito.SinglePlayer
             return Status.Success;
         }
 
-        public Status Prueba()
+        public Status PatrolPointFalse()
         {
-            Debug.Log("Prueba");
+            patrolPointFound = false;
             return Status.Success;
         }
         #endregion

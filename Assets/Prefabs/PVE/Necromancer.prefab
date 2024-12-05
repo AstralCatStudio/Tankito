@@ -714,7 +714,7 @@ MonoBehaviour:
       nodes:
       - name: MainLoopNode
         id: 1aa05ee2-dd33-4dc5-ac5a-e23b96f29ca1
-        position: {x: 450, y: 0}
+        position: {x: 0, y: 0}
         node:
           rid: 4783593673473654785
         references: []
@@ -723,13 +723,13 @@ MonoBehaviour:
         - 5dcd57a9-7e52-47fc-9c2b-e8641174908d
       - name: Resurrect
         id: e4d1fd5b-c4a7-44fb-8987-498039f06282
-        position: {x: -583.2, y: 593.60004}
+        position: {x: -750, y: 1000}
         node:
           rid: 4783593673473654788
         references:
         - fieldName: Action
           value:
-            rid: 4463992033904689156
+            rid: 4463992045251330067
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         parentIds:
@@ -737,7 +737,7 @@ MonoBehaviour:
         childIds: []
       - name: Flee
         id: 8f21e99b-e049-4d05-8096-970305a24601
-        position: {x: 888.8, y: 632}
+        position: {x: 150, y: 1000}
         node:
           rid: 4783593673473654789
         references:
@@ -751,7 +751,7 @@ MonoBehaviour:
         childIds: []
       - name: GoToDeathTank
         id: 63aa282c-1107-41c8-9c15-30fcf6bc20bf
-        position: {x: -12, y: 616}
+        position: {x: -450, y: 1000}
         node:
           rid: 4783593673473654790
         references:
@@ -765,7 +765,7 @@ MonoBehaviour:
         childIds: []
       - name: Idle
         id: cfc51d5f-5ed6-45eb-8878-2044dfa7e9bb
-        position: {x: 1500, y: 400}
+        position: {x: 150, y: 400}
         node:
           rid: 4783593673473654792
         references:
@@ -779,22 +779,18 @@ MonoBehaviour:
         childIds: []
       - name: MainSelectorNode
         id: 5dcd57a9-7e52-47fc-9c2b-e8641174908d
-        position: {x: 450, y: 200}
+        position: {x: 0, y: 200}
         node:
           rid: 4783593673473654797
         references: []
         parentIds:
         - 1aa05ee2-dd33-4dc5-ac5a-e23b96f29ca1
         childIds:
+        - 4bf59636-08ec-4d37-830a-e0c416e444ce
         - cfc51d5f-5ed6-45eb-8878-2044dfa7e9bb
-        - d3c6a9db-09ce-4e6e-b2c2-54ce96c09d94
-        - eadce3dd-71ac-4521-9843-d73294785ef7
-        - 15a1ea40-238b-4cce-bc42-fcb590c2cfe6
-        - 9f08c8bd-f137-4a4a-9597-0d5c5ebf1e87
-        - 9b848340-be32-418f-8fdc-89db39dedf3e
       - name: ConditionResurrection
         id: d3c6a9db-09ce-4e6e-b2c2-54ce96c09d94
-        position: {x: -591.2, y: 400}
+        position: {x: -750, y: 800}
         node:
           rid: 4783593673473654802
         references:
@@ -804,12 +800,12 @@ MonoBehaviour:
           fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
             Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         parentIds:
-        - 5dcd57a9-7e52-47fc-9c2b-e8641174908d
+        - 04c9c4c2-8ff3-4af5-9e0c-41803c521c3f
         childIds:
         - e4d1fd5b-c4a7-44fb-8987-498039f06282
       - name: ConditionGoToDeath
         id: eadce3dd-71ac-4521-9843-d73294785ef7
-        position: {x: -22.4, y: 416}
+        position: {x: -450, y: 800}
         node:
           rid: 4783593673473654803
         references:
@@ -819,12 +815,12 @@ MonoBehaviour:
           fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
             Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         parentIds:
-        - 5dcd57a9-7e52-47fc-9c2b-e8641174908d
+        - 04c9c4c2-8ff3-4af5-9e0c-41803c521c3f
         childIds:
         - 63aa282c-1107-41c8-9c15-30fcf6bc20bf
       - name: ConditionFlee
         id: 9f08c8bd-f137-4a4a-9597-0d5c5ebf1e87
-        position: {x: 900.8, y: 416}
+        position: {x: 150, y: 800}
         node:
           rid: 4783593673473654804
         references:
@@ -834,12 +830,12 @@ MonoBehaviour:
           fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
             Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         parentIds:
-        - 5dcd57a9-7e52-47fc-9c2b-e8641174908d
+        - 04c9c4c2-8ff3-4af5-9e0c-41803c521c3f
         childIds:
         - 8f21e99b-e049-4d05-8096-970305a24601
       - name: Hit
         id: f77bbf27-3b8d-40fc-83e0-f13937659e29
-        position: {x: 440, y: 620.8}
+        position: {x: -150, y: 1000}
         node:
           rid: 4463992033904689152
         references:
@@ -853,7 +849,7 @@ MonoBehaviour:
         childIds: []
       - name: ConditionHit
         id: 15a1ea40-238b-4cce-bc42-fcb590c2cfe6
-        position: {x: 450.4, y: 416}
+        position: {x: -150, y: 800}
         node:
           rid: 4463992033904689154
         references:
@@ -863,23 +859,47 @@ MonoBehaviour:
           fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
             Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         parentIds:
-        - 5dcd57a9-7e52-47fc-9c2b-e8641174908d
+        - 04c9c4c2-8ff3-4af5-9e0c-41803c521c3f
         childIds:
         - f77bbf27-3b8d-40fc-83e0-f13937659e29
-      - name: 
-        id: 9b848340-be32-418f-8fdc-89db39dedf3e
-        position: {x: -331.2, y: 432}
+      - name: PatrolPointFalse
+        id: 6be3716d-b368-44b2-a662-29359f661254
+        position: {x: 0, y: 600}
         node:
-          rid: 4783593686277029888
+          rid: 4463992045251330068
         references:
         - fieldName: Action
           value:
-            rid: 4783593686277029889
+            rid: 4463992045251330069
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         parentIds:
-        - 5dcd57a9-7e52-47fc-9c2b-e8641174908d
+        - 4bf59636-08ec-4d37-830a-e0c416e444ce
         childIds: []
+      - name: PatrolPointFalseBranch
+        id: 4bf59636-08ec-4d37-830a-e0c416e444ce
+        position: {x: -150, y: 400}
+        node:
+          rid: 4463992045251330070
+        references: []
+        parentIds:
+        - 5dcd57a9-7e52-47fc-9c2b-e8641174908d
+        childIds:
+        - 04c9c4c2-8ff3-4af5-9e0c-41803c521c3f
+        - 6be3716d-b368-44b2-a662-29359f661254
+      - name: SelectotPatrolFalse
+        id: 04c9c4c2-8ff3-4af5-9e0c-41803c521c3f
+        position: {x: -300, y: 600}
+        node:
+          rid: 4463992045251330071
+        references: []
+        parentIds:
+        - 4bf59636-08ec-4d37-830a-e0c416e444ce
+        childIds:
+        - d3c6a9db-09ce-4e6e-b2c2-54ce96c09d94
+        - eadce3dd-71ac-4521-9843-d73294785ef7
+        - 15a1ea40-238b-4cce-bc42-fcb590c2cfe6
+        - 9f08c8bd-f137-4a4a-9597-0d5c5ebf1e87
     pushPerceptions: []
   references:
     version: 2
@@ -900,24 +920,6 @@ MonoBehaviour:
           componentName: NecromancerBehaviour
           methodName: ConditionResurrection
         reset:
-          componentName: 
-          methodName: 
-        pause:
-          componentName: 
-          methodName: 
-        unpause:
-          componentName: 
-          methodName: 
-    - rid: 4463992033904689156
-      type: {class: CustomAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
-      data:
-        start:
-          componentName: 
-          methodName: 
-        update:
-          componentName: NecromancerBehaviour
-          methodName: Resurrect
-        stop:
           componentName: 
           methodName: 
         pause:
@@ -1052,6 +1054,53 @@ MonoBehaviour:
         unpause:
           componentName: 
           methodName: 
+    - rid: 4463992045251330067
+      type: {class: CustomAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        start:
+          componentName: 
+          methodName: 
+        update:
+          componentName: NecromancerBehaviour
+          methodName: Resurrect
+        stop:
+          componentName: 
+          methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
+    - rid: 4463992045251330068
+      type: {class: LeafNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
+      data: 
+    - rid: 4463992045251330069
+      type: {class: CustomAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        start:
+          componentName: 
+          methodName: 
+        update:
+          componentName: NecromancerBehaviour
+          methodName: PatrolPointFalse
+        stop:
+          componentName: 
+          methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
+    - rid: 4463992045251330070
+      type: {class: SequencerNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
+      data:
+        IsRandomized: 0
+    - rid: 4463992045251330071
+      type: {class: SelectorNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
+      data:
+        IsRandomized: 0
     - rid: 4783593673473654784
       type: {class: BehaviourTree, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
       data: 
@@ -1084,27 +1133,6 @@ MonoBehaviour:
     - rid: 4783593673473654804
       type: {class: ConditionNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
       data: 
-    - rid: 4783593686277029888
-      type: {class: LeafNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
-      data: 
-    - rid: 4783593686277029889
-      type: {class: CustomAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
-      data:
-        start:
-          componentName: 
-          methodName: 
-        update:
-          componentName: NecromancerBehaviour
-          methodName: Prueba
-        stop:
-          componentName: 
-          methodName: 
-        pause:
-          componentName: 
-          methodName: 
-        unpause:
-          componentName: 
-          methodName: 
 --- !u!114 &4843055890111847316
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1184,7 +1212,7 @@ MonoBehaviour:
   agent: {fileID: 7157197457863854575}
   npcData: {fileID: 11400000, guid: 9a5fdeebb35830841aa211d888206dfa, type: 2}
   updateDesTimer: 0
-  updateTime: 1
+  updateTime: 0.5
   minDesDelta: 1
   maxDesDelta: 10
 --- !u!1 &8544809212635256772
