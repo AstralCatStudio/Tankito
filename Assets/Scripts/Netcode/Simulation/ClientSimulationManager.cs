@@ -104,6 +104,8 @@ namespace Tankito.Netcode.Simulation
                 m_snapshotBuffer.First.Timestamp < firstTick)
             {
                 return;
+            }
+
             for (int tick = firstTick; tick < lastTick; tick++)
             {
                 // Only trigger early input reconciliation if we have ALL of the user's inputs at that tick
