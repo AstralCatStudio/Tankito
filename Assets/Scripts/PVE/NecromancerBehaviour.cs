@@ -95,6 +95,12 @@ namespace Tankito.SinglePlayer
             base.IdleState();
             return Status.Success;
         }
+
+        public Status Prueba()
+        {
+            Debug.Log("Prueba");
+            return Status.Success;
+        }
         #endregion
 
         #region Utilis

@@ -791,6 +791,7 @@ MonoBehaviour:
         - eadce3dd-71ac-4521-9843-d73294785ef7
         - 15a1ea40-238b-4cce-bc42-fcb590c2cfe6
         - 9f08c8bd-f137-4a4a-9597-0d5c5ebf1e87
+        - 9b848340-be32-418f-8fdc-89db39dedf3e
       - name: ConditionResurrection
         id: d3c6a9db-09ce-4e6e-b2c2-54ce96c09d94
         position: {x: -591.2, y: 400}
@@ -865,6 +866,20 @@ MonoBehaviour:
         - 5dcd57a9-7e52-47fc-9c2b-e8641174908d
         childIds:
         - f77bbf27-3b8d-40fc-83e0-f13937659e29
+      - name: 
+        id: 9b848340-be32-418f-8fdc-89db39dedf3e
+        position: {x: -331.2, y: 432}
+        node:
+          rid: 4783593686277029888
+        references:
+        - fieldName: Action
+          value:
+            rid: 4783593686277029889
+          fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+        parentIds:
+        - 5dcd57a9-7e52-47fc-9c2b-e8641174908d
+        childIds: []
     pushPerceptions: []
   references:
     version: 2
@@ -1069,6 +1084,27 @@ MonoBehaviour:
     - rid: 4783593673473654804
       type: {class: ConditionNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
       data: 
+    - rid: 4783593686277029888
+      type: {class: LeafNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
+      data: 
+    - rid: 4783593686277029889
+      type: {class: CustomAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        start:
+          componentName: 
+          methodName: 
+        update:
+          componentName: NecromancerBehaviour
+          methodName: Prueba
+        stop:
+          componentName: 
+          methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
 --- !u!114 &4843055890111847316
 MonoBehaviour:
   m_ObjectHideFlags: 0
