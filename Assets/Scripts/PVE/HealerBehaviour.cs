@@ -159,8 +159,7 @@ namespace Tankito.SinglePlayer
             if(gameObject.GetComponent<HealerBehaviour>() == null) base.OnSubjectDetected(gameObject);
 
         }
-
-
+        
         private void OnPlayerDetected(GameObject gameObject)
         {
             player = gameObject;

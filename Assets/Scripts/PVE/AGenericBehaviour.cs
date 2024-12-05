@@ -61,6 +61,7 @@ namespace Tankito.SinglePlayer
             genericAreaDetection.OnSubjectDetected += OnSubjectDetected;
             genericAreaDetection.OnSubjectDissapear += OnSubjectDissapear;
             var genericOrder = GenericListOrder();
+            m_currentInput.moveVector = PatrolManager.Instance.GetPatrolPoint().position;
         }
 
         protected virtual void OnDisable()
@@ -100,19 +101,13 @@ namespace Tankito.SinglePlayer
         #endregion
 
         #region States
-        public Status IdleState()
+        public virtual Status IdleState()
         {
             if (DEBUG) Debug.Log("IDLESTATE");
             if (new Vector2(transform.position.x, transform.position.y) == m_currentInput.moveVector)
             {
-                patrolPointFound = false;
+                m_currentInput.moveVector = PatrolManager.Instance.GetPatrolPoint().position; ;
             }
-
-            if (!patrolPointFound)
-            {
-                m_currentInput.moveVector = PatrolManager.Instance.GetPatrolPoint().position;
-            }
-
             return Status.Running;
         }
 
