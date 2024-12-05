@@ -10,7 +10,7 @@ using UnityEngine.Rendering;
 
 namespace Tankito
 {
-    public class TankData : NetworkBehaviour
+    public class TankData : NetworkBehaviour, IComparable
     {
         public delegate void TankDestroyedHandler(TankData tank);
         public event TankDestroyedHandler OnTankDestroyed = (TankData tank) => { };
@@ -21,14 +21,27 @@ namespace Tankito
         private int m_health;
         private bool m_isAlive;
         private int m_points;
-        private string m_username;
+        private string m_username = "Jugador";
         private int m_skinSelected;
         public int Health => m_health;
         public bool Alive => m_isAlive;
         public int Points => m_points;
         public string Username => m_username;
         public int SkinSelected => m_skinSelected;
+        public int position;
+        public GameObject playerInfo;
+        public int CompareTo(object obj)
+        {
+            var a = this;
+            var b = obj as TankData;
 
+            if (a.m_points < b.m_points)
+                return 1;
+            else if (a.m_points > b.m_points)
+                return -1;
+
+            return 0;
+        }
         void Start()
         {
             if (IsServer)
@@ -60,32 +73,9 @@ namespace Tankito
         private void OnEnable()
         {
             OnTankDestroyed += RoundManager.Instance.TankDeath;
-            if(IsOwner)
-            {
-                m_username = ClientData.Instance.username;
-                m_skinSelected = ClientData.Instance.characters.IndexOf(ClientData.Instance.GetCharacterSelected());
-                SetClientDataServerRpc(m_username, m_skinSelected);
-            }
+            
         }
-        [ServerRpc]
-        void SetClientDataServerRpc(string username, int skinSelected)
-        {
-            if (!IsOwner)
-            {
-                m_username = username;
-                m_skinSelected = skinSelected;
-                SetClientDataClientRpc(username, skinSelected);
-            }
-        }
-        [ClientRpc]
-        void SetClientDataClientRpc(string username, int skinSelected)
-        {
-            if (!IsOwner && !IsServer)
-            {
-                m_username = username;
-                m_skinSelected = skinSelected;
-            }
-        }
+
         private void OnDisable()
         {
 
@@ -176,6 +166,38 @@ namespace Tankito
             if (!IsServer)
             {
                 ResetPoints();
+            }
+        }
+        #endregion
+
+        #region username
+        public override void OnNetworkSpawn()
+        {
+            base.OnNetworkSpawn();
+            if (IsOwner)
+            {
+                m_username = ClientData.Instance.username;
+                m_skinSelected = ClientData.Instance.characters.IndexOf(ClientData.Instance.GetCharacterSelected());
+                SetClientDataServerRpc(m_username, m_skinSelected);
+            }
+        }
+        [ServerRpc]
+        void SetClientDataServerRpc(string username, int skinSelected)
+        {
+            if (!IsOwner)
+            {
+                m_username = username;
+                m_skinSelected = skinSelected;
+                SetClientDataClientRpc(username, skinSelected);
+            }
+        }
+        [ClientRpc]
+        void SetClientDataClientRpc(string username, int skinSelected)
+        {
+            if (!IsOwner && !IsServer)
+            {
+                m_username = username;
+                m_skinSelected = skinSelected;
             }
         }
         #endregion

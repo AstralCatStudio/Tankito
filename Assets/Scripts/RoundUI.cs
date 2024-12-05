@@ -43,6 +43,7 @@ public class RoundUI : Singleton<RoundUI>
 
     public void SetActivePowerUps(bool active)
     {
+        
         PanelPowerUps.SetActive(active);
     }
 
