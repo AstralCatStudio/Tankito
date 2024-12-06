@@ -8,11 +8,11 @@ namespace Tankito.SinglePlayer
 {
     public class HealerBehaviour : AGenericBehaviour
     {
-        [SerializeField] GameObject player;
+        GameObject player;
         [SerializeField] AreaDetection playerAreaDetection;
         [SerializeField] float healReloadTime = 10f;
         [SerializeField] float healTimer = 0;
-        [SerializeField] bool healReloaded = true;
+        bool HealReloaded { get => healTimer >= healReloadTime; }
         [SerializeField] float minDisFromPlayer = 3f;
         bool playerTooClose = false;
 
@@ -53,10 +53,6 @@ namespace Tankito.SinglePlayer
         {
             base.Update();
             healTimer += Time.deltaTime;
-            if (healTimer >= healReloadTime)
-            {
-                healReloaded = true;
-            }
         }
 
         #region States
@@ -110,7 +106,7 @@ namespace Tankito.SinglePlayer
             if(genericTargets.Count > 0)
             {
                 PVEEnemyData targetData = genericTargets[0].GetComponent<PVEEnemyData>();
-                return noObstaclesBetween && healReloaded && targetInRange && targetData.Health != targetData.Max_Health;
+                return noObstaclesBetween && HealReloaded && targetInRange && targetData.Health != targetData.Max_Health;
             }
             return false;
         }
@@ -158,7 +154,6 @@ namespace Tankito.SinglePlayer
 
         public void ActionHealAllyPOP()
         {
-            healReloaded = false;
             healTimer = 0;
             hasShot = false;
         }
