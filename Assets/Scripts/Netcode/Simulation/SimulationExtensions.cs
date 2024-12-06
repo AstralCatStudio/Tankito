@@ -120,12 +120,14 @@ namespace Tankito.Netcode.Simulation
             float lifeTimeDiff = b.LifeTime - a.LifeTime;
             int bouncesLeftDiff = b.BouncesLeft - a.BouncesLeft;
             long ownerIdDiff = (long)b.OwnerId - (long)a.OwnerId;
+            long lastShooterObjIdDiff = (long)b.LastShooterObjId - (long)a.LastShooterObjId;
 
             var deltas = new BulletDelta(positionDiff,
                                     velocityDiff,
                                     lifeTimeDiff,
                                     bouncesLeftDiff,
-                                    ownerIdDiff);
+                                    ownerIdDiff,
+                                    lastShooterObjIdDiff);
 
             //Debug.Log("BulletDeltas: " + deltas);
 
@@ -167,7 +169,8 @@ namespace Tankito.Netcode.Simulation
                     a.velDiff.sqrMagnitude > b.velDiff.sqrMagnitude ||
                     Mathf.Abs(a.lifeTimeDiff) > Mathf.Abs(b.lifeTimeDiff) ||
                     Mathf.Abs(a.bouncesLeftDiff) > Mathf.Abs(b.bouncesLeftDiff) ||
-                    Mathf.Abs(a.ownerIdDiff) > Mathf.Abs(b.ownerIdDiff);
+                    Mathf.Abs(a.ownerIdDiff) > Mathf.Abs(b.ownerIdDiff) ||
+                    Mathf.Abs(a.lastShooterObjIdDiff) > Mathf.Abs(b.lastShooterObjIdDiff);
         }
     }
 }

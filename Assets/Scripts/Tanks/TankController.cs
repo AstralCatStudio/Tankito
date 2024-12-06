@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Tankito.Netcode;
 using Tankito.Netcode.Simulation;
@@ -35,6 +36,11 @@ namespace Tankito
         [SerializeField] private float m_speed;
         [SerializeField] private float m_rotationSpeed;
         [SerializeField] private float m_aimSpeed = 900f;
+        
+        /// <summary>
+        /// Parry collider, must be set on a physics layer to not interfere with tanks and so on.
+        /// </summary>
+        [SerializeField] private Collider2D m_parryHitbox;
 
         /// <summary>
         /// Used to avoid Simulation State dependance on tank controller actions
@@ -69,7 +75,6 @@ namespace Tankito
 
         [SerializeField] private BulletCannon m_cannon;
 
-        private int m_currentTick = 0;
 
         /// <summary>
         /// Tick when the fire action was last triggered.
@@ -291,11 +296,13 @@ namespace Tankito
                     }
                     break;
             }
+
+            m_parryHitbox.enabled = m_playerState == PlayerState.Parrying;
         }
 
         private void ParryTank(int parryTick)
         {
-            if (DEBUG_PARRY) Debug.LogWarning($"TODO: Implement Parry. progressTicks( {parryTick}/{m_parryTicks} )");
+            if (DEBUG_PARRY) Debug.LogWarning($"[{SimClock.TickCounter}] Parry progressTicks( {parryTick}/{m_parryTicks} )");
 
             // Only trigger Parry Animations during the first parry tick, and only if NOT rolling back
             if (parryTick == 0 && SimClock.Instance.Active)
@@ -345,14 +352,13 @@ namespace Tankito
         {
             if (DEBUG_DASH)
             {
+                if (dashTick == 0)
+                {
+                    Debug.Log($"[{SimClock.TickCounter}]Comienza el dash");
+                }
                 Debug.Log($"[{SimClock.TickCounter}] DASH: progressTicks( {dashTick}/{m_dashTicks} )");
             }
 
-            if (dashTick == 0)
-            {
-                m_playerState = PlayerState.Dashing;
-                if (DEBUG_DASH) Debug.Log($"[{SimClock.TickCounter}]Comienza el dash");
-            }
 
             float dashSpeed = m_dashSpeedMultiplier * m_dashSpeedCurve.Evaluate((float)dashTick/m_dashTicks);
 

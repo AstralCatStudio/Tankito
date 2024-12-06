@@ -20,7 +20,7 @@ namespace Tankito
         public int bouncesTotal;
         public float lifetimeTotal;
         public int spawnTickTime;
-        public ulong ownerID;
+        //public ulong ownerID;
     }
 
     public class BulletCannon : NetworkBehaviour

@@ -34,11 +34,10 @@ namespace Tankito.Netcode.Simulation
             {
                 ServerSimulationManager.Instance.AddToSim(this);
             }
-            //else  // Este else no lo queremos porque necesitamos que un host sea capaz de recoger el input del jugador,
-            // de lo cual se encarga ClientSimulationManager
-            //{
-            ClientSimulationManager.Instance.AddToSim(this);
-            //}
+            else
+            {
+                ClientSimulationManager.Instance.AddToSim(this);
+            }
         }
 
         /// <summary>
@@ -50,7 +49,10 @@ namespace Tankito.Netcode.Simulation
             {
                 ServerSimulationManager.Instance.RemoveFromSim(this);
             }
-            ClientSimulationManager.Instance.RemoveFromSim(this);
+            else
+            {
+                ClientSimulationManager.Instance.RemoveFromSim(this);
+            }
         }
 
         /// <summary>

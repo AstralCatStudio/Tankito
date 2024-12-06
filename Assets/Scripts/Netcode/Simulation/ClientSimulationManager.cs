@@ -69,8 +69,8 @@ namespace Tankito.Netcode.Simulation
                 Debug.LogWarning("ClientSimulationManager is network node that is NOT a CLIENT (is server). this should not happen!");
                 Destroy(this);
             }
-            m_tankSimulationTolerance = new TankDelta(new Vector2(0.1f,0.1f), 3f, new Vector2(0.2f,0.2f), 60f, 0, 0, 0, 0, 0);
-            m_bulletSimulationTolerance = new BulletDelta(new Vector2(0.1f,0.1f), new Vector2(0.1f,0.1f), 0.05f, 0, 0);
+            m_tankSimulationTolerance = new TankDelta(new Vector2(0.1f,0.1f), 0.5f, new Vector2(0.2f,0.2f), 1f, 0, 0, 0, 0, 0);
+            m_bulletSimulationTolerance = new BulletDelta(new Vector2(0.1f,0.1f), new Vector2(0.1f,0.1f), 0.05f, 0, 0, 0);
 
             m_snapshotBuffer = new CircularBuffer<SimulationSnapshot>(SNAPSHOT_BUFFER_SIZE);
             m_lastAuthSnapshotTimestamp = NO_SNAPSHOT;
@@ -278,7 +278,7 @@ namespace Tankito.Netcode.Simulation
             // We must resimulate all ticks up to (and including) the "present" tick,
             // in order to catch back up to our simlation predictions and not fall back in sim ticks,
             // which would cause a desync.
-             while(m_rollbackTick <= SimClock.TickCounter)
+            while(m_rollbackTick </*=*/ SimClock.TickCounter)
             {
                 m_rollbackTick++;
                 Simulate();

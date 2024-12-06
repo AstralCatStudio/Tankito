@@ -88,6 +88,7 @@ namespace Tankito.Netcode.Simulation
         public float lifeTimeDiff;
         public int bouncesLeftDiff;
         public long ownerIdDiff;
+        public long lastShooterObjIdDiff;
 #else
     public readonly struct BulletDelta : IStateDelta
     {
@@ -97,13 +98,14 @@ namespace Tankito.Netcode.Simulation
         public readonly int bouncesLeftDiff;
         public readonly long ownerIdDiff;
 #endif
-        public BulletDelta(Vector2 posDiff, Vector2 velDiff, float lifeTimeDiff, int bouncesLeftDiff, long ownerIdDiff)
+        public BulletDelta(Vector2 posDiff, Vector2 velDiff, float lifeTimeDiff, int bouncesLeftDiff, long ownerIdDiff, long lastShooterObjIdDiff)
         {
             this.posDiff = posDiff;
             this.velDiff = velDiff;
             this.lifeTimeDiff = lifeTimeDiff;
             this.bouncesLeftDiff = bouncesLeftDiff;
             this.ownerIdDiff = ownerIdDiff;
+            this.lastShooterObjIdDiff = lastShooterObjIdDiff;
         }
 
         public BulletDelta(in BulletSimulationState bulletState)
@@ -113,6 +115,7 @@ namespace Tankito.Netcode.Simulation
             lifeTimeDiff = bulletState.LifeTime;
             bouncesLeftDiff = bulletState.BouncesLeft;
             ownerIdDiff = (long)bulletState.OwnerId;
+            lastShooterObjIdDiff = (long)bulletState.LastShooterObjId;
         }
         public override string ToString()
         {
@@ -122,6 +125,7 @@ namespace Tankito.Netcode.Simulation
                     " | Δ_lifeTime: " + lifeTimeDiff +
                     " | Δ_bouncesLeft: " + bouncesLeftDiff +
                     " | Δ_ownerId: " + ownerIdDiff +
+                    " | Δ_lastShooterId: " + lastShooterObjIdDiff +
                     " ]";
         }
     }

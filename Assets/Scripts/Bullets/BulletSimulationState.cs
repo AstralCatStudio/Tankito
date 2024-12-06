@@ -16,20 +16,23 @@ namespace Tankito.Netcode.Simulation
         public float LifeTime { get => lifeTime; }
         public int BouncesLeft { get => bouncesLeft; }
         public ulong OwnerId { get => ownerId; }
+        public ulong LastShooterObjId { get => lastShooterObjId; }
 
         private Vector2 position;
         private Vector2 velocity;
         private float lifeTime; // In seconds
         private int bouncesLeft;
         private ulong ownerId;
+        private ulong lastShooterObjId;
 
-        public BulletSimulationState(Vector2 position, Vector2 velocity, float lifeTime, int bouncesLeft, ulong ownerId)
+        public BulletSimulationState(Vector2 position, Vector2 velocity, float lifeTime, int bouncesLeft, ulong ownerId, ulong lastShooterObjId)
         {
             this.position = position;
             this.velocity = velocity;
             this.lifeTime = lifeTime;
             this.bouncesLeft = bouncesLeft;
             this.ownerId = ownerId;
+            this.lastShooterObjId = lastShooterObjId;
         }
 
         public static int SerializedSize =>
@@ -37,8 +40,9 @@ namespace Tankito.Netcode.Simulation
                     FastBufferWriter.GetWriteSize(Vector2.one) + // velocity
                     sizeof(float) + // lifeTime
                     sizeof(int) + // bouncesLeft
-                    sizeof(ulong); // ownerId
-                    
+                    sizeof(ulong) + // ownerId
+                    sizeof(ulong); // lastShooterObjId
+
 
         internal void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
         {
@@ -47,6 +51,7 @@ namespace Tankito.Netcode.Simulation
             serializer.SerializeValue(ref lifeTime);
             serializer.SerializeValue(ref bouncesLeft);
             serializer.SerializeValue(ref ownerId);
+            serializer.SerializeValue(ref lastShooterObjId);
         }
 
         public override string ToString()
@@ -56,7 +61,8 @@ namespace Tankito.Netcode.Simulation
                     "velocity: " + velocity + " | " +
                     "lifeTime: " + lifeTime + " | " +
                     "bouncesLeft: " + bouncesLeft + " | " +
-                    "ownerId: " + ownerId + " | ";
+                    "ownerId: " + ownerId + " | " +
+                    "lastShooterObjId: " + lastShooterObjId + " | ";
         }
     }
 }
