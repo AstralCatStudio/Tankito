@@ -180,7 +180,15 @@ namespace Tankito
             {
                 m_username = ClientData.Instance.username;
                 m_skinSelected = ClientData.Instance.characters.IndexOf(ClientData.Instance.GetCharacterSelected());
-                playerColor = colors[ RoundManager.Instance.Players.Values.ToList().IndexOf(this)];
+                if((int)OwnerClientId<4 && (int)OwnerClientId >= 0)
+                {
+                    playerColor = colors[(int)OwnerClientId];
+                }
+                else
+                {
+                    playerColor = new Color(1,1,1,1);
+                }
+                
                 SetClientDataServerRpc(m_username, m_skinSelected, playerColor);
             }
         }
