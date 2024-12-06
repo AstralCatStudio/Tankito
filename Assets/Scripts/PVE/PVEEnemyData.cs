@@ -16,7 +16,7 @@ namespace Tankito.SinglePlayer
         {
             base.Die();
             Debug.Log("Se crea resto para revivir con el necromancer");
-            // Instaciar prefab de resto
+            Instantiate(GetComponent<AgentController>().npcData.leftoversInDeath, transform.position, Quaternion.identity);
         }
     }
 }

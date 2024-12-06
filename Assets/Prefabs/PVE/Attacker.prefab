@@ -1219,7 +1219,7 @@ MonoBehaviour:
         childIds: []
       - name: Healer
         id: aefe5c18-a75f-4065-ba2e-6277963a635a
-        position: {x: 536.8, y: 854.4}
+        position: {x: 1025.6, y: 1094.3999}
         node:
           rid: 4463992056704139271
         references:
@@ -1229,11 +1229,12 @@ MonoBehaviour:
           fieldType: System.Func`1[[System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089]], mscorlib, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089
-        parentIds: []
+        parentIds:
+        - bbecd0e4-4f1d-4e45-9165-2dda2e625e4e
         childIds: []
       - name: AggroNA
         id: cc888af6-309d-4574-9945-4c2529405ecb
-        position: {x: 1100.8, y: 223.99998}
+        position: {x: 951.2, y: 58.399994}
         node:
           rid: 4463992056704139273
         references:
@@ -1244,12 +1245,13 @@ MonoBehaviour:
             PublicKeyToken=b77a5c561934e089],[System.Single, mscorlib, Version=4.0.0.0,
             Culture=neutral, PublicKeyToken=b77a5c561934e089]], mscorlib, Version=4.0.0.0,
             Culture=neutral, PublicKeyToken=b77a5c561934e089
-        parentIds: []
+        parentIds:
+        - 36a8872f-37d4-4c7b-823f-82fe2ed82a2a
         childIds:
         - fa315dd7-7120-42e6-888b-fac15e5c7171
       - name: AggroHPA
         id: 00bd482f-6317-454e-88f3-a7e73a1a2413
-        position: {x: 1116.8, y: 479.2}
+        position: {x: 1001.6, y: 343.2}
         node:
           rid: 4463992056704139275
         references:
@@ -1260,12 +1262,15 @@ MonoBehaviour:
             PublicKeyToken=b77a5c561934e089],[System.Single, mscorlib, Version=4.0.0.0,
             Culture=neutral, PublicKeyToken=b77a5c561934e089]], mscorlib, Version=4.0.0.0,
             Culture=neutral, PublicKeyToken=b77a5c561934e089
-        parentIds: []
+        parentIds:
+        - 36a8872f-37d4-4c7b-823f-82fe2ed82a2a
+        - a702a056-5d52-4f5c-990b-81cba0b38459
+        - f289f018-b372-4bb8-ba87-d6de8835f103
         childIds:
         - 4469ee1b-4a0b-429d-af73-8dd2773dd172
       - name: AggroHPP
         id: 343304ef-7acb-450c-8d71-1aa80e7c9b25
-        position: {x: 1116.8, y: 708.8}
+        position: {x: 1009.6, y: 681.60004}
         node:
           rid: 4463992056704139278
         references:
@@ -1276,9 +1281,134 @@ MonoBehaviour:
             PublicKeyToken=b77a5c561934e089],[System.Single, mscorlib, Version=4.0.0.0,
             Culture=neutral, PublicKeyToken=b77a5c561934e089]], mscorlib, Version=4.0.0.0,
             Culture=neutral, PublicKeyToken=b77a5c561934e089
-        parentIds: []
+        parentIds:
+        - 36a8872f-37d4-4c7b-823f-82fe2ed82a2a
+        - faaa3d4c-5856-42e3-b469-b47bcb223053
+        - f289f018-b372-4bb8-ba87-d6de8835f103
         childIds:
         - a64ea4cb-ac8d-4ec7-9c1f-752c5d043eb3
+      - name: UGoAggro
+        id: 36a8872f-37d4-4c7b-823f-82fe2ed82a2a
+        position: {x: 1756.8, y: 102.399994}
+        node:
+          rid: 4463992067889561600
+        references: []
+        parentIds:
+        - c1309ca5-4794-4892-a558-cc8e3910776a
+        childIds:
+        - cc888af6-309d-4574-9945-4c2529405ecb
+        - 00bd482f-6317-454e-88f3-a7e73a1a2413
+        - 343304ef-7acb-450c-8d71-1aa80e7c9b25
+      - name: 1_AggroHPA
+        id: a702a056-5d52-4f5c-990b-81cba0b38459
+        position: {x: 993.6, y: 506.40002}
+        node:
+          rid: 4463992067889561601
+        references: []
+        parentIds:
+        - 6ae85959-e6b2-44e4-9d68-2119b46dcb2a
+        - bbecd0e4-4f1d-4e45-9165-2dda2e625e4e
+        childIds:
+        - 00bd482f-6317-454e-88f3-a7e73a1a2413
+      - name: 1_AggroHPP
+        id: faaa3d4c-5856-42e3-b469-b47bcb223053
+        position: {x: 1017.6, y: 860.8}
+        node:
+          rid: 4463992067889561602
+        references: []
+        parentIds:
+        - 6ae85959-e6b2-44e4-9d68-2119b46dcb2a
+        childIds:
+        - 343304ef-7acb-450c-8d71-1aa80e7c9b25
+      - name: UGoIdealDis
+        id: f289f018-b372-4bb8-ba87-d6de8835f103
+        position: {x: 1772.8, y: 359.2}
+        node:
+          rid: 4463992067889561603
+        references: []
+        parentIds:
+        - ec6bee4a-6390-48f7-945f-e53844e0a6f4
+        childIds:
+        - 00bd482f-6317-454e-88f3-a7e73a1a2413
+        - 343304ef-7acb-450c-8d71-1aa80e7c9b25
+      - name: UGoDef
+        id: 6ae85959-e6b2-44e4-9d68-2119b46dcb2a
+        position: {x: 1788.8, y: 577.60004}
+        node:
+          rid: 4463992067889561604
+        references: []
+        parentIds:
+        - 32236d3d-e7bd-4add-8f37-8f563325cd72
+        childIds:
+        - faaa3d4c-5856-42e3-b469-b47bcb223053
+        - a702a056-5d52-4f5c-990b-81cba0b38459
+      - name: UGoHeal
+        id: bbecd0e4-4f1d-4e45-9165-2dda2e625e4e
+        position: {x: 1796.8, y: 807.2}
+        node:
+          rid: 4463992067889561605
+        references: []
+        parentIds:
+        - 52b72314-c6bf-4c6d-8ce0-5a08acda455f
+        childIds:
+        - a702a056-5d52-4f5c-990b-81cba0b38459
+        - aefe5c18-a75f-4065-ba2e-6277963a635a
+      - name: GoAggro
+        id: c1309ca5-4794-4892-a558-cc8e3910776a
+        position: {x: 2391.2, y: 100.8}
+        node:
+          rid: 4463992067889561606
+        references:
+        - fieldName: Action
+          value:
+            rid: 4463992067889561610
+          fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+        parentIds: []
+        childIds:
+        - 36a8872f-37d4-4c7b-823f-82fe2ed82a2a
+      - name: GoIdealDis
+        id: ec6bee4a-6390-48f7-945f-e53844e0a6f4
+        position: {x: 2408, y: 343.2}
+        node:
+          rid: 4463992067889561607
+        references:
+        - fieldName: Action
+          value:
+            rid: 4463992067889561611
+          fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+        parentIds: []
+        childIds:
+        - f289f018-b372-4bb8-ba87-d6de8835f103
+      - name: GoDef
+        id: 32236d3d-e7bd-4add-8f37-8f563325cd72
+        position: {x: 2399.2, y: 560.8}
+        node:
+          rid: 4463992067889561608
+        references:
+        - fieldName: Action
+          value:
+            rid: 4463992067889561612
+          fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+        parentIds: []
+        childIds:
+        - 6ae85959-e6b2-44e4-9d68-2119b46dcb2a
+      - name: GoHeal
+        id: 52b72314-c6bf-4c6d-8ce0-5a08acda455f
+        position: {x: 2395.2, y: 790.4}
+        node:
+          rid: 4463992067889561609
+        references:
+        - fieldName: Action
+          value:
+            rid: 4463992067889561613
+          fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+        parentIds: []
+        childIds:
+        - bbecd0e4-4f1d-4e45-9165-2dda2e625e4e
     pushPerceptions: []
   references:
     version: 2
@@ -1725,6 +1855,137 @@ MonoBehaviour:
       data:
         componentName: AttackerBehaviour
         methodName: AggroHPP
+    - rid: 4463992067889561600
+      type: {class: WeightedFusionFactor, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
+      data:
+        PullingEnabled: 1
+        Weights:
+        - 0.3
+        - 0.35
+        - 0.35
+    - rid: 4463992067889561601
+      type: {class: LinearCurveFactor, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
+      data:
+        PullingEnabled: 1
+        Slope: -1
+        YIntercept: 1
+    - rid: 4463992067889561602
+      type: {class: LinearCurveFactor, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
+      data:
+        PullingEnabled: 1
+        Slope: -1
+        YIntercept: 1
+    - rid: 4463992067889561603
+      type: {class: WeightedFusionFactor, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
+      data:
+        PullingEnabled: 1
+        Weights:
+        - 0.5
+        - 0.5
+    - rid: 4463992067889561604
+      type: {class: WeightedFusionFactor, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
+      data:
+        PullingEnabled: 1
+        Weights:
+        - 0.5
+        - 0.5
+    - rid: 4463992067889561605
+      type: {class: WeightedFusionFactor, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
+      data:
+        PullingEnabled: 1
+        Weights: []
+    - rid: 4463992067889561606
+      type: {class: UtilityAction, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
+      data:
+        PullingEnabled: 1
+        FinishSystemOnComplete: 0
+    - rid: 4463992067889561607
+      type: {class: UtilityAction, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
+      data:
+        PullingEnabled: 1
+        FinishSystemOnComplete: 0
+    - rid: 4463992067889561608
+      type: {class: UtilityAction, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
+      data:
+        PullingEnabled: 1
+        FinishSystemOnComplete: 0
+    - rid: 4463992067889561609
+      type: {class: UtilityAction, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
+      data:
+        PullingEnabled: 1
+        FinishSystemOnComplete: 0
+    - rid: 4463992067889561610
+      type: {class: CustomAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        start:
+          componentName: 
+          methodName: 
+        update:
+          componentName: AttackerBehaviour
+          methodName: GoAggro
+        stop:
+          componentName: 
+          methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
+    - rid: 4463992067889561611
+      type: {class: CustomAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        start:
+          componentName: 
+          methodName: 
+        update:
+          componentName: AttackerBehaviour
+          methodName: GoIdealDis
+        stop:
+          componentName: 
+          methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
+    - rid: 4463992067889561612
+      type: {class: CustomAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        start:
+          componentName: 
+          methodName: 
+        update:
+          componentName: AttackerBehaviour
+          methodName: GoDef
+        stop:
+          componentName: 
+          methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
+    - rid: 4463992067889561613
+      type: {class: CustomAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        start:
+          componentName: 
+          methodName: 
+        update:
+          componentName: AttackerBehaviour
+          methodName: GoHeal
+        stop:
+          componentName: 
+          methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
     - rid: 4783593595286061094
       type: {class: StackFSM, ns: BehaviourAPI.StateMachines.StackFSMs, asm: BehaviourAPI.StateMachines}
       data: 

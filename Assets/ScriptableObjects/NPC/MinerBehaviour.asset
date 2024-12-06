@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5efdb9c759129e246b2f4fa11592ba4b, type: 3}
-  m_Name: AttackerData
+  m_Name: MinerBehaviour
   m_EditorClassIdentifier: 
   health: 2
   speed: 3.2
   aimSpeed: 360
   angularSpeed: 360
-  idealDistance: 5
-  attackRange: 15
-  reloadTime: 0.5
-  angleErrorAccepted: 15
+  idealDistance: 25
+  attackRange: 0
+  reloadTime: 15
+  angleErrorAccepted: 0
   genericTargetTag: 
-  leftoversInDeath: {fileID: 1104531696892935519, guid: c02df0a6bcc62c4498e499e93d675ec5, type: 3}
+  leftoversInDeath: {fileID: 3385328193976778370, guid: c63177a0ad240a348bc71d52966acc41, type: 3}
