@@ -26,7 +26,7 @@ public class ClientData : Singleton<ClientData>
     public string username;
     public accountType accountT;   //Tipo de la cuenta al iniciar sesión
     public event Action onMoneyChanged, onUsernameChanged, onCharacterPurchased, onCharacterSelected;
-
+    Character characterSelected;
     public bool firstLoad = true;
 
     // Start is called before the first frame update
@@ -47,8 +47,13 @@ public class ClientData : Singleton<ClientData>
         money = 0;
         accountT = 0;
         username = "guest";
-        characters[0].unlocked = true;  //characters[0] -> fish
-        SelectCharacter(characters[0]);
+#if UNITY_EDITOR
+        int randomCharacter = UnityEngine.Random.Range(0,characters.Count);
+#else
+        int randomCharacter = 0;
+#endif
+        characters[randomCharacter].unlocked = true;  //characters[0] -> fish
+        SelectCharacter(characters[randomCharacter]);
     }
 
     public void InitSelectCharacter()
@@ -146,15 +151,13 @@ public class ClientData : Singleton<ClientData>
             selectionSkinButton.sprite = character.data.sprite;
             onCharacterSelected?.Invoke();
         }
-        
+        characterSelected = character;
+
+
     }
     public Character GetCharacterSelected()
     {
-        foreach (var c in characters)
-        {
-            if (c.selected) return c;
-        }
-        return characters[0];
+        return characterSelected;
     }
 
     public void UnsubscribeButtons()
