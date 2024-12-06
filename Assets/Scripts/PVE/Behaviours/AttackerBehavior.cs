@@ -15,11 +15,19 @@ namespace Tankito.SinglePlayer
         [SerializeField] bool Bullets { get => ammunition > 0; }
         [SerializeField] float loaderReloadDuration = 5f;
         float loaderReloadTimer = 0f;
-         
+        List<GameObject> healerList = new List<GameObject>();
+        float maxAttackerHp;
+        float maxPlayerHp;
+
+        #region USParameters
+        int MAX_AGGRO_ATTACKERS = 5;
+        #endregion
+
         protected override void Start()
         {
             base.Start();
             ammunition = LOADER_SIZE;
+            maxAttackerHp = GetComponent<PVEEnemyData>().Max_Health;
             playerAreaDetection.OnSubjectDetected += OnPlayerDetected;
             playerAreaDetection.OnSubjectDissapear += OnPlayerDissapear;
         }
@@ -110,7 +118,59 @@ namespace Tankito.SinglePlayer
             ammunition--;
         }
 
-        #endregion 
+        #endregion
+
+        #region UtilitySystem
+        #region Variables
+
+        public float NAFullAggro()
+        {
+            return USManager.Instance.NAttackerFullAggro;
+        }
+
+        public float HP_Attacker()
+        {
+            return (float)GetComponent<PVEEnemyData>().Health/maxAttackerHp;
+        }
+
+        public float HP_PLayer()
+        {
+            if(player != null)
+            {
+                return 1 - (float)player.GetComponent<PVECharacterData>().Health/maxPlayerHp;
+            }
+            return 0;
+        }
+
+        public float Healer()
+        {
+            if(healerList.Count == 0)
+            {
+                return 0;
+            }
+            else
+            {
+                return 1;
+            }
+        }
+        #endregion
+        #region Function
+        public float AggroNA(float NA)
+        {
+            return - (NA * NA) + 1;
+        }
+
+        public float AggroHPA(float HP_A)
+        {
+            return (HP_A - 1 / maxAttackerHp) / (1 - 1 / maxAttackerHp);
+        }
+
+        public float AggroHPP(float HP_P)
+        {
+            return (-HP_P + 1) / (1 - 1 / maxPlayerHp);
+        }
+        #endregion
+        #endregion
 
         #region Utilis
         protected override void OnSubjectDetected(GameObject gameObject)
@@ -118,11 +178,25 @@ namespace Tankito.SinglePlayer
             if(gameObject.GetComponent<BodyGuardBehaviour>() != null)
             {
                 base.OnSubjectDetected(gameObject);
-            }  
+            }
+            else if(gameObject.GetComponent<HealerBehaviour>() != null)
+            {
+                healerList.Add(gameObject);
+            }
+        }
+
+        protected override void OnSubjectDissapear(GameObject gameObject)
+        {
+            base.OnSubjectDissapear(gameObject);
+            if(healerList.Contains(gameObject)) healerList.Remove(gameObject);
         }
 
         private void OnPlayerDetected(GameObject gameObject)
         {
+            if(maxPlayerHp == 0)
+            {
+                maxPlayerHp = gameObject.GetComponent<PVECharacterData>().Max_Health;
+            }
             player = gameObject;
         }
 

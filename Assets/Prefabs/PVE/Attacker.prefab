@@ -1171,7 +1171,114 @@ MonoBehaviour:
       id: 44caa9c0-442d-4032-b241-0ebf982bd75a
       graph:
         rid: 4783593595286061096
-      nodes: []
+      nodes:
+      - name: NAFullAggro
+        id: fa315dd7-7120-42e6-888b-fac15e5c7171
+        position: {x: 512.8, y: 207.99998}
+        node:
+          rid: 4463992056704139264
+        references:
+        - fieldName: Variable
+          value:
+            rid: 4463992056704139265
+          fieldType: System.Func`1[[System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089]], mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        parentIds:
+        - cc888af6-309d-4574-9945-4c2529405ecb
+        childIds: []
+      - name: HP_Player
+        id: a64ea4cb-ac8d-4ec7-9c1f-752c5d043eb3
+        position: {x: 528.8, y: 654.4}
+        node:
+          rid: 4463992056704139267
+        references:
+        - fieldName: Variable
+          value:
+            rid: 4463992056704139268
+          fieldType: System.Func`1[[System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089]], mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        parentIds:
+        - 343304ef-7acb-450c-8d71-1aa80e7c9b25
+        childIds: []
+      - name: HP_Attacker
+        id: 4469ee1b-4a0b-429d-af73-8dd2773dd172
+        position: {x: 528.8, y: 452}
+        node:
+          rid: 4463992056704139269
+        references:
+        - fieldName: Variable
+          value:
+            rid: 4463992056704139270
+          fieldType: System.Func`1[[System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089]], mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        parentIds:
+        - 00bd482f-6317-454e-88f3-a7e73a1a2413
+        childIds: []
+      - name: Healer
+        id: aefe5c18-a75f-4065-ba2e-6277963a635a
+        position: {x: 536.8, y: 854.4}
+        node:
+          rid: 4463992056704139271
+        references:
+        - fieldName: Variable
+          value:
+            rid: 4463992056704139272
+          fieldType: System.Func`1[[System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089]], mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        parentIds: []
+        childIds: []
+      - name: AggroNA
+        id: cc888af6-309d-4574-9945-4c2529405ecb
+        position: {x: 1100.8, y: 223.99998}
+        node:
+          rid: 4463992056704139273
+        references:
+        - fieldName: Function
+          value:
+            rid: 4463992056704139274
+          fieldType: System.Func`2[[System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089],[System.Single, mscorlib, Version=4.0.0.0,
+            Culture=neutral, PublicKeyToken=b77a5c561934e089]], mscorlib, Version=4.0.0.0,
+            Culture=neutral, PublicKeyToken=b77a5c561934e089
+        parentIds: []
+        childIds:
+        - fa315dd7-7120-42e6-888b-fac15e5c7171
+      - name: AggroHPA
+        id: 00bd482f-6317-454e-88f3-a7e73a1a2413
+        position: {x: 1116.8, y: 479.2}
+        node:
+          rid: 4463992056704139275
+        references:
+        - fieldName: Function
+          value:
+            rid: 4463992056704139276
+          fieldType: System.Func`2[[System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089],[System.Single, mscorlib, Version=4.0.0.0,
+            Culture=neutral, PublicKeyToken=b77a5c561934e089]], mscorlib, Version=4.0.0.0,
+            Culture=neutral, PublicKeyToken=b77a5c561934e089
+        parentIds: []
+        childIds:
+        - 4469ee1b-4a0b-429d-af73-8dd2773dd172
+      - name: AggroHPP
+        id: 343304ef-7acb-450c-8d71-1aa80e7c9b25
+        position: {x: 1116.8, y: 708.8}
+        node:
+          rid: 4463992056704139278
+        references:
+        - fieldName: Function
+          value:
+            rid: 4463992056704139279
+          fieldType: System.Func`2[[System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089],[System.Single, mscorlib, Version=4.0.0.0,
+            Culture=neutral, PublicKeyToken=b77a5c561934e089]], mscorlib, Version=4.0.0.0,
+            Culture=neutral, PublicKeyToken=b77a5c561934e089
+        parentIds: []
+        childIds:
+        - a64ea4cb-ac8d-4ec7-9c1f-752c5d043eb3
     pushPerceptions: []
   references:
     version: 2
@@ -1547,6 +1654,77 @@ MonoBehaviour:
         unpause:
           componentName: 
           methodName: 
+    - rid: 4463992056704139264
+      type: {class: VariableFactor, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
+      data:
+        PullingEnabled: 1
+        min: 0
+        max: 5
+    - rid: 4463992056704139265
+      type: {class: SerializedContextMethod, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        componentName: AttackerBehaviour
+        methodName: NAFullAggro
+    - rid: 4463992056704139267
+      type: {class: VariableFactor, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
+      data:
+        PullingEnabled: 1
+        min: 0
+        max: 1
+    - rid: 4463992056704139268
+      type: {class: SerializedContextMethod, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        componentName: AttackerBehaviour
+        methodName: HP_Player
+    - rid: 4463992056704139269
+      type: {class: VariableFactor, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
+      data:
+        PullingEnabled: 1
+        min: 0
+        max: 1
+    - rid: 4463992056704139270
+      type: {class: SerializedContextMethod, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        componentName: AttackerBehaviour
+        methodName: HP_Attacker
+    - rid: 4463992056704139271
+      type: {class: VariableFactor, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
+      data:
+        PullingEnabled: 1
+        min: 0
+        max: 1
+    - rid: 4463992056704139272
+      type: {class: SerializedContextMethod, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        componentName: AttackerBehaviour
+        methodName: Healer
+    - rid: 4463992056704139273
+      type: {class: CustomCurveFactor, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
+      data:
+        PullingEnabled: 1
+    - rid: 4463992056704139274
+      type: {class: SerializedContextMethod, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        componentName: AttackerBehaviour
+        methodName: AggroNA
+    - rid: 4463992056704139275
+      type: {class: CustomCurveFactor, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
+      data:
+        PullingEnabled: 1
+    - rid: 4463992056704139276
+      type: {class: SerializedContextMethod, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        componentName: AttackerBehaviour
+        methodName: AggroHPA
+    - rid: 4463992056704139278
+      type: {class: CustomCurveFactor, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
+      data:
+        PullingEnabled: 1
+    - rid: 4463992056704139279
+      type: {class: SerializedContextMethod, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        componentName: AttackerBehaviour
+        methodName: AggroHPP
     - rid: 4783593595286061094
       type: {class: StackFSM, ns: BehaviourAPI.StateMachines.StackFSMs, asm: BehaviourAPI.StateMachines}
       data: 
