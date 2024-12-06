@@ -32,8 +32,7 @@ namespace Tankito
         [SerializeField] private Transform row1;
         [SerializeField] private Transform row2;
         [SerializeField] private List<GameObject> shells;
-
-        public ModifierList modifierList;
+        List<Modifier> modifiers;
         #endregion
 
         #region removeThis
@@ -46,17 +45,14 @@ namespace Tankito
         #region UnityFunctions
         public override void OnNetworkSpawn()
         {
+            
             base.OnNetworkSpawn();
             transform.SetParent(RoundUI.Instance.transform);
             RoundUI.Instance.PanelPowerUps = gameObject;
             gameObject.SetActive(false);
-            //-------------------------
-            //Esto habrá que eliminarlo
             players = RoundManager.Instance.Players.Values.ToList<TankData>();
             numPlayers = players.Count;
             Debug.Log("spawning" + numPlayers);
-            //Esto habrá que eliminarlo
-            //-------------------------
 
             //Instancia los objetos de los modificadores
             for (int i = 0; i < numPlayers + 1; i++) //Cambiarlo para que se haga por cada jugador que haya en partida (Creo que por los TankDatas)
@@ -80,7 +76,20 @@ namespace Tankito
                 instance.GetComponent<Button>().enabled = false;
                 instance.GetComponent<HoverButton>().enabled = false;
             }
+            if (IsServer)
+            {
+                GenerateNewModifiers();
+            }
             //Instancia los objetos donde irá la información del resto de jugadores
+            foreach (TankData player in players)
+            {
+                
+                if (player.IsOwner)
+                {
+                    
+                    player.SetClientDataServerRpc(player.Username, player.SkinSelected, player.playerColor);
+                }
+            }
             foreach (TankData player in players)
             {
                 GameObject instance;
@@ -96,6 +105,7 @@ namespace Tankito
         {
             if (IsSpawned)
             {
+                
                 SortPlayers();
 
                 foreach (TankData player in players)
@@ -113,6 +123,7 @@ namespace Tankito
 
         private void OtherPlayersLoadInfo(TankData player)
         {
+            
             OtherP_LoadInfo otherP = player.playerInfo.GetComponent<OtherP_LoadInfo>();
             otherP.icon.sprite = ClientData.Instance.characters[player.SkinSelected].data.sprite;
             Debug.Log(player.Username);
@@ -156,6 +167,7 @@ namespace Tankito
         {
             turn = 0;
             int currentIndex = (numPlayers - 1) - turn;
+            DisableButtonsModifiers();
             AnimatePlayerEnable(players[currentIndex]);
         }
 
@@ -166,7 +178,11 @@ namespace Tankito
             LeanTween.move(playerRT, playerChoosingPosition.anchoredPosition, playerTransitionTime).setEase(LeanTweenType.easeInOutCubic);
             LeanTween.scale(playerRT, Vector3.one * playerScale, playerTransitionTime).setEase(LeanTweenType.easeInOutCubic);
 
-            Invoke("EnableButtonsModifiers", playerTransitionTime);
+            if (player.OwnerClientId  == NetworkManager.Singleton.LocalClientId)
+            {
+                Invoke("EnableButtonsModifiers", playerTransitionTime);
+            }
+            
         }
 
         private void AnimateModifierAppearingInPlayer(GameObject instance)
@@ -248,6 +264,8 @@ namespace Tankito
         public void TryNextTurn()
         {
             GameObject shellSelected = CheckSelected();
+            
+            
 
             if (shellSelected == null)
             {
@@ -255,24 +273,53 @@ namespace Tankito
             }
             else
             {
-                shellSelected.GetComponent<ShellAnimation>().SetAlreadyTaken(true);
-                shellSelected.GetComponent<ShellAnimation>().Disable(); //desactiva el potenciador elegido
-                int currentIndex = (numPlayers - 1) - turn;
-                GameObject parent = players[currentIndex].playerInfo.GetComponent<OtherP_LoadInfo>().modifiers;
-                GameObject instance = Instantiate(modifierPrefab, parent.transform);
-                instance.GetComponent<Image>().sprite = shellSelected.GetComponent<ShellAnimation>().modifier.GetSprite();
-                DeselectAllModifiers();
-                AnimateModifierAppearingInPlayer(instance);
-                AnimatePlayerDisable(players[currentIndex]);
+                TryNextTurnServerRpc(shells.IndexOf(shellSelected), NetworkManager.Singleton.LocalClientId);
+                
             }
         }
 
+        [ServerRpc(RequireOwnership = false)]
+        void TryNextTurnServerRpc(int shellSelected, ulong client)
+        {
+            int currentIndex = (numPlayers - 1) - turn;
+            if (players[currentIndex] == RoundManager.Instance.Players[client])
+            {
+                //turn++;
+                BulletCannonRegistry.Instance[client].transform.parent.parent.parent.GetComponent<ModifiersController>().AddModifier(shells[shellSelected].GetComponent<ShellAnimation>().modifier);
+                AddModifierClientRpc(client, shellSelected);
+                goNextTurnClientRpc(shellSelected);
+                
+            }
+        }
+        [ClientRpc]
+        void goNextTurnClientRpc(int shellSelected)
+        {
+            shells[shellSelected].GetComponent<ShellAnimation>().SetAlreadyTaken(true);
+            shells[shellSelected].GetComponent<ShellAnimation>().Disable(); //desactiva el potenciador elegido
+            int currentIndex = (numPlayers - 1) - turn;
+            GameObject parent = players[currentIndex].playerInfo.GetComponent<OtherP_LoadInfo>().modifiers;
+            GameObject instance = Instantiate(modifierPrefab, parent.transform);
+            instance.GetComponent<Image>().sprite = shells[shellSelected].GetComponent<ShellAnimation>().modifier.GetSprite();
+            DeselectAllModifiers();
+            AnimateModifierAppearingInPlayer(instance);
+            AnimatePlayerDisable(players[currentIndex]);
+        }
+        [ClientRpc]
+        void AddModifierClientRpc(ulong playerClientId, int shellSelected)
+        {
+            if (!IsServer)
+            {
+                BulletCannonRegistry.Instance[playerClientId].transform.parent.parent.parent.GetComponent<ModifiersController>().AddModifier(shells[shellSelected].GetComponent<ShellAnimation>().modifier);
+
+            }
+        }
         private void ChangeTurn()
         {
             turn++;
             if (turn >= numPlayers)
             {
                 Disappear();
+                RoundManager.Instance.EndPowerUpSelection();
             }
             else
             {
@@ -319,9 +366,30 @@ namespace Tankito
 
         private void Disable()
         {
+            GenerateNewModifiers();
             gameObject.SetActive(false);
             shells[0].GetComponent<ShellAnimation>().onAnimationFinished -= StartChoosing;
         }
 
+
+        [ClientRpc]
+        void SyncronizeModifiersClientRpc(int[] modificadores)
+        {
+            for (int i = 0; i < shells.Count; i++)
+            {
+                shells[i].GetComponent<ShellAnimation>().modifier= ModifierRegistry.Instance.GetModifier(modificadores[i]);
+            }
+        }
+        void GenerateNewModifiers()
+        {
+            modifiers = ModifierRegistry.Instance.GetRandomModifiers(6);
+            List<int> indexModificadores = new List<int>();
+            for (int i = 0; i < shells.Count; i++)
+            {
+                indexModificadores.Add(ModifierRegistry.Instance.GetModifierIndex(modifiers[i]));
+                shells[i].GetComponent<ShellAnimation>().modifier = modifiers[i];
+            }
+            SyncronizeModifiersClientRpc(indexModificadores.ToArray());
+        }
     }
 }

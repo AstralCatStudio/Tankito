@@ -37,7 +37,7 @@ public class ShellAnimation : MonoBehaviour
 
     private void OnEnable()
     {
-        modifier = potenciadoresGameObject.modifierList.GetModifier(UnityEngine.Random.Range(0, 11));
+        
         Invoke("StartAnimation", waitTime);
     }
 
@@ -91,7 +91,7 @@ public class ShellAnimation : MonoBehaviour
             GetComponent<HoverButton>().enabled = true;
             description.SetActive(true);
             modifierObject.SetActive(true);
-            modifierObject.transform.GetChild(0).GetComponent<Image>().sprite = modifier.GetSprite();  //obtiene el sprite del modificador y lo aplica en el icono del shell
+            modifierObject.transform.GetChild(0).GetComponent<Image>().sprite = modifier.GetSpriteNoBackground();  //obtiene el sprite del modificador y lo aplica en el icono del shell
             description.GetComponent<TextMeshProUGUI>().text = modifier.GetDescription();   //obtiene la descripcion
         }
     }

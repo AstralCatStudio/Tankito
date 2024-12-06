@@ -7,6 +7,7 @@ using Tankito;
 using NUnit.Framework;
 using Tankito.Netcode.Simulation;
 using UnityEngine.Rendering;
+using System.Linq;
 
 namespace Tankito
 {
@@ -21,7 +22,7 @@ namespace Tankito
         private int m_health;
         private bool m_isAlive;
         private int m_points;
-        private string m_username = "Jugador";
+        private string m_username;
         private int m_skinSelected;
         public int Health => m_health;
         public bool Alive => m_isAlive;
@@ -30,6 +31,7 @@ namespace Tankito
         public int SkinSelected => m_skinSelected;
         public int position;
         public GameObject playerInfo;
+        private Color[] colors = { Color.blue, Color.red, Color.green, Color.yellow };
         public int CompareTo(object obj)
         {
             var a = this;
@@ -178,21 +180,20 @@ namespace Tankito
             {
                 m_username = ClientData.Instance.username;
                 m_skinSelected = ClientData.Instance.characters.IndexOf(ClientData.Instance.GetCharacterSelected());
-                SetClientDataServerRpc(m_username, m_skinSelected);
+                playerColor = colors[ RoundManager.Instance.Players.Values.ToList().IndexOf(this)];
+                SetClientDataServerRpc(m_username, m_skinSelected, playerColor);
             }
         }
         [ServerRpc]
-        void SetClientDataServerRpc(string username, int skinSelected)
+        public void SetClientDataServerRpc(string username, int skinSelected, Color color)
         {
-            if (!IsOwner)
-            {
                 m_username = username;
                 m_skinSelected = skinSelected;
-                SetClientDataClientRpc(username, skinSelected);
-            }
+                SetClientDataClientRpc(username, skinSelected, color);
+            
         }
         [ClientRpc]
-        void SetClientDataClientRpc(string username, int skinSelected)
+        void SetClientDataClientRpc(string username, int skinSelected, Color color)
         {
             if (!IsOwner && !IsServer)
             {
