@@ -26,10 +26,11 @@ namespace Tankito.SinglePlayer
 
         [Header("Current State")]
         [SerializeField] private List<GameObject> activeEnemies;
+        [SerializeField] private int maxEnemies;
         [SerializeField] private int currentWave;
         [SerializeField] private int currentWaveIndex = -1;
 
-        private void Awake()
+        protected override void Awake()
         {
             base.Awake();
             activeEnemies = new List<GameObject>();
@@ -64,31 +65,32 @@ namespace Tankito.SinglePlayer
             WaveData newWave = waveConfigs[currentWaveIndex];
             currentWave++;
             Debug.Log($"Spawneando la oleada {currentWave}");
-            SpawnEnemies(newWave);
+            StartCoroutine(SpawnEnemiesWithDelay(newWave));
         }
 
-        private void SpawnEnemies(WaveData newWave)
+        private IEnumerator SpawnEnemiesWithDelay(WaveData newWave)
         {
-            SpawnEnemy(newWave.BodyGuards, bodyGuardPrefab);
-            SpawnEnemy(newWave.Healers, healerPrefab);
-            SpawnEnemy(newWave.Kamikazes, kamikazePrefab);
-            SpawnEnemy(newWave.Necromancers, necromancerPrefab);
-            SpawnEnemy(newWave.Attackers, attackerPrefab);
-            SpawnEnemy(newWave.Miners, minerPrefab);
+            yield return StartCoroutine(SpawnEnemyWithDelay(newWave.BodyGuards, bodyGuardPrefab));
+            yield return StartCoroutine(SpawnEnemyWithDelay(newWave.Healers, healerPrefab));
+            yield return StartCoroutine(SpawnEnemyWithDelay(newWave.Kamikazes, kamikazePrefab));
+            yield return StartCoroutine(SpawnEnemyWithDelay(newWave.Necromancers, necromancerPrefab));
+            yield return StartCoroutine(SpawnEnemyWithDelay(newWave.Attackers, attackerPrefab));
+            yield return StartCoroutine(SpawnEnemyWithDelay(newWave.Miners, minerPrefab));
         }
 
-        private void SpawnEnemy(int count, GameObject enemy)
+        private IEnumerator SpawnEnemyWithDelay(int count, GameObject enemy)
         {
-            Transform spawn;
             for (int i = 0; i < count; i++)
             {
-                spawn = SelectSpawnPoint();
+                Transform spawn = SelectSpawnPoint();
 
                 GameObject newEnemy = Instantiate(enemy, spawn);
 
                 AddEnemy(newEnemy);
 
                 newEnemy.GetComponent<PVEEnemyData>().OnDeath += () => activeEnemies.Remove(newEnemy);
+
+                yield return new WaitForSeconds(0.5f);
             }
         }
 
@@ -99,10 +101,31 @@ namespace Tankito.SinglePlayer
 
         private Transform SelectSpawnPoint()
         {
+            Transform playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
+
             List<Transform> nearSpawnPoints = new List<Transform>();
-            //Pillar los spawns cercanos
-            return spawnPoints[Random.Range(0, spawnPoints.Count)];
+
+            foreach (Transform spawnPoint in spawnPoints)
+            {
+                float distance = Vector3.Distance(spawnPoint.position, playerTransform.position);
+
+                if (distance <= maxDistance)
+                {
+                    nearSpawnPoints.Add(spawnPoint);
+                }
+            }
+
+            if (nearSpawnPoints.Count > 0)
+            {
+                return nearSpawnPoints[Random.Range(0, nearSpawnPoints.Count)];
+            }
+            else
+            {
+                Debug.LogWarning("No hay spawns cercanos, seleccionando uno aleatorio.");
+                return spawnPoints[Random.Range(0, spawnPoints.Count)];
+            }
         }
     }
 }
+
 
