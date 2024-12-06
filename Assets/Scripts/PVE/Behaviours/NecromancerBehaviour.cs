@@ -52,7 +52,7 @@ namespace Tankito.SinglePlayer
             m_currentInput.aimVector = (genericTargets[0].transform.position - transform.position).normalized;
             if(resurrectTimer >= agentController.npcData.reloadTime)
             {
-                Debug.Log("RESUCITACIOOOOOON");
+                genericTargets[0].GetComponent<Leftovers>().ReviveTank();
             }
             return Status.Success;
         }
