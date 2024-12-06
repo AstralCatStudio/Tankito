@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5efdb9c759129e246b2f4fa11592ba4b, type: 3}
-  m_Name: HealerData
+  m_Name: MinerBehaviour
   m_EditorClassIdentifier: 
   health: 2
   speed: 3.2
   aimSpeed: 360
   angularSpeed: 360
-  idealDistance: 4.5
-  attackRange: 6
-  reloadTime: 2
-  angleErrorAccepted: 15
+  idealDistance: 25
+  attackRange: 0
+  reloadTime: 15
+  angleErrorAccepted: 0
   genericTargetTag: 

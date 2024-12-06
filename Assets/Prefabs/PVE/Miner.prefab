@@ -199,7 +199,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 10
+  m_Radius: 50
 --- !u!114 &7633983614548081428
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -441,7 +441,7 @@ GameObject:
   - component: {fileID: 5302585328781883277}
   - component: {fileID: 5809519463851701106}
   m_Layer: 0
-  m_Name: BulletAreaDetection
+  m_Name: AllyAreaDetection
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -474,7 +474,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e740d88368a6dec42a3e8c864e05aa55, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  subjectTag: Bullet
+  subjectTag: Enemy
 --- !u!58 &5809519463851701106
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -509,7 +509,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 2.5
+  m_Radius: 25
 --- !u!1 &7961667591255896337
 GameObject:
   m_ObjectHideFlags: 0
@@ -521,12 +521,12 @@ GameObject:
   - component: {fileID: 5387718942698819218}
   - component: {fileID: 4897918201683854192}
   - component: {fileID: 1495208003927218069}
-  - component: {fileID: 8623859476937610694}
-  - component: {fileID: 6866319806494830271}
   - component: {fileID: 1416114550839104953}
   - component: {fileID: 6001308960678759924}
   - component: {fileID: 8108601122068728091}
   - component: {fileID: 5450187379696770274}
+  - component: {fileID: 1622443689222201118}
+  - component: {fileID: 5081890824654510718}
   m_Layer: 10
   m_Name: Miner
   m_TagString: Enemy
@@ -549,8 +549,8 @@ Transform:
   m_Children:
   - {fileID: 4729124530440115097}
   - {fileID: 8248769803647303712}
-  - {fileID: 9141373989833345517}
   - {fileID: 175191412389789227}
+  - {fileID: 9141373989833345517}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!50 &4897918201683854192
@@ -615,91 +615,6 @@ CircleCollider2D:
   m_Offset: {x: -0.35260153, y: 0}
   serializedVersion: 2
   m_Radius: 0.6026015
---- !u!114 &8623859476937610694
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7961667591255896337}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f73756c709b76c346a32499696a44495, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_inputReplayTick: -1
-  m_tankController: {fileID: 6866319806494830271}
-  m_turretAnimator: {fileID: 4415187671920792333}
-  m_hullAnimator: {fileID: 2867733742914670491}
-  m_turretRB: {fileID: 2861752177015873557}
-  DEBUG: 0
---- !u!114 &6866319806494830271
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7961667591255896337}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c8b17a9f4c79034ea0a4c07208b7663, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_tankRB: {fileID: 4897918201683854192}
-  m_turretRB: {fileID: 2861752177015873557}
-  m_speed: 3
-  m_rotationSpeed: 360
-  m_aimSpeed: 900
-  m_dashSpeedCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 24.596172
-      outSlope: 24.596172
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 0.08127188
-      value: 1.9989772
-      inSlope: -0.002123253
-      outSlope: -0.002123253
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.26034087
-    - serializedVersion: 3
-      time: 0.8607947
-      value: 1.9965394
-      inSlope: 0.002965081
-      outSlope: 0.002965081
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.5057174
-      outWeight: 1
-    - serializedVersion: 3
-      time: 1.0028714
-      value: -0.0022583008
-      inSlope: -14.068443
-      outSlope: -14.068443
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  m_dashSpeedMultiplier: 3
-  m_dashDistance: 0.5
-  m_reloadDashTicks: 0
-  stateInitTick: 0
-  playerState: 0
-  DEBUGCONT: 0
-  DEBUGDASh: 0
-  m_dashCooldown: 2
 --- !u!195 &1416114550839104953
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -781,6 +696,76 @@ MonoBehaviour:
   m_maxHealth: 0
   m_health: 0
   m_isAlive: 0
+--- !u!114 &1622443689222201118
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7961667591255896337}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7831cacc7a77dd4894d162b3a1e1b33, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  agentController: {fileID: 5081890824654510718}
+  cannon: {fileID: 6093874407106433653}
+  genericAreaDetection: {fileID: 0}
+  wallLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  debugPosition: {fileID: 7844513577416338512}
+  DEBUG: 1
+  genericTargets: []
+  patrolPointFound: 0
+  noObstaclesBetween: 0
+  cannonReloaded: 1
+  timerShoot: 0
+  targetInRange: 0
+  turretInPosition: 0
+  hasShot: 0
+  playerAreaDetection: {fileID: 7633983614548081428}
+  nRayCastCover: 10
+  coverLayers:
+    serializedVersion: 2
+    m_Bits: 3200
+  excaveCooldown: 10
+--- !u!114 &5081890824654510718
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7961667591255896337}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0ebb401ae137a4498cf28db06882eaa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_tankRB: {fileID: 4897918201683854192}
+  m_turretRB: {fileID: 2861752177015873557}
+  m_speed: 0
+  m_rotationSpeed: 0
+  m_aimSpeed: 900
+  m_dashSpeedCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  m_dashSpeedMultiplier: 1
+  m_dashDistance: 0
+  m_reloadDashTicks: 0
+  stateInitTick: 0
+  playerState: 0
+  DEBUGCONT: 0
+  DEBUGDASh: 0
+  agent: {fileID: 0}
+  npcData: {fileID: 0}
+  updateDesTimer: 0
+  updateTime: 0.5
+  minDesDelta: 1
+  maxDesDelta: 10
 --- !u!1 &8714602361156488432
 GameObject:
   m_ObjectHideFlags: 0
