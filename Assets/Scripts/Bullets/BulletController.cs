@@ -37,7 +37,7 @@ namespace Tankito {
         public void SetLastShooterObjId(ulong simObjId)
         {
             m_lastShooterObjId = simObjId;
-            Debug.Log($"[{SimClock.TickCounter}] LastShooterSimObjId[{LastShooterObjId}]");
+            //Debug.Log($"[{SimClock.TickCounter}] LastShooterSimObjId[{LastShooterObjId}]");
         }
 
         public void InitializeProperties(bool triggerOnSpawnEvents = true)
@@ -122,7 +122,7 @@ namespace Tankito {
         private void OnCollisionEnter2D(Collision2D collision)
         {
             lastCollisionNormal = collision.GetContact(0).normal;
-            Debug.Log($"[{SimClock.TickCounter}]Collided with: {collision.collider.name}(tag:{collision.collider.tag}) at {collision.contacts.First().point}");
+            //Debug.Log($"[{SimClock.TickCounter}]Collided with: {collision.collider.name}(tag:{collision.collider.tag}) at {collision.contacts.First().point}");
             switch (collision.collider.tag)
             {
                 case "NormalWall":
