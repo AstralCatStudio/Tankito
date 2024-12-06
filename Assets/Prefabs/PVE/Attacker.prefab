@@ -822,7 +822,7 @@ MonoBehaviour:
         - ed7c2c88-df55-431c-bb0d-dc24b5dad413
       - name: Cover
         id: b80fcd9e-7c6c-4cef-8f98-06f0ef0770bb
-        position: {x: 450.4, y: 886.4}
+        position: {x: 466.4, y: 905.60004}
         node:
           rid: 4783593595286061099
         references:
@@ -1155,7 +1155,7 @@ MonoBehaviour:
         references:
         - fieldName: Action
           value:
-            rid: 4463992048828022787
+            rid: 4463992073094692878
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         parentIds:
@@ -1167,6 +1167,19 @@ MonoBehaviour:
         - dc57172c-9687-4dc4-8740-05f64f2dd52f
         - 9a104752-60ca-485a-8c86-ef113ed1f4c9
         - 447ff124-1909-45ae-bf1b-a69bfc037df8
+      - name: 
+        id: 6f14ca16-48e7-4b4e-9b90-6258c54dcc30
+        position: {x: 1997.3334, y: 450.1333}
+        node:
+          rid: 4463992073094692876
+        references:
+        - fieldName: Action
+          value:
+            rid: 4463992073094692877
+          fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+        parentIds: []
+        childIds: []
     - name: CombatUS
       id: 44caa9c0-442d-4032-b241-0ebf982bd75a
       graph:
@@ -1418,12 +1431,6 @@ MonoBehaviour:
     - rid: 4463992048828022784
       type: {class: State, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
       data: 
-    - rid: 4463992048828022787
-      type: {class: SubgraphAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
-      data:
-        ExecuteOnLoop: 0
-        InterruptOptions: 2
-        subgraphId: 44caa9c0-442d-4032-b241-0ebf982bd75a
     - rid: 4463992048828022811
       type: {class: CustomPerception, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
       data:
@@ -1564,7 +1571,7 @@ MonoBehaviour:
           methodName: 
         check:
           componentName: AttackerBehaviour
-          methodName: CheckUsToChase
+          methodName: CheckUSToChase
         reset:
           componentName: 
           methodName: 
@@ -1581,7 +1588,7 @@ MonoBehaviour:
           componentName: 
           methodName: 
         check:
-          componentName: attackerBehaviour
+          componentName: AttackerBehaviour
           methodName: CheckUSToCover
         reset:
           componentName: 
@@ -1986,6 +1993,23 @@ MonoBehaviour:
         unpause:
           componentName: 
           methodName: 
+    - rid: 4463992073094692876
+      type: {class: State, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
+      data: 
+    - rid: 4463992073094692877
+      type: {class: AssetSubgraphAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        ExecuteOnLoop: 0
+        InterruptOptions: 2
+        subgraph: {fileID: 11400000, guid: 6d534a20583df114383f152d5945ceb0, type: 2}
+        name: 
+    - rid: 4463992073094692878
+      type: {class: FleeAction, ns: BehaviourAPI.UnityToolkit, asm: BehaviourAPI.UnityToolkit}
+      data:
+        OtherTransform: {fileID: 2390821608382412513}
+        speed: 0
+        distance: 0
+        maxTimeRunning: 0
     - rid: 4783593595286061094
       type: {class: StackFSM, ns: BehaviourAPI.StateMachines.StackFSMs, asm: BehaviourAPI.StateMachines}
       data: 
