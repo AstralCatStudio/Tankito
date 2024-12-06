@@ -63,7 +63,8 @@ namespace Tankito.SinglePlayer
         {
             Instantiate(explosionEffect, transform.position, Quaternion.identity);
             Debug.Log("KAMIKAZE EXPLOTA");
-            Destroy(gameObject);
+            //Destroy(gameObject);
+            GetComponent<PVEEnemyData>().Die();
             return Status.Success;
         }
         #endregion

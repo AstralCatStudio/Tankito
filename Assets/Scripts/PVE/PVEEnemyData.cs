@@ -15,12 +15,15 @@ namespace Tankito.SinglePlayer
             base.Start();
         }
 
-        protected override void Die()
+        public override void Die()
         {
             OnDeath?.Invoke();
             base.Die();
             Debug.Log("Se crea resto para revivir con el necromancer");
-            Instantiate(GetComponent<AgentController>().npcData.leftoversInDeath, transform.position, Quaternion.identity);
+            if (GetComponent<AgentController>().npcData.leftoversInDeath != null)
+            {
+                Instantiate(GetComponent<AgentController>().npcData.leftoversInDeath, transform.position, Quaternion.identity);
+            }
         }
     }
 }
