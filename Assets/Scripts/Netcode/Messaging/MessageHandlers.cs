@@ -79,6 +79,8 @@ namespace Tankito.Netcode.Messaging
         {
             if (!NetworkManager.Singleton.IsServer) return;
             
+            // TODO: Take into account client input lead times!!!
+            
             int throttleTicks = (SimClock.TickCounter + SimulationParameters.SERVER_IDEAL_INPUT_BUFFER_SIZE - 1) - ServerSimulationManager.Instance.remoteInputTankComponents[clientId].Last;
             var throttleSignal = new ClockSignal(ClockSignalHeader.Throttle, throttleTicks);
             

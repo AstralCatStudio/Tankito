@@ -89,19 +89,17 @@ namespace Tankito.Netcode.Simulation
             }
             else
             {
-                InputPayload onlyActionReplay = new();
-                onlyActionReplay.action =  m_inputBuffer.Last.action;
-                return onlyActionReplay;
-            }
+                // InputPayload actionReplay = new();
+                // actionReplay.action =  m_inputBuffer.Last.action;
+                // actionReplay.timestamp = tick;
+                // actionReplay.aimVector = m_inputBuffer.Last.aimVector;
 
-            /*if (SimClock.Instance.Active)
-            {
-                return InterpolateInputAt(tick);
+                InputPayload replay = m_inputBuffer.Last;
+                replay.timestamp = tick;
+                replay.moveVector = Vector2.zero;
+                
+                return replay;
             }
-            else
-            {
-                return default;
-            }*/
         }
 
 

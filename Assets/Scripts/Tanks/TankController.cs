@@ -75,7 +75,11 @@ namespace Tankito
 
         [SerializeField] private BulletCannon m_cannon;
 
-
+        /// <summary>
+        /// During these ticks, actions are initiated but don't execute their behaviour, to compensate for network action propagation delay.
+        /// </summary>
+        private int ACTION_LEAD_TICKS => Mathf.CeilToInt((float)(SimulationParameters.WORST_CASE_LATENCY*2/SimulationParameters.SIM_DELTA_TIME));
+        private float ACTION_LEAD_SECONDS => (float)SimulationParameters.WORST_CASE_LATENCY;
         /// <summary>
         /// Tick when the fire action was last triggered.
         /// </summary>
@@ -92,13 +96,17 @@ namespace Tankito
 
         // Mucho texto, lo siento, pero simplifica el resto del codigo, lo prometo xd
 
-        private int FireReloadTick { get => m_lastFireTick + m_cannon.ReloadTicks;
-                                     set => m_lastFireTick = value - m_cannon.ReloadTicks; }
-        private int DashReloadTick { get => m_lastDashTick + m_dashCooldownTicks;
-                                     set => m_lastDashTick = value - m_dashCooldownTicks; }
-        private int ParryReloadTick { get => m_lastParryTick + m_parryCooldownTicks;
-                                      set => m_lastParryTick = value - m_parryCooldownTicks; }
+        const int FIRE_TICK_DURATION = 0;
+        // NO se añade el ACTION_LEAD_TICKS aposta, porque queda muy raro que afecte a tu cooldown y no es intuitivo
+        private int FireReloadTick { get => m_lastFireTick  + FIRE_TICK_DURATION + m_cannon.ReloadTicks; }
+                                     //set => m_lastFireTick = value - m_cannon.ReloadTicks - FIRE_TICK_DURATION - ACTION_LEAD_TICKS; }
+        private int DashReloadTick { get => m_lastDashTick + m_dashTicks + m_dashCooldownTicks; }
+                                     //set => m_lastDashTick = value - m_dashCooldownTicks - m_dashTicks - ACTION_LEAD_TICKS; }
+        private int ParryReloadTick { get => m_lastParryTick + m_parryTicks + m_parryCooldownTicks; }
+                                      //set => m_lastParryTick = value - m_parryCooldownTicks - m_parryTicks - ACTION_LEAD_TICKS; }
+
         // El Getter de Last....Tick no esta expuesto porque no deberia usarse al hacer GetSimState, se usa TicksSince.... para poder usar ushorts
+        // YA NO, (muy complicao ahora mismo no tengo neuronas suficientes para hacerlo bien)
         public int LastFireTick { get => m_lastFireTick; set => m_lastFireTick = value; }
         public int LastDashTick { get => m_lastDashTick; set => m_lastDashTick = value; }
         public int LastParryTick { get => m_lastParryTick; set => m_lastParryTick = value; }
@@ -254,30 +262,60 @@ namespace Tankito
                     break;
             }
 
+            // Hack para joysticks 😅
+            var aimVector = (input.aimVector.sqrMagnitude > 0.1) ? input.aimVector : m_lastAimVector;
+
             switch(m_playerState)
             {
                 // Moving the tank must always precede aiming, because opposite aim rotation is applied whenever rotating while moving.
                 case PlayerState.Moving:
                     MoveTank(input.moveVector, deltaTime);
-                    AimTank(input.aimVector, deltaTime);
+                    AimTank(aimVector, deltaTime);
                     break;
 
                 case PlayerState.Firing:
-                    MoveTank(input.moveVector, deltaTime);
-                    AimTank(input.aimVector, deltaTime);
+                    int fireTick = input.timestamp - m_lastFireTick - ACTION_LEAD_TICKS;
+                    Debug.Log($"[{input.timestamp}] FireTick: ({fireTick}/FIRE_TICK_DURATION)");
 
-                    // Hack para joysticks 😅
-                    var aimVector = (input.aimVector.sqrMagnitude > 0.1) ? input.aimVector : m_lastAimVector;
-                    FireTank(aimVector, input.timestamp);
+                    if (fireTick >= 0)
+                    {
+                        FireTank(aimVector, input.timestamp);
+                    }
+                    // ACTION LEAD TIME PHASE
+                    else
+                    {
+                        // DEBUG
+                        m_turretAnimator.SetTrigger("Shoot");
+                        m_hullAnimator.SetTrigger("Shoot");
+                    }
+                    MoveTank(input.moveVector, deltaTime);
+                    //AimTank(aimVector, deltaTime);
 
                     // Reset state to movement for next tick (firing is considered to only take 0 ticks right now)
-                    m_playerState = PlayerState.Moving;
+                    if (fireTick >= FIRE_TICK_DURATION)
+                    {
+                        m_playerState = PlayerState.Moving;
+                    }
                     break;
 
                 case PlayerState.Dashing:
-                    int dashTick =  input.timestamp - m_lastDashTick;
-                    DashTank(input.moveVector, dashTick, deltaTime);
-                    AimTank(input.aimVector, deltaTime);
+                    // Action lead ticks  must be taken into account when computing the action tick, since they do count as part of the action.
+                    int dashTick =  input.timestamp - m_lastDashTick - ACTION_LEAD_TICKS;
+
+                    // Only execute dash behaviour past action lead time
+                    if (dashTick >= 0)
+                    {
+                        DashTank(input.moveVector, dashTick, deltaTime);
+                    }
+                    // ACTION LEAD TIME PHASE
+                    else
+                    {
+                        MoveTank(m_tankRB.transform.right, deltaTime);
+                        // DEBUG
+                        m_turretAnimator.SetTrigger("Dash");
+                        m_hullAnimator.SetTrigger("Dash");
+                    }
+                    AimTank(aimVector, deltaTime);
 
                     if (dashTick >= m_dashTicks)
                     {
@@ -286,9 +324,21 @@ namespace Tankito
                     break;
 
                 case PlayerState.Parrying:
-                    int parryTick = input.timestamp - m_lastParryTick;
+                    int parryTick = input.timestamp - m_lastParryTick - ACTION_LEAD_TICKS;
+                    
+                    // Only execute dash behaviour past action lead time
+                    if (parryTick >= 0)
+                    {
+                        ParryTank(parryTick);
+                    }
+                    // ACTION LEAD TIME PHASE
+                    else
+                    {
+                        MoveTank(input.moveVector, deltaTime);
+                        m_turretAnimator.SetTrigger("Parry");
+                        m_hullAnimator.SetTrigger("Parry");
+                    }
                     MoveTank(input.moveVector, deltaTime);
-                    ParryTank(parryTick);
 
                     if (parryTick >= m_parryTicks)
                     {
@@ -297,19 +347,14 @@ namespace Tankito
                     break;
             }
 
-            m_parryHitbox.enabled = m_playerState == PlayerState.Parrying;
+            // Only execute parry behaviour past action lead time
+            m_parryHitbox.enabled = (m_playerState == PlayerState.Parrying) &&
+                                    (input.timestamp >= (m_lastParryTick + ACTION_LEAD_TICKS));
         }
 
         private void ParryTank(int parryTick)
         {
             if (DEBUG_PARRY) Debug.LogWarning($"[{SimClock.TickCounter}] Parry progressTicks( {parryTick}/{m_parryTicks} )");
-
-            // Only trigger Parry Animations during the first parry tick, and only if NOT rolling back
-            if (parryTick == 0 && SimClock.Instance.Active)
-            {
-                m_turretAnimator.SetTrigger("Parry");
-                m_hullAnimator.SetTrigger("Parry");
-            }
         }
 
         private void FireTank(Vector2 aimVector, int inputTick)
@@ -321,6 +366,8 @@ namespace Tankito
 
         private void MoveTank(Vector2 moveVector, float deltaTime)
         {
+            if (moveVector.sqrMagnitude < 0.1) return;
+
             var targetAngle = Vector2.SignedAngle(m_tankRB.transform.right, moveVector);
             float rotDeg = 0f;
 
@@ -335,7 +382,7 @@ namespace Tankito
             }
 
             m_tankRB.MoveRotation(m_tankRB.rotation + rotDeg);
-            m_turretRB.MoveRotation(-rotDeg);
+            m_turretRB.MoveRotation(m_turretRB.rotation + rotDeg);
 
             m_tankRB.MovePosition(m_tankRB.position + m_speed * moveVector * deltaTime);
 

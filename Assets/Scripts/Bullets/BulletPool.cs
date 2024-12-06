@@ -33,7 +33,7 @@ namespace Tankito
 
             void ActionOnGet(BulletSimulationObject bulletObject)
             {
-                if (DEBUG) Debug.Log($"ActionOnGet called on {bulletObject}");
+                if (DEBUG) Debug.Log($"ActionOnGet called on {bulletObject} *PRE-HASHING STEP (hash is stale from prev. use)");
                 bulletObject.gameObject.SetActive(true);
             }
 
@@ -77,7 +77,8 @@ namespace Tankito
 
         /// <summary>
         /// Gets and (if <paramref name="autoSpawn"/> is true) adds a new bullet object to the local <see cref="NetSimulationManager"/>.<br />
-        /// If <paramref name="autoSpawn"/> is false, you must call <see cref="BulletSimulationObject.OnNetworkSpawn()"/> 
+        /// If <paramref name="autoSpawn"/> is true the spawning is handled by simulation manager with the spawn queue.
+        /// If it is false you must call <see cref="BulletSimulationObject.OnNetworkSpawn()" manually to add it to the local sim manager./> 
         /// </summary>
         /// <param name="position"></param>
         /// <param name="rotation"></param>
@@ -118,7 +119,6 @@ namespace Tankito
 
         public void Release(BulletSimulationObject bullet)
         {
-            if (DEBUG) Debug.Log($"[{SimClock.TickCounter}]Release called on {bullet.SimObjId}!");
             m_pool.Release(bullet);
         }
     }

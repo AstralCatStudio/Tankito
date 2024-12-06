@@ -64,7 +64,7 @@ namespace Tankito.Netcode.Simulation
 
         void Start()
         {
-            if (NetworkManager.Singleton.IsServer)//if (!NetworkManager.Singleton.IsClient)
+            if (NetworkManager.Singleton.IsServer)
             {
                 Debug.LogWarning("ClientSimulationManager is network node that is NOT a CLIENT (is server). this should not happen!");
                 Destroy(this);

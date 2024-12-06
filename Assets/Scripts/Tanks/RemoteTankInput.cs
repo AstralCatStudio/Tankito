@@ -68,6 +68,10 @@ namespace Tankito.Netcode.Simulation
                 m_inputBuffer.Remove(m_inputBuffer.First());
                 m_replayInput = input;
             }
+            else
+            {
+                m_replayInput.timestamp = SimClock.TickCounter;
+            }
 
             if (DEBUG) Debug.Log($"Popping Input: {m_replayInput}");
 
