@@ -4,6 +4,17 @@ using UnityEngine;
 
 namespace Tankito.SinglePlayer
 {
+    public enum tankType
+    {
+        player = 0,
+        attacker = 1,
+        bodyguard = 2,
+        healer = 3,
+        kamikaze = 4,
+        miner = 5,
+        necromancer = 6
+    }
+
     public class PVECharacterData : MonoBehaviour
     {
         [SerializeField] protected int m_maxHealth = 2;
