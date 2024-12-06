@@ -23,6 +23,7 @@ namespace Tankito.SinglePlayer
 
         [SerializeField] List<GameObject> bulletsInRange = new List<GameObject>();
         [SerializeField] AreaDetection bulletAreaDetection;
+        public GameObject explosionEffect;
 
         protected override void Start()
         {
@@ -60,6 +61,7 @@ namespace Tankito.SinglePlayer
 
         public Status BlowState()
         {
+            Instantiate(explosionEffect, transform.position, Quaternion.identity);
             Debug.Log("KAMIKAZE EXPLOTA");
             Destroy(gameObject);
             return Status.Success;
