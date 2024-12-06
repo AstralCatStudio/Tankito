@@ -137,7 +137,7 @@ namespace Tankito.SinglePlayer
         {
             if(player != null)
             {
-                return 1 - (float)player.GetComponent<PVECharacterData>().Health/maxPlayerHp;
+                return (float)player.GetComponent<PVECharacterData>().Health/maxPlayerHp;
             }
             return 0;
         }
@@ -154,6 +154,7 @@ namespace Tankito.SinglePlayer
             }
         }
         #endregion
+
         #region Function
         public float AggroNA(float NA)
         {
@@ -169,6 +170,9 @@ namespace Tankito.SinglePlayer
         {
             return (-HP_P + 1) / (1 - 1 / maxPlayerHp);
         }
+        #endregion
+        #region UtilityActions
+
         #endregion
         #endregion
 
