@@ -6,6 +6,9 @@ namespace Tankito.SinglePlayer
 {
     public class PVEEnemyData : PVECharacterData
     {
+        public delegate void EnemyDeathEvent();
+        public event EnemyDeathEvent OnDeath;
+
         protected override void Start()
         {
             m_maxHealth = GetComponent<AgentController>().npcData.health;
@@ -14,6 +17,7 @@ namespace Tankito.SinglePlayer
 
         protected override void Die()
         {
+            OnDeath?.Invoke();
             base.Die();
             Debug.Log("Se crea resto para revivir con el necromancer");
             
