@@ -1808,10 +1808,9 @@ MonoBehaviour:
   genericAreaDetection: {fileID: 1103806512239411869}
   wallLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   debugPosition: {fileID: 5102606635492426459}
   DEBUG: 0
-  genericTargets: []
   patrolPointFound: 0
   noObstaclesBetween: 0
   cannonReloaded: 1
@@ -1819,13 +1818,12 @@ MonoBehaviour:
   targetInRange: 0
   turretInPosition: 0
   hasShot: 0
-  player: {fileID: 0}
   playerAreaDetection: {fileID: 1233278039609621871}
   healReloadTime: 10
   healTimer: 0
   healReloaded: 1
   minDisFromPlayer: 2
-  idealFleeDistance: 5
+  idealFleeDistance: 4
 --- !u!114 &3536166341766638845
 MonoBehaviour:
   m_ObjectHideFlags: 0

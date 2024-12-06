@@ -21,7 +21,7 @@ namespace Tankito.SinglePlayer
 
         [SerializeField] private float parryDistance; 
 
-        [SerializeField] List<GameObject> bulletsInRange = new List<GameObject>();
+        List<GameObject> bulletsInRange = new List<GameObject>();
         [SerializeField] AreaDetection bulletAreaDetection;
         public GameObject explosionEffect;
 

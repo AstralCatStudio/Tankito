@@ -7,6 +7,7 @@ namespace Tankito.SinglePlayer
     [CreateAssetMenu(menuName = "Npc/NpcData", order = 2, fileName = "New NpcData")]
     public class NpcData : ScriptableObject
     {
+        public tankType tankType;
         public int health;
         public float speed;
         public float aimSpeed;
@@ -16,6 +17,7 @@ namespace Tankito.SinglePlayer
         public float reloadTime;
         public float angleErrorAccepted; //Margen de error del angulo para disparar
         public string genericTargetTag;
+        public GameObject leftoversInDeath;
     }
 }
 
