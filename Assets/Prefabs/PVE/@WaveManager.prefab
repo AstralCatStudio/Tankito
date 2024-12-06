@@ -2011,10 +2011,11 @@ MonoBehaviour:
   attackerPrefab: {fileID: 8926018345817467150, guid: 8bb03883d46f3b44a95ec94d9e421b23, type: 3}
   minerPrefab: {fileID: 7961667591255896337, guid: 3d525d69aea25a340b8ee103eee11360, type: 3}
   spawnPoints: []
-  maxDistance: 0
+  maxDistance: 17.5
   waveTimeOut: 60
   waveTimer: 0
   activeEnemies: []
+  maxEnemies: 0
   currentWave: 0
   currentWaveIndex: -1
 --- !u!1 &8497440432536545648

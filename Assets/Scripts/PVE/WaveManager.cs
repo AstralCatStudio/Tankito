@@ -19,6 +19,7 @@ namespace Tankito.SinglePlayer
 
         [Header("Spawn Points")]
         [SerializeField] private List<Transform> spawnPoints;
+        [SerializeField] private float maxDistance;
 
         [Header("Timer")]
         [SerializeField] private float waveTimeOut;
@@ -26,7 +27,6 @@ namespace Tankito.SinglePlayer
 
         [Header("Current State")]
         [SerializeField] private List<GameObject> activeEnemies;
-        [SerializeField] private int maxEnemies;
         [SerializeField] private int currentWave;
         [SerializeField] private int currentWaveIndex = -1;
 
@@ -51,7 +51,7 @@ namespace Tankito.SinglePlayer
         {
             waveTimer += Time.deltaTime;
 
-            if (waveTimer > waveTimeOut || activeEnemies.Count <= 0)
+            if (waveTimer >= waveTimeOut || activeEnemies.Count <= 0)
             {
                 SpawnWave();
             }
