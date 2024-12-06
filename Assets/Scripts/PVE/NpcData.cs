@@ -16,6 +16,7 @@ namespace Tankito.SinglePlayer
         public float reloadTime;
         public float angleErrorAccepted; //Margen de error del angulo para disparar
         public string genericTargetTag;
+        public GameObject leftoversInDeath;
     }
 }
 
