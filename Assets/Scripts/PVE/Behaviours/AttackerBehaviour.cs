@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Tankito.SinglePlayer
 {
-    public class AttackerBehavior : AGenericBehaviour
+    public class AttackerBehaviour : AGenericBehaviour
     {
         GameObject player;
         [SerializeField] AreaDetection playerAreaDetection;
@@ -172,7 +172,22 @@ namespace Tankito.SinglePlayer
         }
         #endregion
         #region UtilityActions
+        public void GoAggro()
+        {
 
+        }
+        public void GoIdealDis()
+        {
+
+        }
+        public void GoDef()
+        {
+
+        }
+        public void GoHeal()
+        {
+
+        }
         #endregion
         #endregion
 
