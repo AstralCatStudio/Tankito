@@ -785,13 +785,13 @@ MonoBehaviour:
       nodes:
       - name: Idle
         id: 9116079c-b66f-404e-9c56-81d8f578b3af
-        position: {x: 903.2, y: 57.6}
+        position: {x: 495.45547, y: -326.81677}
         node:
           rid: 4783593595286061097
         references:
         - fieldName: Action
           value:
-            rid: -2
+            rid: 4463992073094692957
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         parentIds:
@@ -800,10 +800,9 @@ MonoBehaviour:
         childIds:
         - f7eaf8b7-633d-471c-95f3-00b6b5092141
         - e3850a80-f1fa-4740-9463-0b23768f1042
-        - f7eaf8b7-633d-471c-95f3-00b6b5092141
       - name: ChaseBodyGuard
         id: c0da3ff2-00ea-4328-b91b-f6ffaecb2c45
-        position: {x: 434.4, y: 470.40002}
+        position: {x: 1015.6961, y: -609.23615}
         node:
           rid: 4783593595286061098
         references:
@@ -814,15 +813,15 @@ MonoBehaviour:
             Culture=neutral, PublicKeyToken=null
         parentIds:
         - f7eaf8b7-633d-471c-95f3-00b6b5092141
-        - ecdc653d-4a58-4e09-9d0a-ffdfd9961c1f
-        - 8d6ae0e8-a6e2-4a86-94b8-61570815b7d5
         - dc57172c-9687-4dc4-8740-05f64f2dd52f
+        - 8d6ae0e8-a6e2-4a86-94b8-61570815b7d5
         childIds:
         - fef9cdb3-035a-4316-b63c-d030c94a9c92
         - ed7c2c88-df55-431c-bb0d-dc24b5dad413
+        - ecdc653d-4a58-4e09-9d0a-ffdfd9961c1f
       - name: Cover
         id: b80fcd9e-7c6c-4cef-8f98-06f0ef0770bb
-        position: {x: 466.4, y: 905.60004}
+        position: {x: 1681.7714, y: -394.90414}
         node:
           rid: 4783593595286061099
         references:
@@ -832,14 +831,14 @@ MonoBehaviour:
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         parentIds:
-        - ecdc653d-4a58-4e09-9d0a-ffdfd9961c1f
-        - 9a104752-60ca-485a-8c86-ef113ed1f4c9
-        childIds:
-        - 8d6ae0e8-a6e2-4a86-94b8-61570815b7d5
         - 9787bc85-825a-4526-b004-663b74ae4d6f
+        - ecdc653d-4a58-4e09-9d0a-ffdfd9961c1f
+        childIds:
+        - 9a104752-60ca-485a-8c86-ef113ed1f4c9
+        - 8d6ae0e8-a6e2-4a86-94b8-61570815b7d5
       - name: Aim
         id: 5824b2b8-7e8f-44a6-b5fa-a6295958759a
-        position: {x: 1344.8, y: 1346.3999}
+        position: {x: 1355.3922, y: 1460.698}
         node:
           rid: 4783593595286061100
         references:
@@ -851,11 +850,11 @@ MonoBehaviour:
         parentIds:
         - 447ff124-1909-45ae-bf1b-a69bfc037df8
         childIds:
-        - 0a598486-d22a-4837-b00e-67c4fe16dda7
         - e5647238-21dd-4e07-a305-361c1591e6e4
+        - 0a598486-d22a-4837-b00e-67c4fe16dda7
       - name: Shoot
         id: 31bc8d02-ce37-4adf-b33d-cd3c4d07346f
-        position: {x: 1344.8, y: 1758.3999}
+        position: {x: 727.84235, y: 1866.3147}
         node:
           rid: 4783593595286061101
         references:
@@ -870,7 +869,7 @@ MonoBehaviour:
         - 9c1dcbb8-fc77-4ba0-82ca-a0109f15110f
       - name: ChaseToIdle
         id: fef9cdb3-035a-4316-b63c-d030c94a9c92
-        position: {x: 664.8, y: 277.59998}
+        position: {x: 615.8853, y: -761.6278}
         node:
           rid: 4783593595286061103
         references:
@@ -890,7 +889,7 @@ MonoBehaviour:
         - 9116079c-b66f-404e-9c56-81d8f578b3af
       - name: IdleToChase
         id: f7eaf8b7-633d-471c-95f3-00b6b5092141
-        position: {x: 302.4, y: 239.2}
+        position: {x: 763.2, y: -491.2}
         node:
           rid: 4783593595286061104
         references:
@@ -906,12 +905,11 @@ MonoBehaviour:
             Culture=neutral, PublicKeyToken=null
         parentIds:
         - 9116079c-b66f-404e-9c56-81d8f578b3af
-        - 9116079c-b66f-404e-9c56-81d8f578b3af
         childIds:
         - c0da3ff2-00ea-4328-b91b-f6ffaecb2c45
       - name: CoverToChase
         id: 8d6ae0e8-a6e2-4a86-94b8-61570815b7d5
-        position: {x: 266.4, y: 676}
+        position: {x: 1401.6837, y: -540.3631}
         node:
           rid: 4783593595286061105
         references:
@@ -931,7 +929,7 @@ MonoBehaviour:
         - c0da3ff2-00ea-4328-b91b-f6ffaecb2c45
       - name: ChaseToCover
         id: ecdc653d-4a58-4e09-9d0a-ffdfd9961c1f
-        position: {x: 581.6, y: 664}
+        position: {x: 1468.553, y: -786.7141}
         node:
           rid: 4783593595286061106
         references:
@@ -945,13 +943,13 @@ MonoBehaviour:
             rid: -2
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
-        parentIds: []
-        childIds:
+        parentIds:
         - c0da3ff2-00ea-4328-b91b-f6ffaecb2c45
+        childIds:
         - b80fcd9e-7c6c-4cef-8f98-06f0ef0770bb
       - name: AimToShoot
         id: 0a598486-d22a-4837-b00e-67c4fe16dda7
-        position: {x: 1336.8, y: 1536}
+        position: {x: 1087.3625, y: 1814.7272}
         node:
           rid: 4783593595286061107
         references:
@@ -971,7 +969,7 @@ MonoBehaviour:
         - 31bc8d02-ce37-4adf-b33d-cd3c4d07346f
       - name: POPAim
         id: e5647238-21dd-4e07-a305-361c1591e6e4
-        position: {x: 957.6, y: 1325.6}
+        position: {x: 1626.2382, y: 1790.9227}
         node:
           rid: 4783593595286061108
         references:
@@ -990,7 +988,7 @@ MonoBehaviour:
         childIds: []
       - name: USToCover
         id: 9787bc85-825a-4526-b004-663b74ae4d6f
-        position: {x: 919.2, y: 809.60004}
+        position: {x: 1710.4, y: 130.4}
         node:
           rid: 4783593595286061109
         references:
@@ -1005,12 +1003,12 @@ MonoBehaviour:
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         parentIds:
-        - b80fcd9e-7c6c-4cef-8f98-06f0ef0770bb
-        childIds:
         - 7a3d3818-241d-4afa-a3cf-76b916c31863
+        childIds:
+        - b80fcd9e-7c6c-4cef-8f98-06f0ef0770bb
       - name: CoverToUS
         id: 9a104752-60ca-485a-8c86-ef113ed1f4c9
-        position: {x: 927.2, y: 980.00006}
+        position: {x: 1548.8, y: -28.800003}
         node:
           rid: 4783593595286061110
         references:
@@ -1025,12 +1023,12 @@ MonoBehaviour:
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         parentIds:
-        - 7a3d3818-241d-4afa-a3cf-76b916c31863
-        childIds:
         - b80fcd9e-7c6c-4cef-8f98-06f0ef0770bb
+        childIds:
+        - 7a3d3818-241d-4afa-a3cf-76b916c31863
       - name: ChaseToUS
         id: ed7c2c88-df55-431c-bb0d-dc24b5dad413
-        position: {x: 911.2, y: 386.40002}
+        position: {x: 1294.4, y: -228}
         node:
           rid: 4783593595286061111
         references:
@@ -1050,7 +1048,7 @@ MonoBehaviour:
         - 7a3d3818-241d-4afa-a3cf-76b916c31863
       - name: USToChase
         id: dc57172c-9687-4dc4-8740-05f64f2dd52f
-        position: {x: 911.2, y: 563.2}
+        position: {x: 894.4, y: -228}
         node:
           rid: 4783593595286061112
         references:
@@ -1070,7 +1068,7 @@ MonoBehaviour:
         - c0da3ff2-00ea-4328-b91b-f6ffaecb2c45
       - name: IdleToUS
         id: e3850a80-f1fa-4740-9463-0b23768f1042
-        position: {x: 1483.2, y: 231.2}
+        position: {x: 728.9242, y: -16.351555}
         node:
           rid: 4783593595286061113
         references:
@@ -1090,7 +1088,7 @@ MonoBehaviour:
         - 7a3d3818-241d-4afa-a3cf-76b916c31863
       - name: USToIdle
         id: 5fbd7825-0944-41a7-a737-2bc5388714b7
-        position: {x: 1212, y: 239.2}
+        position: {x: 511.2, y: 160}
         node:
           rid: 4783593595286061114
         references:
@@ -1110,7 +1108,7 @@ MonoBehaviour:
         - 9116079c-b66f-404e-9c56-81d8f578b3af
       - name: USToAim
         id: 447ff124-1909-45ae-bf1b-a69bfc037df8
-        position: {x: 1351.2, y: 1082.3999}
+        position: {x: 1275.6967, y: 854.0654}
         node:
           rid: 4783593595286061115
         references:
@@ -1130,7 +1128,7 @@ MonoBehaviour:
         - 5824b2b8-7e8f-44a6-b5fa-a6295958759a
       - name: POPShoot
         id: 9c1dcbb8-fc77-4ba0-82ca-a0109f15110f
-        position: {x: 989.6, y: 1764}
+        position: {x: 399.90305, y: 1942.647}
         node:
           rid: 4783593595286061116
         references:
@@ -1149,37 +1147,24 @@ MonoBehaviour:
         childIds: []
       - name: AttackUSystem
         id: 7a3d3818-241d-4afa-a3cf-76b916c31863
-        position: {x: 1391.2, y: 579.2}
+        position: {x: 1120.8, y: 186.4}
         node:
           rid: 4463992048828022784
         references:
         - fieldName: Action
           value:
-            rid: 4463992073094692878
+            rid: 4463992073094692956
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         parentIds:
         - e3850a80-f1fa-4740-9463-0b23768f1042
         - ed7c2c88-df55-431c-bb0d-dc24b5dad413
-        - 9787bc85-825a-4526-b004-663b74ae4d6f
+        - 9a104752-60ca-485a-8c86-ef113ed1f4c9
         childIds:
         - 5fbd7825-0944-41a7-a737-2bc5388714b7
         - dc57172c-9687-4dc4-8740-05f64f2dd52f
-        - 9a104752-60ca-485a-8c86-ef113ed1f4c9
+        - 9787bc85-825a-4526-b004-663b74ae4d6f
         - 447ff124-1909-45ae-bf1b-a69bfc037df8
-      - name: 
-        id: 6f14ca16-48e7-4b4e-9b90-6258c54dcc30
-        position: {x: 1997.3334, y: 450.1333}
-        node:
-          rid: 4463992073094692876
-        references:
-        - fieldName: Action
-          value:
-            rid: 4463992073094692877
-          fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
-        parentIds: []
-        childIds: []
     - name: CombatUS
       id: 44caa9c0-442d-4032-b241-0ebf982bd75a
       graph:
@@ -1993,23 +1978,30 @@ MonoBehaviour:
         unpause:
           componentName: 
           methodName: 
-    - rid: 4463992073094692876
-      type: {class: State, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
-      data: 
-    - rid: 4463992073094692877
-      type: {class: AssetSubgraphAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+    - rid: 4463992073094692956
+      type: {class: SubgraphAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
       data:
         ExecuteOnLoop: 0
         InterruptOptions: 2
-        subgraph: {fileID: 11400000, guid: 6d534a20583df114383f152d5945ceb0, type: 2}
-        name: 
-    - rid: 4463992073094692878
-      type: {class: FleeAction, ns: BehaviourAPI.UnityToolkit, asm: BehaviourAPI.UnityToolkit}
+        subgraphId: 44caa9c0-442d-4032-b241-0ebf982bd75a
+    - rid: 4463992073094692957
+      type: {class: CustomAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
       data:
-        OtherTransform: {fileID: 2390821608382412513}
-        speed: 0
-        distance: 0
-        maxTimeRunning: 0
+        start:
+          componentName: 
+          methodName: 
+        update:
+          componentName: AttackerBehaviour
+          methodName: IdleState
+        stop:
+          componentName: 
+          methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
     - rid: 4783593595286061094
       type: {class: StackFSM, ns: BehaviourAPI.StateMachines.StackFSMs, asm: BehaviourAPI.StateMachines}
       data: 
