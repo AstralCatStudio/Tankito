@@ -8,6 +8,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -7700718287366206763, guid: c02df0a6bcc62c4498e499e93d675ec5, type: 3}
+      propertyPath: type
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: -7700718287366206763, guid: c02df0a6bcc62c4498e499e93d675ec5, type: 3}
+      propertyPath: tankPrefab
+      value: 
+      objectReference: {fileID: 7961667591255896337, guid: 3d525d69aea25a340b8ee103eee11360, type: 3}
     - target: {fileID: 1104531696892935519, guid: c02df0a6bcc62c4498e499e93d675ec5, type: 3}
       propertyPath: m_Name
       value: MinerLeftovers Variant

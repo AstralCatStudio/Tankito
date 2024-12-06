@@ -6,4 +6,11 @@ using UnityEngine;
 public class Leftovers : MonoBehaviour
 {
     public tankType type;
+    public GameObject tankPrefab;
+
+    public void ReviveTank()
+    {
+        Instantiate(tankPrefab, transform.position, Quaternion.identity);
+        Destroy(gameObject);
+    }
 }

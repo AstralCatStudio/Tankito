@@ -1174,7 +1174,7 @@ MonoBehaviour:
       nodes:
       - name: NAFullAggro
         id: fa315dd7-7120-42e6-888b-fac15e5c7171
-        position: {x: 512.8, y: 207.99998}
+        position: {x: 0, y: 0}
         node:
           rid: 4463992056704139264
         references:
@@ -1189,7 +1189,7 @@ MonoBehaviour:
         childIds: []
       - name: HP_Player
         id: a64ea4cb-ac8d-4ec7-9c1f-752c5d043eb3
-        position: {x: 528.8, y: 654.4}
+        position: {x: 0, y: 200}
         node:
           rid: 4463992056704139267
         references:
@@ -1204,7 +1204,7 @@ MonoBehaviour:
         childIds: []
       - name: HP_Attacker
         id: 4469ee1b-4a0b-429d-af73-8dd2773dd172
-        position: {x: 528.8, y: 452}
+        position: {x: 0, y: 400}
         node:
           rid: 4463992056704139269
         references:
@@ -1219,7 +1219,7 @@ MonoBehaviour:
         childIds: []
       - name: Healer
         id: aefe5c18-a75f-4065-ba2e-6277963a635a
-        position: {x: 1025.6, y: 1094.3999}
+        position: {x: 0, y: 600}
         node:
           rid: 4463992056704139271
         references:
@@ -1234,7 +1234,7 @@ MonoBehaviour:
         childIds: []
       - name: AggroNA
         id: cc888af6-309d-4574-9945-4c2529405ecb
-        position: {x: 951.2, y: 58.399994}
+        position: {x: 300, y: 0}
         node:
           rid: 4463992056704139273
         references:
@@ -1251,7 +1251,7 @@ MonoBehaviour:
         - fa315dd7-7120-42e6-888b-fac15e5c7171
       - name: AggroHPA
         id: 00bd482f-6317-454e-88f3-a7e73a1a2413
-        position: {x: 1001.6, y: 343.2}
+        position: {x: 300, y: 400}
         node:
           rid: 4463992056704139275
         references:
@@ -1270,7 +1270,7 @@ MonoBehaviour:
         - 4469ee1b-4a0b-429d-af73-8dd2773dd172
       - name: AggroHPP
         id: 343304ef-7acb-450c-8d71-1aa80e7c9b25
-        position: {x: 1009.6, y: 681.60004}
+        position: {x: 300, y: 200}
         node:
           rid: 4463992056704139278
         references:
@@ -1289,7 +1289,7 @@ MonoBehaviour:
         - a64ea4cb-ac8d-4ec7-9c1f-752c5d043eb3
       - name: UGoAggro
         id: 36a8872f-37d4-4c7b-823f-82fe2ed82a2a
-        position: {x: 1756.8, y: 102.399994}
+        position: {x: 747.2, y: -6.4000015}
         node:
           rid: 4463992067889561600
         references: []
@@ -1301,7 +1301,7 @@ MonoBehaviour:
         - 343304ef-7acb-450c-8d71-1aa80e7c9b25
       - name: 1_AggroHPA
         id: a702a056-5d52-4f5c-990b-81cba0b38459
-        position: {x: 993.6, y: 506.40002}
+        position: {x: 755.2, y: 599.2}
         node:
           rid: 4463992067889561601
         references: []
@@ -1312,7 +1312,7 @@ MonoBehaviour:
         - 00bd482f-6317-454e-88f3-a7e73a1a2413
       - name: 1_AggroHPP
         id: faaa3d4c-5856-42e3-b469-b47bcb223053
-        position: {x: 1017.6, y: 860.8}
+        position: {x: 747.2, y: 195.99998}
         node:
           rid: 4463992067889561602
         references: []
@@ -1322,7 +1322,7 @@ MonoBehaviour:
         - 343304ef-7acb-450c-8d71-1aa80e7c9b25
       - name: UGoIdealDis
         id: f289f018-b372-4bb8-ba87-d6de8835f103
-        position: {x: 1772.8, y: 359.2}
+        position: {x: 755.2, y: 393.59998}
         node:
           rid: 4463992067889561603
         references: []
@@ -1333,7 +1333,7 @@ MonoBehaviour:
         - 343304ef-7acb-450c-8d71-1aa80e7c9b25
       - name: UGoDef
         id: 6ae85959-e6b2-44e4-9d68-2119b46dcb2a
-        position: {x: 1788.8, y: 577.60004}
+        position: {x: 1120.8, y: 246.40001}
         node:
           rid: 4463992067889561604
         references: []
@@ -1344,7 +1344,7 @@ MonoBehaviour:
         - a702a056-5d52-4f5c-990b-81cba0b38459
       - name: UGoHeal
         id: bbecd0e4-4f1d-4e45-9165-2dda2e625e4e
-        position: {x: 1796.8, y: 807.2}
+        position: {x: 1136.8, y: 822.4}
         node:
           rid: 4463992067889561605
         references: []
@@ -1355,7 +1355,7 @@ MonoBehaviour:
         - aefe5c18-a75f-4065-ba2e-6277963a635a
       - name: GoAggro
         id: c1309ca5-4794-4892-a558-cc8e3910776a
-        position: {x: 2391.2, y: 100.8}
+        position: {x: 1128.8, y: 40}
         node:
           rid: 4463992067889561606
         references:
@@ -1369,7 +1369,7 @@ MonoBehaviour:
         - 36a8872f-37d4-4c7b-823f-82fe2ed82a2a
       - name: GoIdealDis
         id: ec6bee4a-6390-48f7-945f-e53844e0a6f4
-        position: {x: 2408, y: 343.2}
+        position: {x: 1128.8, y: 440}
         node:
           rid: 4463992067889561607
         references:
@@ -1383,7 +1383,7 @@ MonoBehaviour:
         - f289f018-b372-4bb8-ba87-d6de8835f103
       - name: GoDef
         id: 32236d3d-e7bd-4add-8f37-8f563325cd72
-        position: {x: 2399.2, y: 560.8}
+        position: {x: 1478.4, y: 354.40002}
         node:
           rid: 4463992067889561608
         references:
@@ -1397,7 +1397,7 @@ MonoBehaviour:
         - 6ae85959-e6b2-44e4-9d68-2119b46dcb2a
       - name: GoHeal
         id: 52b72314-c6bf-4c6d-8ce0-5a08acda455f
-        position: {x: 2395.2, y: 790.4}
+        position: {x: 1486.4, y: 540}
         node:
           rid: 4463992067889561609
         references:
