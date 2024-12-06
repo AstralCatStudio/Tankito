@@ -347,7 +347,11 @@ namespace Tankito.Netcode.Messaging
 
             for(int i = 0; i < targetClientIds.Length; i++)
             {
-                SendThrottleSignal(targetClientIds[i]);
+                var clientId = targetClientIds[i];
+                if (RoundManager.Instance.IsAlive(clientId))
+                {
+                    SendThrottleSignal(clientId);
+                }
             }
             
 
