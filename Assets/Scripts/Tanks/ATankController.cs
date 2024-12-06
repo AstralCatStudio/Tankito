@@ -90,7 +90,7 @@ public abstract class ATankController : MonoBehaviour
         if (DEBUGCONT) Debug.Log($"Processing {gameObject} input: {input}");
         if ((CanDash && input.action == TankAction.Dash) || playerState == PlayerState.Dashing)
         {
-            DashTank(dashVec, input.timestamp, deltaTime);
+            DashTank(input.moveVector, input.timestamp, deltaTime);
         }
         else
         {
@@ -157,9 +157,9 @@ public abstract class ATankController : MonoBehaviour
         if (DEBUGDASh) Debug.Log($"[{SimClock.TickCounter}]: curve value: {m_dashSpeedCurve.Evaluate((float)(currentInputDashTick - stateInitTick) / m_dashTicks)}");
         float dashSpeed = m_speed * m_dashSpeedMultiplier * m_dashSpeedCurve.Evaluate((float)(currentInputDashTick - stateInitTick) / m_dashTicks);
 
-        if (moveVector != Vector2.zero)
+        if (dashVec != Vector2.zero)
         {
-            m_tankRB.MovePosition(m_tankRB.position + moveVector * deltaTime * dashSpeed);
+            m_tankRB.MovePosition(m_tankRB.position + dashVec * deltaTime * dashSpeed);
         }
         else
         {
@@ -176,6 +176,7 @@ public abstract class ATankController : MonoBehaviour
             currentDashReloadTick = 0;
             playerState = PlayerState.Moving;
             stateInitTick = 0;
+            dashVec = Vector2.zero;
             if (DEBUGDASh) Debug.Log("Se termina el dash");
         }
     }

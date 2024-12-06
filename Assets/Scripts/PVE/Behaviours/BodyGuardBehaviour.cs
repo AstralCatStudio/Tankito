@@ -19,11 +19,11 @@ public class BodyGuardBehaviour : AGenericBehaviour
     [SerializeField] AreaDetection bulletAreaDetection;
     [SerializeField] bool DEBUG_BG = true;
     [SerializeField] LayerMask enemyLayer;
-    [SerializeField] float bulletRadius = 0.6f;
+    float bulletRadius = 0.6f;
     bool importantPos = false;
     #region TargetList
-    [SerializeField] List<GameObject> alliesInRange = new List<GameObject>();
-    [SerializeField] List<GameObject> bulletsInRange = new List<GameObject>();
+    List<GameObject> alliesInRange = new List<GameObject>();
+    List<GameObject> bulletsInRange = new List<GameObject>();
     #endregion
 
     protected override void Start()

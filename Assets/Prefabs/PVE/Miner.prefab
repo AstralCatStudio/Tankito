@@ -627,7 +627,7 @@ Transform:
   m_GameObject: {fileID: 7961667591255896337}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.2, y: -1.29, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -948,10 +948,9 @@ MonoBehaviour:
   genericAreaDetection: {fileID: 5302585328781883277}
   wallLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   debugPosition: {fileID: 6727595187853663268}
   DEBUG: 1
-  genericTargets: []
   patrolPointFound: 0
   noObstaclesBetween: 0
   cannonReloaded: 1
