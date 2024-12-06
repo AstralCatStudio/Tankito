@@ -1148,6 +1148,9 @@ MonoBehaviour:
   m_maxHealth: 0
   m_health: 0
   m_isAlive: 0
+  healthBarPrefab: {fileID: 0}
+  healthBarOffset: {x: -1, y: 1, z: 0}
+  healthBarSize: {x: 1.6, y: 0.3}
 --- !u!114 &1733209558801626374
 MonoBehaviour:
   m_ObjectHideFlags: 0
