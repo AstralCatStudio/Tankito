@@ -96,7 +96,7 @@ namespace Tankito.Netcode.Simulation
 
                 InputPayload replay = m_inputBuffer.Last;
                 replay.timestamp = tick;
-                replay.moveVector = Vector2.zero;
+                replay.moveVector = replay.moveVector * 0.1f;
                 
                 return replay;
             }

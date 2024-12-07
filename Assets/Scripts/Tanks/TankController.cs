@@ -78,8 +78,8 @@ namespace Tankito
         /// <summary>
         /// During these ticks, actions are initiated but don't execute their behaviour, to compensate for network action propagation delay.
         /// </summary>
-        private int ACTION_LEAD_TICKS => Mathf.CeilToInt((float)(SimulationParameters.WORST_CASE_LATENCY*2/SimulationParameters.SIM_DELTA_TIME));
-        private float ACTION_LEAD_SECONDS => (float)SimulationParameters.WORST_CASE_LATENCY;
+        private int ACTION_LEAD_TICKS => Mathf.CeilToInt((float)(SimulationParameters.WORST_CASE_LATENCY * 2 / SimulationParameters.SIM_DELTA_TIME));
+        private float ACTION_LEAD_SECONDS => (float)SimulationParameters.WORST_CASE_LATENCY * 2;
         /// <summary>
         /// Tick when the fire action was last triggered.
         /// </summary>
@@ -288,7 +288,7 @@ namespace Tankito
                         m_turretAnimator.SetTrigger("Shoot");
                         m_hullAnimator.SetTrigger("Shoot");
                     }
-                    MoveTank(input.moveVector, deltaTime);
+                    //MoveTank(input.moveVector, deltaTime);
                     //AimTank(aimVector, deltaTime);
 
                     // Reset state to movement for next tick (firing is considered to only take 0 ticks right now)
@@ -310,7 +310,6 @@ namespace Tankito
                     // ACTION LEAD TIME PHASE
                     else
                     {
-                        MoveTank(m_tankRB.transform.right, deltaTime);
                         // DEBUG
                         m_turretAnimator.SetTrigger("Dash");
                         m_hullAnimator.SetTrigger("Dash");
@@ -361,12 +360,12 @@ namespace Tankito
         {
             if (DEBUG_FIRE) Debug.Log($"[{SimClock.TickCounter}] FireTank({GetComponent<TankSimulationObject>().SimObjId}) called.");
 
-            m_cannon.Shoot(m_turretRB.position, aimVector, inputTick);
+            m_cannon.Shoot(m_turretRB.position, m_turretRB.transform.right, inputTick);
         }
 
         private void MoveTank(Vector2 moveVector, float deltaTime)
         {
-            if (moveVector.sqrMagnitude < 0.1) return;
+            if (moveVector.sqrMagnitude < 0.05) return;
 
             var targetAngle = Vector2.SignedAngle(m_tankRB.transform.right, moveVector);
             float rotDeg = 0f;
@@ -381,8 +380,9 @@ namespace Tankito
                 rotDeg = targetAngle;
             }
 
+            //var turrRot = m_turretRB.rotation;
             m_tankRB.MoveRotation(m_tankRB.rotation + rotDeg);
-            m_turretRB.MoveRotation(m_turretRB.rotation + rotDeg);
+            m_turretRB.MoveRotation(m_turretRB.rotation);
 
             m_tankRB.MovePosition(m_tankRB.position + m_speed * moveVector * deltaTime);
 
