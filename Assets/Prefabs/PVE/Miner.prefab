@@ -742,168 +742,252 @@ MonoBehaviour:
   data:
     graphs:
     - name: MinerBehaviour
-      id: ac67105a-5ddd-429a-8b69-253b1e6d6724
+      id: b78cf7a5-a541-48a9-b685-4eae7e7d9de5
       graph:
-        rid: 4783593595286061118
+        rid: 4783593730761031680
       nodes:
-      - name: HPPlayer
-        id: b9d0a355-69f1-4676-a99c-7b16b1b69192
-        position: {x: 610.4, y: 103.2}
+      - name: Idle
+        id: 1854d39d-4dec-4590-84cc-8435476d742a
+        position: {x: 761.6, y: 429.59998}
         node:
-          rid: 4463992073094692864
+          rid: 4783593730761031681
         references:
-        - fieldName: Variable
+        - fieldName: Action
           value:
-            rid: 4463992073094692865
-          fieldType: System.Func`1[[System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
-            PublicKeyToken=b77a5c561934e089]], mscorlib, Version=4.0.0.0, Culture=neutral,
-            PublicKeyToken=b77a5c561934e089
-        parentIds: []
-        childIds: []
-      - name: NAllies
-        id: 40da9144-9266-4b3a-9e9e-c69677d5506f
-        position: {x: 626.4, y: 315.2}
+            rid: -2
+          fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+        parentIds:
+        - 65febeae-67d1-4a00-8b26-05c34ba1a5fb
+        childIds:
+        - 0294f808-907e-4c7e-a345-0831a1ebbdb3
+      - name: Dig
+        id: d2dcc615-fb9f-4bfa-b742-853fe1b8a46d
+        position: {x: 1433.6, y: 935.2}
         node:
-          rid: 4463992073094692866
+          rid: 4783593730761031683
         references:
-        - fieldName: Variable
+        - fieldName: Action
           value:
-            rid: 4463992073094692867
-          fieldType: System.Func`1[[System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
-            PublicKeyToken=b77a5c561934e089]], mscorlib, Version=4.0.0.0, Culture=neutral,
-            PublicKeyToken=b77a5c561934e089
-        parentIds: []
-        childIds: []
-      - name: NMines
-        id: 3cf08c59-671f-496c-83af-7e526808a905
-        position: {x: 658.4, y: 538.4}
+            rid: -2
+          fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+        parentIds:
+        - cddbc084-4553-40a2-9e62-ff5241e26689
+        childIds:
+        - cf86bf10-83a9-4d97-a50b-b98036efe611
+      - name: MinerUS
+        id: d0c78b14-5f4d-4af2-80da-ebec62a28e31
+        position: {x: 1403.2, y: 437.59998}
         node:
-          rid: 4463992073094692868
+          rid: 4783593730761031685
         references:
-        - fieldName: Variable
+        - fieldName: Action
           value:
-            rid: 4463992073094692869
-          fieldType: System.Func`1[[System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
-            PublicKeyToken=b77a5c561934e089]], mscorlib, Version=4.0.0.0, Culture=neutral,
-            PublicKeyToken=b77a5c561934e089
-        parentIds: []
-        childIds: []
-      - name: Distance
-        id: 520a5fe1-86b7-4bcc-ae87-c16811179338
-        position: {x: 642.4, y: 729.60004}
+            rid: 4783593730761031687
+          fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+        parentIds:
+        - 0294f808-907e-4c7e-a345-0831a1ebbdb3
+        - cf86bf10-83a9-4d97-a50b-b98036efe611
+        - 638abd29-398e-406a-a64c-319a395976ca
+        childIds:
+        - 65febeae-67d1-4a00-8b26-05c34ba1a5fb
+        - cddbc084-4553-40a2-9e62-ff5241e26689
+        - 504ead2b-a028-4547-94a4-c37995e1b58b
+      - name: IdleToUS
+        id: 0294f808-907e-4c7e-a345-0831a1ebbdb3
+        position: {x: 1076, y: 318.40002}
         node:
-          rid: 4463992073094692870
+          rid: 4783593730761031688
         references:
-        - fieldName: Variable
+        - fieldName: Perception
           value:
-            rid: 4463992073094692871
-          fieldType: System.Func`1[[System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
-            PublicKeyToken=b77a5c561934e089]], mscorlib, Version=4.0.0.0, Culture=neutral,
-            PublicKeyToken=b77a5c561934e089
-        parentIds: []
-        childIds: []
-      - name: CanMine
-        id: d52dbb03-636e-44f9-be13-66b360158eb1
-        position: {x: 650.4, y: 928.8}
+            rid: -2
+          fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
+            Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        - fieldName: Action
+          value:
+            rid: -2
+          fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+        parentIds:
+        - 1854d39d-4dec-4590-84cc-8435476d742a
+        childIds:
+        - d0c78b14-5f4d-4af2-80da-ebec62a28e31
+      - name: USToIdle
+        id: 65febeae-67d1-4a00-8b26-05c34ba1a5fb
+        position: {x: 1068, y: 500.8}
         node:
-          rid: 4463992073094692872
+          rid: 4783593730761031689
         references:
-        - fieldName: Variable
+        - fieldName: Perception
           value:
-            rid: 4463992073094692873
-          fieldType: System.Func`1[[System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
-            PublicKeyToken=b77a5c561934e089]], mscorlib, Version=4.0.0.0, Culture=neutral,
-            PublicKeyToken=b77a5c561934e089
-        parentIds: []
-        childIds: []
-      - name: CanExcave
-        id: 24f8dd02-d7a9-4277-88b5-547937eb94ff
-        position: {x: 666.4, y: 1130.3999}
+            rid: -2
+          fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
+            Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        - fieldName: Action
+          value:
+            rid: -2
+          fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+        parentIds:
+        - d0c78b14-5f4d-4af2-80da-ebec62a28e31
+        childIds:
+        - 1854d39d-4dec-4590-84cc-8435476d742a
+      - name: USToDig
+        id: cddbc084-4553-40a2-9e62-ff5241e26689
+        position: {x: 1521.6, y: 694.4}
         node:
-          rid: 4463992073094692874
+          rid: 4783593730761031690
         references:
-        - fieldName: Variable
+        - fieldName: Perception
           value:
-            rid: 4463992073094692875
-          fieldType: System.Func`1[[System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
-            PublicKeyToken=b77a5c561934e089]], mscorlib, Version=4.0.0.0, Culture=neutral,
-            PublicKeyToken=b77a5c561934e089
-        parentIds: []
+            rid: -2
+          fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
+            Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        - fieldName: Action
+          value:
+            rid: -2
+          fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+        parentIds:
+        - d0c78b14-5f4d-4af2-80da-ebec62a28e31
+        childIds:
+        - d2dcc615-fb9f-4bfa-b742-853fe1b8a46d
+      - name: DigToUS
+        id: cf86bf10-83a9-4d97-a50b-b98036efe611
+        position: {x: 1280, y: 686.4}
+        node:
+          rid: 4783593730761031691
+        references:
+        - fieldName: Perception
+          value:
+            rid: -2
+          fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
+            Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        - fieldName: Action
+          value:
+            rid: -2
+          fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+        parentIds:
+        - d2dcc615-fb9f-4bfa-b742-853fe1b8a46d
+        childIds:
+        - d0c78b14-5f4d-4af2-80da-ebec62a28e31
+      - name: USToMine
+        id: 504ead2b-a028-4547-94a4-c37995e1b58b
+        position: {x: 1721.6, y: 326.40002}
+        node:
+          rid: 4783593730761031692
+        references:
+        - fieldName: Perception
+          value:
+            rid: -2
+          fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
+            Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        - fieldName: Action
+          value:
+            rid: -2
+          fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+        parentIds:
+        - d0c78b14-5f4d-4af2-80da-ebec62a28e31
         childIds: []
+      - name: MineToUS
+        id: 638abd29-398e-406a-a64c-319a395976ca
+        position: {x: 1729.6, y: 500.8}
+        node:
+          rid: 4783593730761031693
+        references:
+        - fieldName: Perception
+          value:
+            rid: -2
+          fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
+            Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        - fieldName: Action
+          value:
+            rid: -2
+          fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+        parentIds: []
+        childIds:
+        - d0c78b14-5f4d-4af2-80da-ebec62a28e31
+      - name: PutMine
+        id: d570d9f1-32aa-4d98-b48c-97801a534f12
+        position: {x: 2060, y: 444.8}
+        node:
+          rid: 4783593730761031694
+        references:
+        - fieldName: Action
+          value:
+            rid: -2
+          fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+        parentIds:
+        - 504ead2b-a028-4547-94a4-c37995e1b58b
+        childIds:
+        - 638abd29-398e-406a-a64c-319a395976ca
+    - name: MinerUS
+      id: df57f385-78e4-4b6c-97d9-2f464c7fae8c
+      graph:
+        rid: 4783593730761031686
+      nodes: []
     pushPerceptions: []
   references:
     version: 2
     RefIds:
-    - rid: 4463992073094692864
-      type: {class: VariableFactor, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
-      data:
-        PullingEnabled: 1
-        min: 0
-        max: 1
-    - rid: 4463992073094692865
-      type: {class: SerializedContextMethod, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
-      data:
-        componentName: MinerBehaviour
-        methodName: HPPlayer
-    - rid: 4463992073094692866
-      type: {class: VariableFactor, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
-      data:
-        PullingEnabled: 1
-        min: 0
-        max: 10
-    - rid: 4463992073094692867
-      type: {class: SerializedContextMethod, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
-      data:
-        componentName: MinerBehaviour
-        methodName: NAllies
-    - rid: 4463992073094692868
-      type: {class: VariableFactor, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
-      data:
-        PullingEnabled: 1
-        min: 0
-        max: 1
-    - rid: 4463992073094692869
-      type: {class: SerializedContextMethod, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
-      data:
-        componentName: MinerBehaviour
-        methodName: NMines
-    - rid: 4463992073094692870
-      type: {class: VariableFactor, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
-      data:
-        PullingEnabled: 1
-        min: 0
-        max: 1
-    - rid: 4463992073094692871
-      type: {class: SerializedContextMethod, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
-      data:
-        componentName: MinerBehaviour
-        methodName: Distance
-    - rid: 4463992073094692872
-      type: {class: VariableFactor, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
-      data:
-        PullingEnabled: 1
-        min: 0
-        max: 1
-    - rid: 4463992073094692873
-      type: {class: SerializedContextMethod, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
-      data:
-        componentName: MinerBehaviour
-        methodName: CanMine
-    - rid: 4463992073094692874
-      type: {class: VariableFactor, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
-      data:
-        PullingEnabled: 1
-        min: 0
-        max: 1
-    - rid: 4463992073094692875
-      type: {class: SerializedContextMethod, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
-      data:
-        componentName: MinerBehaviour
-        methodName: CanExcave
-    - rid: 4783593595286061118
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 4783593730761031680
+      type: {class: FSM, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
+      data: 
+    - rid: 4783593730761031681
+      type: {class: State, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
+      data: 
+    - rid: 4783593730761031683
+      type: {class: State, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
+      data: 
+    - rid: 4783593730761031685
+      type: {class: State, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
+      data: 
+    - rid: 4783593730761031686
       type: {class: UtilitySystem, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
       data:
         Inertia: 1.3
+    - rid: 4783593730761031687
+      type: {class: SubgraphAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        ExecuteOnLoop: 0
+        InterruptOptions: 2
+        subgraphId: df57f385-78e4-4b6c-97d9-2f464c7fae8c
+    - rid: 4783593730761031688
+      type: {class: StateTransition, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
+      data:
+        StatusFlags: 0
+    - rid: 4783593730761031689
+      type: {class: StateTransition, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
+      data:
+        StatusFlags: 0
+    - rid: 4783593730761031690
+      type: {class: StateTransition, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
+      data:
+        StatusFlags: 0
+    - rid: 4783593730761031691
+      type: {class: StateTransition, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
+      data:
+        StatusFlags: 0
+    - rid: 4783593730761031692
+      type: {class: StateTransition, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
+      data:
+        StatusFlags: 0
+    - rid: 4783593730761031693
+      type: {class: StateTransition, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
+      data:
+        StatusFlags: 0
+    - rid: 4783593730761031694
+      type: {class: State, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
+      data: 
 --- !u!114 &8108601122068728091
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -973,6 +1057,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 3200
   excaveCooldown: 10
+  minePrefab: {fileID: 3910763919036118693, guid: 3a1b62ff20cf9ea44950c78f6cdcf260, type: 3}
+  mineSpawnPoint: {fileID: 0}
 --- !u!114 &5081890824654510718
 MonoBehaviour:
   m_ObjectHideFlags: 0
