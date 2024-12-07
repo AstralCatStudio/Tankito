@@ -10,7 +10,9 @@ public class Leftovers : MonoBehaviour
 
     public void ReviveTank()
     {
-        Instantiate(tankPrefab, transform.position, Quaternion.identity);
+        Debug.Log("Reviving tank: " + tankPrefab.name);
+        GameObject revivedTank = Instantiate(tankPrefab, transform.position, Quaternion.identity);
+        WaveManager.Instance.AddEnemy(revivedTank);
         Destroy(gameObject);
     }
 }

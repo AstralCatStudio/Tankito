@@ -104,8 +104,6 @@ namespace Tankito.SinglePlayer
 
                 AddEnemy(newEnemy);
 
-                newEnemy.GetComponent<PVEEnemyData>().OnDeath += () => activeEnemies.Remove(newEnemy);
-
                 yield return new WaitForSeconds(0.5f);
             }
         }
@@ -113,6 +111,7 @@ namespace Tankito.SinglePlayer
         public void AddEnemy(GameObject enemy)
         {
             activeEnemies.Add(enemy);
+            enemy.GetComponent<PVEEnemyData>().OnDeath += () => activeEnemies.Remove(enemy);
         }
 
         private Transform SelectSpawnPoint()

@@ -94,11 +94,13 @@ namespace Tankito.SinglePlayer
             Instantiate(cristalExplosionPrefab, transform.position, Quaternion.identity);
 
             m_isAlive = false;
-            gameObject.SetActive(false);
+            //gameObject.SetActive(false);
+            Destroy(gameObject);
 
             if (healthBarTransform != null)
             {
-                healthBarTransform.gameObject.SetActive(false);
+                //healthBarTransform.gameObject.SetActive(false);
+                Destroy(healthBarTransform.gameObject);
             }
         }
 
