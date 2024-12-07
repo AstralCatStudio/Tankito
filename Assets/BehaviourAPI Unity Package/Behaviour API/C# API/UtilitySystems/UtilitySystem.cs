@@ -438,6 +438,7 @@ namespace BehaviourAPI.UtilitySystems
                 _currentBestElement = newBestAction;
                 _currentBestElement?.OnStarted();
             }
+            //_currentBestElement.Utility;
             _currentBestElement?.OnUpdated();
         }
 
