@@ -21,6 +21,9 @@ namespace Tankito.SinglePlayer
         [SerializeField] protected int m_health;
         [SerializeField] protected bool m_isAlive;
 
+        public GameObject aguaExplosionPrefab;
+        public GameObject cristalExplosionPrefab;
+
         [Header("Health Bar Settings")]
         [SerializeField] private GameObject healthBarPrefab; // Prefab del sprite de la barra de vida.
         [SerializeField] private Vector3 healthBarOffset = new Vector3(0, 1, 0); // Posición relativa de la barra de vida.
@@ -38,16 +41,26 @@ namespace Tankito.SinglePlayer
             m_health = m_maxHealth;
             m_isAlive = true;
 
-            // prefab de vida
+            // Instanciar la barra de vida
             if (healthBarPrefab != null)
             {
-                GameObject healthBarObject = Instantiate(healthBarPrefab, transform.position + healthBarOffset, Quaternion.identity, transform);
+                GameObject healthBarObject = Instantiate(healthBarPrefab, transform.position + healthBarOffset, Quaternion.identity);
                 healthBarTransform = healthBarObject.transform;
                 healthBarRenderer = healthBarObject.GetComponent<SpriteRenderer>();
 
-                // tamaño inicial del prfab
+                // Configurar el tamaño inicial de la barra
                 healthBarTransform.localScale = new Vector3(healthBarSize.x, healthBarSize.y, 1);
                 UpdateHealthBar();
+            }
+        }
+
+        private void LateUpdate()
+        {
+            // Mantener la posición de la barra de vida sobre el personaje
+            if (healthBarTransform != null)
+            {
+                healthBarTransform.position = transform.position + healthBarOffset;
+                healthBarTransform.rotation = Quaternion.identity; // Evitar que rote con el personaje
             }
         }
 
@@ -76,6 +89,10 @@ namespace Tankito.SinglePlayer
         public virtual void Die()
         {
             Debug.Log($"El personaje {gameObject.name} fue derrotado");
+
+            Instantiate(aguaExplosionPrefab, transform.position, Quaternion.identity);
+            Instantiate(cristalExplosionPrefab, transform.position, Quaternion.identity);
+
             m_isAlive = false;
             gameObject.SetActive(false);
 
@@ -113,13 +130,13 @@ namespace Tankito.SinglePlayer
 
         private void UpdateHealthBar()
         {
-            // porcentaje de vida restante
+            // Calcular el porcentaje de vida restante
             float healthPercent = (float)m_health / m_maxHealth;
 
-            // escalar
+            // Ajustar la escala de la barra en el eje X
             healthBarTransform.localScale = new Vector3(healthPercent * healthBarSize.x, healthBarSize.y, 1);
 
-            // cambiar color
+            // Cambiar el color de la barra (rojo a verde según la salud)
             if (healthBarRenderer != null)
             {
                 healthBarRenderer.color = Color.Lerp(Color.red, Color.green, healthPercent);

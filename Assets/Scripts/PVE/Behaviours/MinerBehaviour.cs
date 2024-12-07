@@ -21,6 +21,13 @@ namespace Tankito.SinglePlayer
         float excaveTimer = 0;
         const int MAX_NA = 5;
 
+        [SerializeField] private GameObject minePrefab; 
+        private Transform mineSpawnPoint;
+        private float stateTimer = 0f;
+
+        [SerializeField] private float digDuration = 5f;
+        [SerializeField] private float putMineDuration = 3f;
+
         protected override void Start()
         {
             base.Start();
@@ -43,6 +50,40 @@ namespace Tankito.SinglePlayer
             base.Update();
             excaveTimer += Time.deltaTime;
         }
+
+        #region States
+
+        private void HandleDigState()
+        {
+            Debug.Log("escavando");
+        }
+
+        private void HandlePutMineState()
+        {
+            Debug.Log("contador para poner mina");
+            if (stateTimer >= putMineDuration)
+            {
+                PlaceMine();
+            }
+        }
+
+
+        private void PlaceMine()
+        {
+            if (minePrefab != null && mineSpawnPoint != null)
+            {
+                Instantiate(minePrefab, mineSpawnPoint.position, Quaternion.identity);
+                Debug.Log("Minero ha colocado una mina.");
+                nMines--;
+            }
+            else
+            {
+                Debug.LogError("fallo al poner mina");
+            }
+        }
+
+
+        #endregion
 
 
         #region UtilitySystem
