@@ -20,7 +20,6 @@ public class BodyGuardBehaviour : AGenericBehaviour
     [SerializeField] bool DEBUG_BG = true;
     [SerializeField] LayerMask enemyLayer;
     float bulletRadius = 0.6f;
-    bool importantPos = false;
     #region TargetList
     List<GameObject> alliesInRange = new List<GameObject>();
     List<GameObject> bulletsInRange = new List<GameObject>();
@@ -43,15 +42,6 @@ public class BodyGuardBehaviour : AGenericBehaviour
         allyAreaDetection.OnSubjectDissapear -= OnAllyDissapear;
         bulletAreaDetection.OnSubjectDetected -= OnBulletDetected;
         bulletAreaDetection.OnSubjectDissapear -= OnBulletDissapear;
-    }
-
-    public override InputPayload GetInput()
-    {
-        if (importantPos)
-        {
-            agentController.ImportantDestiny = true;
-        }
-        return base.GetInput();
     }
 
     #region States

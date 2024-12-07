@@ -20,6 +20,7 @@ namespace Tankito.SinglePlayer
         [SerializeField] LayerMask wallLayer;
         [SerializeField] GameObject debugPosition;
         protected GameObject target;
+        protected bool importantPos = false;
 
         [SerializeField] protected bool DEBUG = true;
 
@@ -83,7 +84,11 @@ namespace Tankito.SinglePlayer
 
         #region TankInputMethods
         public virtual InputPayload GetInput() 
-        { 
+        {
+            if (importantPos)
+            {
+                agentController.ImportantDestiny = true;
+            }
             InputPayload newInput = m_currentInput;
             m_currentInput.action = TankAction.None;
             debugPosition.transform.position = newInput.moveVector;

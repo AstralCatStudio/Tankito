@@ -38,7 +38,7 @@ namespace Tankito.SinglePlayer
         [SerializeField] private GameObject digObject;
         [SerializeField] int maxDigDistance = 50;
         [SerializeField] private float digDuration = 5f;
-        List<SpriteRenderer> spriteRenderers = new List<SpriteRenderer>();
+        [SerializeField] List<SpriteRenderer> spriteRenderers = new List<SpriteRenderer>();
         bool hasDigged = false;
         #endregion
 
@@ -70,11 +70,13 @@ namespace Tankito.SinglePlayer
 
         public void InitDigState()
         {
+            Debug.Log("INICIA DIG");
             foreach (var sprite in spriteRenderers)
             {
                 sprite.enabled = false;
             }
-            GameObject.Instantiate(digObject, transform.position, Quaternion.identity);
+            GetComponent<CircleCollider2D>().enabled = false;
+            Instantiate(digObject, transform.position, Quaternion.identity);
         }
 
         public Status DigState()
@@ -87,10 +89,16 @@ namespace Tankito.SinglePlayer
                 {
                     sprite.enabled = true;
                 }
-                GameObject.Instantiate(digObject, transform.position, Quaternion.identity);
+                GetComponent<CircleCollider2D>().enabled = true;
+                Instantiate(digObject, transform.position, Quaternion.identity);
                 hasDigged = true;
             }
             
+            return Status.Running;
+        }
+
+        public Status Nothing()
+        {
             return Status.Running;
         }
 
@@ -143,6 +151,8 @@ namespace Tankito.SinglePlayer
             hasPutMine = false;
             putMineAction = false;
             digAction = false;
+            m_currentInput.moveVector = transform.position;
+            importantPos = true;
             stateTimer = 0;
         }
         #endregion
