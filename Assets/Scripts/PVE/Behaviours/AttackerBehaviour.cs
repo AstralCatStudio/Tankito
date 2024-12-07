@@ -21,6 +21,8 @@ namespace Tankito.SinglePlayer
 
         #region USParameters
         int MAX_AGGRO_ATTACKERS = 5;
+        [SerializeField]
+        float aggroRadiusMult, normalRadiusMult, defRadiusMult, baseDistanceAggroRadius, baseDistanceNormalRadius, baseDistanceDefRadius;
         #endregion
 
         protected override void Start()
@@ -172,21 +174,70 @@ namespace Tankito.SinglePlayer
         }
         #endregion
         #region UtilityActions
+        Vector2 CircleIntersection(float extraradius, Vector2 pos1, Vector2 pos2, Vector2 pos)
+        {
+            List<Vector2> outVectors = new List<Vector2>();
+            float distance = Vector2.Distance(pos1, pos2);
+            float rad1 = distance / 2;
+            float rad2 = rad1 * extraradius;
+            Vector2 firstpart = 0.5f* (pos1+ pos2)+ ((Mathf.Pow(rad1,2)- Mathf.Pow(rad2,2))/(2* Mathf.Pow(distance,2) ))*(pos2-pos1) ;
+            Vector2 secondpart = 0.5f * Mathf.Sqrt(2*((Mathf.Pow(rad1,2)+ Mathf.Pow(rad2,2)) /Mathf.Pow(distance,2))- (Mathf.Pow((Mathf.Pow(rad1, 2) - Mathf.Pow(rad2, 2)),2) / Mathf.Pow(distance, 4))-1 ) *(new Vector2(pos2.y-pos1.y,pos1.x-pos2.x));
+            outVectors.Add(firstpart+secondpart);
+            outVectors.Add(firstpart - secondpart);
+            if (Vector2.Distance(pos, outVectors[0])< Vector2.Distance(pos, outVectors[1]))
+            {
+                return outVectors[0];
+            }
+            else
+            {
+                return outVectors[1];
+            }
+            
+        }
         public Status GoAggro()
         {
-            return Status.Success;
+            if (genericTargets.Count>0)
+            {
+                m_currentInput.moveVector = CircleIntersection(aggroRadiusMult, genericTargets[0].transform.position, player.transform.position,transform.position);
+            }
+            else
+            {
+                m_currentInput.moveVector = player.transform.position + (transform.position-player.transform.position).normalized * baseDistanceAggroRadius;
+            }
+            
+            m_currentInput.moveVector = CheckNewPosition(m_currentInput.moveVector);
+            CheckObstacles(m_currentInput.moveVector, m_currentInput.moveVector - (Vector2)transform.position);
+            return Status.Running;
         }
         public Status GoIdealDis()
         {
-            return Status.Success;
+            if (genericTargets.Count > 0)
+            {
+                m_currentInput.moveVector = CircleIntersection(normalRadiusMult, genericTargets[0].transform.position, player.transform.position, transform.position);
+            }
+            else
+            {
+                m_currentInput.moveVector = player.transform.position + (transform.position - player.transform.position).normalized * baseDistanceNormalRadius;
+            }
+            m_currentInput.moveVector = CheckNewPosition(m_currentInput.moveVector);
+            return Status.Running;
         }
         public Status GoDef()
         {
-            return Status.Success;
+            if (genericTargets.Count > 0)
+            {
+                m_currentInput.moveVector = CircleIntersection(defRadiusMult, genericTargets[0].transform.position, player.transform.position, transform.position);
+            }
+            else
+            {
+                m_currentInput.moveVector = player.transform.position + (transform.position - player.transform.position).normalized * baseDistanceDefRadius;
+            }
+            m_currentInput.moveVector = CheckNewPosition(m_currentInput.moveVector);
+            return Status.Running;
         }
         public Status GoHeal()
         {
-            return Status.Success;
+            return Status.Running;
         }
         #endregion
         #endregion
