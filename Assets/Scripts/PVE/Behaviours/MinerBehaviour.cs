@@ -20,7 +20,7 @@ namespace Tankito.SinglePlayer
         float disPerStep;
         [SerializeField] LayerMask coverLayers;
 
-        [SerializeField]float excaveCooldown = 10;
+        [SerializeField]float digCooldown = 10;
         float digTimer = 0;
         const int MAX_NA = 5;
 
@@ -217,7 +217,7 @@ namespace Tankito.SinglePlayer
             return 0;
         }
 
-        public float CanMine()
+        public float CanPutMine()
         {
             if (player == null || cannonReloaded == false || nMines == 0)
             {
@@ -229,9 +229,9 @@ namespace Tankito.SinglePlayer
             }
         }
 
-        public float CanExcave()
+        public float CanDig()
         {
-            if(digTimer >= excaveCooldown)
+            if(digTimer >= digCooldown)
             {
                 return 1;
             }
@@ -256,12 +256,12 @@ namespace Tankito.SinglePlayer
         #region UtlityActions
         public Status MoveAggro()
         {
-            return Status.Success;
+            return Status.Running;
         }
 
         public Status MoveDef()
         {
-            return Status.Success;
+            return Status.Running;
         }
 
         public Status Dig()

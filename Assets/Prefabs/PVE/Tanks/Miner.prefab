@@ -931,6 +931,205 @@ MonoBehaviour:
         - 504ead2b-a028-4547-94a4-c37995e1b58b
         childIds:
         - 638abd29-398e-406a-a64c-319a395976ca
+    - name: MinerUS
+      id: c317b5b0-5ca1-479e-beb6-09773f197b64
+      graph:
+        rid: 4463992094451564544
+      nodes:
+      - name: HPPlayer
+        id: 9e1e1545-7886-4e79-9eae-90b36b70a716
+        position: {x: -83.2, y: -319.2}
+        node:
+          rid: 4463992094451564545
+        references:
+        - fieldName: Variable
+          value:
+            rid: 4463992094451564546
+          fieldType: System.Func`1[[System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089]], mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        parentIds:
+        - 4e86eeb3-2915-40ce-a9ae-bab5213c8981
+        childIds: []
+      - name: Distance
+        id: 3b767f21-6165-4eec-9933-28e835790896
+        position: {x: -75.2, y: 187.2}
+        node:
+          rid: 4463992094451564547
+        references:
+        - fieldName: Variable
+          value:
+            rid: 4463992094451564548
+          fieldType: System.Func`1[[System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089]], mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        parentIds: []
+        childIds: []
+      - name: Cover
+        id: 49a701b7-8349-4d71-bbdc-27d151243066
+        position: {x: -75.2, y: 398.40002}
+        node:
+          rid: 4463992094451564549
+        references:
+        - fieldName: Variable
+          value:
+            rid: 4463992094451564550
+          fieldType: System.Func`1[[System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089]], mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        parentIds:
+        - 337959f2-4fdf-43f5-8056-da35832a8b20
+        childIds: []
+      - name: CanDig
+        id: d3433aa8-3a7a-4896-9b03-0a2800b713aa
+        position: {x: -75.2, y: 587.2}
+        node:
+          rid: 4463992094451564551
+        references:
+        - fieldName: Variable
+          value:
+            rid: 4463992094451564552
+          fieldType: System.Func`1[[System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089]], mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        parentIds: []
+        childIds: []
+      - name: CanPutMIne
+        id: 100516d7-61eb-4450-a24c-f6aaf74769de
+        position: {x: -75.2, y: 807.2}
+        node:
+          rid: 4463992094451564553
+        references:
+        - fieldName: Variable
+          value:
+            rid: 4463992094451564554
+          fieldType: System.Func`1[[System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089]], mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        parentIds: []
+        childIds: []
+      - name: NAllies
+        id: 07c64f9e-147c-49e1-9da9-4a4aee3edb23
+        position: {x: -83.2, y: -126.4}
+        node:
+          rid: 4463992094451564555
+        references:
+        - fieldName: Variable
+          value:
+            rid: 4463992094451564556
+          fieldType: System.Func`1[[System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089]], mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        parentIds:
+        - 5e20c7b0-8475-4a8b-9b12-731f93e28d76
+        childIds: []
+      - name: NMines
+        id: d61a4072-a5b2-4119-8770-b679da61c223
+        position: {x: -75.2, y: 36}
+        node:
+          rid: 4463992094451564557
+        references:
+        - fieldName: Variable
+          value:
+            rid: 4463992094451564558
+          fieldType: System.Func`1[[System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089]], mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        parentIds: []
+        childIds: []
+      - name: AggroHPP
+        id: 4e86eeb3-2915-40ce-a9ae-bab5213c8981
+        position: {x: 382.4, y: -303.2}
+        node:
+          rid: 4463992094451564559
+        references:
+        - fieldName: Function
+          value:
+            rid: 4463992094451564560
+          fieldType: System.Func`2[[System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089],[System.Single, mscorlib, Version=4.0.0.0,
+            Culture=neutral, PublicKeyToken=b77a5c561934e089]], mscorlib, Version=4.0.0.0,
+            Culture=neutral, PublicKeyToken=b77a5c561934e089
+        parentIds: []
+        childIds:
+        - 9e1e1545-7886-4e79-9eae-90b36b70a716
+      - name: AggroNA
+        id: 5e20c7b0-8475-4a8b-9b12-731f93e28d76
+        position: {x: 390.4, y: -110.4}
+        node:
+          rid: 4463992094451564561
+        references:
+        - fieldName: Function
+          value:
+            rid: 4463992094451564562
+          fieldType: System.Func`2[[System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089],[System.Single, mscorlib, Version=4.0.0.0,
+            Culture=neutral, PublicKeyToken=b77a5c561934e089]], mscorlib, Version=4.0.0.0,
+            Culture=neutral, PublicKeyToken=b77a5c561934e089
+        parentIds: []
+        childIds:
+        - 07c64f9e-147c-49e1-9da9-4a4aee3edb23
+      - name: 
+        id: 337959f2-4fdf-43f5-8056-da35832a8b20
+        position: {x: 422.4, y: 405.59998}
+        node:
+          rid: 4463992094451564563
+        references: []
+        parentIds: []
+        childIds:
+        - 49a701b7-8349-4d71-bbdc-27d151243066
+      - name: GoAggro
+        id: 54dca2bb-c3b4-4ec0-9385-702fe34b3790
+        position: {x: 1098.4, y: -303.2}
+        node:
+          rid: 4463992094451564564
+        references:
+        - fieldName: Action
+          value:
+            rid: 4463992094451564572
+          fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+        parentIds: []
+        childIds: []
+      - name: GoDef
+        id: 4638b0a9-f6c9-4804-ac9c-c1b744908e3c
+        position: {x: 1114.4, y: 44}
+        node:
+          rid: 4463992094451564565
+        references:
+        - fieldName: Action
+          value:
+            rid: 4463992094451564571
+          fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+        parentIds: []
+        childIds: []
+      - name: Dig
+        id: 7b3fee8c-7eff-451a-83d0-b15c6ab37d46
+        position: {x: 1122.4, y: 357.59998}
+        node:
+          rid: 4463992094451564567
+        references:
+        - fieldName: Action
+          value:
+            rid: 4463992094451564570
+          fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+        parentIds: []
+        childIds: []
+      - name: PutMine
+        id: 47d53aa4-35ff-421b-802e-8f1d23437ef0
+        position: {x: 1130.4, y: 617.60004}
+        node:
+          rid: 4463992094451564568
+        references:
+        - fieldName: Action
+          value:
+            rid: 4463992094451564569
+          fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+        parentIds: []
+        childIds: []
     pushPerceptions: []
   references:
     version: 2
@@ -1141,6 +1340,204 @@ MonoBehaviour:
         unpause:
           componentName: 
           methodName: 
+    - rid: 4463992094451564544
+      type: {class: UtilitySystem, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
+      data:
+        Inertia: 1.3
+    - rid: 4463992094451564545
+      type: {class: VariableFactor, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
+      data:
+        PullingEnabled: 1
+        min: 0
+        max: 1
+    - rid: 4463992094451564546
+      type: {class: SerializedContextMethod, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        componentName: MinerBehaviour
+        methodName: HP_Player
+    - rid: 4463992094451564547
+      type: {class: VariableFactor, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
+      data:
+        PullingEnabled: 1
+        min: 0
+        max: 1
+    - rid: 4463992094451564548
+      type: {class: SerializedContextMethod, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        componentName: MinerBehaviour
+        methodName: Distance
+    - rid: 4463992094451564549
+      type: {class: VariableFactor, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
+      data:
+        PullingEnabled: 1
+        min: 0
+        max: 1
+    - rid: 4463992094451564550
+      type: {class: SerializedContextMethod, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        componentName: MinerBehaviour
+        methodName: Cover
+    - rid: 4463992094451564551
+      type: {class: VariableFactor, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
+      data:
+        PullingEnabled: 1
+        min: 0
+        max: 1
+    - rid: 4463992094451564552
+      type: {class: SerializedContextMethod, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        componentName: MinerBehaviour
+        methodName: CanDig
+    - rid: 4463992094451564553
+      type: {class: VariableFactor, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
+      data:
+        PullingEnabled: 1
+        min: 0
+        max: 1
+    - rid: 4463992094451564554
+      type: {class: SerializedContextMethod, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        componentName: MinerBehaviour
+        methodName: CanPutMine
+    - rid: 4463992094451564555
+      type: {class: VariableFactor, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
+      data:
+        PullingEnabled: 1
+        min: 0
+        max: 1
+    - rid: 4463992094451564556
+      type: {class: SerializedContextMethod, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        componentName: MinerBehaviour
+        methodName: NAllies
+    - rid: 4463992094451564557
+      type: {class: VariableFactor, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
+      data:
+        PullingEnabled: 1
+        min: 0
+        max: 1
+    - rid: 4463992094451564558
+      type: {class: SerializedContextMethod, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        componentName: MinerBehaviour
+        methodName: NMines
+    - rid: 4463992094451564559
+      type: {class: CustomCurveFactor, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
+      data:
+        PullingEnabled: 1
+    - rid: 4463992094451564560
+      type: {class: SerializedContextMethod, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        componentName: MinerBehaviour
+        methodName: AggroHPP
+    - rid: 4463992094451564561
+      type: {class: CustomCurveFactor, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
+      data:
+        PullingEnabled: 1
+    - rid: 4463992094451564562
+      type: {class: SerializedContextMethod, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        componentName: MinerBehaviour
+        methodName: AggroNA
+    - rid: 4463992094451564563
+      type: {class: ExponentialCurveFactor, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
+      data:
+        PullingEnabled: 1
+        Exponent: 2
+        DespX: 0
+        DespY: 0
+    - rid: 4463992094451564564
+      type: {class: UtilityAction, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
+      data:
+        PullingEnabled: 1
+        FinishSystemOnComplete: 0
+    - rid: 4463992094451564565
+      type: {class: UtilityAction, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
+      data:
+        PullingEnabled: 1
+        FinishSystemOnComplete: 0
+    - rid: 4463992094451564567
+      type: {class: UtilityAction, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
+      data:
+        PullingEnabled: 1
+        FinishSystemOnComplete: 0
+    - rid: 4463992094451564568
+      type: {class: UtilityAction, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
+      data:
+        PullingEnabled: 1
+        FinishSystemOnComplete: 0
+    - rid: 4463992094451564569
+      type: {class: CustomAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        start:
+          componentName: 
+          methodName: 
+        update:
+          componentName: MinerBehaviour
+          methodName: PutMine
+        stop:
+          componentName: 
+          methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
+    - rid: 4463992094451564570
+      type: {class: CustomAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        start:
+          componentName: 
+          methodName: 
+        update:
+          componentName: MinerBehaviour
+          methodName: Dig
+        stop:
+          componentName: 
+          methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
+    - rid: 4463992094451564571
+      type: {class: CustomAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        start:
+          componentName: 
+          methodName: 
+        update:
+          componentName: MinerBehaviour
+          methodName: GoDef
+        stop:
+          componentName: 
+          methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
+    - rid: 4463992094451564572
+      type: {class: CustomAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        start:
+          componentName: 
+          methodName: 
+        update:
+          componentName: MinerBehaviour
+          methodName: GoAggro
+        stop:
+          componentName: 
+          methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
     - rid: 4783593730761031680
       type: {class: FSM, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
       data: 
@@ -1248,7 +1645,7 @@ MonoBehaviour:
   coverLayers:
     serializedVersion: 2
     m_Bits: 3200
-  excaveCooldown: 10
+  digCooldown: 10
   minePrefab: {fileID: 3910763919036118693, guid: 3a1b62ff20cf9ea44950c78f6cdcf260, type: 3}
   putMineAction: 0
   putMineDuration: 3
