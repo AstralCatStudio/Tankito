@@ -150,7 +150,7 @@ GameObject:
   - component: {fileID: 928002265130865569}
   - component: {fileID: 3737391283033407211}
   m_Layer: 0
-  m_Name: BodyGuardAreaDetection
+  m_Name: AllyAreaDetection
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -196,10 +196,10 @@ CircleCollider2D:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 3072
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 29695
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2
@@ -595,10 +595,10 @@ CircleCollider2D:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8192
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 24575
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2
