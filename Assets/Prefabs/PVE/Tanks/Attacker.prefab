@@ -648,7 +648,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1684963001551916388
 Transform:
   m_ObjectHideFlags: 0
@@ -2308,3 +2308,9 @@ MonoBehaviour:
   hasShot: 0
   playerAreaDetection: {fileID: 4538736786602061432}
   loaderReloadDuration: 5
+  aggroRadiusMult: 1.4
+  normalRadiusMult: 2
+  defRadiusMult: 2.4
+  baseDistanceAggroRadius: 4
+  baseDistanceNormalRadius: 6
+  baseDistanceDefRadius: 8

@@ -85,9 +85,17 @@ namespace Tankito.SinglePlayer
 
         public Status Flee()
         {
-            Vector2 playerToNecroVec = (transform.position - player.transform.position).normalized;
-            m_currentInput.moveVector = (Vector2)transform.position + playerToNecroVec * agentController.agent.speed;
-            return Status.Success;
+            if (player != null)
+            {
+                Vector2 playerToNecroVec = (transform.position - player.transform.position).normalized;
+                m_currentInput.moveVector = (Vector2)transform.position + playerToNecroVec * agentController.agent.speed;
+                return Status.Success;
+            }
+            else
+            {
+                return Status.Failure;
+            }
+            
         }
 
         public override Status IdleState()

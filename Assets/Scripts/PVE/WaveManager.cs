@@ -20,7 +20,10 @@ namespace Tankito.SinglePlayer
         [Header("Spawn Points")]
         [SerializeField] private Transform spawnsParent;
         [SerializeField] private List<Transform> spawnPoints;
+
+        [Header("Spawning variables")]
         [SerializeField] private float maxDistance;
+        [SerializeField] private bool isSpawning;
 
         [Header("Timer")]
         [SerializeField] private float waveTimeOut;
@@ -37,6 +40,7 @@ namespace Tankito.SinglePlayer
             activeEnemies = new List<GameObject>();
             spawnPoints = new List<Transform>();
             currentWave = 0;
+            isSpawning = true;
             foreach (Transform t in spawnsParent)
             {
                 spawnPoints.Add(t);
@@ -50,21 +54,29 @@ namespace Tankito.SinglePlayer
 
         private void Update()
         {
-            waveTimer += Time.deltaTime;
-
-            if (waveTimer >= waveTimeOut || activeEnemies.Count <= 0)
+            if (!isSpawning)
             {
-                SpawnWave();
+                waveTimer += Time.deltaTime;
+                SinglePlayerUI.Instance.SetWaveTime((int)waveTimer, (int)waveTimeOut);
+
+                if (waveTimer > waveTimeOut || activeEnemies.Count <= 0)
+                {
+                    SpawnWave();
+                }
             }
         }
 
         private void SpawnWave()
         {
+            isSpawning = true;
+
             waveTimer = 0f;
+            SinglePlayerUI.Instance.SetDefaultWaveTimer();
 
             currentWaveIndex = Random.Range(0, waveConfigs.Count);
             WaveData newWave = waveConfigs[currentWaveIndex];
             currentWave++;
+            SinglePlayerUI.Instance.SetCurrentWave(currentWave);
             Debug.Log($"Spawneando la oleada {currentWave}");
             StartCoroutine(SpawnEnemiesWithDelay(newWave));
         }
@@ -77,10 +89,13 @@ namespace Tankito.SinglePlayer
             yield return StartCoroutine(SpawnEnemyWithDelay(newWave.Necromancers, necromancerPrefab));
             yield return StartCoroutine(SpawnEnemyWithDelay(newWave.Attackers, attackerPrefab));
             yield return StartCoroutine(SpawnEnemyWithDelay(newWave.Miners, minerPrefab));
+
+            isSpawning = false;
         }
 
         private IEnumerator SpawnEnemyWithDelay(int count, GameObject enemy)
         {
+            Debug.Log($"Spawning {count} enemigos de tipo {enemy.name}");
             for (int i = 0; i < count; i++)
             {
                 Transform spawn = SelectSpawnPoint();
