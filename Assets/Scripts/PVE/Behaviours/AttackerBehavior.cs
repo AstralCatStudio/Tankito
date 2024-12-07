@@ -20,7 +20,7 @@ namespace Tankito.SinglePlayer
         float maxPlayerHp;
 
         #region USParameters
-        int MAX_AGGRO_ATTACKERS = 5;
+        const int MAX_AGGRO_ATTACKERS = 5;
         #endregion
 
         protected override void Start()

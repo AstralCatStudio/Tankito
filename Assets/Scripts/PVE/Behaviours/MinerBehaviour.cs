@@ -46,7 +46,7 @@ namespace Tankito.SinglePlayer
 
         #region UtilitySystem
         #region Variables
-        public float HP_Player()
+        public float HPPlayer()
         {
             if (player != null)
             {
@@ -55,12 +55,12 @@ namespace Tankito.SinglePlayer
             return 0;
         }
 
-        public float N_Allies()
+        public float NAllies()
         {
             return genericTargets.Count;
         }
 
-        public float N_Mines()
+        public float NMines()
         {
             return nMines / MAX_MINES;
         }

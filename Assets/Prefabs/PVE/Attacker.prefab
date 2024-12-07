@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3216635870188460328}
   m_Layer: 0
   m_Name: HullAnimator
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -231,7 +231,7 @@ GameObject:
   - component: {fileID: 4577103739939983843}
   m_Layer: 0
   m_Name: Cannon
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -279,7 +279,7 @@ GameObject:
   - component: {fileID: 6226900747102457051}
   m_Layer: 0
   m_Name: TurretAnimator
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -334,7 +334,7 @@ GameObject:
   - component: {fileID: 2120431866081212010}
   m_Layer: 0
   m_Name: Turret
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -478,7 +478,7 @@ GameObject:
   - component: {fileID: 5801990407999099147}
   m_Layer: 0
   m_Name: HullSprite
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -664,7 +664,7 @@ Transform:
   m_GameObject: {fileID: 8926018345817467150}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -7.47, y: -0.7, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -785,13 +785,13 @@ MonoBehaviour:
       nodes:
       - name: Idle
         id: 9116079c-b66f-404e-9c56-81d8f578b3af
-        position: {x: 903.2, y: 57.6}
+        position: {x: 495.45547, y: -326.81677}
         node:
           rid: 4783593595286061097
         references:
         - fieldName: Action
           value:
-            rid: -2
+            rid: 4463992073094692957
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         parentIds:
@@ -800,10 +800,9 @@ MonoBehaviour:
         childIds:
         - f7eaf8b7-633d-471c-95f3-00b6b5092141
         - e3850a80-f1fa-4740-9463-0b23768f1042
-        - f7eaf8b7-633d-471c-95f3-00b6b5092141
       - name: ChaseBodyGuard
         id: c0da3ff2-00ea-4328-b91b-f6ffaecb2c45
-        position: {x: 434.4, y: 470.40002}
+        position: {x: 1015.6961, y: -609.23615}
         node:
           rid: 4783593595286061098
         references:
@@ -814,15 +813,15 @@ MonoBehaviour:
             Culture=neutral, PublicKeyToken=null
         parentIds:
         - f7eaf8b7-633d-471c-95f3-00b6b5092141
-        - ecdc653d-4a58-4e09-9d0a-ffdfd9961c1f
-        - 8d6ae0e8-a6e2-4a86-94b8-61570815b7d5
         - dc57172c-9687-4dc4-8740-05f64f2dd52f
+        - 8d6ae0e8-a6e2-4a86-94b8-61570815b7d5
         childIds:
         - fef9cdb3-035a-4316-b63c-d030c94a9c92
         - ed7c2c88-df55-431c-bb0d-dc24b5dad413
+        - ecdc653d-4a58-4e09-9d0a-ffdfd9961c1f
       - name: Cover
         id: b80fcd9e-7c6c-4cef-8f98-06f0ef0770bb
-        position: {x: 450.4, y: 886.4}
+        position: {x: 1681.7714, y: -394.90414}
         node:
           rid: 4783593595286061099
         references:
@@ -832,14 +831,14 @@ MonoBehaviour:
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         parentIds:
-        - ecdc653d-4a58-4e09-9d0a-ffdfd9961c1f
-        - 9a104752-60ca-485a-8c86-ef113ed1f4c9
-        childIds:
-        - 8d6ae0e8-a6e2-4a86-94b8-61570815b7d5
         - 9787bc85-825a-4526-b004-663b74ae4d6f
+        - ecdc653d-4a58-4e09-9d0a-ffdfd9961c1f
+        childIds:
+        - 9a104752-60ca-485a-8c86-ef113ed1f4c9
+        - 8d6ae0e8-a6e2-4a86-94b8-61570815b7d5
       - name: Aim
         id: 5824b2b8-7e8f-44a6-b5fa-a6295958759a
-        position: {x: 1344.8, y: 1346.3999}
+        position: {x: 1355.3922, y: 1460.698}
         node:
           rid: 4783593595286061100
         references:
@@ -851,11 +850,11 @@ MonoBehaviour:
         parentIds:
         - 447ff124-1909-45ae-bf1b-a69bfc037df8
         childIds:
-        - 0a598486-d22a-4837-b00e-67c4fe16dda7
         - e5647238-21dd-4e07-a305-361c1591e6e4
+        - 0a598486-d22a-4837-b00e-67c4fe16dda7
       - name: Shoot
         id: 31bc8d02-ce37-4adf-b33d-cd3c4d07346f
-        position: {x: 1344.8, y: 1758.3999}
+        position: {x: 727.84235, y: 1866.3147}
         node:
           rid: 4783593595286061101
         references:
@@ -870,7 +869,7 @@ MonoBehaviour:
         - 9c1dcbb8-fc77-4ba0-82ca-a0109f15110f
       - name: ChaseToIdle
         id: fef9cdb3-035a-4316-b63c-d030c94a9c92
-        position: {x: 664.8, y: 277.59998}
+        position: {x: 615.8853, y: -761.6278}
         node:
           rid: 4783593595286061103
         references:
@@ -890,7 +889,7 @@ MonoBehaviour:
         - 9116079c-b66f-404e-9c56-81d8f578b3af
       - name: IdleToChase
         id: f7eaf8b7-633d-471c-95f3-00b6b5092141
-        position: {x: 302.4, y: 239.2}
+        position: {x: 763.2, y: -491.2}
         node:
           rid: 4783593595286061104
         references:
@@ -906,12 +905,11 @@ MonoBehaviour:
             Culture=neutral, PublicKeyToken=null
         parentIds:
         - 9116079c-b66f-404e-9c56-81d8f578b3af
-        - 9116079c-b66f-404e-9c56-81d8f578b3af
         childIds:
         - c0da3ff2-00ea-4328-b91b-f6ffaecb2c45
       - name: CoverToChase
         id: 8d6ae0e8-a6e2-4a86-94b8-61570815b7d5
-        position: {x: 266.4, y: 676}
+        position: {x: 1401.6837, y: -540.3631}
         node:
           rid: 4783593595286061105
         references:
@@ -931,7 +929,7 @@ MonoBehaviour:
         - c0da3ff2-00ea-4328-b91b-f6ffaecb2c45
       - name: ChaseToCover
         id: ecdc653d-4a58-4e09-9d0a-ffdfd9961c1f
-        position: {x: 581.6, y: 664}
+        position: {x: 1468.553, y: -786.7141}
         node:
           rid: 4783593595286061106
         references:
@@ -945,13 +943,13 @@ MonoBehaviour:
             rid: -2
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
-        parentIds: []
-        childIds:
+        parentIds:
         - c0da3ff2-00ea-4328-b91b-f6ffaecb2c45
+        childIds:
         - b80fcd9e-7c6c-4cef-8f98-06f0ef0770bb
       - name: AimToShoot
         id: 0a598486-d22a-4837-b00e-67c4fe16dda7
-        position: {x: 1336.8, y: 1536}
+        position: {x: 1087.3625, y: 1814.7272}
         node:
           rid: 4783593595286061107
         references:
@@ -971,7 +969,7 @@ MonoBehaviour:
         - 31bc8d02-ce37-4adf-b33d-cd3c4d07346f
       - name: POPAim
         id: e5647238-21dd-4e07-a305-361c1591e6e4
-        position: {x: 957.6, y: 1325.6}
+        position: {x: 1626.2382, y: 1790.9227}
         node:
           rid: 4783593595286061108
         references:
@@ -990,7 +988,7 @@ MonoBehaviour:
         childIds: []
       - name: USToCover
         id: 9787bc85-825a-4526-b004-663b74ae4d6f
-        position: {x: 919.2, y: 809.60004}
+        position: {x: 1710.4, y: 130.4}
         node:
           rid: 4783593595286061109
         references:
@@ -1005,12 +1003,12 @@ MonoBehaviour:
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         parentIds:
-        - b80fcd9e-7c6c-4cef-8f98-06f0ef0770bb
-        childIds:
         - 7a3d3818-241d-4afa-a3cf-76b916c31863
+        childIds:
+        - b80fcd9e-7c6c-4cef-8f98-06f0ef0770bb
       - name: CoverToUS
         id: 9a104752-60ca-485a-8c86-ef113ed1f4c9
-        position: {x: 927.2, y: 980.00006}
+        position: {x: 1548.8, y: -28.800003}
         node:
           rid: 4783593595286061110
         references:
@@ -1025,12 +1023,12 @@ MonoBehaviour:
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         parentIds:
-        - 7a3d3818-241d-4afa-a3cf-76b916c31863
-        childIds:
         - b80fcd9e-7c6c-4cef-8f98-06f0ef0770bb
+        childIds:
+        - 7a3d3818-241d-4afa-a3cf-76b916c31863
       - name: ChaseToUS
         id: ed7c2c88-df55-431c-bb0d-dc24b5dad413
-        position: {x: 911.2, y: 386.40002}
+        position: {x: 1294.4, y: -228}
         node:
           rid: 4783593595286061111
         references:
@@ -1050,7 +1048,7 @@ MonoBehaviour:
         - 7a3d3818-241d-4afa-a3cf-76b916c31863
       - name: USToChase
         id: dc57172c-9687-4dc4-8740-05f64f2dd52f
-        position: {x: 911.2, y: 563.2}
+        position: {x: 894.4, y: -228}
         node:
           rid: 4783593595286061112
         references:
@@ -1070,7 +1068,7 @@ MonoBehaviour:
         - c0da3ff2-00ea-4328-b91b-f6ffaecb2c45
       - name: IdleToUS
         id: e3850a80-f1fa-4740-9463-0b23768f1042
-        position: {x: 1483.2, y: 231.2}
+        position: {x: 728.9242, y: -16.351555}
         node:
           rid: 4783593595286061113
         references:
@@ -1090,7 +1088,7 @@ MonoBehaviour:
         - 7a3d3818-241d-4afa-a3cf-76b916c31863
       - name: USToIdle
         id: 5fbd7825-0944-41a7-a737-2bc5388714b7
-        position: {x: 1212, y: 239.2}
+        position: {x: 511.2, y: 160}
         node:
           rid: 4783593595286061114
         references:
@@ -1110,7 +1108,7 @@ MonoBehaviour:
         - 9116079c-b66f-404e-9c56-81d8f578b3af
       - name: USToAim
         id: 447ff124-1909-45ae-bf1b-a69bfc037df8
-        position: {x: 1351.2, y: 1082.3999}
+        position: {x: 1275.6967, y: 854.0654}
         node:
           rid: 4783593595286061115
         references:
@@ -1130,7 +1128,7 @@ MonoBehaviour:
         - 5824b2b8-7e8f-44a6-b5fa-a6295958759a
       - name: POPShoot
         id: 9c1dcbb8-fc77-4ba0-82ca-a0109f15110f
-        position: {x: 989.6, y: 1764}
+        position: {x: 399.90305, y: 1942.647}
         node:
           rid: 4783593595286061116
         references:
@@ -1149,23 +1147,23 @@ MonoBehaviour:
         childIds: []
       - name: AttackUSystem
         id: 7a3d3818-241d-4afa-a3cf-76b916c31863
-        position: {x: 1391.2, y: 579.2}
+        position: {x: 1120.8, y: 186.4}
         node:
           rid: 4463992048828022784
         references:
         - fieldName: Action
           value:
-            rid: 4463992048828022787
+            rid: 4463992073094692956
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         parentIds:
         - e3850a80-f1fa-4740-9463-0b23768f1042
         - ed7c2c88-df55-431c-bb0d-dc24b5dad413
-        - 9787bc85-825a-4526-b004-663b74ae4d6f
+        - 9a104752-60ca-485a-8c86-ef113ed1f4c9
         childIds:
         - 5fbd7825-0944-41a7-a737-2bc5388714b7
         - dc57172c-9687-4dc4-8740-05f64f2dd52f
-        - 9a104752-60ca-485a-8c86-ef113ed1f4c9
+        - 9787bc85-825a-4526-b004-663b74ae4d6f
         - 447ff124-1909-45ae-bf1b-a69bfc037df8
     - name: CombatUS
       id: 44caa9c0-442d-4032-b241-0ebf982bd75a
@@ -1174,7 +1172,7 @@ MonoBehaviour:
       nodes:
       - name: NAFullAggro
         id: fa315dd7-7120-42e6-888b-fac15e5c7171
-        position: {x: 512.8, y: 207.99998}
+        position: {x: 0, y: 0}
         node:
           rid: 4463992056704139264
         references:
@@ -1189,7 +1187,7 @@ MonoBehaviour:
         childIds: []
       - name: HP_Player
         id: a64ea4cb-ac8d-4ec7-9c1f-752c5d043eb3
-        position: {x: 528.8, y: 654.4}
+        position: {x: 0, y: 200}
         node:
           rid: 4463992056704139267
         references:
@@ -1204,7 +1202,7 @@ MonoBehaviour:
         childIds: []
       - name: HP_Attacker
         id: 4469ee1b-4a0b-429d-af73-8dd2773dd172
-        position: {x: 528.8, y: 452}
+        position: {x: 0, y: 400}
         node:
           rid: 4463992056704139269
         references:
@@ -1219,7 +1217,7 @@ MonoBehaviour:
         childIds: []
       - name: Healer
         id: aefe5c18-a75f-4065-ba2e-6277963a635a
-        position: {x: 1025.6, y: 1094.3999}
+        position: {x: 0, y: 600}
         node:
           rid: 4463992056704139271
         references:
@@ -1234,7 +1232,7 @@ MonoBehaviour:
         childIds: []
       - name: AggroNA
         id: cc888af6-309d-4574-9945-4c2529405ecb
-        position: {x: 951.2, y: 58.399994}
+        position: {x: 300, y: 0}
         node:
           rid: 4463992056704139273
         references:
@@ -1251,7 +1249,7 @@ MonoBehaviour:
         - fa315dd7-7120-42e6-888b-fac15e5c7171
       - name: AggroHPA
         id: 00bd482f-6317-454e-88f3-a7e73a1a2413
-        position: {x: 1001.6, y: 343.2}
+        position: {x: 300, y: 400}
         node:
           rid: 4463992056704139275
         references:
@@ -1270,7 +1268,7 @@ MonoBehaviour:
         - 4469ee1b-4a0b-429d-af73-8dd2773dd172
       - name: AggroHPP
         id: 343304ef-7acb-450c-8d71-1aa80e7c9b25
-        position: {x: 1009.6, y: 681.60004}
+        position: {x: 300, y: 200}
         node:
           rid: 4463992056704139278
         references:
@@ -1289,7 +1287,7 @@ MonoBehaviour:
         - a64ea4cb-ac8d-4ec7-9c1f-752c5d043eb3
       - name: UGoAggro
         id: 36a8872f-37d4-4c7b-823f-82fe2ed82a2a
-        position: {x: 1756.8, y: 102.399994}
+        position: {x: 747.2, y: -6.4000015}
         node:
           rid: 4463992067889561600
         references: []
@@ -1301,7 +1299,7 @@ MonoBehaviour:
         - 343304ef-7acb-450c-8d71-1aa80e7c9b25
       - name: 1_AggroHPA
         id: a702a056-5d52-4f5c-990b-81cba0b38459
-        position: {x: 993.6, y: 506.40002}
+        position: {x: 755.2, y: 599.2}
         node:
           rid: 4463992067889561601
         references: []
@@ -1312,7 +1310,7 @@ MonoBehaviour:
         - 00bd482f-6317-454e-88f3-a7e73a1a2413
       - name: 1_AggroHPP
         id: faaa3d4c-5856-42e3-b469-b47bcb223053
-        position: {x: 1017.6, y: 860.8}
+        position: {x: 747.2, y: 195.99998}
         node:
           rid: 4463992067889561602
         references: []
@@ -1322,7 +1320,7 @@ MonoBehaviour:
         - 343304ef-7acb-450c-8d71-1aa80e7c9b25
       - name: UGoIdealDis
         id: f289f018-b372-4bb8-ba87-d6de8835f103
-        position: {x: 1772.8, y: 359.2}
+        position: {x: 755.2, y: 393.59998}
         node:
           rid: 4463992067889561603
         references: []
@@ -1333,7 +1331,7 @@ MonoBehaviour:
         - 343304ef-7acb-450c-8d71-1aa80e7c9b25
       - name: UGoDef
         id: 6ae85959-e6b2-44e4-9d68-2119b46dcb2a
-        position: {x: 1788.8, y: 577.60004}
+        position: {x: 1120.8, y: 246.40001}
         node:
           rid: 4463992067889561604
         references: []
@@ -1344,7 +1342,7 @@ MonoBehaviour:
         - a702a056-5d52-4f5c-990b-81cba0b38459
       - name: UGoHeal
         id: bbecd0e4-4f1d-4e45-9165-2dda2e625e4e
-        position: {x: 1796.8, y: 807.2}
+        position: {x: 1136.8, y: 822.4}
         node:
           rid: 4463992067889561605
         references: []
@@ -1355,7 +1353,7 @@ MonoBehaviour:
         - aefe5c18-a75f-4065-ba2e-6277963a635a
       - name: GoAggro
         id: c1309ca5-4794-4892-a558-cc8e3910776a
-        position: {x: 2391.2, y: 100.8}
+        position: {x: 1128.8, y: 40}
         node:
           rid: 4463992067889561606
         references:
@@ -1369,7 +1367,7 @@ MonoBehaviour:
         - 36a8872f-37d4-4c7b-823f-82fe2ed82a2a
       - name: GoIdealDis
         id: ec6bee4a-6390-48f7-945f-e53844e0a6f4
-        position: {x: 2408, y: 343.2}
+        position: {x: 1128.8, y: 440}
         node:
           rid: 4463992067889561607
         references:
@@ -1383,7 +1381,7 @@ MonoBehaviour:
         - f289f018-b372-4bb8-ba87-d6de8835f103
       - name: GoDef
         id: 32236d3d-e7bd-4add-8f37-8f563325cd72
-        position: {x: 2399.2, y: 560.8}
+        position: {x: 1478.4, y: 354.40002}
         node:
           rid: 4463992067889561608
         references:
@@ -1397,7 +1395,7 @@ MonoBehaviour:
         - 6ae85959-e6b2-44e4-9d68-2119b46dcb2a
       - name: GoHeal
         id: 52b72314-c6bf-4c6d-8ce0-5a08acda455f
-        position: {x: 2395.2, y: 790.4}
+        position: {x: 1486.4, y: 540}
         node:
           rid: 4463992067889561609
         references:
@@ -1418,12 +1416,6 @@ MonoBehaviour:
     - rid: 4463992048828022784
       type: {class: State, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
       data: 
-    - rid: 4463992048828022787
-      type: {class: SubgraphAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
-      data:
-        ExecuteOnLoop: 0
-        InterruptOptions: 2
-        subgraphId: 44caa9c0-442d-4032-b241-0ebf982bd75a
     - rid: 4463992048828022811
       type: {class: CustomPerception, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
       data:
@@ -1564,7 +1556,7 @@ MonoBehaviour:
           methodName: 
         check:
           componentName: AttackerBehaviour
-          methodName: CheckUsToChase
+          methodName: CheckUSToChase
         reset:
           componentName: 
           methodName: 
@@ -1581,7 +1573,7 @@ MonoBehaviour:
           componentName: 
           methodName: 
         check:
-          componentName: attackerBehaviour
+          componentName: AttackerBehaviour
           methodName: CheckUSToCover
         reset:
           componentName: 
@@ -1986,6 +1978,30 @@ MonoBehaviour:
         unpause:
           componentName: 
           methodName: 
+    - rid: 4463992073094692956
+      type: {class: SubgraphAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        ExecuteOnLoop: 0
+        InterruptOptions: 2
+        subgraphId: 44caa9c0-442d-4032-b241-0ebf982bd75a
+    - rid: 4463992073094692957
+      type: {class: CustomAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        start:
+          componentName: 
+          methodName: 
+        update:
+          componentName: AttackerBehaviour
+          methodName: IdleState
+        stop:
+          componentName: 
+          methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
     - rid: 4783593595286061094
       type: {class: StackFSM, ns: BehaviourAPI.StateMachines.StackFSMs, asm: BehaviourAPI.StateMachines}
       data: 
@@ -2091,7 +2107,9 @@ MonoBehaviour:
   m_maxHealth: 0
   m_health: 0
   m_isAlive: 0
-  positionSprite: {fileID: 21300000, guid: 9f9bf86151fa04b4fb600f122aaba541, type: 3}
+  healthBarPrefab: {fileID: 7735631790222357969, guid: 10e8e7d9fc2d16244953da8598bb4057, type: 3}
+  healthBarOffset: {x: -1, y: 1, z: 0}
+  healthBarSize: {x: 1.6, y: 0.3}
 --- !u!114 &7628752212270859141
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2145,10 +2163,9 @@ MonoBehaviour:
   genericAreaDetection: {fileID: 928002265130865569}
   wallLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   debugPosition: {fileID: 5739514068712817557}
   DEBUG: 1
-  genericTargets: []
   patrolPointFound: 0
   noObstaclesBetween: 0
   cannonReloaded: 1

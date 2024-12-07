@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6093874407106433653}
   m_Layer: 0
   m_Name: Cannon
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -225,7 +225,7 @@ GameObject:
   - component: {fileID: 2867733742914670491}
   m_Layer: 0
   m_Name: HullAnimator
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -267,6 +267,90 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!1 &6727595187853663268
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 273677626033319820}
+  - component: {fileID: 7356904487411293564}
+  m_Layer: 0
+  m_Name: Circle
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &273677626033319820
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6727595187853663268}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5387718942698819218}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!212 &7356904487411293564
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6727595187853663268}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
+  m_Color: {r: 0.9528302, g: 0.84486824, b: 0, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 1, y: 1}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_MaskInteraction: 0
+  m_SpriteSortPoint: 0
 --- !u!1 &7120789980950667906
 GameObject:
   m_ObjectHideFlags: 0
@@ -385,7 +469,7 @@ GameObject:
   - component: {fileID: 4415187671920792333}
   m_Layer: 0
   m_Name: TurretAnimator
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -543,7 +627,7 @@ Transform:
   m_GameObject: {fileID: 7961667591255896337}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.2, y: -1.29, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -551,6 +635,7 @@ Transform:
   - {fileID: 8248769803647303712}
   - {fileID: 175191412389789227}
   - {fileID: 9141373989833345517}
+  - {fileID: 273677626033319820}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!50 &4897918201683854192
@@ -660,11 +745,161 @@ MonoBehaviour:
       id: ac67105a-5ddd-429a-8b69-253b1e6d6724
       graph:
         rid: 4783593595286061118
-      nodes: []
+      nodes:
+      - name: HPPlayer
+        id: b9d0a355-69f1-4676-a99c-7b16b1b69192
+        position: {x: 610.4, y: 103.2}
+        node:
+          rid: 4463992073094692864
+        references:
+        - fieldName: Variable
+          value:
+            rid: 4463992073094692865
+          fieldType: System.Func`1[[System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089]], mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        parentIds: []
+        childIds: []
+      - name: NAllies
+        id: 40da9144-9266-4b3a-9e9e-c69677d5506f
+        position: {x: 626.4, y: 315.2}
+        node:
+          rid: 4463992073094692866
+        references:
+        - fieldName: Variable
+          value:
+            rid: 4463992073094692867
+          fieldType: System.Func`1[[System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089]], mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        parentIds: []
+        childIds: []
+      - name: NMines
+        id: 3cf08c59-671f-496c-83af-7e526808a905
+        position: {x: 658.4, y: 538.4}
+        node:
+          rid: 4463992073094692868
+        references:
+        - fieldName: Variable
+          value:
+            rid: 4463992073094692869
+          fieldType: System.Func`1[[System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089]], mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        parentIds: []
+        childIds: []
+      - name: Distance
+        id: 520a5fe1-86b7-4bcc-ae87-c16811179338
+        position: {x: 642.4, y: 729.60004}
+        node:
+          rid: 4463992073094692870
+        references:
+        - fieldName: Variable
+          value:
+            rid: 4463992073094692871
+          fieldType: System.Func`1[[System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089]], mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        parentIds: []
+        childIds: []
+      - name: CanMine
+        id: d52dbb03-636e-44f9-be13-66b360158eb1
+        position: {x: 650.4, y: 928.8}
+        node:
+          rid: 4463992073094692872
+        references:
+        - fieldName: Variable
+          value:
+            rid: 4463992073094692873
+          fieldType: System.Func`1[[System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089]], mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        parentIds: []
+        childIds: []
+      - name: CanExcave
+        id: 24f8dd02-d7a9-4277-88b5-547937eb94ff
+        position: {x: 666.4, y: 1130.3999}
+        node:
+          rid: 4463992073094692874
+        references:
+        - fieldName: Variable
+          value:
+            rid: 4463992073094692875
+          fieldType: System.Func`1[[System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089]], mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        parentIds: []
+        childIds: []
     pushPerceptions: []
   references:
     version: 2
     RefIds:
+    - rid: 4463992073094692864
+      type: {class: VariableFactor, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
+      data:
+        PullingEnabled: 1
+        min: 0
+        max: 1
+    - rid: 4463992073094692865
+      type: {class: SerializedContextMethod, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        componentName: MinerBehaviour
+        methodName: HPPlayer
+    - rid: 4463992073094692866
+      type: {class: VariableFactor, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
+      data:
+        PullingEnabled: 1
+        min: 0
+        max: 10
+    - rid: 4463992073094692867
+      type: {class: SerializedContextMethod, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        componentName: MinerBehaviour
+        methodName: NAllies
+    - rid: 4463992073094692868
+      type: {class: VariableFactor, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
+      data:
+        PullingEnabled: 1
+        min: 0
+        max: 1
+    - rid: 4463992073094692869
+      type: {class: SerializedContextMethod, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        componentName: MinerBehaviour
+        methodName: NMines
+    - rid: 4463992073094692870
+      type: {class: VariableFactor, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
+      data:
+        PullingEnabled: 1
+        min: 0
+        max: 1
+    - rid: 4463992073094692871
+      type: {class: SerializedContextMethod, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        componentName: MinerBehaviour
+        methodName: Distance
+    - rid: 4463992073094692872
+      type: {class: VariableFactor, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
+      data:
+        PullingEnabled: 1
+        min: 0
+        max: 1
+    - rid: 4463992073094692873
+      type: {class: SerializedContextMethod, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        componentName: MinerBehaviour
+        methodName: CanMine
+    - rid: 4463992073094692874
+      type: {class: VariableFactor, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
+      data:
+        PullingEnabled: 1
+        min: 0
+        max: 1
+    - rid: 4463992073094692875
+      type: {class: SerializedContextMethod, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        componentName: MinerBehaviour
+        methodName: CanExcave
     - rid: 4783593595286061118
       type: {class: UtilitySystem, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
       data:
@@ -696,7 +931,9 @@ MonoBehaviour:
   m_maxHealth: 0
   m_health: 0
   m_isAlive: 0
-  positionSprite: {fileID: 21300000, guid: 9f9bf86151fa04b4fb600f122aaba541, type: 3}
+  healthBarPrefab: {fileID: 0}
+  healthBarOffset: {x: 1, y: 1, z: 0}
+  healthBarSize: {x: 1.6, y: 0.3}
 --- !u!114 &1622443689222201118
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -711,13 +948,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   agentController: {fileID: 5081890824654510718}
   cannon: {fileID: 6093874407106433653}
-  genericAreaDetection: {fileID: 0}
+  genericAreaDetection: {fileID: 5302585328781883277}
   wallLayer:
     serializedVersion: 2
-    m_Bits: 0
-  debugPosition: {fileID: 7844513577416338512}
+    m_Bits: 128
+  debugPosition: {fileID: 6727595187853663268}
   DEBUG: 1
-  genericTargets: []
   patrolPointFound: 0
   noObstaclesBetween: 0
   cannonReloaded: 1
@@ -761,8 +997,8 @@ MonoBehaviour:
   playerState: 0
   DEBUGCONT: 0
   DEBUGDASh: 0
-  agent: {fileID: 0}
-  npcData: {fileID: 0}
+  agent: {fileID: 1416114550839104953}
+  npcData: {fileID: 11400000, guid: d977d3ab22454014da5f1a722fabe61d, type: 2}
   updateDesTimer: 0
   updateTime: 0.5
   minDesDelta: 1
@@ -779,7 +1015,7 @@ GameObject:
   - component: {fileID: 5097661682653571233}
   m_Layer: 0
   m_Name: HullSprite
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -863,7 +1099,7 @@ GameObject:
   - component: {fileID: 2861752177015873557}
   m_Layer: 0
   m_Name: Turret
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

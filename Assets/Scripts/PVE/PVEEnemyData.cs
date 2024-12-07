@@ -10,6 +10,8 @@ namespace Tankito.SinglePlayer
         private Sprite positionSprite;
         private GameObject player;
         private GameObject positionIndicator;
+        public delegate void EnemyDeathEvent();
+        public event EnemyDeathEvent OnDeath;
 
         protected override void Start()
         {
@@ -19,10 +21,15 @@ namespace Tankito.SinglePlayer
             base.Start();
         }
 
-        protected override void Die()
+        public override void Die()
         {
+            OnDeath?.Invoke();
             base.Die();
-            Instantiate(GetComponent<AgentController>().npcData.leftoversInDeath, transform.position, Quaternion.identity);
+            Debug.Log("Se crea resto para revivir con el necromancer");
+            if (GetComponent<AgentController>().npcData.leftoversInDeath != null)
+            {
+                Instantiate(GetComponent<AgentController>().npcData.leftoversInDeath, transform.position, Quaternion.identity);
+            }
         }
 
         void Update()
@@ -68,7 +75,7 @@ namespace Tankito.SinglePlayer
             float topDistance = Mathf.Abs(hitPoint.y - bounds.max.y);
             float bottomDistance = Mathf.Abs(hitPoint.y - bounds.min.y);
 
-            // Determina el lado más cercano
+            // Determina el lado mï¿½s cercano
             float minDistance = Mathf.Min(leftDistance, rightDistance, topDistance, bottomDistance);
 
             if (Mathf.Approximately(minDistance, leftDistance))

@@ -21,7 +21,7 @@ namespace Tankito.SinglePlayer
 
         [SerializeField] private float parryDistance; 
 
-        [SerializeField] List<GameObject> bulletsInRange = new List<GameObject>();
+        List<GameObject> bulletsInRange = new List<GameObject>();
         [SerializeField] AreaDetection bulletAreaDetection;
         public GameObject explosionEffect;
 
@@ -63,7 +63,8 @@ namespace Tankito.SinglePlayer
         {
             Instantiate(explosionEffect, transform.position, Quaternion.identity);
             Debug.Log("KAMIKAZE EXPLOTA");
-            Destroy(gameObject);
+            //Destroy(gameObject);
+            GetComponent<PVEEnemyData>().Die();
             return Status.Success;
         }
         #endregion
