@@ -96,7 +96,7 @@ GameObject:
   - component: {fileID: 5299058469088932656}
   m_Layer: 0
   m_Name: TurretAnimator
-  m_TagString: Player
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -151,7 +151,7 @@ GameObject:
   - component: {fileID: 1418549098127270362}
   m_Layer: 0
   m_Name: HullSprite
-  m_TagString: Player
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -235,7 +235,7 @@ GameObject:
   - component: {fileID: 1867312442756813050}
   m_Layer: 0
   m_Name: HullAnimator
-  m_TagString: Player
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -477,6 +477,9 @@ MonoBehaviour:
   m_maxHealth: 4
   m_health: 0
   m_isAlive: 0
+  healthBarPrefab: {fileID: 0}
+  healthBarOffset: {x: 0, y: 1, z: 0}
+  healthBarSize: {x: 1, y: 0.1}
 --- !u!1 &7271102851290112516
 GameObject:
   m_ObjectHideFlags: 0
@@ -489,7 +492,7 @@ GameObject:
   - component: {fileID: 4501129095166664200}
   m_Layer: 0
   m_Name: Cannon
-  m_TagString: Player
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -537,7 +540,7 @@ GameObject:
   - component: {fileID: 7912626573320990537}
   m_Layer: 0
   m_Name: Turret
-  m_TagString: Player
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

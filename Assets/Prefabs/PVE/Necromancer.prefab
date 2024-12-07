@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5706699329963222631}
   m_Layer: 0
   m_Name: Turret
-  m_TagString: Player
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -72,7 +72,7 @@ GameObject:
   - component: {fileID: 1229014732604803558}
   m_Layer: 0
   m_Name: HullSprite
-  m_TagString: Player
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -156,7 +156,7 @@ GameObject:
   - component: {fileID: 2426720804992937878}
   m_Layer: 0
   m_Name: HullAnimator
-  m_TagString: Player
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -294,7 +294,7 @@ GameObject:
   - component: {fileID: 3438079698645263086}
   m_Layer: 0
   m_Name: Cannon
-  m_TagString: Player
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -423,7 +423,7 @@ GameObject:
   - component: {fileID: 2900531068069454296}
   m_Layer: 0
   m_Name: TurretAnimator
-  m_TagString: Player
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1151,6 +1151,7 @@ MonoBehaviour:
   healthBarPrefab: {fileID: 0}
   healthBarOffset: {x: -1, y: 1, z: 0}
   healthBarSize: {x: 1.6, y: 0.3}
+  positionIndicatorSprite: {fileID: 21300000, guid: 9f9bf86151fa04b4fb600f122aaba541, type: 3}
 --- !u!114 &1733209558801626374
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1171,7 +1172,6 @@ MonoBehaviour:
     m_Bits: 128
   debugPosition: {fileID: 8836122588437294826}
   DEBUG: 1
-  genericTargets: []
   patrolPointFound: 0
   noObstaclesBetween: 0
   cannonReloaded: 1

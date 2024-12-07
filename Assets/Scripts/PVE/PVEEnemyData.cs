@@ -7,11 +7,13 @@ namespace Tankito.SinglePlayer
     public class PVEEnemyData : PVECharacterData
     {
         [SerializeField]
-        private Sprite positionSprite;
+        private Sprite positionIndicatorSprite;
+        [SerializeField]
         private GameObject player;
         private GameObject positionIndicator;
         public delegate void EnemyDeathEvent();
         public event EnemyDeathEvent OnDeath;
+        public Vector2 hitPoint;
 
         protected override void Start()
         {
@@ -40,6 +42,8 @@ namespace Tankito.SinglePlayer
                 int layerMask = LayerMask.GetMask("ScreenEdges");
                 Vector2 direction = (player.transform.position - transform.position).normalized;
                 RaycastHit2D hit = Physics2D.Raycast(transform.position, direction, Mathf.Infinity, layerMask);
+                Debug.DrawRay(transform.position, direction * 100, Color.red);
+                hitPoint = hit.point;
 
                 if (hit.collider != null)
                 {
@@ -57,6 +61,12 @@ namespace Tankito.SinglePlayer
             {
                 positionIndicator.SetActive(false);
             }
+        }
+
+        private void OnDrawGizmos()
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawSphere(hitPoint, 0.5f);
         }
 
         void DetectCollisionSide(RaycastHit2D hit)
@@ -115,9 +125,9 @@ namespace Tankito.SinglePlayer
             GameObject positionIndicator = new GameObject("PositionIndicator");
             positionIndicator.transform.SetParent(transform);
             SpriteRenderer renderer = positionIndicator.AddComponent<SpriteRenderer>();
-            renderer.sprite = positionSprite;
+            renderer.sprite = positionIndicatorSprite;
             renderer.color = Color.red;
-            renderer.sortingLayerID = 3;
+            renderer.renderingLayerMask = 3;
             positionIndicator.SetActive(false);
             return positionIndicator;
         }
