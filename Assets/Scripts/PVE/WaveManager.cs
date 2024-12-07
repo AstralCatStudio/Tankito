@@ -18,6 +18,7 @@ namespace Tankito.SinglePlayer
         [SerializeField] private GameObject minerPrefab;
 
         [Header("Spawn Points")]
+        [SerializeField] private Transform spawnsParent;
         [SerializeField] private List<Transform> spawnPoints;
         [SerializeField] private float maxDistance;
 
@@ -36,7 +37,7 @@ namespace Tankito.SinglePlayer
             activeEnemies = new List<GameObject>();
             spawnPoints = new List<Transform>();
             currentWave = 0;
-            foreach (Transform t in transform)
+            foreach (Transform t in spawnsParent)
             {
                 spawnPoints.Add(t);
             }
