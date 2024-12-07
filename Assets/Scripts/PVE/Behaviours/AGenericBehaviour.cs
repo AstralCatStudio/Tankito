@@ -34,6 +34,7 @@ namespace Tankito.SinglePlayer
         }
 
         #region TargetList
+        [SerializeField]
         protected List<GameObject>  genericTargets = new List<GameObject>();
         #endregion
 
