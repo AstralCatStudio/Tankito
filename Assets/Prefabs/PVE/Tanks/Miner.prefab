@@ -1059,7 +1059,7 @@ MonoBehaviour:
       nodes:
       - name: HPPlayer
         id: 9e1e1545-7886-4e79-9eae-90b36b70a716
-        position: {x: -83.2, y: -319.2}
+        position: {x: 0, y: 0}
         node:
           rid: 4463992094451564545
         references:
@@ -1074,7 +1074,7 @@ MonoBehaviour:
         childIds: []
       - name: Distance
         id: 3b767f21-6165-4eec-9933-28e835790896
-        position: {x: -75.2, y: 187.2}
+        position: {x: 0, y: 200}
         node:
           rid: 4463992094451564547
         references:
@@ -1084,11 +1084,14 @@ MonoBehaviour:
           fieldType: System.Func`1[[System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089]], mscorlib, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089
-        parentIds: []
+        parentIds:
+        - c2abe422-b78f-4243-b9e0-9ed592bc7e92
+        - 73ae0bde-9e51-46a3-b551-fc8c70ffe242
+        - 016bcb23-dc59-4316-b9ad-54ff151cea58
         childIds: []
       - name: Cover
         id: 49a701b7-8349-4d71-bbdc-27d151243066
-        position: {x: -75.2, y: 398.40002}
+        position: {x: 0, y: 400}
         node:
           rid: 4463992094451564549
         references:
@@ -1103,7 +1106,7 @@ MonoBehaviour:
         childIds: []
       - name: CanDig
         id: d3433aa8-3a7a-4896-9b03-0a2800b713aa
-        position: {x: -75.2, y: 587.2}
+        position: {x: 16, y: 1394.3999}
         node:
           rid: 4463992094451564551
         references:
@@ -1113,11 +1116,12 @@ MonoBehaviour:
           fieldType: System.Func`1[[System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089]], mscorlib, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089
-        parentIds: []
+        parentIds:
+        - 0cb12908-d626-4558-9909-41bdf673c8e2
         childIds: []
       - name: CanPutMIne
         id: 100516d7-61eb-4450-a24c-f6aaf74769de
-        position: {x: -75.2, y: 807.2}
+        position: {x: 0, y: 800}
         node:
           rid: 4463992094451564553
         references:
@@ -1127,11 +1131,12 @@ MonoBehaviour:
           fieldType: System.Func`1[[System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089]], mscorlib, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089
-        parentIds: []
+        parentIds:
+        - bfb84064-20c0-44f8-aaf0-531bd6f92826
         childIds: []
       - name: NAllies
         id: 07c64f9e-147c-49e1-9da9-4a4aee3edb23
-        position: {x: -83.2, y: -126.4}
+        position: {x: 0, y: 1000}
         node:
           rid: 4463992094451564555
         references:
@@ -1146,7 +1151,7 @@ MonoBehaviour:
         childIds: []
       - name: NMines
         id: d61a4072-a5b2-4119-8770-b679da61c223
-        position: {x: -75.2, y: 36}
+        position: {x: 0, y: 1200}
         node:
           rid: 4463992094451564557
         references:
@@ -1156,11 +1161,13 @@ MonoBehaviour:
           fieldType: System.Func`1[[System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089]], mscorlib, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089
-        parentIds: []
+        parentIds:
+        - 44f54bc1-38e2-4bf5-be45-3ced414fa55e
+        - 016bcb23-dc59-4316-b9ad-54ff151cea58
         childIds: []
       - name: AggroHPP
         id: 4e86eeb3-2915-40ce-a9ae-bab5213c8981
-        position: {x: 382.4, y: -303.2}
+        position: {x: 406.4, y: 170.4}
         node:
           rid: 4463992094451564559
         references:
@@ -1171,12 +1178,15 @@ MonoBehaviour:
             PublicKeyToken=b77a5c561934e089],[System.Single, mscorlib, Version=4.0.0.0,
             Culture=neutral, PublicKeyToken=b77a5c561934e089]], mscorlib, Version=4.0.0.0,
             Culture=neutral, PublicKeyToken=b77a5c561934e089
-        parentIds: []
+        parentIds:
+        - c2292eb4-3d30-4157-b7ee-6c05383e366d
+        - eb8b7490-7343-4f9e-bd6c-cc2e23183024
+        - 016bcb23-dc59-4316-b9ad-54ff151cea58
         childIds:
         - 9e1e1545-7886-4e79-9eae-90b36b70a716
       - name: AggroNA
         id: 5e20c7b0-8475-4a8b-9b12-731f93e28d76
-        position: {x: 390.4, y: -110.4}
+        position: {x: 406.4, y: 770.4}
         node:
           rid: 4463992094451564561
         references:
@@ -1187,21 +1197,24 @@ MonoBehaviour:
             PublicKeyToken=b77a5c561934e089],[System.Single, mscorlib, Version=4.0.0.0,
             Culture=neutral, PublicKeyToken=b77a5c561934e089]], mscorlib, Version=4.0.0.0,
             Culture=neutral, PublicKeyToken=b77a5c561934e089
-        parentIds: []
+        parentIds:
+        - 016bcb23-dc59-4316-b9ad-54ff151cea58
+        - 594de514-87cc-4077-a65e-d9b44ea00239
         childIds:
         - 07c64f9e-147c-49e1-9da9-4a4aee3edb23
       - name: 
         id: 337959f2-4fdf-43f5-8056-da35832a8b20
-        position: {x: 422.4, y: 405.59998}
+        position: {x: 406.4, y: 570.4}
         node:
           rid: 4463992094451564563
         references: []
-        parentIds: []
+        parentIds:
+        - 016bcb23-dc59-4316-b9ad-54ff151cea58
         childIds:
         - 49a701b7-8349-4d71-bbdc-27d151243066
       - name: GoAggro
         id: 54dca2bb-c3b4-4ec0-9385-702fe34b3790
-        position: {x: 1098.4, y: -303.2}
+        position: {x: 1628, y: 340}
         node:
           rid: 4463992094451564564
         references:
@@ -1211,10 +1224,11 @@ MonoBehaviour:
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         parentIds: []
-        childIds: []
+        childIds:
+        - eb8b7490-7343-4f9e-bd6c-cc2e23183024
       - name: GoDef
         id: 4638b0a9-f6c9-4804-ac9c-c1b744908e3c
-        position: {x: 1114.4, y: 44}
+        position: {x: 2073.6, y: 500}
         node:
           rid: 4463992094451564565
         references:
@@ -1224,10 +1238,11 @@ MonoBehaviour:
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         parentIds: []
-        childIds: []
+        childIds:
+        - 73ae0bde-9e51-46a3-b551-fc8c70ffe242
       - name: Dig
         id: 7b3fee8c-7eff-451a-83d0-b15c6ab37d46
-        position: {x: 1122.4, y: 357.59998}
+        position: {x: 2089.6, y: 1124.7999}
         node:
           rid: 4463992094451564567
         references:
@@ -1237,10 +1252,11 @@ MonoBehaviour:
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         parentIds: []
-        childIds: []
+        childIds:
+        - 0cb12908-d626-4558-9909-41bdf673c8e2
       - name: PutMine
         id: 47d53aa4-35ff-421b-802e-8f1d23437ef0
-        position: {x: 1130.4, y: 617.60004}
+        position: {x: 2081.6, y: 700}
         node:
           rid: 4463992094451564568
         references:
@@ -1250,7 +1266,113 @@ MonoBehaviour:
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         parentIds: []
-        childIds: []
+        childIds:
+        - bfb84064-20c0-44f8-aaf0-531bd6f92826
+      - name: UGoAggro
+        id: eb8b7490-7343-4f9e-bd6c-cc2e23183024
+        position: {x: 937.6, y: 416}
+        node:
+          rid: 4463992096203997184
+        references: []
+        parentIds:
+        - 54dca2bb-c3b4-4ec0-9385-702fe34b3790
+        childIds:
+        - 4e86eeb3-2915-40ce-a9ae-bab5213c8981
+        - c2abe422-b78f-4243-b9e0-9ed592bc7e92
+        - 44f54bc1-38e2-4bf5-be45-3ced414fa55e
+      - name: 1_AggroHPP
+        id: c2292eb4-3d30-4157-b7ee-6c05383e366d
+        position: {x: 937.6, y: 215.99998}
+        node:
+          rid: 4463992096203997185
+        references: []
+        parentIds:
+        - 73ae0bde-9e51-46a3-b551-fc8c70ffe242
+        - 594de514-87cc-4077-a65e-d9b44ea00239
+        childIds:
+        - 4e86eeb3-2915-40ce-a9ae-bab5213c8981
+      - name: 1_Distance
+        id: c2abe422-b78f-4243-b9e0-9ed592bc7e92
+        position: {x: 406.4, y: 370.40002}
+        node:
+          rid: 4463992096203997186
+        references: []
+        parentIds:
+        - eb8b7490-7343-4f9e-bd6c-cc2e23183024
+        - 594de514-87cc-4077-a65e-d9b44ea00239
+        childIds:
+        - 3b767f21-6165-4eec-9933-28e835790896
+      - name: 1_NMines
+        id: 44f54bc1-38e2-4bf5-be45-3ced414fa55e
+        position: {x: 406.4, y: 970.39996}
+        node:
+          rid: 4463992096203997187
+        references: []
+        parentIds:
+        - eb8b7490-7343-4f9e-bd6c-cc2e23183024
+        - 73ae0bde-9e51-46a3-b551-fc8c70ffe242
+        childIds:
+        - d61a4072-a5b2-4119-8770-b679da61c223
+      - name: UGoDef
+        id: 73ae0bde-9e51-46a3-b551-fc8c70ffe242
+        position: {x: 1628, y: 540}
+        node:
+          rid: 4463992096203997188
+        references: []
+        parentIds:
+        - 4638b0a9-f6c9-4804-ac9c-c1b744908e3c
+        childIds:
+        - c2292eb4-3d30-4157-b7ee-6c05383e366d
+        - 3b767f21-6165-4eec-9933-28e835790896
+        - 44f54bc1-38e2-4bf5-be45-3ced414fa55e
+      - name: WeightPutMine
+        id: 016bcb23-dc59-4316-b9ad-54ff151cea58
+        position: {x: 937.6, y: 616}
+        node:
+          rid: 4463992096203997190
+        references: []
+        parentIds:
+        - bfb84064-20c0-44f8-aaf0-531bd6f92826
+        childIds:
+        - 4e86eeb3-2915-40ce-a9ae-bab5213c8981
+        - 3b767f21-6165-4eec-9933-28e835790896
+        - 337959f2-4fdf-43f5-8056-da35832a8b20
+        - 5e20c7b0-8475-4a8b-9b12-731f93e28d76
+        - d61a4072-a5b2-4119-8770-b679da61c223
+      - name: UPutMine
+        id: bfb84064-20c0-44f8-aaf0-531bd6f92826
+        position: {x: 1628, y: 740}
+        node:
+          rid: 4463992096203997191
+        references: []
+        parentIds:
+        - 47d53aa4-35ff-421b-802e-8f1d23437ef0
+        childIds:
+        - 016bcb23-dc59-4316-b9ad-54ff151cea58
+        - 100516d7-61eb-4450-a24c-f6aaf74769de
+      - name: WeightDig
+        id: 594de514-87cc-4077-a65e-d9b44ea00239
+        position: {x: 1318.4, y: 986.39996}
+        node:
+          rid: 4463992096203997192
+        references: []
+        parentIds:
+        - 0cb12908-d626-4558-9909-41bdf673c8e2
+        childIds:
+        - 5e20c7b0-8475-4a8b-9b12-731f93e28d76
+        - c2abe422-b78f-4243-b9e0-9ed592bc7e92
+        - c2292eb4-3d30-4157-b7ee-6c05383e366d
+      - name: UDig
+        id: 0cb12908-d626-4558-9909-41bdf673c8e2
+        position: {x: 1592.5925, y: 1109.0623}
+        node:
+          rid: 4463992096203997193
+        references: []
+        parentIds:
+        - 7b3fee8c-7eff-451a-83d0-b15c6ab37d46
+        childIds:
+        - 594de514-87cc-4077-a65e-d9b44ea00239
+        - d3433aa8-3a7a-4896-9b03-0a2800b713aa
     pushPerceptions: []
   references:
     version: 2
@@ -1659,6 +1781,66 @@ MonoBehaviour:
         unpause:
           componentName: 
           methodName: 
+    - rid: 4463992096203997184
+      type: {class: WeightedFusionFactor, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
+      data:
+        PullingEnabled: 1
+        Weights:
+        - 0.5
+        - 0.3
+        - 0.2
+    - rid: 4463992096203997185
+      type: {class: LinearCurveFactor, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
+      data:
+        PullingEnabled: 1
+        Slope: -1
+        YIntercept: 1
+    - rid: 4463992096203997186
+      type: {class: LinearCurveFactor, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
+      data:
+        PullingEnabled: 1
+        Slope: -1
+        YIntercept: 1
+    - rid: 4463992096203997187
+      type: {class: LinearCurveFactor, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
+      data:
+        PullingEnabled: 1
+        Slope: 1
+        YIntercept: 0
+    - rid: 4463992096203997188
+      type: {class: WeightedFusionFactor, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
+      data:
+        PullingEnabled: 1
+        Weights:
+        - 0.5
+        - 0.3
+        - 0.2
+    - rid: 4463992096203997190
+      type: {class: WeightedFusionFactor, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
+      data:
+        PullingEnabled: 1
+        Weights:
+        - 0.15
+        - 0.15
+        - 0.3
+        - 0.1
+        - 0.2
+    - rid: 4463992096203997191
+      type: {class: MinFusionFactor, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
+      data:
+        PullingEnabled: 1
+    - rid: 4463992096203997192
+      type: {class: WeightedFusionFactor, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
+      data:
+        PullingEnabled: 1
+        Weights:
+        - 0.4
+        - 0.4
+        - 0.2
+    - rid: 4463992096203997193
+      type: {class: MinFusionFactor, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
+      data:
+        PullingEnabled: 1
     - rid: 4783593730761031680
       type: {class: FSM, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
       data: 

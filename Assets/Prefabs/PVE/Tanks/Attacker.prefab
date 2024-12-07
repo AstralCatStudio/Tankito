@@ -1349,7 +1349,7 @@ MonoBehaviour:
             PublicKeyToken=b77a5c561934e089]], mscorlib, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089
         parentIds:
-        - bbecd0e4-4f1d-4e45-9165-2dda2e625e4e
+        - 72a6a746-4c12-4792-ae1a-a9659d1c3eff
         childIds: []
       - name: AggroNA
         id: cc888af6-309d-4574-9945-4c2529405ecb
@@ -1426,7 +1426,7 @@ MonoBehaviour:
         references: []
         parentIds:
         - 6ae85959-e6b2-44e4-9d68-2119b46dcb2a
-        - bbecd0e4-4f1d-4e45-9165-2dda2e625e4e
+        - 72a6a746-4c12-4792-ae1a-a9659d1c3eff
         childIds:
         - 00bd482f-6317-454e-88f3-a7e73a1a2413
       - name: 1_AggroHPP
@@ -1461,17 +1461,6 @@ MonoBehaviour:
         childIds:
         - faaa3d4c-5856-42e3-b469-b47bcb223053
         - a702a056-5d52-4f5c-990b-81cba0b38459
-      - name: UGoHeal
-        id: bbecd0e4-4f1d-4e45-9165-2dda2e625e4e
-        position: {x: 1136.8, y: 822.4}
-        node:
-          rid: 4463992067889561605
-        references: []
-        parentIds:
-        - 52b72314-c6bf-4c6d-8ce0-5a08acda455f
-        childIds:
-        - a702a056-5d52-4f5c-990b-81cba0b38459
-        - aefe5c18-a75f-4065-ba2e-6277963a635a
       - name: GoAggro
         id: c1309ca5-4794-4892-a558-cc8e3910776a
         position: {x: 1128.8, y: 40}
@@ -1516,7 +1505,7 @@ MonoBehaviour:
         - 6ae85959-e6b2-44e4-9d68-2119b46dcb2a
       - name: GoHeal
         id: 52b72314-c6bf-4c6d-8ce0-5a08acda455f
-        position: {x: 1486.4, y: 540}
+        position: {x: 1724.8, y: 702.4}
         node:
           rid: 4463992067889561609
         references:
@@ -1527,7 +1516,18 @@ MonoBehaviour:
             Culture=neutral, PublicKeyToken=null
         parentIds: []
         childIds:
-        - bbecd0e4-4f1d-4e45-9165-2dda2e625e4e
+        - 72a6a746-4c12-4792-ae1a-a9659d1c3eff
+      - name: UGoHeal
+        id: 72a6a746-4c12-4792-ae1a-a9659d1c3eff
+        position: {x: 1144.8, y: 849.60004}
+        node:
+          rid: 4463992096203997189
+        references: []
+        parentIds:
+        - 52b72314-c6bf-4c6d-8ce0-5a08acda455f
+        childIds:
+        - a702a056-5d52-4f5c-990b-81cba0b38459
+        - aefe5c18-a75f-4065-ba2e-6277963a635a
     pushPerceptions: []
   references:
     version: 2
@@ -2002,11 +2002,6 @@ MonoBehaviour:
         Weights:
         - 0.5
         - 0.5
-    - rid: 4463992067889561605
-      type: {class: WeightedFusionFactor, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
-      data:
-        PullingEnabled: 1
-        Weights: []
     - rid: 4463992067889561606
       type: {class: UtilityAction, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
       data:
@@ -2123,6 +2118,10 @@ MonoBehaviour:
         unpause:
           componentName: 
           methodName: 
+    - rid: 4463992096203997189
+      type: {class: MinFusionFactor, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
+      data:
+        PullingEnabled: 1
     - rid: 4783593595286061094
       type: {class: StackFSM, ns: BehaviourAPI.StateMachines.StackFSMs, asm: BehaviourAPI.StateMachines}
       data: 
@@ -2295,7 +2294,7 @@ MonoBehaviour:
   genericAreaDetection: {fileID: 928002265130865569}
   wallLayer:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 1152
   debugPosition: {fileID: 5739514068712817557}
   DEBUG: 1
   genericTargets: []
@@ -2308,6 +2307,7 @@ MonoBehaviour:
   hasShot: 0
   playerAreaDetection: {fileID: 4538736786602061432}
   loaderReloadDuration: 5
+  maxAttackerHp: 0
   aggroRadiusMult: 1.4
   normalRadiusMult: 2
   defRadiusMult: 2.4
