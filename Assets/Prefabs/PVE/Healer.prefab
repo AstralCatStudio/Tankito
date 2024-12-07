@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2960797486582107007}
   m_Layer: 0
   m_Name: HullSprite
-  m_TagString: Player
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -96,7 +96,7 @@ GameObject:
   - component: {fileID: 8121392476532854674}
   m_Layer: 0
   m_Name: Turret
-  m_TagString: Player
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -240,7 +240,7 @@ GameObject:
   - component: {fileID: 8579740154918381968}
   m_Layer: 0
   m_Name: Cannon
-  m_TagString: Player
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -478,7 +478,7 @@ GameObject:
   - component: {fileID: 3237926822004283103}
   m_Layer: 0
   m_Name: TurretAnimator
-  m_TagString: Player
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -615,7 +615,7 @@ GameObject:
   - component: {fileID: 8789598123878204757}
   m_Layer: 0
   m_Name: HullAnimator
-  m_TagString: Player
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -724,7 +724,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 10
+  m_Radius: 8
 --- !u!114 &1233278039609621871
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1841,3 +1841,4 @@ MonoBehaviour:
   healthBarPrefab: {fileID: 7735631790222357969, guid: 10e8e7d9fc2d16244953da8598bb4057, type: 3}
   healthBarOffset: {x: 1, y: 1, z: 0}
   healthBarSize: {x: 1.6, y: 0.3}
+  positionIndicatorSprite: {fileID: 21300000, guid: 9f9bf86151fa04b4fb600f122aaba541, type: 3}

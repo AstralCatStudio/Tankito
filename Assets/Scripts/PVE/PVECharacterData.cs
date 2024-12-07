@@ -73,7 +73,7 @@ namespace Tankito.SinglePlayer
             }
         }
 
-        protected virtual void Die()
+        public virtual void Die()
         {
             Debug.Log($"El personaje {gameObject.name} fue derrotado");
             m_isAlive = false;

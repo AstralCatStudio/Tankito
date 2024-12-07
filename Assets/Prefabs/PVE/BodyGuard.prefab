@@ -1272,7 +1272,6 @@ MonoBehaviour:
     m_Bits: 128
   debugPosition: {fileID: 8372812398923057591}
   DEBUG: 0
-  genericTargets: []
   patrolPointFound: 0
   noObstaclesBetween: 0
   cannonReloaded: 1
@@ -1287,9 +1286,6 @@ MonoBehaviour:
   enemyLayer:
     serializedVersion: 2
     m_Bits: 1024
-  bulletRadius: 0.6
-  alliesInRange: []
-  bulletsInRange: []
 --- !u!114 &4763442505822864343
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1320,6 +1316,7 @@ MonoBehaviour:
   healthBarPrefab: {fileID: 7735631790222357969, guid: 10e8e7d9fc2d16244953da8598bb4057, type: 3}
   healthBarOffset: {x: -1, y: 1, z: 0}
   healthBarSize: {x: 1.6, y: 0.3}
+  positionIndicatorSprite: {fileID: 21300000, guid: 9f9bf86151fa04b4fb600f122aaba541, type: 3}
 --- !u!1 &6026416375967643090
 GameObject:
   m_ObjectHideFlags: 0
