@@ -1,6 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using BehaviourAPI;
+using BehaviourAPI.Core;
+using System.Linq;
 
 namespace Tankito.SinglePlayer
 {
@@ -18,15 +21,26 @@ namespace Tankito.SinglePlayer
         [SerializeField] LayerMask coverLayers;
 
         [SerializeField]float excaveCooldown = 10;
-        float excaveTimer = 0;
+        float digTimer = 0;
         const int MAX_NA = 5;
 
         [SerializeField] private GameObject minePrefab; 
-        private Transform mineSpawnPoint;
         private float stateTimer = 0f;
 
-        [SerializeField] private float digDuration = 5f;
+        #region PutMine
+        [SerializeField] bool putMineAction = false;
+        bool hasPutMine = false;
         [SerializeField] private float putMineDuration = 3f;
+        #endregion
+
+        #region Dig
+        [SerializeField] bool digAction = false;
+        [SerializeField] private GameObject digObject;
+        [SerializeField] int maxDigDistance = 50;
+        [SerializeField] private float digDuration = 5f;
+        List<SpriteRenderer> spriteRenderers = new List<SpriteRenderer>();
+        bool hasDigged = false;
+        #endregion
 
         protected override void Start()
         {
@@ -34,6 +48,7 @@ namespace Tankito.SinglePlayer
             nMines = MAX_MINES;
             colliderDiameter = GetComponent<CircleCollider2D>().radius * 2;
             disPerStep = colliderDiameter / 10;
+            spriteRenderers = gameObject.GetComponentsInChildren<SpriteRenderer>().ToList();
             playerAreaDetection.OnSubjectDetected += OnPlayerDetected;
             playerAreaDetection.OnSubjectDissapear += OnPlayerDissapear;
         }
@@ -48,43 +63,89 @@ namespace Tankito.SinglePlayer
         protected override void Update()
         {
             base.Update();
-            excaveTimer += Time.deltaTime;
+            digTimer += Time.deltaTime;
         }
 
         #region States
 
-        private void HandleDigState()
+        public void InitDigState()
         {
-            Debug.Log("escavando");
+            foreach (var sprite in spriteRenderers)
+            {
+                sprite.enabled = false;
+            }
+            GameObject.Instantiate(digObject, transform.position, Quaternion.identity);
         }
 
-        private void HandlePutMineState()
+        public Status DigState()
         {
-            Debug.Log("contador para poner mina");
+            stateTimer += Time.deltaTime;
+            if(stateTimer >= digDuration)
+            {
+                transform.position = PatrolManager.Instance.GetDigAppearPoint(maxDigDistance).position;
+                foreach (var sprite in spriteRenderers)
+                {
+                    sprite.enabled = true;
+                }
+                GameObject.Instantiate(digObject, transform.position, Quaternion.identity);
+                hasDigged = true;
+            }
+            
+            return Status.Running;
+        }
+
+        public Status PutMineState()
+        {
+            stateTimer += Time.deltaTime;
             if (stateTimer >= putMineDuration)
             {
                 PlaceMine();
+                hasPutMine = true;
             }
+            return Status.Running;
         }
-
-
-        private void PlaceMine()
-        {
-            if (minePrefab != null && mineSpawnPoint != null)
-            {
-                Instantiate(minePrefab, mineSpawnPoint.position, Quaternion.identity);
-                Debug.Log("Minero ha colocado una mina.");
-                nMines--;
-            }
-            else
-            {
-                Debug.LogError("fallo al poner mina");
-            }
-        }
-
-
         #endregion
 
+        #region Perceptions
+        public bool CheckIdleToMinerUS()
+        {
+            return player != null;
+        }
+
+        public bool CheckMinerUSToIdle()
+        {
+            return player == null;
+        }
+
+        public bool CheckMinerUSToDig()
+        {
+            return digAction;
+        }
+
+        public bool CheckDigToMinerUS()
+        {
+            return hasDigged;
+        }
+
+        public bool CheckMinerUSToPutMine()
+        {
+            return putMineAction;
+        }
+
+        public bool CheckPutMineToMinerUS()
+        {
+            return hasPutMine;
+        }
+
+        public void ActionMinerUSExit()
+        {
+            hasDigged = false;
+            hasPutMine = false;
+            putMineAction = false;
+            digAction = false;
+            stateTimer = 0;
+        }
+        #endregion
 
         #region UtilitySystem
         #region Variables
@@ -160,7 +221,7 @@ namespace Tankito.SinglePlayer
 
         public float CanExcave()
         {
-            if(excaveTimer >= excaveCooldown)
+            if(digTimer >= excaveCooldown)
             {
                 return 1;
             }
@@ -182,14 +243,51 @@ namespace Tankito.SinglePlayer
             return (1 / MAX_NA) / (NA + 1 / MAX_NA);
         }
         #endregion
+        #region UtlityActions
+        public Status MoveAggro()
+        {
+            return Status.Success;
+        }
+
+        public Status MoveDef()
+        {
+            return Status.Success;
+        }
+
+        public Status Dig()
+        {
+            digAction = true;
+            return Status.Success;
+        }
+
+        public Status PutMine()
+        {
+            putMineAction = true;
+            return Status.Success;
+        }
+        #endregion 
         #endregion
 
         #region Utilities
+        private void PlaceMine()
+        {
+            if (minePrefab != null)
+            {
+                Instantiate(minePrefab, transform.position, Quaternion.identity);
+                Debug.Log("Minero ha colocado una mina.");
+                nMines--;
+            }
+            else
+            {
+                Debug.LogError("fallo al poner mina");
+            }
+        }
+
         void OnPlayerDetected(GameObject gameObject)
         {
             if(maxPlayerHp == 0)
             {
-                maxPlayerHp = player.GetComponent<PVECharacterData>().Max_Health;
+                maxPlayerHp = gameObject.GetComponent<PVECharacterData>().Max_Health;
             }
             player = gameObject;
         }

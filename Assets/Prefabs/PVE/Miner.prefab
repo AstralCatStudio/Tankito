@@ -754,7 +754,7 @@ MonoBehaviour:
         references:
         - fieldName: Action
           value:
-            rid: -2
+            rid: 4463992089664552961
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         parentIds:
@@ -769,7 +769,7 @@ MonoBehaviour:
         references:
         - fieldName: Action
           value:
-            rid: -2
+            rid: 4463992089664552969
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         parentIds:
@@ -784,7 +784,7 @@ MonoBehaviour:
         references:
         - fieldName: Action
           value:
-            rid: 4783593730761031687
+            rid: 4463992089664552977
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         parentIds:
@@ -803,12 +803,12 @@ MonoBehaviour:
         references:
         - fieldName: Perception
           value:
-            rid: -2
+            rid: 4463992089664552962
           fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
             Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         - fieldName: Action
           value:
-            rid: -2
+            rid: 4463992089664552963
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         parentIds:
@@ -823,12 +823,12 @@ MonoBehaviour:
         references:
         - fieldName: Perception
           value:
-            rid: -2
+            rid: 4463992089664552964
           fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
             Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         - fieldName: Action
           value:
-            rid: -2
+            rid: 4463992089664552974
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         parentIds:
@@ -843,12 +843,12 @@ MonoBehaviour:
         references:
         - fieldName: Perception
           value:
-            rid: -2
+            rid: 4463992089664552970
           fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
             Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         - fieldName: Action
           value:
-            rid: -2
+            rid: 4463992089664552973
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         parentIds:
@@ -863,12 +863,12 @@ MonoBehaviour:
         references:
         - fieldName: Perception
           value:
-            rid: -2
+            rid: 4463992089664552971
           fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
             Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         - fieldName: Action
           value:
-            rid: -2
+            rid: 4463992089664552972
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         parentIds:
@@ -883,17 +883,18 @@ MonoBehaviour:
         references:
         - fieldName: Perception
           value:
-            rid: -2
+            rid: 4463992089664552965
           fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
             Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         - fieldName: Action
           value:
-            rid: -2
+            rid: 4463992089664552976
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         parentIds:
         - d0c78b14-5f4d-4af2-80da-ebec62a28e31
-        childIds: []
+        childIds:
+        - d570d9f1-32aa-4d98-b48c-97801a534f12
       - name: MineToUS
         id: 638abd29-398e-406a-a64c-319a395976ca
         position: {x: 1729.6, y: 500.8}
@@ -902,12 +903,12 @@ MonoBehaviour:
         references:
         - fieldName: Perception
           value:
-            rid: -2
+            rid: 4463992089664552967
           fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
             Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         - fieldName: Action
           value:
-            rid: -2
+            rid: 4463992089664552968
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         parentIds: []
@@ -921,10 +922,11 @@ MonoBehaviour:
         references:
         - fieldName: Action
           value:
-            rid: -2
+            rid: 4463992089664552966
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         parentIds:
+        - 504ead2b-a028-4547-94a4-c37995e1b58b
         - 504ead2b-a028-4547-94a4-c37995e1b58b
         childIds:
         - 638abd29-398e-406a-a64c-319a395976ca
@@ -937,8 +939,211 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
+    - rid: 4463992089664552961
+      type: {class: CustomAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        start:
+          componentName: 
+          methodName: 
+        update:
+          componentName: MinerBehaviour
+          methodName: IdleState
+        stop:
+          componentName: 
+          methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
+    - rid: 4463992089664552962
+      type: {class: CustomPerception, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        init:
+          componentName: 
+          methodName: 
+        check:
+          componentName: MinerBehaviour
+          methodName: CheckIdleToMinerUS
+        reset:
+          componentName: 
+          methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
+    - rid: 4463992089664552963
+      type: {class: SimpleAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        method:
+          componentName: MinerBehaviour
+          methodName: ActionIdleToChase
+    - rid: 4463992089664552964
+      type: {class: CustomPerception, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        init:
+          componentName: 
+          methodName: 
+        check:
+          componentName: MinerBehaviour
+          methodName: CheckMinerUSToIdle
+        reset:
+          componentName: 
+          methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
+    - rid: 4463992089664552965
+      type: {class: CustomPerception, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        init:
+          componentName: 
+          methodName: 
+        check:
+          componentName: MinerBehaviour
+          methodName: CheckUSMinerToPutMine
+        reset:
+          componentName: 
+          methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
+    - rid: 4463992089664552966
+      type: {class: CustomAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        start:
+          componentName: MinerBehaviour
+          methodName: InitPutMineState
+        update:
+          componentName: MinerBehaviour
+          methodName: PutMineState
+        stop:
+          componentName: 
+          methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
+    - rid: 4463992089664552967
+      type: {class: CustomPerception, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        init:
+          componentName: 
+          methodName: 
+        check:
+          componentName: MinerBehaviour
+          methodName: CheckPutMineToMinerUS
+        reset:
+          componentName: 
+          methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
+    - rid: 4463992089664552968
+      type: {class: SimpleAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        method:
+          componentName: MinerBehaviour
+          methodName: ActionMineToMinerUS
+    - rid: 4463992089664552969
+      type: {class: CustomAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        start:
+          componentName: 
+          methodName: 
+        update:
+          componentName: MinerBehaviour
+          methodName: DigState
+        stop:
+          componentName: 
+          methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
+    - rid: 4463992089664552970
+      type: {class: CustomPerception, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        init:
+          componentName: 
+          methodName: 
+        check:
+          componentName: MinerBehaviour
+          methodName: CheckMinerUSToDig
+        reset:
+          componentName: 
+          methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
+    - rid: 4463992089664552971
+      type: {class: CustomPerception, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        init:
+          componentName: 
+          methodName: 
+        check:
+          componentName: MinerBehaviour
+          methodName: CheckDigToMinerUS
+        reset:
+          componentName: 
+          methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
+    - rid: 4463992089664552972
+      type: {class: SimpleAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        method:
+          componentName: MinerBehaviour
+          methodName: ActionDigToMinerUS
+    - rid: 4463992089664552973
+      type: {class: SimpleAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        method:
+          componentName: MinerBehaviour
+          methodName: ActionMinerUSExit
+    - rid: 4463992089664552974
+      type: {class: SimpleAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        method:
+          componentName: MinerBehaviour
+          methodName: ActionMinerUSExit
+    - rid: 4463992089664552976
+      type: {class: SimpleAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        method:
+          componentName: MinerBehaviour
+          methodName: ActionMinerUSExit
+    - rid: 4463992089664552977
+      type: {class: MoveToMousePosAction, ns: BehaviourAPI.UnityToolkit, asm: BehaviourAPI.UnityToolkit}
+      data:
+        maxRayDistance: 100
+        layerMask:
+          serializedVersion: 2
+          m_Bits: 4294967295
     - rid: 4783593730761031680
       type: {class: FSM, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
       data: 
@@ -955,36 +1160,30 @@ MonoBehaviour:
       type: {class: UtilitySystem, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
       data:
         Inertia: 1.3
-    - rid: 4783593730761031687
-      type: {class: SubgraphAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
-      data:
-        ExecuteOnLoop: 0
-        InterruptOptions: 2
-        subgraphId: df57f385-78e4-4b6c-97d9-2f464c7fae8c
     - rid: 4783593730761031688
       type: {class: StateTransition, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
       data:
-        StatusFlags: 0
+        StatusFlags: -1
     - rid: 4783593730761031689
       type: {class: StateTransition, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
       data:
-        StatusFlags: 0
+        StatusFlags: -1
     - rid: 4783593730761031690
       type: {class: StateTransition, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
       data:
-        StatusFlags: 0
+        StatusFlags: -1
     - rid: 4783593730761031691
       type: {class: StateTransition, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
       data:
-        StatusFlags: 0
+        StatusFlags: -1
     - rid: 4783593730761031692
       type: {class: StateTransition, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
       data:
-        StatusFlags: 0
+        StatusFlags: -1
     - rid: 4783593730761031693
       type: {class: StateTransition, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
       data:
-        StatusFlags: 0
+        StatusFlags: -1
     - rid: 4783593730761031694
       type: {class: State, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
       data: 
@@ -1058,7 +1257,12 @@ MonoBehaviour:
     m_Bits: 3200
   excaveCooldown: 10
   minePrefab: {fileID: 3910763919036118693, guid: 3a1b62ff20cf9ea44950c78f6cdcf260, type: 3}
-  mineSpawnPoint: {fileID: 0}
+  putMineAction: 0
+  putMineDuration: 3
+  digAction: 0
+  digObject: {fileID: 3385328193976778370, guid: c63177a0ad240a348bc71d52966acc41, type: 3}
+  maxDigDistance: 50
+  digDuration: 5
 --- !u!114 &5081890824654510718
 MonoBehaviour:
   m_ObjectHideFlags: 0
