@@ -482,9 +482,11 @@ MonoBehaviour:
   m_maxHealth: 4
   m_health: 0
   m_isAlive: 0
-  healthBarPrefab: {fileID: 0}
-  healthBarOffset: {x: 0, y: 1, z: 0}
-  healthBarSize: {x: 1, y: 0.1}
+  aguaExplosionPrefab: {fileID: 2893440506253335864, guid: 7fb7da318b7e1f0438096e1ee6164671, type: 3}
+  cristalExplosionPrefab: {fileID: 981767969252295395, guid: 6fce030f82f81d04291b055999719dec, type: 3}
+  healthBarPrefab: {fileID: 7735631790222357969, guid: 10e8e7d9fc2d16244953da8598bb4057, type: 3}
+  healthBarOffset: {x: -1, y: 1, z: 0}
+  healthBarSize: {x: 1.6, y: 0.3}
 --- !u!1 &7271102851290112516
 GameObject:
   m_ObjectHideFlags: 0

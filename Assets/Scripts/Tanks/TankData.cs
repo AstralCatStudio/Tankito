@@ -20,6 +20,7 @@ public class TankData : NetworkBehaviour
     public bool Alive => m_isAlive;
     public int Points => m_points;
 
+
     void Start()
     {
         if (IsServer)
@@ -34,6 +35,8 @@ public class TankData : NetworkBehaviour
         {
             DieClientRpc();
         }
+
+
 
         OnTankDestroyed.Invoke(this);
         UnityEngine.Debug.LogWarning("TODO: Trigger tank death animation");

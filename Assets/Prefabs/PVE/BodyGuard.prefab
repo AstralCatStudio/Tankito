@@ -1244,8 +1244,14 @@ MonoBehaviour:
   m_reloadDashTicks: 0
   stateInitTick: 0
   playerState: 0
+  parryHitbox: {fileID: 0}
   DEBUGCONT: 0
   DEBUGDASh: 0
+  m_turretAnimator: {fileID: 0}
+  m_hullAnimator: {fileID: 0}
+  parryTotalTime: 0
+  parryStart: 0
+  parryWindow: 0
   agent: {fileID: 902194235030755267}
   npcData: {fileID: 11400000, guid: a0a880d7eb38b3a4393e8ce65c7b5ef7, type: 2}
   updateDesTimer: 0
@@ -1272,6 +1278,7 @@ MonoBehaviour:
     m_Bits: 128
   debugPosition: {fileID: 8372812398923057591}
   DEBUG: 0
+  genericTargets: []
   patrolPointFound: 0
   noObstaclesBetween: 0
   cannonReloaded: 1
@@ -1313,10 +1320,14 @@ MonoBehaviour:
   m_maxHealth: 0
   m_health: 0
   m_isAlive: 0
+  aguaExplosionPrefab: {fileID: 2893440506253335864, guid: 7fb7da318b7e1f0438096e1ee6164671, type: 3}
+  cristalExplosionPrefab: {fileID: 981767969252295395, guid: 6fce030f82f81d04291b055999719dec, type: 3}
   healthBarPrefab: {fileID: 7735631790222357969, guid: 10e8e7d9fc2d16244953da8598bb4057, type: 3}
   healthBarOffset: {x: -1, y: 1, z: 0}
   healthBarSize: {x: 1.6, y: 0.3}
   positionIndicatorSprite: {fileID: 21300000, guid: 9f9bf86151fa04b4fb600f122aaba541, type: 3}
+  player: {fileID: 0}
+  hitPoint: {x: 0, y: 0}
 --- !u!1 &6026416375967643090
 GameObject:
   m_ObjectHideFlags: 0

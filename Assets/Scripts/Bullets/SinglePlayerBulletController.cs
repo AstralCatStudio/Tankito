@@ -7,6 +7,8 @@ namespace Tankito.SinglePlayer
 {
     public class SinglePlayerBulletController : ABulletController
     {
+        public GameObject miniExplosionPrefab;
+
         [SerializeField] float bulletVelocity;
         [SerializeField] float lifeTimeTreshold;
         [SerializeField] BulletType bulletType;
@@ -47,6 +49,8 @@ namespace Tankito.SinglePlayer
 
         public override void Detonate(bool lifeTimeOver = false)
         {
+            Instantiate(miniExplosionPrefab, transform.position, Quaternion.identity);
+
             OnDetonate.Invoke(this);
             SinglePlayerBulletPool.Instance.Release(this.gameObject, (int)bulletType);
         }
