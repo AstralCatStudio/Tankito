@@ -51,6 +51,14 @@ namespace Tankito.SinglePlayer
             SinglePlayerBulletPool.Instance.Release(this.gameObject, (int)bulletType);
         }
 
+        private void OnTriggerEnter2D(Collider2D collision)
+        {
+            if (collision.gameObject.layer == 14)
+            {
+                m_rb.velocity = -m_rb.velocity*1.5f;
+                bulletType = BulletType.Player;
+            }
+        }
         protected override void OnCollisionEnter2D(Collision2D collision)
         {
             lastCollisionNormal = collision.GetContact(0).normal;

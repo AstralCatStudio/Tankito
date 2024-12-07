@@ -36,7 +36,7 @@ public abstract class ATankController : MonoBehaviour
     [SerializeField] protected ITankInput m_tankInput;
 
     [SerializeField] protected PlayerState playerState = PlayerState.Moving;
-
+    [SerializeField] GameObject parryHitbox;
     public ITankInput TankInputComponent { get => m_tankInput; set { if (m_tankInput == null) m_tankInput = value; else Debug.LogWarning($"TankInputComponent for {this} was already set!"); } }
 
     [SerializeField] protected IBulletCannon cannon;
@@ -44,11 +44,18 @@ public abstract class ATankController : MonoBehaviour
     public PlayerState PlayerState { get => playerState; set => playerState = value; }
     public int StateInitTick { get => stateInitTick; set => stateInitTick = value; }
     protected bool CanDash { get => CheckCanDash() && playerState != PlayerState.Parrying && playerState != PlayerState.Firing; }
-
+    protected bool CanParry { get => CheckCanDash() && playerState != PlayerState.Dashing && playerState != PlayerState.Firing; }
     protected Vector2 dashVec;
 
     [SerializeField] protected bool DEBUGCONT = false;
     [SerializeField] protected bool DEBUGDASh = false;
+
+
+    [SerializeField]
+    private Animator m_turretAnimator, m_hullAnimator;
+    [SerializeField]
+    float parryTotalTime, parryStart, parryWindow;
+    float parryTimer =0;
 
     protected virtual void Start()
     {
@@ -93,6 +100,10 @@ public abstract class ATankController : MonoBehaviour
             DashTank(input.moveVector, input.timestamp, deltaTime);
         }
         else
+        if ((CanParry && input.action == TankAction.Parry) || playerState == PlayerState.Parrying)
+        {
+            Parry(input.timestamp, deltaTime);
+        }
         {
             switch (input.action)
             {
@@ -103,6 +114,7 @@ public abstract class ATankController : MonoBehaviour
                     break;
 
                 case TankAction.Parry:
+                    
                     break;
 
                 case TankAction.Fire:
@@ -116,6 +128,33 @@ public abstract class ATankController : MonoBehaviour
         }
 
         AimTank(input.aimVector, deltaTime);
+    }
+    void Parry(int currentInputDashTick, float deltaTime)
+    {
+        if (playerState != PlayerState.Parrying)
+        {
+            parryHitbox.SetActive(false);
+            parryTimer = 0;
+            playerState = PlayerState.Parrying;
+            stateInitTick = currentInputDashTick;
+            m_turretAnimator.SetTrigger("Parry");
+            m_hullAnimator.SetTrigger("Parry");
+        }
+        if (parryTimer >= parryStart)
+        {
+            parryHitbox.SetActive(true);
+        }
+        if (parryTimer >= parryStart+parryWindow)
+        {
+            parryHitbox.SetActive(false);
+        }
+        if (parryTimer >= parryTotalTime)
+        {
+            playerState = PlayerState.Moving;
+            parryHitbox.SetActive(false);
+        }
+        parryTimer += deltaTime;
+        
     }
 
     protected virtual void MoveTank(Vector2 moveVector, float deltaTime)

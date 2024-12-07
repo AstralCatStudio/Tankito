@@ -174,7 +174,6 @@ namespace Tankito.SinglePlayer
         #region UtilityActions
         public Status GoAggro()
         {
-            genericTargets.Add(player);
             return Status.Success;
         }
         public Status GoIdealDis()
