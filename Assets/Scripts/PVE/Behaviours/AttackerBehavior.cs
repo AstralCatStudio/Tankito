@@ -133,7 +133,7 @@ namespace Tankito.SinglePlayer
             return (float)GetComponent<PVEEnemyData>().Health/maxAttackerHp;
         }
 
-        public float HP_PLayer()
+        public float HP_Player()
         {
             if(player != null)
             {
@@ -172,7 +172,30 @@ namespace Tankito.SinglePlayer
         }
         #endregion
         #region UtilityActions
+        public Status GoAggro()
+        {
 
+            genericTargets.Add(player);
+            return Status.Success;
+        }
+
+        public Status GoIdealDis()
+        {
+
+            return Status.Success;
+        }
+
+        public Status GoDef()
+        {
+
+            return Status.Success;
+        }
+
+        public Status GoHeal()
+        {
+
+            return Status.Success;
+        }
         #endregion
         #endregion
 
