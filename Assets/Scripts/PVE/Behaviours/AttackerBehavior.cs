@@ -118,6 +118,12 @@ namespace Tankito.SinglePlayer
             ammunition--;
         }
 
+        public void ActionAttackerUSToAim()
+        {
+            noObstaclesBetween = false;
+            target = player;
+        }
+
         #endregion
 
         #region UtilitySystem
