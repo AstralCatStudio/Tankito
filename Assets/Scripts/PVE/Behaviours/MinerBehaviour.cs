@@ -19,6 +19,7 @@ namespace Tankito.SinglePlayer
 
         [SerializeField]float excaveCooldown = 10;
         float excaveTimer = 0;
+        const int MAX_NA = 5;
 
         protected override void Start()
         {
@@ -57,7 +58,9 @@ namespace Tankito.SinglePlayer
 
         public float NAllies()
         {
-            return genericTargets.Count;
+           float uNa = (float)genericTargets.Count / MAX_NA;
+            if (uNa >= 1) return 1;
+            return uNa;
         }
 
         public float NMines()
@@ -125,7 +128,19 @@ namespace Tankito.SinglePlayer
                 return 0;
             }
         }
-        #endregion 
+        #endregion
+        #region Functions
+        public float AggroHPP(float HPP)
+        {
+            if (HPP == 0) HPP = 1 / maxPlayerHp;
+            return 1 / (maxPlayerHp *  HPP);
+        }
+
+        public float AggroNA(float NA)
+        {
+            return (1 / MAX_NA) / (NA + 1 / MAX_NA);
+        }
+        #endregion
         #endregion
 
         #region Utilities
