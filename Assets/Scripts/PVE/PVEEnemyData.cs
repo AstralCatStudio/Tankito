@@ -20,6 +20,11 @@ namespace Tankito.SinglePlayer
             player = GameObject.FindGameObjectWithTag("Player");
             positionIndicator = CreatePositionIndicator();
             m_maxHealth = GetComponent<AgentController>().npcData.health;
+            AttackerBehaviour attacker = GetComponent<AttackerBehaviour>();
+            if(attacker != null)
+            {
+                attacker.maxAttackerHp = m_maxHealth;
+            }
             base.Start();
         }
 

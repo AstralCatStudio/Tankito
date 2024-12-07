@@ -16,7 +16,7 @@ namespace Tankito.SinglePlayer
         [SerializeField] float loaderReloadDuration = 5f;
         float loaderReloadTimer = 0f;
         List<GameObject> healerList = new List<GameObject>();
-        float maxAttackerHp;
+        public float maxAttackerHp;
         float maxPlayerHp;
 
         #region USParameters
@@ -120,6 +120,12 @@ namespace Tankito.SinglePlayer
             ammunition--;
         }
 
+        public void ActionAttackerUSToAim()
+        {
+            noObstaclesBetween = false;
+            target = player;
+        }
+
         #endregion
 
         #region UtilitySystem
@@ -127,19 +133,22 @@ namespace Tankito.SinglePlayer
 
         public float NAFullAggro()
         {
-            return USManager.Instance.NAttackerFullAggro;
+            return USManager.Instance.AttackerFullAggro.Count;
         }
 
         public float HP_Attacker()
         {
-            return (float)GetComponent<PVEEnemyData>().Health/maxAttackerHp;
+
+            float factor = (float)(GetComponent<PVEEnemyData>().Health / maxAttackerHp);
+            Debug.Log(" "+ GetComponent<PVEEnemyData>().Health+ " " + maxAttackerHp+""+ factor);
+            return factor;
         }
 
         public float HP_Player()
         {
             if(player != null)
             {
-                return (float)player.GetComponent<PVECharacterData>().Health/maxPlayerHp;
+                return (float)(player.GetComponent<PVECharacterData>().Health/maxPlayerHp);
             }
             return 0;
         }
@@ -165,6 +174,7 @@ namespace Tankito.SinglePlayer
 
         public float AggroHPA(float HP_A)
         {
+            Debug.Log(HP_A);
             return (HP_A - 1 / maxAttackerHp) / (1 - 1 / maxAttackerHp);
         }
 
@@ -196,6 +206,7 @@ namespace Tankito.SinglePlayer
         }
         public Status GoAggro()
         {
+            if (!USManager.Instance.AttackerFullAggro.Contains(this)) USManager.Instance.AttackerFullAggro.Add(this);
             if (genericTargets.Count>0)
             {
                 m_currentInput.moveVector = CircleIntersection(aggroRadiusMult, genericTargets[0].transform.position, player.transform.position,transform.position);
@@ -209,8 +220,10 @@ namespace Tankito.SinglePlayer
             CheckObstacles(m_currentInput.moveVector, m_currentInput.moveVector - (Vector2)transform.position);
             return Status.Running;
         }
+
         public Status GoIdealDis()
         {
+            if (USManager.Instance.AttackerFullAggro.Contains(this)) USManager.Instance.AttackerFullAggro.Remove(this);
             if (genericTargets.Count > 0)
             {
                 m_currentInput.moveVector = CircleIntersection(normalRadiusMult, genericTargets[0].transform.position, player.transform.position, transform.position);
@@ -222,8 +235,10 @@ namespace Tankito.SinglePlayer
             m_currentInput.moveVector = CheckNewPosition(m_currentInput.moveVector);
             return Status.Running;
         }
+
         public Status GoDef()
         {
+            if (USManager.Instance.AttackerFullAggro.Contains(this)) USManager.Instance.AttackerFullAggro.Remove(this);
             if (genericTargets.Count > 0)
             {
                 m_currentInput.moveVector = CircleIntersection(defRadiusMult, genericTargets[0].transform.position, player.transform.position, transform.position);
@@ -235,8 +250,10 @@ namespace Tankito.SinglePlayer
             m_currentInput.moveVector = CheckNewPosition(m_currentInput.moveVector);
             return Status.Running;
         }
+
         public Status GoHeal()
         {
+            if (USManager.Instance.AttackerFullAggro.Contains(this)) USManager.Instance.AttackerFullAggro.Remove(this);
             return Status.Running;
         }
         #endregion
