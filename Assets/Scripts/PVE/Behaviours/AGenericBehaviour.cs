@@ -273,12 +273,12 @@ namespace Tankito.SinglePlayer
             
             if (Physics2D.CircleCast(targetPosition, bulletRadius,targetToNpc.normalized ,targetToNpc.magnitude, wallLayer))
             {
-                Debug.DrawRay(targetPosition, targetToNpc, Color.red, 0.1f);
+                //Debug.DrawRay(targetPosition, targetToNpc, Color.red, 0.1f);
                 noObstaclesBetween = false;
             }
             else
             {
-                Debug.DrawRay(targetPosition, targetToNpc, Color.green, 0.1f);
+                //Debug.DrawRay(targetPosition, targetToNpc, Color.green, 0.1f);
                 noObstaclesBetween = true;
             }
             return !noObstaclesBetween;
