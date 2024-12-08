@@ -709,7 +709,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 10
+  m_Radius: 15
 --- !u!114 &1103806512239411869
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1226,7 +1226,7 @@ MonoBehaviour:
         - 95b0dbd5-93e4-4bf4-9e6b-417a844da3e5
       - name: POPAimAlly
         id: 054b9a32-4d00-45fc-810b-bd5bd0057022
-        position: {x: 917.6, y: 965.60004}
+        position: {x: 882.4, y: 958.4}
         node:
           rid: 4783593595286061073
         references:
@@ -1472,7 +1472,7 @@ MonoBehaviour:
           methodName: 
         check:
           componentName: HealerBehaviour
-          methodName: CheckChaseToAim
+          methodName: CheckChaseToAimAlly
         reset:
           componentName: 
           methodName: 

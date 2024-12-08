@@ -278,7 +278,7 @@ namespace Tankito.SinglePlayer
             }
             if (healerList.Count>0)
             {
-                m_currentInput.moveVector = player.transform.position + (healerList[0].transform.position - player.transform.position) + (healerList[0].transform.position - player.transform.position).normalized;
+                m_currentInput.moveVector = player.transform.position + (healerList[0].transform.position - player.transform.position) + (healerList[0].transform.position - player.transform.position).normalized*3;
             }
             return Status.Running;
         }
