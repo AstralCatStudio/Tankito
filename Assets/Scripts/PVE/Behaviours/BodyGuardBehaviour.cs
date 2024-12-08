@@ -54,15 +54,19 @@ public class BodyGuardBehaviour : AGenericBehaviour
 
     public Status ProtectAllyState()
     {
-        Vector2 allyToBulletDir = (bulletToStop.transform.position - allyToProtect.transform.position).normalized;
-        Vector2 newPosition = (Vector2)allyToProtect.transform.position + allyToBulletDir * protectDistance;
-        m_currentInput.moveVector = newPosition;
-        if(genericTargets.Count > 0)
+        if (bulletToStop != null && allyToProtect != null)
         {
-            Vector2 playerPos = genericTargets[0].transform.position;
-            Vector2 playerToNpc = (Vector2)transform.position - playerPos;
-            CheckObstacles(playerPos, playerToNpc);
-            CheckTargetInRange(playerToNpc.magnitude, agentController.npcData.attackRange);
+
+            Vector2 allyToBulletDir = (bulletToStop.transform.position - allyToProtect.transform.position).normalized;
+            Vector2 newPosition = (Vector2)allyToProtect.transform.position + allyToBulletDir * protectDistance;
+            m_currentInput.moveVector = newPosition;
+            if (genericTargets.Count > 0)
+            {
+                Vector2 playerPos = genericTargets[0].transform.position;
+                Vector2 playerToNpc = (Vector2)transform.position - playerPos;
+                CheckObstacles(playerPos, playerToNpc);
+                CheckTargetInRange(playerToNpc.magnitude, agentController.npcData.attackRange);
+            }
         }
         return Status.Running;
     }
