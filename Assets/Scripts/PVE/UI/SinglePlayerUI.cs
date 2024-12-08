@@ -46,7 +46,7 @@ public class SinglePlayerUI : Singleton<SinglePlayerUI>
 
     public void ReturnToMenu()
     {
-        SceneManager.LoadScene("MainMenu");
+        SceneManager.LoadScene("SinglePlayer Menu");
         Time.timeScale = 1.0f;
     }
 

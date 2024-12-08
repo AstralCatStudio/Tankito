@@ -80,11 +80,11 @@ namespace Tankito.SinglePlayer
                 bulletType = BulletType.Parry;
             }
             else
-            if (bulletType != BulletType.Parry &&bulletType != BulletType.Attacker && collision.gameObject.GetComponent<SinglePlayerBulletController>()?.bulletType == BulletType.Attacker)
+            if (bulletType != BulletType.Parry &&bulletType != BulletType.Attacker && collision.gameObject.CompareTag("EnemyBullet") && collision.gameObject.GetComponent<SinglePlayerBulletController>()?.bulletType == BulletType.Attacker)
             {
                 Detonate();
             }
-            else if (bulletType != BulletType.Parry && collision.gameObject.GetComponent<SinglePlayerBulletController>()?.bulletType == BulletType.Attacker)
+            else if (bulletType != BulletType.Parry && collision.gameObject.CompareTag("EnemyBullet") || collision.gameObject.CompareTag("Bullet") && collision.gameObject.GetComponent<SinglePlayerBulletController>()?.bulletType == BulletType.Parry)
             {
                 Detonate();
             }
@@ -183,11 +183,10 @@ namespace Tankito.SinglePlayer
                             break;
 
                         case "Enemy":
-                            if (m_lifetime >= lifeTimeTreshold)
-                            {
+                            
                                 Detonate();
                                 collision.gameObject.GetComponent<PVEEnemyData>().AddHealth(1);
-                            }
+                            
                             break;
 
                         case "Player":

@@ -198,6 +198,7 @@ namespace Tankito.SinglePlayer
 
         public bool CheckChaseToAim()
         {
+            //Debug.Log(noObstaclesBetween + " " + cannonReloaded + " "+ targetInRange);
             return noObstaclesBetween && cannonReloaded && targetInRange;
         }
 
@@ -268,6 +269,8 @@ namespace Tankito.SinglePlayer
 
         protected bool CheckObstacles(Vector2 targetPosition, Vector2 targetToNpc)
         {
+            targetToNpc = targetToNpc - targetToNpc.normalized*GetComponent<CircleCollider2D>().radius*1.01f;
+            //Debug.DrawRay(targetPosition, targetToNpc, Color.red ,0.1f);
             if (Physics2D.Raycast(targetPosition, targetToNpc.normalized, targetToNpc.magnitude, wallLayer))
             {
                 noObstaclesBetween = false;

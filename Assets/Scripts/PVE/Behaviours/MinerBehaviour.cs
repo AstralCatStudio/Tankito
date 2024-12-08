@@ -230,9 +230,9 @@ namespace Tankito.SinglePlayer
 
         public float NMines()
         {
-            Debug.Log(nMines);
-            Debug.Log(MAX_MINES);
-            Debug.Log((float)nMines / (float)MAX_MINES);
+            //Debug.Log(nMines);
+            //Debug.Log(MAX_MINES);
+            //Debug.Log((float)nMines / (float)MAX_MINES);
             return (float)nMines / (float)MAX_MINES;
         }
 

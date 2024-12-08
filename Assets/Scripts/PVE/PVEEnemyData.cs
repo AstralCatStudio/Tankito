@@ -48,7 +48,7 @@ namespace Tankito.SinglePlayer
 
         void Update()
         {
-            if (IsEnemyOutOfScreen())
+            if (IsEnemyOutOfScreen() && player!=null)
             {
                 positionIndicator.SetActive(true);
                 int layerMask = LayerMask.GetMask("ScreenEdges");
