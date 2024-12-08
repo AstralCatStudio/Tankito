@@ -49,7 +49,7 @@ namespace Tankito.SinglePlayer
                 loaderReloadTimer += Time.deltaTime;
                 if(loaderReloadTimer >= loaderReloadDuration)
                 {
-                    loaderReloadDuration = 0;
+                    loaderReloadTimer = 0;
                     ammunition = LOADER_SIZE;
                 }
             }
@@ -140,7 +140,7 @@ namespace Tankito.SinglePlayer
         {
 
             float factor = (float)(GetComponent<PVEEnemyData>().Health / maxAttackerHp);
-            Debug.Log(" "+ GetComponent<PVEEnemyData>().Health+ " " + maxAttackerHp+""+ factor);
+            //Debug.Log(" "+ GetComponent<PVEEnemyData>().Health+ " " + maxAttackerHp+""+ factor);
             return factor;
         }
 
@@ -174,7 +174,7 @@ namespace Tankito.SinglePlayer
 
         public float AggroHPA(float HP_A)
         {
-            Debug.Log(HP_A);
+            //Debug.Log(HP_A);
             return (HP_A - 1 / maxAttackerHp) / (1 - 1 / maxAttackerHp);
         }
 
