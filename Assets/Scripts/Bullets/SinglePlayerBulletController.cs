@@ -52,6 +52,7 @@ namespace Tankito.SinglePlayer
             if (m_lifetime >=lifeTimeTreshold)
             {
                 //Debug.Log($"lifetime: {m_lifetime}/{BulletCannonRegistry.Instance[m_simObj.OwnerId].Properties.lifetimeTotal}");
+                Debug.Log("detonado por lifetime");
                 Detonate(true);
             }
         }
@@ -83,12 +84,14 @@ namespace Tankito.SinglePlayer
                 creator = collision.gameObject;
             }
             else
-            if (bulletType != BulletType.Parry &&bulletType != BulletType.Attacker && collision.gameObject.CompareTag("EnemyBullet") && collision.gameObject.GetComponent<SinglePlayerBulletController>()?.bulletType == BulletType.Attacker)
+            if (collision.gameObject.GetComponent<SinglePlayerBulletController>()!=null &&bulletType != BulletType.Parry &&bulletType != BulletType.Attacker && collision.gameObject.CompareTag("EnemyBullet") && collision.gameObject.GetComponent<SinglePlayerBulletController>()?.bulletType == BulletType.Attacker)
             {
+                Debug.Log("chocando con bala de atacker");
                 Detonate();
             }
-            else if (bulletType != BulletType.Parry && (collision.gameObject.CompareTag("EnemyBullet") || collision.gameObject.CompareTag("Bullet")) && collision.gameObject.GetComponent<SinglePlayerBulletController>()?.bulletType == BulletType.Parry)
+            else if (collision.gameObject.GetComponent<SinglePlayerBulletController>() != null && bulletType != BulletType.Parry && (collision.gameObject.CompareTag("EnemyBullet") || collision.gameObject.CompareTag("Bullet")) && collision.gameObject.GetComponent<SinglePlayerBulletController>()?.bulletType == BulletType.Parry)
             {
+                Debug.Log("chocando con bala parreada");
                 Detonate();
             }
         }
@@ -168,6 +171,7 @@ namespace Tankito.SinglePlayer
                     }
                     break;
                 case BulletType.Healer:
+                    Debug.Log("bala chocando");
                     switch (collision.gameObject.tag)
                     {
                         case "NormalWall":
@@ -185,9 +189,9 @@ namespace Tankito.SinglePlayer
                             break;
 
                         case "Enemy":
-                            
-                                Detonate();
-                                collision.gameObject.GetComponent<PVEEnemyData>().AddHealth(1);
+                            Debug.Log("bala curando");
+                            Detonate();
+                            collision.gameObject.GetComponent<PVEEnemyData>().AddHealth(1);
                             
                             break;
 
