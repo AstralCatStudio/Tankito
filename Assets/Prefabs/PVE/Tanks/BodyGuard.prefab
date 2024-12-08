@@ -305,10 +305,10 @@ CircleCollider2D:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 257
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 32511
+    m_Bits: 65278
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2
@@ -389,7 +389,7 @@ CircleCollider2D:
     m_Bits: 1024
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 31743
+    m_Bits: 64511
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2
@@ -408,7 +408,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 6
+  m_Radius: 10
 --- !u!114 &6004854575687995592
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1779,7 +1779,7 @@ CircleCollider2D:
     m_Bits: 8192
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 24575
+    m_Bits: 57343
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2

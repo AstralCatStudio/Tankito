@@ -284,6 +284,9 @@ namespace Tankito.SinglePlayer
             {
                 m_currentInput.moveVector = player.transform.position + (healerList[0].transform.position - player.transform.position) + (healerList[0].transform.position - player.transform.position).normalized*3;
             }
+            m_currentInput.moveVector = CheckNewPosition(m_currentInput.moveVector);
+            CheckObstacles(player.transform.position, transform.position - player.transform.position);
+            CheckTargetInRange(Vector2.Distance(transform.position, player.transform.position), 20);
             return Status.Running;
         }
         #endregion

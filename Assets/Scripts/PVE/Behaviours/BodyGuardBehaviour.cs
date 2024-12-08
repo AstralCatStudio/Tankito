@@ -19,7 +19,7 @@ public class BodyGuardBehaviour : AGenericBehaviour
     [SerializeField] AreaDetection bulletAreaDetection;
     [SerializeField] bool DEBUG_BG = true;
     [SerializeField] LayerMask enemyLayer;
-    float bulletRadius = 0.6f;
+    
     #region TargetList
     List<GameObject> alliesInRange = new List<GameObject>();
     List<GameObject> bulletsInRange = new List<GameObject>();
@@ -97,14 +97,14 @@ public class BodyGuardBehaviour : AGenericBehaviour
     #region Utilis
     private bool CheckBulletRoute()
     {
-        if (DEBUG_BG) Debug.Log("SE CHEQUEA LA RUTA DE BALA");
+        //if (DEBUG_BG) Debug.Log("SE CHEQUEA LA RUTA DE BALA");
         bulletsInRange.OrderBy(obj => bulletsInRange.OrderBy(obj => Vector2.Distance(obj.transform.position, transform.position)));
         for (int i = 0; i < bulletsInRange.Count; i++)
         {
             var targetBullet = bulletsInRange[i];
             Vector2 bulletVec = targetBullet.GetComponent<Rigidbody2D>().velocity.normalized;
             RaycastHit2D hit = Physics2D.CircleCast(targetBullet.transform.position, bulletRadius, bulletVec, maxCast, enemyLayer);
-
+            
             if (DEBUG_BG)
             {
                 if(hit.collider == null)
