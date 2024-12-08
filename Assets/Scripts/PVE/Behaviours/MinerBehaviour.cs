@@ -312,13 +312,27 @@ namespace Tankito.SinglePlayer
         {
             if (minePrefab != null)
             {
-                Instantiate(minePrefab, transform.position, Quaternion.identity);
+                GameObject mineObject = Instantiate(minePrefab, transform.position, Quaternion.identity);
+                Mine mineScript = mineObject.GetComponent<Mine>();
+                if (mineScript != null)
+                {
+                    mineScript.SetMinerReference(this);
+                }
                 Debug.Log("Minero ha colocado una mina.");
                 nMines--;
             }
             else
             {
                 Debug.LogError("fallo al poner mina");
+            }
+        }
+
+
+        public void AddMine()
+        {
+            if (nMines<MAX_MINES)
+            {
+                nMines++;
             }
         }
 

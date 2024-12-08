@@ -54,6 +54,9 @@ namespace Tankito.SinglePlayer
         private void Start()
         {
             SpawnWave();
+
+            MusicManager.Instance.SetSong("PVE");
+            MusicManager.Instance.SetPhase(1);
         }
 
         private void Update()
