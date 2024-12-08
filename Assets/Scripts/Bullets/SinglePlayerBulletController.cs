@@ -30,6 +30,8 @@ namespace Tankito.SinglePlayer
             transform.rotation = Quaternion.LookRotation(new Vector3(0, 0, 1), m_rb.velocity.normalized);
 
             if (triggerOnSpawnEvents) OnSpawn?.Invoke(this);
+
+            MusicManager.Instance.PlaySoundPitch("snd_bala_impacta",0.3f);
         }
 
         private void FixedUpdate()
@@ -59,6 +61,8 @@ namespace Tankito.SinglePlayer
             if (!detonated)
             {
                 Instantiate(miniExplosionPrefab, transform.position, Quaternion.identity);
+
+                MusicManager.Instance.PlaySoundPitch("snd_disparo");
 
                 OnDetonate.Invoke(this);
                 detonated = true;

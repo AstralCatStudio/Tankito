@@ -142,6 +142,7 @@ public abstract class ATankController : MonoBehaviour
             stateInitTick = currentInputParryTick;
             m_turretAnimator.SetTrigger("Parry");
             m_hullAnimator.SetTrigger("Parry");
+            MusicManager.Instance.PlaySoundPitch("snd_laser", 0.3f);
         }
         if (parryTimer >= parryStart)
         {
@@ -158,7 +159,8 @@ public abstract class ATankController : MonoBehaviour
             parryHitbox.SetActive(false);
         }
         parryTimer += deltaTime;
-        
+
+
     }
 
     protected virtual void MoveTank(Vector2 moveVector, float deltaTime)
@@ -192,6 +194,8 @@ public abstract class ATankController : MonoBehaviour
             stateInitTick = currentInputDashTick;
             playerState = PlayerState.Dashing;
             if (DEBUGDASh) Debug.Log($"[{SimClock.TickCounter}]Comienza el dash");
+
+            MusicManager.Instance.PlaySoundPitch("snd_dash", 0.3f);
         }
 
         //currentAcceleration = Mathf.Lerp(accelerationMultiplier, 0, (currentInputDashTick - (stateInitTick + fullDashTicks)) / (stateInitTick + dashTicks) - (stateInitTick + fullDashTicks));
@@ -222,6 +226,8 @@ public abstract class ATankController : MonoBehaviour
             dashVec = Vector2.zero;
             if (DEBUGDASh) Debug.Log("Se termina el dash");
         }
+
+
     }
 
     private void FireTank(Vector2 aimVector, float deltaTime)
