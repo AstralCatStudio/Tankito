@@ -10,7 +10,8 @@ namespace Tankito.SinglePlayer
     {
         GameObject player;
         [SerializeField] AreaDetection playerAreaDetection;
-        [SerializeField] const int LOADER_SIZE = 5;
+        [SerializeField]  int LOADER_SIZE = 5;
+        [SerializeField]
         int ammunition;
         [SerializeField] bool Bullets { get => ammunition > 0; }
         [SerializeField] float loaderReloadDuration = 5f;
@@ -98,7 +99,10 @@ namespace Tankito.SinglePlayer
         {
             return player == null && genericTargets.Count > 0;
         }
-
+        public bool CheckUSToAim()
+        {
+            return CheckChaseToAim() && Bullets;
+        }
         public bool CheckUSToCover()
         {
             return player != null && genericTargets.Count > 0 && !Bullets;
@@ -217,11 +221,11 @@ namespace Tankito.SinglePlayer
             }
             else
             {
-                m_currentInput.moveVector = player.transform.position + (transform.position-player.transform.position).normalized * baseDistanceAggroRadius;
+                m_currentInput.moveVector = player.transform.position + (transform.position-player.transform.position).normalized * baseDistanceAggroRadius+ Vector3.Cross((transform.position - player.transform.position).normalized, Vector3.forward)*0.1f;
             }
             
             m_currentInput.moveVector = CheckNewPosition(m_currentInput.moveVector);
-            CheckObstacles(m_currentInput.moveVector, m_currentInput.moveVector - (Vector2)transform.position);
+            CheckObstacles(player.transform.position, transform.position-player.transform.position);
             CheckTargetInRange(Vector2.Distance(transform.position,player.transform.position),20);
             return Status.Running;
         }
@@ -242,7 +246,7 @@ namespace Tankito.SinglePlayer
                 m_currentInput.moveVector = player.transform.position + (transform.position - player.transform.position).normalized * baseDistanceNormalRadius;
             }
             m_currentInput.moveVector = CheckNewPosition(m_currentInput.moveVector);
-            CheckObstacles(m_currentInput.moveVector, m_currentInput.moveVector - (Vector2)transform.position);
+            CheckObstacles(player.transform.position, transform.position - player.transform.position);
             CheckTargetInRange(Vector2.Distance(transform.position, player.transform.position), 20);
             return Status.Running;
         }
@@ -263,7 +267,7 @@ namespace Tankito.SinglePlayer
                 m_currentInput.moveVector = player.transform.position + (transform.position - player.transform.position).normalized * baseDistanceDefRadius;
             }
             m_currentInput.moveVector = CheckNewPosition(m_currentInput.moveVector);
-            CheckObstacles(m_currentInput.moveVector, m_currentInput.moveVector - (Vector2)transform.position);
+            CheckObstacles(player.transform.position, transform.position - player.transform.position);
             CheckTargetInRange(Vector2.Distance(transform.position, player.transform.position), 20);
             return Status.Running;
         }

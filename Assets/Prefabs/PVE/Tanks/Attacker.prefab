@@ -1868,7 +1868,7 @@ MonoBehaviour:
           methodName: 
         check:
           componentName: AttackerBehaviour
-          methodName: CheckChaseToAim
+          methodName: CheckUSToAim
         reset:
           componentName: 
           methodName: 
@@ -2413,11 +2413,13 @@ MonoBehaviour:
   turretInPosition: 0
   hasShot: 0
   playerAreaDetection: {fileID: 4538736786602061432}
+  LOADER_SIZE: 5
+  ammunition: 0
   loaderReloadDuration: 5
   maxAttackerHp: 0
   aggroRadiusMult: 1.4
   normalRadiusMult: 2
-  defRadiusMult: 2.4
+  defRadiusMult: 2.9
   baseDistanceAggroRadius: 4
   baseDistanceNormalRadius: 6
   baseDistanceDefRadius: 8
