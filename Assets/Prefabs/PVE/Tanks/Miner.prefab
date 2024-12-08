@@ -426,7 +426,7 @@ SpriteRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6727595187853663268}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -731,6 +731,8 @@ GameObject:
   - component: {fileID: 5450187379696770274}
   - component: {fileID: 1622443689222201118}
   - component: {fileID: 5081890824654510718}
+  - component: {fileID: 762028382312044380}
+  - component: {fileID: -2882747602471467850}
   m_Layer: 10
   m_Name: Miner
   m_TagString: Enemy
@@ -905,7 +907,7 @@ MonoBehaviour:
         references:
         - fieldName: Action
           value:
-            rid: 4463992089664552978
+            rid: 4463992099500982272
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         parentIds:
@@ -978,7 +980,7 @@ MonoBehaviour:
         - d2dcc615-fb9f-4bfa-b742-853fe1b8a46d
       - name: DigToUS
         id: cf86bf10-83a9-4d97-a50b-b98036efe611
-        position: {x: 1280, y: 686.4}
+        position: {x: 1288, y: 721.60004}
         node:
           rid: 4783593730761031691
         references:
@@ -989,7 +991,7 @@ MonoBehaviour:
             Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         - fieldName: Action
           value:
-            rid: -2
+            rid: 4463992112898637825
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         parentIds:
@@ -1029,7 +1031,7 @@ MonoBehaviour:
             Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         - fieldName: Action
           value:
-            rid: -2
+            rid: 4463992112898637826
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         parentIds:
@@ -1186,7 +1188,7 @@ MonoBehaviour:
         - 9e1e1545-7886-4e79-9eae-90b36b70a716
       - name: AggroNA
         id: 5e20c7b0-8475-4a8b-9b12-731f93e28d76
-        position: {x: 406.4, y: 770.4}
+        position: {x: 422.4, y: 756}
         node:
           rid: 4463992094451564561
         references:
@@ -1199,7 +1201,7 @@ MonoBehaviour:
             Culture=neutral, PublicKeyToken=b77a5c561934e089
         parentIds:
         - 016bcb23-dc59-4316-b9ad-54ff151cea58
-        - 594de514-87cc-4077-a65e-d9b44ea00239
+        - 1ddd8e51-d03d-4d3f-8cda-a82e04110920
         childIds:
         - 07c64f9e-147c-49e1-9da9-4a4aee3edb23
       - name: 
@@ -1212,7 +1214,7 @@ MonoBehaviour:
         - 016bcb23-dc59-4316-b9ad-54ff151cea58
         childIds:
         - 49a701b7-8349-4d71-bbdc-27d151243066
-      - name: GoAggro
+      - name: MoveAggro
         id: 54dca2bb-c3b4-4ec0-9385-702fe34b3790
         position: {x: 1628, y: 340}
         node:
@@ -1226,7 +1228,7 @@ MonoBehaviour:
         parentIds: []
         childIds:
         - eb8b7490-7343-4f9e-bd6c-cc2e23183024
-      - name: GoDef
+      - name: MoveDef
         id: 4638b0a9-f6c9-4804-ac9c-c1b744908e3c
         position: {x: 2073.6, y: 500}
         node:
@@ -1327,7 +1329,7 @@ MonoBehaviour:
         - 44f54bc1-38e2-4bf5-be45-3ced414fa55e
       - name: WeightPutMine
         id: 016bcb23-dc59-4316-b9ad-54ff151cea58
-        position: {x: 937.6, y: 616}
+        position: {x: 953.6, y: 632}
         node:
           rid: 4463992096203997190
         references: []
@@ -1359,8 +1361,8 @@ MonoBehaviour:
         parentIds:
         - 0cb12908-d626-4558-9909-41bdf673c8e2
         childIds:
-        - 5e20c7b0-8475-4a8b-9b12-731f93e28d76
         - c2abe422-b78f-4243-b9e0-9ed592bc7e92
+        - 1ddd8e51-d03d-4d3f-8cda-a82e04110920
         - c2292eb4-3d30-4157-b7ee-6c05383e366d
       - name: UDig
         id: 0cb12908-d626-4558-9909-41bdf673c8e2
@@ -1373,12 +1375,20 @@ MonoBehaviour:
         childIds:
         - 594de514-87cc-4077-a65e-d9b44ea00239
         - d3433aa8-3a7a-4896-9b03-0a2800b713aa
+      - name: 
+        id: 1ddd8e51-d03d-4d3f-8cda-a82e04110920
+        position: {x: 900, y: 986.39996}
+        node:
+          rid: 4463992118346514435
+        references: []
+        parentIds:
+        - 594de514-87cc-4077-a65e-d9b44ea00239
+        childIds:
+        - 5e20c7b0-8475-4a8b-9b12-731f93e28d76
     pushPerceptions: []
   references:
     version: 2
     RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
     - rid: 4463992089664552961
       type: {class: CustomAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
       data:
@@ -1533,24 +1543,6 @@ MonoBehaviour:
           componentName: MinerBehaviour
           methodName: CheckDigToMinerUS
         reset:
-          componentName: 
-          methodName: 
-        pause:
-          componentName: 
-          methodName: 
-        unpause:
-          componentName: 
-          methodName: 
-    - rid: 4463992089664552978
-      type: {class: CustomAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
-      data:
-        start:
-          componentName: 
-          methodName: 
-        update:
-          componentName: MinerBehaviour
-          methodName: Nothing
-        stop:
           componentName: 
           methodName: 
         pause:
@@ -1729,7 +1721,7 @@ MonoBehaviour:
           methodName: 
         update:
           componentName: MinerBehaviour
-          methodName: GoDef
+          methodName: MoveDef
         stop:
           componentName: 
           methodName: 
@@ -1747,7 +1739,7 @@ MonoBehaviour:
           methodName: 
         update:
           componentName: MinerBehaviour
-          methodName: GoAggro
+          methodName: MoveAggro
         stop:
           componentName: 
           methodName: 
@@ -1762,9 +1754,9 @@ MonoBehaviour:
       data:
         PullingEnabled: 1
         Weights:
-        - 0.5
         - 0.3
-        - 0.2
+        - 0.3
+        - 0.4
     - rid: 4463992096203997185
       type: {class: LinearCurveFactor, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
       data:
@@ -1781,26 +1773,26 @@ MonoBehaviour:
       type: {class: LinearCurveFactor, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
       data:
         PullingEnabled: 1
-        Slope: 1
-        YIntercept: 0
+        Slope: -1
+        YIntercept: 1
     - rid: 4463992096203997188
       type: {class: WeightedFusionFactor, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
       data:
         PullingEnabled: 1
         Weights:
-        - 0.5
         - 0.3
-        - 0.2
+        - 0.3
+        - 0.4
     - rid: 4463992096203997190
       type: {class: WeightedFusionFactor, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
       data:
         PullingEnabled: 1
         Weights:
         - 0.15
+        - 0.25
         - 0.15
-        - 0.3
         - 0.1
-        - 0.2
+        - 0.35
     - rid: 4463992096203997191
       type: {class: MinFusionFactor, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
       data:
@@ -1810,13 +1802,19 @@ MonoBehaviour:
       data:
         PullingEnabled: 1
         Weights:
-        - 0.4
-        - 0.4
-        - 0.2
+        - 0.45
+        - 0.45
+        - 0.1
     - rid: 4463992096203997193
       type: {class: MinFusionFactor, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
       data:
         PullingEnabled: 1
+    - rid: 4463992099500982272
+      type: {class: SubgraphAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        ExecuteOnLoop: 0
+        InterruptOptions: 2
+        subgraphId: c317b5b0-5ca1-479e-beb6-09773f197b64
     - rid: 4463992099500982335
       type: {class: CustomAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
       data:
@@ -1889,6 +1887,48 @@ MonoBehaviour:
         unpause:
           componentName: 
           methodName: 
+    - rid: 4463992112898637825
+      type: {class: CustomAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        start:
+          componentName: 
+          methodName: 
+        update:
+          componentName: MinerBehaviour
+          methodName: ActionDigToMinerUS
+        stop:
+          componentName: 
+          methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
+    - rid: 4463992112898637826
+      type: {class: CustomAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        start:
+          componentName: 
+          methodName: 
+        update:
+          componentName: MinerBehaviour
+          methodName: ActionPutMineToMinerUS
+        stop:
+          componentName: 
+          methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
+    - rid: 4463992118346514435
+      type: {class: LinearCurveFactor, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
+      data:
+        PullingEnabled: 1
+        Slope: -1
+        YIntercept: 1
     - rid: 4783593730761031680
       type: {class: FSM, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
       data: 
@@ -1982,7 +2022,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   debugPosition: {fileID: 6727595187853663268}
-  DEBUG: 1
+  DEBUG: 0
   genericTargets: []
   patrolPointFound: 0
   noObstaclesBetween: 0
@@ -1997,7 +2037,7 @@ MonoBehaviour:
   coverLayers:
     serializedVersion: 2
     m_Bits: 3200
-  digCooldown: 10
+  digCooldown: 15
   minePrefab: {fileID: 3910763919036118693, guid: 3a1b62ff20cf9ea44950c78f6cdcf260, type: 3}
   putMineAction: 0
   putMineDuration: 3
@@ -2049,6 +2089,37 @@ MonoBehaviour:
   updateTime: 0.5
   minDesDelta: 1
   maxDesDelta: 10
+--- !u!114 &762028382312044380
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7961667591255896337}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3cbdeb3d30b961c458d4c72c20523c38, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  executeOnLoop: 1
+  interruptOptions: 0
+  m_MinerBehaviour: {fileID: 1622443689222201118}
+  debugger: {fileID: -2882747602471467850}
+--- !u!114 &-2882747602471467850
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7961667591255896337}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1726e9fdb9ff2d4baa8710d607b31ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _eventHandler:
+    debugStatusChanges: 0
+    identifier: 
 --- !u!1 &8714602361156488432
 GameObject:
   m_ObjectHideFlags: 0

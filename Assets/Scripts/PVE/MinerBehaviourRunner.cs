@@ -7,12 +7,15 @@ using BehaviourAPI.Core.Perceptions;
 using BehaviourAPI.UnityToolkit;
 using BehaviourAPI.StateMachines;
 using BehaviourAPI.UtilitySystems;
+using BehaviourAPI.UnityToolkit.GUIDesigner.Runtime;
 
 namespace Tankito.SinglePlayer
 {
 	public class MinerBehaviourRunner : BehaviourRunner
 	{
 		[SerializeField] private MinerBehaviour m_MinerBehaviour;
+		UtilitySystem minerUS;
+		[SerializeField] private BSRuntimeDebugger debugger;
 		
 		protected override void Init()
 		{
@@ -20,11 +23,13 @@ namespace Tankito.SinglePlayer
 			
 			base.Init();
 		}
-		
+
 		protected override BehaviourGraph CreateGraph()
 		{
+			Debug.Log("SE CREA");
 			FSM MinerBehaviour = new FSM();
 			UtilitySystem MinerUS_1 = new UtilitySystem(1.3f);
+            MinerUS_1.OnGetUtility += m_MinerBehaviour.OnGetUtility;
 			
 			FunctionalAction Idle_action = new FunctionalAction();
 			Idle_action.onUpdated = m_MinerBehaviour.IdleState;
@@ -35,7 +40,8 @@ namespace Tankito.SinglePlayer
 			Dig_action.onUpdated = m_MinerBehaviour.DigState;
 			State Dig = MinerBehaviour.CreateState(Dig_action);
 			
-			SubsystemAction MinerUS_action = new SubsystemAction(MinerUS_1);
+			FunctionalAction MinerUS_action = new FunctionalAction();
+			MinerUS_action.onUpdated = () => Status.Running;
 			State MinerUS = MinerBehaviour.CreateState(MinerUS_action);
 			
 			ConditionPerception IdleToUS_perception = new ConditionPerception();
@@ -58,9 +64,7 @@ namespace Tankito.SinglePlayer
 			
 			ConditionPerception DigToUS_perception = new ConditionPerception();
 			DigToUS_perception.onCheck = m_MinerBehaviour.CheckDigToMinerUS;
-			FunctionalAction DigToUS_action = new FunctionalAction();
-			DigToUS_action.onUpdated = m_MinerBehaviour.ActionDigToMinerUS;
-			StateTransition DigToUS = MinerBehaviour.CreateTransition(Dig, MinerUS, DigToUS_perception, DigToUS_action);
+			StateTransition DigToUS = MinerBehaviour.CreateTransition(Dig, MinerUS, DigToUS_perception);
 			
 			FunctionalAction PutMine_action = new FunctionalAction();
 			PutMine_action.onUpdated = m_MinerBehaviour.PutMineState;
@@ -74,9 +78,7 @@ namespace Tankito.SinglePlayer
 			
 			ConditionPerception MineToUS_perception = new ConditionPerception();
 			MineToUS_perception.onCheck = m_MinerBehaviour.CheckPutMineToMinerUS;
-			FunctionalAction MineToUS_action = new FunctionalAction();
-			MineToUS_action.onUpdated = m_MinerBehaviour.ActionPutMineToMinerUS;
-			StateTransition MineToUS = MinerBehaviour.CreateTransition(PutMine, MinerUS, MineToUS_perception, MineToUS_action);
+			StateTransition MineToUS = MinerBehaviour.CreateTransition(PutMine, MinerUS, MineToUS_perception);
 			
 			VariableFactor HPPlayer = MinerUS_1.CreateVariable(m_MinerBehaviour.HP_Player, 0f, 1f);
 			
@@ -104,21 +106,19 @@ namespace Tankito.SinglePlayer
 			
 			WeightedFusionFactor UGoAggro = MinerUS_1.CreateFusion<WeightedFusionFactor>(AggroHPP, _1_Distance, _1_NMines);
 			
-			FunctionalAction MoveAggro_action = new FunctionalAction();
-			MoveAggro_action.onUpdated = m_MinerBehaviour.MoveAggro;
-			UtilityAction MoveAggro = MinerUS_1.CreateAction(UGoAggro, MoveAggro_action);
+			FunctionalAction GoAggro_action = new FunctionalAction();
+			GoAggro_action.onUpdated = () => Status.Running;
+			UtilityAction GoAggro = MinerUS_1.CreateAction(UGoAggro, GoAggro_action);
 			
 			LinearCurveFactor _1_AggroHPP = MinerUS_1.CreateCurve<LinearCurveFactor>(AggroHPP);
 			
 			WeightedFusionFactor UGoDef = MinerUS_1.CreateFusion<WeightedFusionFactor>(_1_AggroHPP, Distance, _1_NMines);
 			
-			FunctionalAction MoveDef_action = new FunctionalAction();
-			MoveDef_action.onUpdated = m_MinerBehaviour.MoveDef;
-			UtilityAction MoveDef = MinerUS_1.CreateAction(UGoDef, MoveDef_action);
+			FunctionalAction GoDef_action = new FunctionalAction();
+			GoDef_action.onUpdated = () => Status.Running;
+			UtilityAction GoDef = MinerUS_1.CreateAction(UGoDef, GoDef_action);
 			
-			LinearCurveFactor unnamed_1 = MinerUS_1.CreateCurve<LinearCurveFactor>(AggroNA);
-			
-			WeightedFusionFactor WeightDig = MinerUS_1.CreateFusion<WeightedFusionFactor>(_1_Distance, unnamed_1, _1_AggroHPP);
+			WeightedFusionFactor WeightDig = MinerUS_1.CreateFusion<WeightedFusionFactor>(AggroNA, _1_Distance, _1_AggroHPP);
 			
 			MinFusionFactor UDig = MinerUS_1.CreateFusion<MinFusionFactor>(WeightDig, CanDig);
 			
