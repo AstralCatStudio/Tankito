@@ -103,6 +103,7 @@ public abstract class ATankController : MonoBehaviour
         else if ((CanParry && input.action == TankAction.Parry) || playerState == PlayerState.Parrying)
         {
             Parry(input.timestamp, deltaTime);
+            MoveTank(input.moveVector, deltaTime);
         }
         else
         {
@@ -144,7 +145,6 @@ public abstract class ATankController : MonoBehaviour
         }
         if (parryTimer >= parryStart)
         {
-            Debug.Log("Haciendo Parry");
             parryHitbox.SetActive(true);
         }
         if (parryTimer >= parryStart+parryWindow)

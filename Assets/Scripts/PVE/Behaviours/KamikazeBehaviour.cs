@@ -24,6 +24,7 @@ namespace Tankito.SinglePlayer
         List<GameObject> bulletsInRange = new List<GameObject>();
         [SerializeField] AreaDetection bulletAreaDetection;
         public GameObject explosionEffect;
+        [SerializeField] float minParryDistance;
 
         protected override void Start()
         {
@@ -75,7 +76,7 @@ namespace Tankito.SinglePlayer
 
         public bool CheckChaseToParry()
         {
-            if(!hasParried &&bulletsInRange.Count > 0)
+            if(!hasParried &&bulletsInRange.Count > 0 && genericTargets.Count > 0 && Vector2.Distance(genericTargets[0].transform.position, transform.position)>= minParryDistance)
             {
                 for(int i = 0; i < bulletsInRange.Count; i++)
                 {

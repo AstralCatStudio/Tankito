@@ -206,6 +206,10 @@ namespace Tankito.SinglePlayer
         }
         public Status GoAggro()
         {
+            if (player == null)
+            {
+                return Status.Running;
+            }
             if (!USManager.Instance.AttackerFullAggro.Contains(this)) USManager.Instance.AttackerFullAggro.Add(this);
             if (genericTargets.Count>0)
             {
@@ -224,6 +228,10 @@ namespace Tankito.SinglePlayer
 
         public Status GoIdealDis()
         {
+            if (player == null)
+            {
+                return Status.Running;
+            }
             if (USManager.Instance.AttackerFullAggro.Contains(this)) USManager.Instance.AttackerFullAggro.Remove(this);
             if (genericTargets.Count > 0)
             {
@@ -241,6 +249,10 @@ namespace Tankito.SinglePlayer
 
         public Status GoDef()
         {
+            if (player == null)
+            {
+                return Status.Running;
+            }
             if (USManager.Instance.AttackerFullAggro.Contains(this)) USManager.Instance.AttackerFullAggro.Remove(this);
             if (genericTargets.Count > 0)
             {
@@ -258,10 +270,15 @@ namespace Tankito.SinglePlayer
 
         public Status GoHeal()
         {
+            
             if (USManager.Instance.AttackerFullAggro.Contains(this)) USManager.Instance.AttackerFullAggro.Remove(this);
+            if (player == null)
+            {
+                return Status.Running;
+            }
             if (healerList.Count>0)
             {
-                
+                m_currentInput.moveVector = player.transform.position + (healerList[0].transform.position - player.transform.position) + (healerList[0].transform.position - player.transform.position).normalized;
             }
             return Status.Running;
         }

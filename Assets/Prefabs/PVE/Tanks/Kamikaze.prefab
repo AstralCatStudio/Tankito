@@ -613,7 +613,7 @@ MonoBehaviour:
   m_hullAnimator: {fileID: 3367818034188912104}
   parryTotalTime: 1
   parryStart: 0
-  parryWindow: 0.3
+  parryWindow: 0.5
   agent: {fileID: 5334828445911339723}
   npcData: {fileID: 11400000, guid: 9a03f38c27b916345bceecf3f257f3e0, type: 2}
   updateDesTimer: 0
@@ -653,6 +653,7 @@ MonoBehaviour:
   parryDistance: 2
   bulletAreaDetection: {fileID: 4310168333349874508}
   explosionEffect: {fileID: 7125269485236248995, guid: 3fa9109637af9214baaa2c73b0f9a9f0, type: 3}
+  minParryDistance: 7
 --- !u!114 &1415010158793888448
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1179,7 +1180,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0.233, y: 0, z: 0}
-  m_LocalScale: {x: 1.79, y: 1.79, z: 1.79}
+  m_LocalScale: {x: 2.3, y: 2.3, z: 2.3}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 1261847421609429294}
@@ -1218,7 +1219,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.6
+  m_Radius: 0.5
 --- !u!212 &1866293608907007881
 SpriteRenderer:
   m_ObjectHideFlags: 0

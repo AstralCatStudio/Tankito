@@ -14,6 +14,7 @@ namespace Tankito.SinglePlayer
         [SerializeField] BulletType bulletType;
         BulletType originalType;
         bool detonated = false;
+        GameObject parriedby;
         private void OnEnable()
         {
             m_bouncesLeft = 0;
@@ -21,6 +22,7 @@ namespace Tankito.SinglePlayer
 
         public void InitializeBullet(Vector2 position, Vector2 direction, bool triggerOnSpawnEvents = true)
         {
+            parriedby = null;
             detonated = false;
             originalType = bulletType;
             transform.position = position;
@@ -67,13 +69,14 @@ namespace Tankito.SinglePlayer
 
         private void OnTriggerEnter2D(Collider2D collision)
         {
-            if (collision.gameObject.layer == 14)
+            if (collision.gameObject.layer == 14 && collision.gameObject != parriedby)
             {
+                parriedby = collision.gameObject;
                 m_rb.velocity = -m_rb.velocity * 1.5f;
                 bulletType = BulletType.Parry;
             }
             else
-            if (bulletType != BulletType.Parry &&bulletType != BulletType.Attacker && collision.gameObject.CompareTag("EnemyBullet") && collision.gameObject.GetComponent<SinglePlayerBulletController>().bulletType == BulletType.Attacker)
+            if (bulletType != BulletType.Parry &&bulletType != BulletType.Attacker && collision.gameObject.GetComponent<SinglePlayerBulletController>()?.bulletType == BulletType.Attacker)
             {
                 Detonate();
             }
