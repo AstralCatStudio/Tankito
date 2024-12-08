@@ -239,7 +239,7 @@ namespace Tankito.SinglePlayer
 
         #region Utilis
 
-        public Vector2 CheckNewPosition(Vector2 nextPos)
+        protected Vector2 CheckNewPosition(Vector2 nextPos)
         {
             /*if (DEBUG)*/
             NavMeshHit closestEdge;

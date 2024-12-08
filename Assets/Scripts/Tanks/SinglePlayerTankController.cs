@@ -18,6 +18,7 @@ namespace Tankito.SinglePlayer
             base.Start();
             float dashTime = (m_dashDistance / m_dashSpeedMultiplier);
             m_dashTicks = (int)(dashTime / Time.fixedDeltaTime);
+            Debug.Log(m_dashTicks);
             m_reloadDashTicks = (int)(m_dashCooldown / Time.fixedDeltaTime);
         }
 

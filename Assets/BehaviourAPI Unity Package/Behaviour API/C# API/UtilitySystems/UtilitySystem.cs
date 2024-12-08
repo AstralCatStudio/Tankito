@@ -35,6 +35,9 @@ namespace BehaviourAPI.UtilitySystems
 
         UtilitySelectableNode _currentBestElement;
 
+        public delegate void GetUtility(float utility);
+        public event GetUtility OnGetUtility;
+
         #region ---------------------------------------- Build methods ---------------------------------------
 
         /// <summary>
@@ -438,7 +441,7 @@ namespace BehaviourAPI.UtilitySystems
                 _currentBestElement = newBestAction;
                 _currentBestElement?.OnStarted();
             }
-            //_currentBestElement.Utility;
+            OnGetUtility?.Invoke(_currentBestElement.Utility);
             _currentBestElement?.OnUpdated();
         }
 
