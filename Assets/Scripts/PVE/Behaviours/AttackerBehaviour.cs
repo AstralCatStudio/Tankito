@@ -135,6 +135,18 @@ namespace Tankito.SinglePlayer
         #region UtilitySystem
         #region Variables
 
+        public float NoBullets()
+        {
+            if (!Bullets && Healer() == 0)
+            {
+                return 1;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
         public float NAFullAggro()
         {
             return USManager.Instance.AttackerFullAggro.Count;
