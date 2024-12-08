@@ -37,6 +37,7 @@ namespace Tankito.SinglePlayer
         {
             var newBullet = SinglePlayerBulletPool.Instance.Get(position, direction, (int)m_bulletType);
             newBullet.GetComponent<SinglePlayerBulletController>().InitializeBullet(position, direction);
+            newBullet.GetComponent<SinglePlayerBulletController>().creator= transform.parent.parent.parent.gameObject;
         }
     }
 }

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Net;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -15,6 +16,7 @@ namespace Tankito.SinglePlayer
         BulletType originalType;
         bool detonated = false;
         GameObject parriedby;
+        public GameObject creator;
         private void OnEnable()
         {
             m_bouncesLeft = 0;
@@ -78,19 +80,24 @@ namespace Tankito.SinglePlayer
                 parriedby = collision.gameObject;
                 m_rb.velocity = -m_rb.velocity * 1.5f;
                 bulletType = BulletType.Parry;
+                creator = collision.gameObject;
             }
             else
             if (bulletType != BulletType.Parry &&bulletType != BulletType.Attacker && collision.gameObject.CompareTag("EnemyBullet") && collision.gameObject.GetComponent<SinglePlayerBulletController>()?.bulletType == BulletType.Attacker)
             {
                 Detonate();
             }
-            else if (bulletType != BulletType.Parry && collision.gameObject.CompareTag("EnemyBullet") || collision.gameObject.CompareTag("Bullet") && collision.gameObject.GetComponent<SinglePlayerBulletController>()?.bulletType == BulletType.Parry)
+            else if (bulletType != BulletType.Parry && (collision.gameObject.CompareTag("EnemyBullet") || collision.gameObject.CompareTag("Bullet")) && collision.gameObject.GetComponent<SinglePlayerBulletController>()?.bulletType == BulletType.Parry)
             {
                 Detonate();
             }
         }
         protected override void OnCollisionEnter2D(Collision2D collision)
         {
+            if(collision.gameObject == creator)
+            {
+                return;
+            }
             lastCollisionNormal = collision.GetContact(0).normal;
             switch (bulletType)
             {
@@ -149,10 +156,7 @@ namespace Tankito.SinglePlayer
                             break;
 
                         case "Enemy":
-                            if (m_lifetime >= lifeTimeTreshold)
-                            {
                                 Detonate();
-                            }
                             break;
 
                         case "Player":
