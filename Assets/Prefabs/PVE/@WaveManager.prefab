@@ -16,7 +16,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8335211196915520443
 Transform:
   m_ObjectHideFlags: 0
@@ -39,7 +39,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8404742480811137975}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b1c1a27433d3b0d4ca5ab2d5de1bcb55, type: 3}
   m_Name: 
@@ -63,7 +63,8 @@ MonoBehaviour:
   minerPrefab: {fileID: 7961667591255896337, guid: 3d525d69aea25a340b8ee103eee11360, type: 3}
   spawnsParent: {fileID: 0}
   spawnPoints: []
-  maxDistance: 15.5
+  maxDistance: 27
+  minDistance: 17
   isSpawning: 0
   waveTimeOut: 60
   waveTimer: 0

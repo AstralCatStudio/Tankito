@@ -298,7 +298,7 @@ namespace Tankito.SinglePlayer
             }
             m_currentInput.moveVector = CheckNewPosition(m_currentInput.moveVector);
             CheckObstacles(player.transform.position, transform.position - player.transform.position);
-            CheckTargetInRange(Vector2.Distance(transform.position, player.transform.position), 20);
+            CheckTargetInRange(Vector2.Distance(transform.position, player.transform.position), 40);
             return Status.Running;
         }
         #endregion

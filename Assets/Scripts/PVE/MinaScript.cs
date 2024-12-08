@@ -18,10 +18,6 @@ public class Mine : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        //Debug.Log("Trigger");
-
-        if (isDestroyed) return;
-
         if (collision.CompareTag("Player"))
         {
             Explode();
@@ -32,22 +28,28 @@ public class Mine : MonoBehaviour
         }
         else if (collision.CompareTag("Bullet"))
         {
-            if (isActivated)
-            {
-                Explode();
-            }
-            else
-            {
-                Activate();
-            }
+            HandleBulletCollision();
+        }
+    }
+
+    private void HandleBulletCollision()
+    {
+        if (!isActivated)
+        {
+            Activate();
+        }
+        else
+        {
+            Explode();
         }
     }
 
     private void Activate()
     {
+        if (isActivated) return; // Evitar múltiples activaciones
+
         isActivated = true;
         MusicManager.Instance.PlaySound("snd_mina");
-        //Debug.Log("activa mina");
         if (animator != null && !string.IsNullOrEmpty(activacionTrigger))
         {
             animator.SetTrigger(activacionTrigger);
@@ -56,12 +58,13 @@ public class Mine : MonoBehaviour
 
     private void Explode()
     {
+        if (isDestroyed) return; // Evitar múltiples explosiones
+
         isDestroyed = true;
         if (explosionEffect != null)
         {
             Instantiate(explosionEffect, transform.position, Quaternion.identity);
         }
-        minerReference.AddMine();
 
         Destroy(gameObject);
     }

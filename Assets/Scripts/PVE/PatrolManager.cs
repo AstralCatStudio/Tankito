@@ -11,13 +11,12 @@ public class PatrolManager : Singleton<PatrolManager>
 
     public Transform GetPatrolPoint()
     {
-        List<Transform> possiblePoints;
+        List<Transform> possiblePoints = patrolPoints;
         if (player != null)
         {
             possiblePoints = patrolPoints.Where(obj => Vector2.Distance(obj.position, player.transform.position) <= patrolDistanceMax).ToList();
-
         }
-        possiblePoints = patrolPoints;
+        //possiblePoints = patrolPoints;
         int n = Random.Range(0, possiblePoints.Count);
         return possiblePoints[n];
     }
