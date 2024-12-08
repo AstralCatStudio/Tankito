@@ -119,11 +119,9 @@ namespace Tankito.SinglePlayer
                             break;
 
                         case "Player":
-                            if (m_lifetime >= lifeTimeTreshold)
-                            {
                                 Detonate();
                                 collision.gameObject.GetComponent<PVECharacterData>().TakeDamage(1);
-                            }
+                            
                             
                             break;
 
@@ -221,10 +219,7 @@ namespace Tankito.SinglePlayer
                             break;
 
                         case "Enemy":
-                            if (m_lifetime >= lifeTimeTreshold)
-                            {
                                 Detonate();
-                            }
                             break;
 
                         case "Player":
