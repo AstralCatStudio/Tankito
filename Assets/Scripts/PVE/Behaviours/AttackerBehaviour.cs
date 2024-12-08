@@ -49,7 +49,7 @@ namespace Tankito.SinglePlayer
                 loaderReloadTimer += Time.deltaTime;
                 if(loaderReloadTimer >= loaderReloadDuration)
                 {
-                    loaderReloadDuration = 0;
+                    loaderReloadTimer = 0;
                     ammunition = LOADER_SIZE;
                 }
             }

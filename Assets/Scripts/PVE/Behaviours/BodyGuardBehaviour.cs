@@ -56,7 +56,6 @@ public class BodyGuardBehaviour : AGenericBehaviour
     {
         if (bulletToStop != null && allyToProtect != null)
         {
-
             Vector2 allyToBulletDir = (bulletToStop.transform.position - allyToProtect.transform.position).normalized;
             Vector2 newPosition = (Vector2)allyToProtect.transform.position + allyToBulletDir * protectDistance;
             m_currentInput.moveVector = newPosition;
@@ -105,12 +104,19 @@ public class BodyGuardBehaviour : AGenericBehaviour
             var targetBullet = bulletsInRange[i];
             Vector2 bulletVec = targetBullet.GetComponent<Rigidbody2D>().velocity.normalized;
             RaycastHit2D hit = Physics2D.CircleCast(targetBullet.transform.position, bulletRadius, bulletVec, maxCast, enemyLayer);
-            /*if (hit.collider != null && hit.collider.gameObject == this.gameObject)
+
+            if (DEBUG_BG)
             {
-                if (DEBUG_BG) Debug.Log("LA BALA VA A COLISIONAR CON EL BODUGUARD");
-                Vector2 initRayPost = (GetComponent<CircleCollider2D>().radius * bulletVec + (Vector2)transform.position) * 1.1f;
-                hit = Physics2D.Raycast(initRayPost, bulletVec, maxCast, enemyLayer);
-            }*/
+                if(hit.collider == null)
+                {
+                    Debug.Log("NO COLISIONA");
+                }
+                else if(!alliesInRange.Contains(hit.collider.gameObject))
+                {
+                    Debug.Log("El objeto es " + hit.collider.gameObject);
+                }
+            }
+
             if (hit.collider != null && alliesInRange.Contains(hit.collider.gameObject))
             {
                 if (DEBUG_BG) Debug.Log("LA BALA VA A COLISIONAS CON UN ALIADO");

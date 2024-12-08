@@ -40,7 +40,7 @@ namespace Tankito.SinglePlayer
         #region Dig
         [SerializeField] bool digAction = false;
         [SerializeField] private GameObject digObject;
-        [SerializeField] int maxDigDistance = 30;
+        [SerializeField] int maxDigDistance = 20;
         [SerializeField] private float digDuration = 5f;
         [SerializeField] List<SpriteRenderer> spriteRenderers = new List<SpriteRenderer>();
         bool hasDigged = false;
@@ -188,6 +188,13 @@ namespace Tankito.SinglePlayer
             return Status.Success;
         }
 
+        public Status ActionDigToMinerUS()
+        {
+            digTimer = 0;
+            ActionMinerUSEnter();
+            return Status.Success;
+        }
+
         public Status ActionPutMineToMinerUS()
         {
             ActionShootPOP();
@@ -261,7 +268,7 @@ namespace Tankito.SinglePlayer
                     }
                     nextRayPos = nextRayPos - radiusDir * disPerStep;
                 }
-                return (float)(nHits / nRayCastCover);
+                return (float)nHits / (float)nRayCastCover;
             }
             return 0;
         }
@@ -289,6 +296,7 @@ namespace Tankito.SinglePlayer
                 return 0;
             }
         }
+
         #endregion
         #region Functions
         public float AggroHPP(float HPP)
