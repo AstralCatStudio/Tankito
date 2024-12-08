@@ -108,6 +108,7 @@ namespace Tankito.SinglePlayer
             if (collision.gameObject.CompareTag("Player") || collision.gameObject.CompareTag("Bullet"))
             {
                 hasCollided = true;
+                Instantiate(explosionEffect, transform.position, Quaternion.identity);
                 Debug.Log("COLLISION DE KAMIKAZE");
             }
         }
