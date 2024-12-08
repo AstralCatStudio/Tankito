@@ -87,7 +87,6 @@ namespace Tankito.SinglePlayer
             spriteRenderers = gameObject.GetComponentsInChildren<SpriteRenderer>().ToList();
             playerAreaDetection.OnSubjectDetected += OnPlayerDetected;
             playerAreaDetection.OnSubjectDissapear += OnPlayerDissapear;
-            GetComponent<MinerBehaviourRunner>().
             StartCoroutine(RechargeMineTimer());
         }
 
