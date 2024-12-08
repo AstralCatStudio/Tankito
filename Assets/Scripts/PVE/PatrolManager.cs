@@ -25,8 +25,15 @@ public class PatrolManager : Singleton<PatrolManager>
     {
 
         List<Transform> possiblePoints = patrolPoints.Where(obj => Vector2.Distance(obj.position, player.transform.position) <= maxDigDistance).ToList();
-        int n = Random.Range(0, possiblePoints.Count);
-        return possiblePoints[n];
-
+        if (possiblePoints.Count > 0)
+        {
+            int n = Random.Range(0, possiblePoints.Count);
+            return possiblePoints[n];
+        }
+        else
+        {
+            int n = Random.Range(0, patrolPoints.Count);
+            return patrolPoints[n];
+        }
     }
 }

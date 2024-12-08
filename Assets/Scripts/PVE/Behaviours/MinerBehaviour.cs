@@ -87,7 +87,6 @@ namespace Tankito.SinglePlayer
             spriteRenderers = gameObject.GetComponentsInChildren<SpriteRenderer>().ToList();
             playerAreaDetection.OnSubjectDetected += OnPlayerDetected;
             playerAreaDetection.OnSubjectDissapear += OnPlayerDissapear;
-            GetComponent<MinerBehaviourRunner>().
             StartCoroutine(RechargeMineTimer());
         }
 
@@ -123,7 +122,10 @@ namespace Tankito.SinglePlayer
                 GetComponent<CircleCollider2D>().enabled = true;
                 Instantiate(digObject, transform.position, Quaternion.identity);
                 hasDigged = true;
+                
+                Debug.Break();
             }
+
 
             return Status.Running;
         }

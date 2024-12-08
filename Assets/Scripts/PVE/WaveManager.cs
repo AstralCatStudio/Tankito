@@ -109,7 +109,7 @@ namespace Tankito.SinglePlayer
             {
                 Transform spawn = SelectSpawnPoint();
 
-                GameObject newEnemy = Instantiate(enemy, spawn);
+                GameObject newEnemy = Instantiate(enemy, spawn.position, spawn.rotation);
 
                 AddEnemy(newEnemy);
 
