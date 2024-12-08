@@ -40,7 +40,7 @@ namespace Tankito.SinglePlayer
         #region Dig
         [SerializeField] bool digAction = false;
         [SerializeField] private GameObject digObject;
-        [SerializeField] int maxDigDistance = 20;
+        [SerializeField] int maxDigDistance = 10;
         [SerializeField] private float digDuration = 5f;
         [SerializeField] List<SpriteRenderer> spriteRenderers = new List<SpriteRenderer>();
         bool hasDigged = false;
@@ -80,12 +80,13 @@ namespace Tankito.SinglePlayer
         {
             base.Start();
             nMines = MAX_MINES;
+            digTimer = digCooldown;
             colliderDiameter = GetComponent<CircleCollider2D>().radius * 2;
             disPerStep = colliderDiameter / 10;
             spriteRenderers = gameObject.GetComponentsInChildren<SpriteRenderer>().ToList();
             playerAreaDetection.OnSubjectDetected += OnPlayerDetected;
             playerAreaDetection.OnSubjectDissapear += OnPlayerDissapear;
-
+            GetComponent<MinerBehaviourRunner>().
             StartCoroutine(RechargeMineTimer());
         }
 
@@ -171,12 +172,11 @@ namespace Tankito.SinglePlayer
 
         public Status ActionMinerUSExit()
         {
+            if (digAction || putMineAction) agentController.agent.speed = 0;
             hasDigged = false;
             hasPutMine = false;
             putMineAction = false;
-            digAction = false;
-            m_currentInput.moveVector = transform.position;
-            importantPos = true;
+            digAction = false;         
             stateTimer = 0;
             return Status.Success;
         }
@@ -204,6 +204,7 @@ namespace Tankito.SinglePlayer
 
         public Status ActionMinerUSEnter()
         {
+            agentController.agent.speed = agentController.npcData.speed;
             currentDirection = Random.Range(0, 2);
             if (currentDirection == 0) currentDirection = -1;
             return Status.Success;
@@ -223,7 +224,9 @@ namespace Tankito.SinglePlayer
 
         public float NAllies()
         {
-            float uNa = (float)(genericTargets.Count / MAX_NA);
+            Debug.Log(genericTargets.Count);
+            Debug.Log((float)genericTargets.Count / (float)MAX_NA);
+            float uNa = (float)genericTargets.Count / (float)MAX_NA;
             if (uNa >= 1) return 1;
             return uNa;
         }
