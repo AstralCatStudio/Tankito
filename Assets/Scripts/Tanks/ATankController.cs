@@ -100,11 +100,11 @@ public abstract class ATankController : MonoBehaviour
             
             DashTank(input.moveVector, input.timestamp, deltaTime);
         }
-        else
-        if ((CanParry && input.action == TankAction.Parry) || playerState == PlayerState.Parrying)
+        else if ((CanParry && input.action == TankAction.Parry) || playerState == PlayerState.Parrying)
         {
             Parry(input.timestamp, deltaTime);
         }
+        else
         {
             switch (input.action)
             {
@@ -199,7 +199,7 @@ public abstract class ATankController : MonoBehaviour
         if (DEBUGDASh) Debug.Log($"[{SimClock.TickCounter}]: parámetros dash {currentInputDashTick}, {stateInitTick}, {m_dashTicks}");
         if (DEBUGDASh) Debug.Log($"[{SimClock.TickCounter}]: curve value: {m_dashSpeedCurve.Evaluate((float)(currentInputDashTick - stateInitTick) / m_dashTicks)}");
         float dashSpeed = m_speed * m_dashSpeedMultiplier * m_dashSpeedCurve.Evaluate((float)(currentInputDashTick - stateInitTick) / m_dashTicks);
-
+        if (DEBUGDASh) Debug.Log(dashSpeed);
         if (dashVec != Vector2.zero)
         {
             m_tankRB.MovePosition(m_tankRB.position + dashVec * deltaTime * dashSpeed);

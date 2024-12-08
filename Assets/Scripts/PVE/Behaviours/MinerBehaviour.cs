@@ -9,7 +9,7 @@ namespace Tankito.SinglePlayer
 {
     public class MinerBehaviour : AGenericBehaviour
     {
-        GameObject player;
+        [SerializeField] GameObject player;
         [SerializeField] AreaDetection playerAreaDetection;
         float maxPlayerHp;
         int nMines;
@@ -26,6 +26,8 @@ namespace Tankito.SinglePlayer
 
         [SerializeField] private GameObject minePrefab; 
         private float stateTimer = 0f;
+        float currentUtility;
+        int currentDirection;
 
         #region PutMine
         [SerializeField] bool putMineAction = false;
@@ -145,7 +147,7 @@ namespace Tankito.SinglePlayer
             return hasPutMine;
         }
 
-        public void ActionMinerUSExit()
+        public Status ActionMinerUSExit()
         {
             hasDigged = false;
             hasPutMine = false;
@@ -154,23 +156,38 @@ namespace Tankito.SinglePlayer
             m_currentInput.moveVector = transform.position;
             importantPos = true;
             stateTimer = 0;
+            return Status.Success;
+        }
+
+        public Status ActionIdleToMinerUS()
+        {
+            patrolPointFound = false;
+            ActionMinerUSEnter();
+            return Status.Success;
+        }
+
+        public Status ActionMinerUSEnter()
+        {
+            currentDirection = Random.Range(0, 2);
+            if (currentDirection == 0) currentDirection = -1;
+            return Status.Success;
         }
         #endregion
 
         #region UtilitySystem
         #region Variables
-        public float HPPlayer()
+        public float HP_Player()
         {
             if (player != null)
             {
-                return (float)player.GetComponent<PVECharacterData>().Health / maxPlayerHp;
+                return (float)(player.GetComponent<PVECharacterData>().Health / maxPlayerHp);
             }
             return 0;
         }
 
         public float NAllies()
         {
-           float uNa = (float)genericTargets.Count / MAX_NA;
+           float uNa = (float)(genericTargets.Count / MAX_NA);
             if (uNa >= 1) return 1;
             return uNa;
         }
@@ -212,7 +229,7 @@ namespace Tankito.SinglePlayer
                     }
                     nextRayPos = nextRayPos - radiusDir * disPerStep;
                 }
-                return (float)nHits / nRayCastCover;
+                return (float)(nHits / nRayCastCover);
             }
             return 0;
         }
@@ -256,24 +273,36 @@ namespace Tankito.SinglePlayer
         #region UtlityActions
         public Status MoveAggro()
         {
+            if(player != null)
+            {
+                float angle = currentDirection * 90 * (1-currentUtility);
+                Vector2 minerToPlayer = (player.transform.position - transform.position).normalized;
+                SetNewMinerUSPosition(angle, minerToPlayer);
+                m_currentInput.moveVector = CheckNewPosition(m_currentInput.moveVector);
+            }
+            
             return Status.Running;
         }
 
         public Status MoveDef()
         {
+            float angle = currentDirection * 90 * (1-currentUtility);
+            Vector2 playerToMiner = (transform.position - player.transform.position).normalized;
+            SetNewMinerUSPosition(angle, playerToMiner);
+            m_currentInput.moveVector = CheckNewPosition(m_currentInput.moveVector);
             return Status.Running;
         }
 
         public Status Dig()
         {
             digAction = true;
-            return Status.Success;
+            return Status.Running;
         }
 
         public Status PutMine()
         {
             putMineAction = true;
-            return Status.Success;
+            return Status.Running;
         }
         #endregion 
         #endregion
@@ -305,6 +334,22 @@ namespace Tankito.SinglePlayer
         private void OnPlayerDissapear(GameObject gameObject)
         {
             player = null;
+        }
+
+        private void SetNewMinerUSPosition(float angle, Vector2 vec)
+        {
+            float angleInRadians = angle * Mathf.Deg2Rad;
+
+            Vector2 dirVec = new Vector2(
+                vec.x * Mathf.Cos(angleInRadians) - vec.y * Mathf.Sin(angleInRadians),
+                vec.x * Mathf.Sin(angleInRadians) + vec.y * Mathf.Cos(angleInRadians)
+            );
+            m_currentInput.moveVector = (Vector2)transform.position + dirVec * agentController.agent.speed * 3;
+        }
+
+        public void OnGetUtility(float utility)
+        {
+            currentUtility = utility;
         }
         #endregion
     }
