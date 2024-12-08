@@ -23,7 +23,7 @@ namespace Tankito.SinglePlayer
         protected bool importantPos = false;
 
         [SerializeField] protected bool DEBUG = true;
-        protected float bulletRadius = 0.6f;
+        protected float bulletRadius = 0.18f;
         protected virtual Comparer<GameObject> GenericListOrder()
         {
             return Comparer<GameObject>.Create((obj1, obj2) =>
@@ -269,14 +269,16 @@ namespace Tankito.SinglePlayer
 
         protected bool CheckObstacles(Vector2 targetPosition, Vector2 targetToNpc)
         {
-            targetToNpc = targetToNpc - targetToNpc.normalized*GetComponent<CircleCollider2D>().radius*2f;
-            //Debug.DrawRay(targetPosition, targetToNpc, Color.red ,0.1f);
+            targetToNpc = targetToNpc - targetToNpc.normalized*GetComponent<CircleCollider2D>().radius*3f- bulletRadius* targetToNpc.normalized;
+            
             if (Physics2D.CircleCast(targetPosition, bulletRadius,targetToNpc.normalized ,targetToNpc.magnitude, wallLayer))
             {
+                Debug.DrawRay(targetPosition, targetToNpc, Color.red, 0.1f);
                 noObstaclesBetween = false;
             }
             else
             {
+                Debug.DrawRay(targetPosition, targetToNpc, Color.green, 0.1f);
                 noObstaclesBetween = true;
             }
             return !noObstaclesBetween;
