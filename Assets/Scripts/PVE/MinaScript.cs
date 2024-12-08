@@ -28,7 +28,10 @@ public class Mine : MonoBehaviour
         }
         else if (collision.CompareTag("Bullet"))
         {
-            HandleBulletCollision();
+            if (collision.isTrigger)
+            {
+                HandleBulletCollision();
+            }
         }
     }
 
