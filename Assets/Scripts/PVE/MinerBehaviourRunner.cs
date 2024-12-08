@@ -7,12 +7,15 @@ using BehaviourAPI.Core.Perceptions;
 using BehaviourAPI.UnityToolkit;
 using BehaviourAPI.StateMachines;
 using BehaviourAPI.UtilitySystems;
+using BehaviourAPI.UnityToolkit.GUIDesigner.Runtime;
 
 namespace Tankito.SinglePlayer
 {
 	public class MinerBehaviourRunner : BehaviourRunner
 	{
 		[SerializeField] private MinerBehaviour m_MinerBehaviour;
+		UtilitySystem minerUS;
+		[SerializeField] private BSRuntimeDebugger debugger;
 		
 		protected override void Init()
 		{
@@ -20,11 +23,13 @@ namespace Tankito.SinglePlayer
 			
 			base.Init();
 		}
-		
+
 		protected override BehaviourGraph CreateGraph()
 		{
+			Debug.Log("SE CREA");
 			FSM MinerBehaviour = new FSM();
 			UtilitySystem MinerUS_1 = new UtilitySystem(1.3f);
+            MinerUS_1.OnGetUtility += m_MinerBehaviour.OnGetUtility;
 			
 			FunctionalAction Idle_action = new FunctionalAction();
 			Idle_action.onUpdated = m_MinerBehaviour.IdleState;
@@ -36,12 +41,13 @@ namespace Tankito.SinglePlayer
 			State Dig = MinerBehaviour.CreateState(Dig_action);
 			
 			FunctionalAction MinerUS_action = new FunctionalAction();
+			MinerUS_action.onUpdated = () => Status.Running;
 			State MinerUS = MinerBehaviour.CreateState(MinerUS_action);
 			
 			ConditionPerception IdleToUS_perception = new ConditionPerception();
 			IdleToUS_perception.onCheck = m_MinerBehaviour.CheckIdleToMinerUS;
 			FunctionalAction IdleToUS_action = new FunctionalAction();
-			IdleToUS_action.onUpdated = () => Status.Running;
+			IdleToUS_action.onUpdated = m_MinerBehaviour.ActionIdleToMinerUS;
 			StateTransition IdleToUS = MinerBehaviour.CreateTransition(Idle, MinerUS, IdleToUS_perception, IdleToUS_action);
 			
 			ConditionPerception USToIdle_perception = new ConditionPerception();

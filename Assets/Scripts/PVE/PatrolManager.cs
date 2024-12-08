@@ -7,28 +7,23 @@ public class PatrolManager : Singleton<PatrolManager>
 {
     [SerializeField] List<Transform> patrolPoints = new List<Transform>();
     [SerializeField] float patrolDistanceMax= 15f;
-    GameObject player;
-
-    protected override void Awake()
-    {
-        base.Awake();
-        player = GameObject.FindGameObjectWithTag("Player");
-    }
+    [SerializeField] GameObject player;
 
     public Transform GetPatrolPoint()
     {
-        List<Transform> possiblePoints;
+        List<Transform> possiblePoints = patrolPoints;
         if (player != null)
         {
             possiblePoints = patrolPoints.Where(obj => Vector2.Distance(obj.position, player.transform.position) <= patrolDistanceMax).ToList();
         }
-        possiblePoints = patrolPoints;
+        //possiblePoints = patrolPoints;
         int n = Random.Range(0, possiblePoints.Count);
         return possiblePoints[n];
     }
 
     public Transform GetDigAppearPoint(int maxDigDistance)
     {
+
         List<Transform> possiblePoints = patrolPoints.Where(obj => Vector2.Distance(obj.position, player.transform.position) <= maxDigDistance).ToList();
         int n = Random.Range(0, possiblePoints.Count);
         return possiblePoints[n];

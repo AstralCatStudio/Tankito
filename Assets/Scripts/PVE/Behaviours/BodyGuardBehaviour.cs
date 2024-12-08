@@ -9,7 +9,7 @@ using static AreaDetection;
 
 public class BodyGuardBehaviour : AGenericBehaviour
 {
-    const float SPEED_MULTIPLIER = 3;
+    const float SPEED_MULTIPLIER = 3.5f;
 
     [SerializeField] float protectDistance = 1.0f;
     private float maxCast;
