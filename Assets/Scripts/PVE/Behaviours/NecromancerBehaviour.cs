@@ -15,6 +15,11 @@ namespace Tankito.SinglePlayer
         [SerializeField] AreaDetection playerAreaDetection;
         [SerializeField] float resurrectDistance = 1f;
 
+        [SerializeField] float hitCooldown = 2f;
+        [SerializeField] float lastAttack;
+        [SerializeField] Collider2D parryHitbox;
+        [SerializeField] bool canAttack = true;
+
         GameObject player;
 
         protected override void Start()
@@ -73,9 +78,28 @@ namespace Tankito.SinglePlayer
 
         public Status Hit()
         {
+            if (!canAttack) return Status.Success;
+
+            canAttack = false;
             m_currentInput.action = TankAction.Parry;
             Debug.Log("PUMBA EL NECROMANCER TE GOLPEA");
+
+            float distanceToPlayer = Vector2.Distance(transform.position, player.transform.position);
+
+            if(distanceToPlayer <= agentController.npcData.attackRange)
+            {
+                Debug.LogWarning("AAAAA");
+                player.GetComponent<PVECharacterData>().TakeDamage(1);
+            }
+            StartCoroutine(CooldownAttack());
+
             return Status.Success;
+        }
+
+        IEnumerator CooldownAttack()
+        {
+            yield return new WaitForSeconds(hitCooldown);
+            canAttack = true;
         }
 
         public bool ConditionFlee()

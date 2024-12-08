@@ -1308,6 +1308,10 @@ MonoBehaviour:
   resurrectTimer: 0
   playerAreaDetection: {fileID: 1497368850164391874}
   resurrectDistance: 1
+  hitCooldown: 2
+  lastAttack: 0
+  parryHitbox: {fileID: 3720022206706476520}
+  canAttack: 1
 --- !u!114 &996433374662104813
 MonoBehaviour:
   m_ObjectHideFlags: 0
