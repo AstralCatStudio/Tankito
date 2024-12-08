@@ -6,18 +6,18 @@ using UnityEngine;
 public class PatrolManager : Singleton<PatrolManager>
 {
     [SerializeField] List<Transform> patrolPoints = new List<Transform>();
+    [SerializeField] float patrolDistanceMax= 15f;
     GameObject player;
 
-    private void Start()
+    protected override void Awake()
     {
+        base.Awake();
         player = GameObject.FindGameObjectWithTag("Player");
     }
 
     public Transform GetPatrolPoint()
     {
-        float appearDistance = 15f;
-
-        List<Transform> possiblePoints = patrolPoints.Where(obj => Vector2.Distance(obj.position, player.transform.position) <= appearDistance).ToList();
+        List<Transform> possiblePoints = patrolPoints.Where(obj => Vector2.Distance(obj.position, player.transform.position) <= patrolDistanceMax).ToList();
         int n = Random.Range(0, possiblePoints.Count);
         return possiblePoints[n];
     }
