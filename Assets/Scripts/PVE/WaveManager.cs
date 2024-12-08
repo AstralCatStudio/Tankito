@@ -24,6 +24,7 @@ namespace Tankito.SinglePlayer
 
         [Header("Spawning variables")]
         [SerializeField] private float maxDistance;
+        [SerializeField] private float minDistance;
         [SerializeField] private bool isSpawning;
 
         [Header("Timer")]
@@ -132,7 +133,7 @@ namespace Tankito.SinglePlayer
             {
                 float distance = Vector3.Distance(spawnPoint.position, playerTransform.position);
 
-                if (distance <= maxDistance)
+                if (distance <= maxDistance && distance > minDistance)
                 {
                     nearSpawnPoints.Add(spawnPoint);
                 }
