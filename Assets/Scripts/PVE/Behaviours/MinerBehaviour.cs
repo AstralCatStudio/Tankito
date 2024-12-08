@@ -20,11 +20,11 @@ namespace Tankito.SinglePlayer
         float disPerStep;
         [SerializeField] LayerMask coverLayers;
 
-        [SerializeField]float digCooldown = 10;
+        [SerializeField] float digCooldown = 10;
         float digTimer = 0;
         const int MAX_NA = 5;
 
-        [SerializeField] private GameObject minePrefab; 
+        [SerializeField] private GameObject minePrefab;
         private float stateTimer = 0f;
         float currentUtility;
         int currentDirection;
@@ -33,6 +33,8 @@ namespace Tankito.SinglePlayer
         [SerializeField] bool putMineAction = false;
         bool hasPutMine = false;
         [SerializeField] private float putMineDuration = 3f;
+        [SerializeField] private float timerRechargeMine = 45f;
+        private Coroutine rechargeCoroutine; // PARA RECARGAR LAS MINAS
         #endregion
 
         #region Dig
@@ -44,6 +46,36 @@ namespace Tankito.SinglePlayer
         bool hasDigged = false;
         #endregion
 
+        protected void OnEnable()
+        {
+            if (rechargeCoroutine == null)
+            {
+                rechargeCoroutine = StartCoroutine(RechargeMineTimer()); // CORRUTINA PARA RECARGAR LAS MINAS
+            }
+        }
+
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+            playerAreaDetection.OnSubjectDetected -= OnPlayerDetected;
+            playerAreaDetection.OnSubjectDissapear -= OnPlayerDissapear;
+
+            if (rechargeCoroutine != null)
+            {
+                StopCoroutine(rechargeCoroutine); // PARAR LA CORRUTINA DE RECARGAR MINAS
+                rechargeCoroutine = null;
+            }
+        }
+
+        private IEnumerator RechargeMineTimer()
+        {
+            while (true)
+            {
+                yield return new WaitForSeconds(timerRechargeMine);
+                AddMine();
+            }
+        }
+
         protected override void Start()
         {
             base.Start();
@@ -53,13 +85,8 @@ namespace Tankito.SinglePlayer
             spriteRenderers = gameObject.GetComponentsInChildren<SpriteRenderer>().ToList();
             playerAreaDetection.OnSubjectDetected += OnPlayerDetected;
             playerAreaDetection.OnSubjectDissapear += OnPlayerDissapear;
-        }
 
-        protected override void OnDisable()
-        {
-            base.OnDisable();
-            playerAreaDetection.OnSubjectDetected -= OnPlayerDetected;
-            playerAreaDetection.OnSubjectDissapear -= OnPlayerDissapear;
+            StartCoroutine(RechargeMineTimer());
         }
 
         protected override void Update()
@@ -84,7 +111,7 @@ namespace Tankito.SinglePlayer
         public Status DigState()
         {
             stateTimer += Time.deltaTime;
-            if(stateTimer >= digDuration)
+            if (stateTimer >= digDuration)
             {
                 transform.position = PatrolManager.Instance.GetDigAppearPoint(maxDigDistance).position;
                 foreach (var sprite in spriteRenderers)
@@ -95,7 +122,7 @@ namespace Tankito.SinglePlayer
                 Instantiate(digObject, transform.position, Quaternion.identity);
                 hasDigged = true;
             }
-            
+
             return Status.Running;
         }
 
@@ -187,7 +214,7 @@ namespace Tankito.SinglePlayer
 
         public float NAllies()
         {
-           float uNa = (float)(genericTargets.Count / MAX_NA);
+            float uNa = (float)(genericTargets.Count / MAX_NA);
             if (uNa >= 1) return 1;
             return uNa;
         }
@@ -203,7 +230,7 @@ namespace Tankito.SinglePlayer
             {
                 float distance = Vector2.Distance(transform.position, player.transform.position);
                 float distanceNormalized = distance / agentController.npcData.idealDistance;
-                if(distanceNormalized > 1)
+                if (distanceNormalized > 1)
                 {
                     distanceNormalized = 1;
                 }
@@ -221,9 +248,9 @@ namespace Tankito.SinglePlayer
                 Vector2 minerToPlayerDir = minerToPlayer.normalized;
                 Vector2 radiusDir = new Vector2(-minerToPlayerDir.y, minerToPlayerDir.x);
                 Vector2 nextRayPos = (Vector2)transform.position + radiusDir * colliderDiameter / 2;
-                for(int i = 0; i < nRayCastCover; i++)
+                for (int i = 0; i < nRayCastCover; i++)
                 {
-                    if(Physics2D.Raycast(nextRayPos, minerToPlayerDir, minerToPlayer.magnitude, coverLayers))
+                    if (Physics2D.Raycast(nextRayPos, minerToPlayerDir, minerToPlayer.magnitude, coverLayers))
                     {
                         nHits++;
                     }
@@ -248,7 +275,7 @@ namespace Tankito.SinglePlayer
 
         public float CanDig()
         {
-            if(digTimer >= digCooldown)
+            if (digTimer >= digCooldown)
             {
                 return 1;
             }
@@ -262,7 +289,7 @@ namespace Tankito.SinglePlayer
         public float AggroHPP(float HPP)
         {
             if (HPP == 0) HPP = 1 / maxPlayerHp;
-            return 1 / (maxPlayerHp *  HPP);
+            return 1 / (maxPlayerHp * HPP);
         }
 
         public float AggroNA(float NA)
@@ -273,20 +300,20 @@ namespace Tankito.SinglePlayer
         #region UtlityActions
         public Status MoveAggro()
         {
-            if(player != null)
+            if (player != null)
             {
-                float angle = currentDirection * 90 * (1-currentUtility);
+                float angle = currentDirection * 90 * (1 - currentUtility);
                 Vector2 minerToPlayer = (player.transform.position - transform.position).normalized;
                 SetNewMinerUSPosition(angle, minerToPlayer);
                 m_currentInput.moveVector = CheckNewPosition(m_currentInput.moveVector);
             }
-            
+
             return Status.Running;
         }
 
         public Status MoveDef()
         {
-            float angle = currentDirection * 90 * (1-currentUtility);
+            float angle = currentDirection * 90 * (1 - currentUtility);
             Vector2 playerToMiner = (transform.position - player.transform.position).normalized;
             SetNewMinerUSPosition(angle, playerToMiner);
             m_currentInput.moveVector = CheckNewPosition(m_currentInput.moveVector);
@@ -330,15 +357,16 @@ namespace Tankito.SinglePlayer
 
         public void AddMine()
         {
-            if (nMines<MAX_MINES)
+            if (nMines < MAX_MINES)
             {
                 nMines++;
+                MusicManager.Instance.PlaySound("snd_rango_danio");
             }
         }
 
         void OnPlayerDetected(GameObject gameObject)
         {
-            if(maxPlayerHp == 0)
+            if (maxPlayerHp == 0)
             {
                 maxPlayerHp = gameObject.GetComponent<PVECharacterData>().Max_Health;
             }
