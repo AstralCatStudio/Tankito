@@ -40,7 +40,7 @@ namespace Tankito.SinglePlayer
         #region Dig
         [SerializeField] bool digAction = false;
         [SerializeField] private GameObject digObject;
-        [SerializeField] int maxDigDistance = 50;
+        [SerializeField] int maxDigDistance = 30;
         [SerializeField] private float digDuration = 5f;
         [SerializeField] List<SpriteRenderer> spriteRenderers = new List<SpriteRenderer>();
         bool hasDigged = false;
