@@ -12,7 +12,8 @@ namespace Tankito.SinglePlayer
         [SerializeField] float bulletVelocity;
         [SerializeField] float lifeTimeTreshold;
         [SerializeField] BulletType bulletType;
-
+        BulletType originalType;
+        bool detonated = false;
         private void OnEnable()
         {
             m_bouncesLeft = 0;
@@ -20,6 +21,8 @@ namespace Tankito.SinglePlayer
 
         public void InitializeBullet(Vector2 position, Vector2 direction, bool triggerOnSpawnEvents = true)
         {
+            detonated = false;
+            originalType = bulletType;
             transform.position = position;
             m_rb.velocity = direction.normalized * bulletVelocity;
             transform.rotation = Quaternion.LookRotation(new Vector3(0, 0, 1), m_rb.velocity.normalized);
@@ -49,18 +52,34 @@ namespace Tankito.SinglePlayer
 
         public override void Detonate(bool lifeTimeOver = false)
         {
-            Instantiate(miniExplosionPrefab, transform.position, Quaternion.identity);
+            
+            
+            if (!detonated)
+            {
+                Instantiate(miniExplosionPrefab, transform.position, Quaternion.identity);
 
-            OnDetonate.Invoke(this);
-            SinglePlayerBulletPool.Instance.Release(this.gameObject, (int)bulletType);
+                OnDetonate.Invoke(this);
+                detonated = true;
+                SinglePlayerBulletPool.Instance.Release(this.gameObject, (int)bulletType);
+            }
+            
         }
 
         private void OnTriggerEnter2D(Collider2D collision)
         {
             if (collision.gameObject.layer == 14)
             {
-                m_rb.velocity = -m_rb.velocity*1.5f;
-                bulletType = BulletType.Player;
+                m_rb.velocity = -m_rb.velocity * 1.5f;
+                bulletType = BulletType.Parry;
+            }
+            else
+            if (bulletType != BulletType.Parry &&bulletType != BulletType.Attacker && collision.gameObject.CompareTag("EnemyBullet") && collision.gameObject.GetComponent<SinglePlayerBulletController>().bulletType == BulletType.Attacker)
+            {
+                Detonate();
+            }
+            else if (bulletType != BulletType.Parry && collision.gameObject.GetComponent<SinglePlayerBulletController>()?.bulletType == BulletType.Attacker)
+            {
+                Detonate();
             }
         }
         protected override void OnCollisionEnter2D(Collision2D collision)
@@ -86,8 +105,12 @@ namespace Tankito.SinglePlayer
                             break;
 
                         case "Player":
-                            Detonate();
-                            collision.gameObject.GetComponent<PVECharacterData>().TakeDamage(1);
+                            if (m_lifetime >= lifeTimeTreshold)
+                            {
+                                Detonate();
+                                collision.gameObject.GetComponent<PVECharacterData>().TakeDamage(1);
+                            }
+                            
                             break;
 
                         case "Enemy":
@@ -119,6 +142,10 @@ namespace Tankito.SinglePlayer
                             break;
 
                         case "Enemy":
+                            if (m_lifetime >= lifeTimeTreshold)
+                            {
+                                Detonate();
+                            }
                             break;
 
                         case "Player":
@@ -149,8 +176,11 @@ namespace Tankito.SinglePlayer
                             break;
 
                         case "Enemy":
-                            Detonate();
-                            collision.gameObject.GetComponent<PVEEnemyData>().AddHealth(1);
+                            if (m_lifetime >= lifeTimeTreshold)
+                            {
+                                Detonate();
+                                collision.gameObject.GetComponent<PVEEnemyData>().AddHealth(1);
+                            }
                             break;
 
                         case "Player":
@@ -181,6 +211,10 @@ namespace Tankito.SinglePlayer
                             break;
 
                         case "Enemy":
+                            if (m_lifetime >= lifeTimeTreshold)
+                            {
+                                Detonate();
+                            }
                             break;
 
                         case "Player":
@@ -192,6 +226,49 @@ namespace Tankito.SinglePlayer
                             break;
 
                         default:
+                            Detonate();
+                            break;
+                    }
+                    break;
+                case BulletType.Parry:
+                    
+                    switch (collision.gameObject.tag)
+                    {
+                        case "NormalWall":
+                            if (m_bouncesLeft <= 0)
+                            {
+                                bulletType = originalType;
+                                Detonate();
+                            }
+                            else
+                            {
+                                m_bouncesLeft--;
+                            }
+                            break;
+
+                        case "BouncyWall":
+                            break;
+
+                        case "Enemy":
+                            bulletType = originalType;
+                            Detonate();
+                            collision.gameObject.GetComponent<PVEEnemyData>().TakeDamage(1);
+                            break;
+
+                        case "Player":
+                            bulletType = originalType;
+                            Detonate();
+                            collision.gameObject.GetComponent<PVECharacterData>().TakeDamage(1);
+
+                            break;
+
+                        case "Bullet":
+                            break;
+                        case "EnemyBullet":
+                            break;
+
+                        default:
+                            bulletType = originalType;
                             Detonate();
                             break;
                     }

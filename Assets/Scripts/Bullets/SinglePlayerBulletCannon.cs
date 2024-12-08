@@ -6,7 +6,7 @@ using static UnityEngine.RuleTile.TilingRuleOutput;
 
 namespace Tankito.SinglePlayer
 {
-    internal enum BulletType { Player = 0, BodyGuard = 1, Healer = 2, Attacker = 3 }
+    internal enum BulletType { Player = 0, BodyGuard = 1, Healer = 2, Attacker = 3, Parry =4 }
     public class SinglePlayerBulletCannon : MonoBehaviour, IBulletCannon
     {
         [SerializeField] float coolDown = 1;

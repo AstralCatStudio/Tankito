@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 3042986251612907951}
   - component: {fileID: 5716645593573142563}
   - component: {fileID: -6089749195890710295}
+  - component: {fileID: 8293219277807600503}
   m_Layer: 8
   m_Name: SinglePlayerBullet
   m_TagString: Bullet
@@ -169,3 +170,38 @@ MonoBehaviour:
   bulletVelocity: 6
   lifeTimeTreshold: 10
   bulletType: 0
+--- !u!58 &8293219277807600503
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5698162112898646976}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 1

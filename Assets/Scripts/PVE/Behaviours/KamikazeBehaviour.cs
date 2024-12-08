@@ -75,7 +75,7 @@ namespace Tankito.SinglePlayer
 
         public bool CheckChaseToParry()
         {
-            if(bulletsInRange.Count > 0)
+            if(!hasParried &&bulletsInRange.Count > 0)
             {
                 for(int i = 0; i < bulletsInRange.Count; i++)
                 {

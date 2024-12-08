@@ -97,6 +97,7 @@ public abstract class ATankController : MonoBehaviour
         if (DEBUGCONT) Debug.Log($"Processing {gameObject} input: {input}");
         if ((CanDash && input.action == TankAction.Dash) || playerState == PlayerState.Dashing)
         {
+            
             DashTank(input.moveVector, input.timestamp, deltaTime);
         }
         else
@@ -129,19 +130,21 @@ public abstract class ATankController : MonoBehaviour
 
         AimTank(input.aimVector, deltaTime);
     }
-    void Parry(int currentInputDashTick, float deltaTime)
+    void Parry(int currentInputParryTick, float deltaTime)
     {
+        
         if (playerState != PlayerState.Parrying)
         {
             parryHitbox.SetActive(false);
             parryTimer = 0;
             playerState = PlayerState.Parrying;
-            stateInitTick = currentInputDashTick;
+            stateInitTick = currentInputParryTick;
             m_turretAnimator.SetTrigger("Parry");
             m_hullAnimator.SetTrigger("Parry");
         }
         if (parryTimer >= parryStart)
         {
+            Debug.Log("Haciendo Parry");
             parryHitbox.SetActive(true);
         }
         if (parryTimer >= parryStart+parryWindow)
@@ -150,6 +153,7 @@ public abstract class ATankController : MonoBehaviour
         }
         if (parryTimer >= parryTotalTime)
         {
+            stateInitTick = 0;
             playerState = PlayerState.Moving;
             parryHitbox.SetActive(false);
         }

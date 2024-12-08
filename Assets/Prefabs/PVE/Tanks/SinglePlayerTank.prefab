@@ -460,12 +460,12 @@ MonoBehaviour:
   playerState: 0
   parryHitbox: {fileID: 7519829339989002454}
   DEBUGCONT: 0
-  DEBUGDASh: 0
+  DEBUGDASh: 1
   m_turretAnimator: {fileID: 5299058469088932656}
   m_hullAnimator: {fileID: 1867312442756813050}
   parryTotalTime: 1
-  parryStart: 0.1
-  parryWindow: 0.4
+  parryStart: 0.05
+  parryWindow: 0.3
   m_dashCooldown: 2
 --- !u!114 &4966372300544870120
 MonoBehaviour:

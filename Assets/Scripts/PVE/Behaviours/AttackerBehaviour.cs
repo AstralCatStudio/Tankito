@@ -218,6 +218,7 @@ namespace Tankito.SinglePlayer
             
             m_currentInput.moveVector = CheckNewPosition(m_currentInput.moveVector);
             CheckObstacles(m_currentInput.moveVector, m_currentInput.moveVector - (Vector2)transform.position);
+            CheckTargetInRange(Vector2.Distance(transform.position,player.transform.position),20);
             return Status.Running;
         }
 
@@ -233,6 +234,8 @@ namespace Tankito.SinglePlayer
                 m_currentInput.moveVector = player.transform.position + (transform.position - player.transform.position).normalized * baseDistanceNormalRadius;
             }
             m_currentInput.moveVector = CheckNewPosition(m_currentInput.moveVector);
+            CheckObstacles(m_currentInput.moveVector, m_currentInput.moveVector - (Vector2)transform.position);
+            CheckTargetInRange(Vector2.Distance(transform.position, player.transform.position), 20);
             return Status.Running;
         }
 
@@ -248,12 +251,18 @@ namespace Tankito.SinglePlayer
                 m_currentInput.moveVector = player.transform.position + (transform.position - player.transform.position).normalized * baseDistanceDefRadius;
             }
             m_currentInput.moveVector = CheckNewPosition(m_currentInput.moveVector);
+            CheckObstacles(m_currentInput.moveVector, m_currentInput.moveVector - (Vector2)transform.position);
+            CheckTargetInRange(Vector2.Distance(transform.position, player.transform.position), 20);
             return Status.Running;
         }
 
         public Status GoHeal()
         {
             if (USManager.Instance.AttackerFullAggro.Contains(this)) USManager.Instance.AttackerFullAggro.Remove(this);
+            if (healerList.Count>0)
+            {
+                
+            }
             return Status.Running;
         }
         #endregion
@@ -292,7 +301,10 @@ namespace Tankito.SinglePlayer
             player = null;
         }
 
-        protected override bool CheckTargetInRange(float magnitude, float range) { return false; }
+        protected override bool CheckTargetInRange(float magnitude, float range) { 
+            base.CheckTargetInRange(magnitude, range);
+            return false; 
+        }
         #endregion
     }
 }

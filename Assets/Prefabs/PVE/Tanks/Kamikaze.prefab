@@ -611,9 +611,9 @@ MonoBehaviour:
   DEBUGDASh: 0
   m_turretAnimator: {fileID: 6669778966259452927}
   m_hullAnimator: {fileID: 3367818034188912104}
-  parryTotalTime: 0
+  parryTotalTime: 1
   parryStart: 0
-  parryWindow: 0
+  parryWindow: 0.3
   agent: {fileID: 5334828445911339723}
   npcData: {fileID: 11400000, guid: 9a03f38c27b916345bceecf3f257f3e0, type: 2}
   updateDesTimer: 0
@@ -650,7 +650,7 @@ MonoBehaviour:
   hasShot: 0
   explosionRange: 1
   autoDestructDistance: 2
-  parryDistance: 1
+  parryDistance: 2
   bulletAreaDetection: {fileID: 4310168333349874508}
   explosionEffect: {fileID: 7125269485236248995, guid: 3fa9109637af9214baaa2c73b0f9a9f0, type: 3}
 --- !u!114 &1415010158793888448
@@ -1329,10 +1329,10 @@ CircleCollider2D:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 769
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 32511
+    m_Bits: 0
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2

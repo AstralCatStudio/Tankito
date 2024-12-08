@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5efdb9c759129e246b2f4fa11592ba4b, type: 3}
   m_Name: KamikazeData
   m_EditorClassIdentifier: 
+  tankType: 4
   health: 1
-  speed: 5
+  speed: 1
   aimSpeed: 360
   angularSpeed: 360
   idealDistance: 0
@@ -21,3 +22,4 @@ MonoBehaviour:
   reloadTime: 3
   angleErrorAccepted: 20
   genericTargetTag: 
+  leftoversInDeath: {fileID: 0}

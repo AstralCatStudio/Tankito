@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 7089625180980551934}
   - component: {fileID: 7043442165355838645}
   - component: {fileID: 2257710541997062530}
+  - component: {fileID: 3236074051544856022}
   m_Layer: 9
   m_Name: AttackerBullet
   m_TagString: EnemyBullet
@@ -168,4 +169,39 @@ MonoBehaviour:
   miniExplosionPrefab: {fileID: 6132816792327757547, guid: 096d9801d27a1164d907995355aa3f24, type: 3}
   bulletVelocity: 6
   lifeTimeTreshold: 10
-  bulletType: 2
+  bulletType: 3
+--- !u!58 &3236074051544856022
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3323262820772698348}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 1

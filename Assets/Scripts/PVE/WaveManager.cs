@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Services.Matchmaker.Models;
 using UnityEngine;
 
 namespace Tankito.SinglePlayer
@@ -33,6 +34,7 @@ namespace Tankito.SinglePlayer
         [SerializeField] private List<GameObject> activeEnemies;
         [SerializeField] private int currentWave;
         [SerializeField] private int currentWaveIndex = -1;
+        [SerializeField] GameObject player;
 
         protected override void Awake()
         {
@@ -68,6 +70,7 @@ namespace Tankito.SinglePlayer
 
         private void SpawnWave()
         {
+            player.GetComponent<PVECharacterData>().AddHealth(1);
             isSpawning = true;
 
             waveTimer = 0f;
