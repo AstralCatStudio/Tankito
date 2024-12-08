@@ -1557,7 +1557,7 @@ MonoBehaviour:
         childIds:
         - 00bd482f-6317-454e-88f3-a7e73a1a2413
         - 343304ef-7acb-450c-8d71-1aa80e7c9b25
-      - name: UGoDef
+      - name: WGoDef
         id: 6ae85959-e6b2-44e4-9d68-2119b46dcb2a
         position: {x: 1120.8, y: 246.40001}
         node:
@@ -1598,7 +1598,7 @@ MonoBehaviour:
         - f289f018-b372-4bb8-ba87-d6de8835f103
       - name: GoDef
         id: 32236d3d-e7bd-4add-8f37-8f563325cd72
-        position: {x: 1478.4, y: 354.40002}
+        position: {x: 1685.6, y: 294.40002}
         node:
           rid: 4463992067889561608
         references:
@@ -1635,6 +1635,28 @@ MonoBehaviour:
         childIds:
         - a702a056-5d52-4f5c-990b-81cba0b38459
         - aefe5c18-a75f-4065-ba2e-6277963a635a
+      - name: NoBullets
+        id: d9a18337-dd59-4e8d-bd71-96cef5111602
+        position: {x: 352, y: 788}
+        node:
+          rid: 4463992118346514432
+        references:
+        - fieldName: Variable
+          value:
+            rid: 4463992118346514433
+          fieldType: System.Func`1[[System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089]], mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        parentIds: []
+        childIds: []
+      - name: U
+        id: 9799f624-2858-490b-9dfd-c2e62d2e457b
+        position: {x: 1380.8, y: 361.59998}
+        node:
+          rid: 4463992118346514434
+        references: []
+        parentIds: []
+        childIds: []
     pushPerceptions: []
   references:
     version: 2
@@ -2227,6 +2249,21 @@ MonoBehaviour:
           methodName: 
     - rid: 4463992096203997189
       type: {class: MinFusionFactor, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
+      data:
+        PullingEnabled: 1
+    - rid: 4463992118346514432
+      type: {class: VariableFactor, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
+      data:
+        PullingEnabled: 1
+        min: 0
+        max: 1
+    - rid: 4463992118346514433
+      type: {class: SerializedContextMethod, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
+      data:
+        componentName: AttackerBehaviour
+        methodName: NoBullets
+    - rid: 4463992118346514434
+      type: {class: MaxFusionFactor, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
       data:
         PullingEnabled: 1
     - rid: 4783593595286061094
