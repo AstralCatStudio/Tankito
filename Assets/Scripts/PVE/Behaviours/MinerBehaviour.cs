@@ -99,11 +99,6 @@ namespace Tankito.SinglePlayer
             return Status.Running;
         }
 
-        public Status Nothing()
-        {
-            return Status.Running;
-        }
-
         public Status PutMineState()
         {
             stateTimer += Time.deltaTime;
@@ -166,6 +161,13 @@ namespace Tankito.SinglePlayer
             return Status.Success;
         }
 
+        public Status ActionPutMineToMinerUS()
+        {
+            ActionShootPOP();
+            ActionMinerUSEnter();
+            return Status.Success;
+        }
+
         public Status ActionMinerUSEnter()
         {
             currentDirection = Random.Range(0, 2);
@@ -194,7 +196,10 @@ namespace Tankito.SinglePlayer
 
         public float NMines()
         {
-            return nMines / MAX_MINES;
+            Debug.Log(nMines);
+            Debug.Log(MAX_MINES);
+            Debug.Log((float)nMines / (float)MAX_MINES);
+            return (float)nMines / (float)MAX_MINES;
         }
 
         public float Distance()
@@ -205,7 +210,7 @@ namespace Tankito.SinglePlayer
                 float distanceNormalized = distance / agentController.npcData.idealDistance;
                 if(distanceNormalized > 1)
                 {
-                    distanceNormalized = 1;
+                    distanceNormalized = 0;
                 }
                 return distanceNormalized;
             }

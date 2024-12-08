@@ -168,7 +168,7 @@ MonoBehaviour:
   PREDICT_DESTRUCTION: 1
   miniExplosionPrefab: {fileID: 6132816792327757547, guid: 096d9801d27a1164d907995355aa3f24, type: 3}
   bulletVelocity: 6
-  lifeTimeTreshold: 10
+  lifeTimeTreshold: 0.2
   bulletType: 2
 --- !u!58 &7719631218609043631
 CircleCollider2D:

@@ -12,11 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5efdb9c759129e246b2f4fa11592ba4b, type: 3}
   m_Name: MinerBehaviour
   m_EditorClassIdentifier: 
+  tankType: 0
   health: 2
   speed: 3.2
   aimSpeed: 360
   angularSpeed: 360
-  idealDistance: 25
+  idealDistance: 15
   attackRange: 0
   reloadTime: 15
   angleErrorAccepted: 0

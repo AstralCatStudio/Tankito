@@ -36,7 +36,6 @@ namespace Tankito.SinglePlayer
 			State Dig = MinerBehaviour.CreateState(Dig_action);
 			
 			FunctionalAction MinerUS_action = new FunctionalAction();
-			MinerUS_action.onUpdated = m_MinerBehaviour.Nothing;
 			State MinerUS = MinerBehaviour.CreateState(MinerUS_action);
 			
 			ConditionPerception IdleToUS_perception = new ConditionPerception();
