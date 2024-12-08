@@ -105,6 +105,11 @@ namespace Tankito.SinglePlayer
                 //healthBarTransform.gameObject.SetActive(false);
                 Destroy(healthBarTransform.gameObject);
             }
+
+            if(gameObject.tag == "Player")
+            {
+                SinglePlayerUI.Instance.SetActiveEndMenu(true);
+            }
         }
 
         public void Revive()

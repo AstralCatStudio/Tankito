@@ -36,6 +36,8 @@ namespace Tankito.SinglePlayer
         [SerializeField] private int currentWaveIndex = -1;
         [SerializeField] GameObject player;
 
+        public int CurrentWave => currentWave;
+
         protected override void Awake()
         {
             base.Awake();

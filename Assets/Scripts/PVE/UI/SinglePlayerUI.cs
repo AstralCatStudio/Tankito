@@ -6,11 +6,15 @@ using System.Threading;
 using Tankito;
 using UnityEditorInternal;
 using UnityEngine.SceneManagement;
+using Tankito.SinglePlayer;
 
 public class SinglePlayerUI : Singleton<SinglePlayerUI>
 {
+    [SerializeField] private GameObject ExitButton;
     [SerializeField] private GameObject CurrentWave;
     [SerializeField] private GameObject PausePanel;
+    [SerializeField] private GameObject PauseButton;
+    [SerializeField] private GameObject EndMenu;
 
     public void SetCurrentWave(int wave)
     {
@@ -30,7 +34,7 @@ public class SinglePlayerUI : Singleton<SinglePlayerUI>
     public void PauseGame()
     {
         PausePanel.SetActive(!PausePanel.activeSelf);
-        if(PausePanel.activeSelf)
+        if (PausePanel.activeSelf)
         {
             Time.timeScale = 0.0f;
         }
@@ -43,5 +47,30 @@ public class SinglePlayerUI : Singleton<SinglePlayerUI>
     public void ReturnToMenu()
     {
         SceneManager.LoadScene("MainMenu");
+        Time.timeScale = 1.0f;
+    }
+
+    public void PlayAgain()
+    {
+        SceneManager.LoadScene("SinglePlayer");
+        Time.timeScale = 1.0f;
+    }
+
+    public void SetEndWaves()
+    {
+        EndMenu.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = "Completed waves: " + (WaveManager.Instance.CurrentWave - 1);
+    }
+
+    public void SetActiveEndMenu(bool active)
+    {
+        if (active)
+        {
+            SetEndWaves();
+            EndMenu.SetActive(true);
+            Time.timeScale = 0.0f;
+            PauseButton.SetActive(false);
+            ExitButton.SetActive(false);
+            CurrentWave.SetActive(false);
+        }
     }
 }
