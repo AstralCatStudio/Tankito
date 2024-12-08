@@ -4,6 +4,7 @@ using UnityEngine;
 using BehaviourAPI;
 using BehaviourAPI.Core;
 using System.Linq;
+using BehaviourAPI.UnityToolkit.GUIDesigner.Editor;
 
 namespace Tankito.SinglePlayer
 {
@@ -142,6 +143,7 @@ namespace Tankito.SinglePlayer
         #region Perceptions
         public bool CheckIdleToMinerUS()
         {
+            Debug.Log("CGEQUEOOOEO=");
             return player != null;
         }
 
@@ -178,28 +180,28 @@ namespace Tankito.SinglePlayer
             putMineAction = false;
             digAction = false;         
             stateTimer = 0;
-            return Status.Success;
+            return Status.Running;
         }
 
         public Status ActionIdleToMinerUS()
         {
             patrolPointFound = false;
             ActionMinerUSEnter();
-            return Status.Success;
+            return Status.Running;
         }
 
         public Status ActionDigToMinerUS()
         {
             digTimer = 0;
             ActionMinerUSEnter();
-            return Status.Success;
+            return Status.Running;
         }
 
         public Status ActionPutMineToMinerUS()
         {
             ActionShootPOP();
             ActionMinerUSEnter();
-            return Status.Success;
+            return Status.Running;
         }
 
         public Status ActionMinerUSEnter()
@@ -207,7 +209,7 @@ namespace Tankito.SinglePlayer
             agentController.agent.speed = agentController.npcData.speed;
             currentDirection = Random.Range(0, 2);
             if (currentDirection == 0) currentDirection = -1;
-            return Status.Success;
+            return Status.Running;
         }
         #endregion
 
@@ -318,7 +320,7 @@ namespace Tankito.SinglePlayer
         {
             if (player != null)
             {
-                float angle = currentDirection * 90 * (1 - currentUtility);
+                float angle = currentDirection * 45;
                 Vector2 minerToPlayer = (player.transform.position - transform.position).normalized;
                 SetNewMinerUSPosition(angle, minerToPlayer);
                 m_currentInput.moveVector = CheckNewPosition(m_currentInput.moveVector);
@@ -329,7 +331,7 @@ namespace Tankito.SinglePlayer
 
         public Status MoveDef()
         {
-            float angle = currentDirection * 90 * (1 - currentUtility);
+            float angle = currentDirection * 45;
             Vector2 playerToMiner = (transform.position - player.transform.position).normalized;
             SetNewMinerUSPosition(angle, playerToMiner);
             m_currentInput.moveVector = CheckNewPosition(m_currentInput.moveVector);
