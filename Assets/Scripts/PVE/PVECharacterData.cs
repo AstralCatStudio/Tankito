@@ -93,6 +93,9 @@ namespace Tankito.SinglePlayer
             Instantiate(aguaExplosionPrefab, transform.position, Quaternion.identity);
             Instantiate(cristalExplosionPrefab, transform.position, Quaternion.identity);
 
+
+            MusicManager.Instance.PlaySoundPitch("snd_muere", 0.3f);
+
             m_isAlive = false;
             //gameObject.SetActive(false);
             Destroy(gameObject);
@@ -101,6 +104,11 @@ namespace Tankito.SinglePlayer
             {
                 //healthBarTransform.gameObject.SetActive(false);
                 Destroy(healthBarTransform.gameObject);
+            }
+
+            if(gameObject.tag == "Player")
+            {
+                SinglePlayerUI.Instance.SetActiveEndMenu(true);
             }
         }
 

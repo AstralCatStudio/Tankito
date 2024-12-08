@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class Mine : MonoBehaviour
 {
+    private MinerBehaviour minerReference;
     public string activacionTrigger;
     public Animator animator;
     private bool isActivated = false;
@@ -12,7 +13,7 @@ public class Mine : MonoBehaviour
 
     private void Start()
     {
-
+        MusicManager.Instance.PlaySound("snd_teletransporte");
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -45,6 +46,7 @@ public class Mine : MonoBehaviour
     private void Activate()
     {
         isActivated = true;
+        MusicManager.Instance.PlaySound("snd_mina");
         //Debug.Log("activa mina");
         if (animator != null && !string.IsNullOrEmpty(activacionTrigger))
         {
@@ -59,6 +61,13 @@ public class Mine : MonoBehaviour
         {
             Instantiate(explosionEffect, transform.position, Quaternion.identity);
         }
+        minerReference.AddMine();
+
         Destroy(gameObject);
+    }
+
+    public void SetMinerReference(MinerBehaviour miner)
+    {
+        minerReference = miner;
     }
 }

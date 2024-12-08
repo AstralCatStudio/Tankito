@@ -12,6 +12,8 @@ namespace Tankito.SinglePlayer
         {
             animator = GetComponent<Animator>();
             Explode();
+
+            MusicManager.Instance.PlaySoundPitch("snd_explosion");
         }
 
         private void Update()

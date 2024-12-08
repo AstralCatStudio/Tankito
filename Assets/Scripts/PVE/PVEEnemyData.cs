@@ -34,6 +34,7 @@ namespace Tankito.SinglePlayer
             base.Die();
             Debug.Log("Se crea resto para revivir con el necromancer");
 
+            MusicManager.Instance.PlaySoundPitch("snd_muere", 0.3f);
 
             //Instantiate(aguaExplosionPrefab, transform.position, Quaternion.identity);
             //Instantiate(cristalExplosionPrefab, transform.position, Quaternion.identity);
