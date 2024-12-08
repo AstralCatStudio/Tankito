@@ -29,6 +29,8 @@ namespace Tankito.SinglePlayer
         private float stateTimer = 0f;
         float currentUtility;
         int currentDirection;
+        float newMineDuration = 45;
+        float newMineTimer = 0f;
 
         #region PutMine
         [SerializeField] bool putMineAction = false;
@@ -47,34 +49,11 @@ namespace Tankito.SinglePlayer
         bool hasDigged = false;
         #endregion
 
-        protected void OnEnable()
-        {
-            if (rechargeCoroutine == null)
-            {
-                rechargeCoroutine = StartCoroutine(RechargeMineTimer()); // CORRUTINA PARA RECARGAR LAS MINAS
-            }
-        }
-
         protected override void OnDisable()
         {
             base.OnDisable();
             playerAreaDetection.OnSubjectDetected -= OnPlayerDetected;
             playerAreaDetection.OnSubjectDissapear -= OnPlayerDissapear;
-
-            if (rechargeCoroutine != null)
-            {
-                StopCoroutine(rechargeCoroutine); // PARAR LA CORRUTINA DE RECARGAR MINAS
-                rechargeCoroutine = null;
-            }
-        }
-
-        private IEnumerator RechargeMineTimer()
-        {
-            while (true)
-            {
-                yield return new WaitForSeconds(timerRechargeMine);
-                AddMine();
-            }
         }
 
         protected override void Start()
@@ -87,14 +66,18 @@ namespace Tankito.SinglePlayer
             spriteRenderers = gameObject.GetComponentsInChildren<SpriteRenderer>().ToList();
             playerAreaDetection.OnSubjectDetected += OnPlayerDetected;
             playerAreaDetection.OnSubjectDissapear += OnPlayerDissapear;
-            GetComponent<MinerBehaviourRunner>().
-            StartCoroutine(RechargeMineTimer());
         }
 
         protected override void Update()
         {
             base.Update();
             digTimer += Time.deltaTime;
+            newMineTimer += Time.deltaTime;
+            if(newMineTimer >= newMineDuration)
+            {
+                newMineTimer = 0;
+                AddMine();
+            }
         }
 
         #region States
