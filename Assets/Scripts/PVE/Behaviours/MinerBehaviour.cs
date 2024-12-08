@@ -106,7 +106,10 @@ namespace Tankito.SinglePlayer
                 GetComponent<CircleCollider2D>().enabled = true;
                 Instantiate(digObject, transform.position, Quaternion.identity);
                 hasDigged = true;
+                
+                Debug.Break();
             }
+
 
             return Status.Running;
         }
