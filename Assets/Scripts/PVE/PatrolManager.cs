@@ -15,8 +15,11 @@ public class PatrolManager : Singleton<PatrolManager>
 
     public Transform GetPatrolPoint()
     {
-        int n = Random.Range(0, patrolPoints.Count);
-        return patrolPoints[n];
+        float appearDistance = 15f;
+
+        List<Transform> possiblePoints = patrolPoints.Where(obj => Vector2.Distance(obj.position, player.transform.position) <= appearDistance).ToList();
+        int n = Random.Range(0, possiblePoints.Count);
+        return possiblePoints[n];
     }
 
     public Transform GetDigAppearPoint(int maxDigDistance)
