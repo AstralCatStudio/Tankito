@@ -186,6 +186,8 @@ MonoBehaviour:
   m_bouncesLeft: 0
   m_lifetime: 0
   selfCollisionTreshold: 0.2
+  PREDICT_DESTRUCTION: 1
+  bulletSprite: {fileID: 21300000, guid: 08c416d8446c550419592e84e1f27870, type: 3}
 --- !u!114 &3728107581918949035
 MonoBehaviour:
   m_ObjectHideFlags: 0

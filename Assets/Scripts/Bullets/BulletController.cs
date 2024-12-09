@@ -23,6 +23,8 @@ namespace Tankito {
                                         OnHit = (ABullet) => { }, OnBounce = (ABullet) => { },
                                         OnDetonate = (ABullet) => { };
         [SerializeField] private bool PREDICT_DESTRUCTION = true;
+        public Sprite bulletSprite;
+        int maxBulletSpritePriority =0;
 
         private void Awake()
         {
@@ -41,8 +43,17 @@ namespace Tankito {
             foreach (var modifier in Tankito.BulletCannonRegistry.Instance[m_simObj.OwnerId].Modifiers)
             {
                 modifier.BindBulletEvents(this);
+                if (modifier.bulletSpritePriority > maxBulletSpritePriority)
+                {
+                    maxBulletSpritePriority = modifier.bulletSpritePriority;
+                    if (modifier.bulletSprite != null)
+                    {
+                        bulletSprite = modifier.bulletSprite;
+                    }
+                }
             }
-
+            maxBulletSpritePriority = 0;
+            GetComponent<SpriteRenderer>().sprite = bulletSprite;
             if (triggerOnSpawnEvents) OnSpawn?.Invoke(this);
         }
 

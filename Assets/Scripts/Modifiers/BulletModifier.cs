@@ -18,7 +18,8 @@ namespace Tankito
         public float spreadMultiplier;
         public float reloadTimeAdded;
         public List<Vector2> BulletDirections;
-        public BulletStatsModifier(float speed, Vector2 size, float acceleration, int bounces, float lifetime, float boomerang, int amount, int amountmult, float spread, float reload)
+        public float lifeTimeMultiplier;
+        public BulletStatsModifier(float speed, Vector2 size, float acceleration, int bounces, float lifetime, float boomerang, int amount, int amountmult, float spread, float reload, float lifeTimeMult)
         {
             speedMultiplier=speed;
             sizeMultiplier=size;
@@ -31,6 +32,7 @@ namespace Tankito
             spreadMultiplier=spread;
             reloadTimeAdded = reload;
             BulletDirections = new List<Vector2>();
+            lifeTimeMultiplier = lifeTimeMult;
         }
     }
 
@@ -44,7 +46,9 @@ namespace Tankito
         public List<ABulletModifierEvent> onHitEvents;
         public List<ABulletModifierEvent> onBounceEvents;
         public List<ABulletModifierEvent> onDetonateEvents;
-        public BulletStatsModifier bulletStatsModifier = new BulletStatsModifier(1,Vector2.one,0,0,0,0,0,1,1,0);
+        public BulletStatsModifier bulletStatsModifier = new BulletStatsModifier(1,Vector2.one,0,0,0,0,0,1,1,0,1);
+        public Sprite bulletSprite;
+        public int bulletSpritePriority;
         public void BindBulletEvents(BulletController newBullet)
         {
             newBullet.OnSpawn += OnSpawn;
