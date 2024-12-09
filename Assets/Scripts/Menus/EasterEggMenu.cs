@@ -18,11 +18,17 @@ public class EasterEggMenu : MonoBehaviour
     private void OnButtonClicked()
     {
         clicks++;
-        Debug.Log($"CLICK: {clicks}");
+
         if (clicks >= 6)
         {
-            Debug.Log("EASTER EGG");
+            MusicManager.Instance.SetPhase(4);
             clicks = 0;
+        }
+        else 
+        {
+            string[] sounds = { "gato1", "gato2", "gato3", "gato4" };
+            string randomSound = sounds[Random.Range(0, sounds.Length)];
+            MusicManager.Instance.PlaySoundPitch(randomSound);
         }
     }
 }
