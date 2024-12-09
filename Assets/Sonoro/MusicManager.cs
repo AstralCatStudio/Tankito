@@ -471,7 +471,7 @@ public class MusicManager : MonoBehaviour
     }
 
 
-    private void SetReverbZone(int phase, float minDistance, float maxDistance)
+    public void SetReverbZone(int phase, float minDistance, float maxDistance)
     {
         if (reverbZone == null)
         {
@@ -525,6 +525,15 @@ public class MusicManager : MonoBehaviour
                 reverbZone.decayHFRatio = 0.8f; // Altas frecuencias ligeramente dominantes
                 reverbZone.reflections = 100; // Reflexiones claras
                 reverbZone.reverb = 400; // Reverberación posterior definida
+                break;
+
+            case 4: // Sushi
+                reverbZone.room = -1000; // Sin reverberación
+                reverbZone.roomHF = -10000; // Sin frecuencias altas
+                reverbZone.decayTime = 0.1f; // Decaimiento mínimo
+                reverbZone.decayHFRatio = 0.1f;
+                reverbZone.reflections = -10000;
+                reverbZone.reverb = -10000;
                 break;
 
             default: // Sin reverberación
@@ -660,7 +669,18 @@ public class MusicManager : MonoBehaviour
 
         string disparoSound = soundNames[Random.Range(0, soundNames.Length)];
 
-        PlaySound(disparoSound);
+        PlaySoundPitch(disparoSound);
+        PlaySoundPitch("snd_bala_impacta");
+    }
+    public void PlayBulletDestroy()
+    {
+        PlaySoundPitch("snd_disparo");
+    }
+
+    
+    public void PlayDamage()
+    {
+        PlaySoundPitch("snd_rango_danio");
     }
 
 

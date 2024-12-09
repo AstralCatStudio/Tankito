@@ -37,6 +37,13 @@ public class CharacterSelectionButton : MonoBehaviour
             ClientData.Instance.onCharacterPurchased += UnlockCharacter;
         }
     }
+
+    private void OnDestroy()
+    {
+        ClientData.Instance.onCharacterSelected -= SelectCharacter;
+        ClientData.Instance.onCharacterPurchased -= UnlockCharacter;
+    }
+
     public void OpenCharacterSelectItem()
     {
         var menu = MenuController.Instance;

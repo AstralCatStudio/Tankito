@@ -112,6 +112,7 @@ namespace Tankito.SyncronizedButtons
         private void OnButtonClicked()
         {
             Debug.Log($"{_button.gameObject.name} button clicked");
+            MusicManager.Instance.PlaySound("aceptar");
             SetButtonClickedServerRpc(NetworkManager.Singleton.LocalClientId);
         }
 

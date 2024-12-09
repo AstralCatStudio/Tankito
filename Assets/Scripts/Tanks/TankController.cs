@@ -183,6 +183,9 @@ namespace Tankito
         
         private void FireTank(Vector2 aimVector, float deltaTime)
         {
+            // TO DO : TIPO DE BALA 
+            if (SimClock.Instance.Active)
+                MusicManager.Instance.PlayDisparo(); //////////////////////////////////////////////////////////
             cannon.Shoot(aimVector);
         }
         
@@ -251,6 +254,8 @@ namespace Tankito
                 stateInitTick = currentInputDashTick;
                 playerState = PlayerState.Dashing;
                 if (DEBUGDASh) Debug.Log($"[{SimClock.TickCounter}]Comienza el dash");
+                if(SimClock.Instance.Active)
+                    MusicManager.Instance.PlaySound("snd_dash"); //////////////////////////////////////////////////////////
             }
 
             //currentAcceleration = Mathf.Lerp(accelerationMultiplier, 0, (currentInputDashTick - (stateInitTick + fullDashTicks)) / (stateInitTick + dashTicks) - (stateInitTick + fullDashTicks));

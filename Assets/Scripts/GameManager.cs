@@ -9,6 +9,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using Tankito.Netcode.Messaging;
+using Tankito.ScenarySelection;
 
 namespace Tankito
 {
