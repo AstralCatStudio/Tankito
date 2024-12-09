@@ -150,6 +150,7 @@ namespace Tankito {
                     }
                     else
                     {
+                        collision.gameObject.GetComponent<TankData>().TakeDamage(1);
                         Detonate();
                     }
                     break;

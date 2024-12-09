@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: b628480b4de132f4db8aa9cb8a202b54
+guid: 2dd9860b5538321499139e9d13f371c3
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -107,7 +107,7 @@ TextureImporter:
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
-    buildTarget: Server
+    buildTarget: Android
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -120,7 +120,7 @@ TextureImporter:
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
-    buildTarget: Android
+    buildTarget: Server
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -136,13 +136,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: spr_explosion_strip8_0
+      name: spr_agua_explosion_strip9_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 186
-        height: 180
+        width: 900
+        height: 600
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -150,20 +150,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f5f847dab769b614a97e83125902c074
-      internalID: 1417250815
+      spriteID: 1c77e3f6929855a49ab51461108477ef
+      internalID: 1291189784
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: spr_explosion_strip8_1
+      name: spr_agua_explosion_strip9_1
       rect:
         serializedVersion: 2
-        x: 186
+        x: 900
         y: 0
-        width: 186
-        height: 180
+        width: 900
+        height: 600
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -171,20 +171,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b3677509ec216ba4babfb73c87eb00d4
-      internalID: 1846191014
+      spriteID: d46bafb6123b574479cecb8714158e1d
+      internalID: 223326194
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: spr_explosion_strip8_2
+      name: spr_agua_explosion_strip9_2
       rect:
         serializedVersion: 2
-        x: 372
+        x: 1800
         y: 0
-        width: 186
-        height: 180
+        width: 900
+        height: 600
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -192,20 +192,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c12ece4c219c3aa4faa817e8aeb9e28d
-      internalID: -1316261025
+      spriteID: eeeda77b6649fcb49979d830846863ae
+      internalID: -1759362851
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: spr_explosion_strip8_3
+      name: spr_agua_explosion_strip9_3
       rect:
         serializedVersion: 2
-        x: 558
+        x: 2700
         y: 0
-        width: 186
-        height: 180
+        width: 900
+        height: 600
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -213,20 +213,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 06f87c1d38863da428c43037fdf661c5
-      internalID: 2110613534
+      spriteID: 29444a71e552fa64fabeffe19611a1d2
+      internalID: -1178600346
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: spr_explosion_strip8_4
+      name: spr_agua_explosion_strip9_4
       rect:
         serializedVersion: 2
-        x: 744
+        x: 3600
         y: 0
-        width: 186
-        height: 180
+        width: 900
+        height: 600
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -234,20 +234,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 116b6a6c8c8452a44a0b3d500ea21a85
-      internalID: 690608465
+      spriteID: 4264f0c870bc369478aec41f952c3a19
+      internalID: 1659468201
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: spr_explosion_strip8_5
+      name: spr_agua_explosion_strip9_5
       rect:
         serializedVersion: 2
-        x: 930
+        x: 4500
         y: 0
-        width: 186
-        height: 180
+        width: 900
+        height: 600
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -255,20 +255,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 60adcc308645a4d4b90a2b203a764fa3
-      internalID: -1370633774
+      spriteID: abe7133178c8f2240846ecb2f535fd2d
+      internalID: -345331870
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: spr_explosion_strip8_6
+      name: spr_agua_explosion_strip9_6
       rect:
         serializedVersion: 2
-        x: 1116
+        x: 5400
         y: 0
-        width: 186
-        height: 180
+        width: 900
+        height: 600
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -276,20 +276,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 4d9bcf3712aef004a95cc162e929dabe
-      internalID: 357642849
+      spriteID: 1d05fbc821b00b646b202ce06e0ea5f3
+      internalID: -1117445353
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: spr_explosion_strip8_7
+      name: spr_agua_explosion_strip9_7
       rect:
         serializedVersion: 2
-        x: 1302
+        x: 6300
         y: 0
-        width: 186
-        height: 180
+        width: 900
+        height: 600
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -297,8 +297,29 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e248eb47d22fb9f43be95c8683ecea9a
-      internalID: 454890916
+      spriteID: efc0209447ce05a4395621a2a533a928
+      internalID: -1408303233
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_agua_explosion_strip9_8
+      rect:
+        serializedVersion: 2
+        x: 7200
+        y: 0
+        width: 900
+        height: 600
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f15abdb69d4f32c4dacee649c5b8bf07
+      internalID: -1109771265
       vertices: []
       indices: 
       edges: []
@@ -314,14 +335,15 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      spr_explosion_strip8_0: 1417250815
-      spr_explosion_strip8_1: 1846191014
-      spr_explosion_strip8_2: -1316261025
-      spr_explosion_strip8_3: 2110613534
-      spr_explosion_strip8_4: 690608465
-      spr_explosion_strip8_5: -1370633774
-      spr_explosion_strip8_6: 357642849
-      spr_explosion_strip8_7: 454890916
+      spr_agua_explosion_strip9_0: 1291189784
+      spr_agua_explosion_strip9_1: 223326194
+      spr_agua_explosion_strip9_2: -1759362851
+      spr_agua_explosion_strip9_3: -1178600346
+      spr_agua_explosion_strip9_4: 1659468201
+      spr_agua_explosion_strip9_5: -345331870
+      spr_agua_explosion_strip9_6: -1117445353
+      spr_agua_explosion_strip9_7: -1408303233
+      spr_agua_explosion_strip9_8: -1109771265
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

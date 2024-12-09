@@ -32,6 +32,8 @@ namespace Tankito
         public int position;
         public GameObject playerInfo;
         private Color[] colors = { Color.blue, Color.red, Color.green, Color.yellow };
+        public float damageBufferTime = 0.5f;
+        public float damageBuffer =0;
         public int CompareTo(object obj)
         {
             var a = this;
@@ -88,6 +90,11 @@ namespace Tankito
         private void Update()
         {
             //Debug.Log("Vida actual: "+ m_health);
+            if (IsServer)
+            {
+                damageBuffer += Time.deltaTime;
+            }
+            
         }
         public void TakeDamage(int damage)
         {
@@ -96,8 +103,9 @@ namespace Tankito
             if (SimClock.Instance.Active && NetworkManager.Singleton.IsClient)
                 MusicManager.Instance.PlayDamage();
 
-            if (IsServer)
+            if (IsServer && damageBuffer>=damageBufferTime)
             {
+                damageBuffer = 0;
                 m_health -= damage;
 
                 if (m_health <= 0)
