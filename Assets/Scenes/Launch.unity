@@ -155,8 +155,8 @@ MonoBehaviour:
   Median_Latency: 0.16
   Worst_Case_Latency: 0.2
   Client_Jitter_Buffer_Time: 0.016
-  Client_Max_Desync_Count: 30
-  Sim_Tick_Rate: 60
+  Client_Max_Desync_Count: 25
+  Sim_Tick_Rate: 45
   DEBUG_LATENCY: 0
   DEBUG_PARAMS: 0
   m_debugRate: 2
@@ -409,9 +409,7 @@ MonoBehaviour:
   victoryClips:
   - {fileID: 8300000, guid: b4c80f1e2e4dab34b9e6bdfe60ccdb62, type: 3}
   - {fileID: 8300000, guid: b4c80f1e2e4dab34b9e6bdfe60ccdb62, type: 3}
-  loseClips:
-  - {fileID: 8300000, guid: 3b235d3344bdad647a1c46286e579547, type: 3}
-  - {fileID: 8300000, guid: 3b235d3344bdad647a1c46286e579547, type: 3}
+  loseClips: []
   volMusic: 0.3
   volSounds: 0.4
 --- !u!4 &1875872589

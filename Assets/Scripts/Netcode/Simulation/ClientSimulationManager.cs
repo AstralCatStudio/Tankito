@@ -66,7 +66,7 @@ namespace Tankito.Netcode.Simulation
         {
             if (NetworkManager.Singleton.IsServer)
             {
-                Debug.LogWarning("ClientSimulationManager is network node that is NOT a CLIENT (is server). this should not happen!");
+                Debug.LogWarning("ClientSimulationManager is network node that is NOT a CLIENT (is server). Proceeding with component destruction...");
                 Destroy(this);
             }
             m_tankSimulationTolerance = new TankDelta(new Vector2(0.1f,0.1f), 0.5f, new Vector2(0.2f,0.2f), 1f, 0, 0, 0, 0, 0);
