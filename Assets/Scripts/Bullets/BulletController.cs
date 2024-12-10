@@ -114,7 +114,7 @@ namespace Tankito {
 
         public void Detonate(bool lifeTimeOver = false)
         {
-            Instantiate(explosionVisual, transform.position, transform.rotation);
+            
             OnDetonate.Invoke(this);
 
             if (SimClock.Instance.Active && NetworkManager.Singleton.IsClient)
@@ -125,12 +125,14 @@ namespace Tankito {
             {
                 BulletSimulationObject bulletSimObj = GetComponent<BulletSimulationObject>();
                 ServerSimulationManager.Instance.QueueForDespawn(bulletSimObj.SimObjId);
+                Instantiate(explosionVisual, transform.position, transform.rotation);
             }
             else if(PREDICT_DESTRUCTION || lifeTimeOver)
             {
                 // Debug.Log("LifeTimeOver?=>" + lifeTimeOver);
                 BulletSimulationObject bulletSimObj = GetComponent<BulletSimulationObject>();
                 ClientSimulationManager.Instance.QueueForDespawn(bulletSimObj.SimObjId);
+                Instantiate(explosionVisual, transform.position, transform.rotation);
             }
             else
             {
