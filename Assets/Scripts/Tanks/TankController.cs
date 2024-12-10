@@ -280,7 +280,7 @@ namespace Tankito
                 case PlayerState.Firing:
                     int fireTick = input.timestamp - m_lastFireTick - ACTION_LEAD_TICKS;
 
-                    Debug.Log($"[{input.timestamp}] FireTick: ({fireTick}/{FIRE_TICK_DURATION})");
+                    if (DEBUG_FIRE) Debug.Log($"[{input.timestamp}] FireTick: ({fireTick}/{FIRE_TICK_DURATION})");
 
                     if (fireTick >= 0)
                     {
@@ -390,7 +390,7 @@ namespace Tankito
                             : currentState == PlayerState.Parrying ? "Parry"
                             : "";
 
-                    Debug.Log($"[{SimClock.TickCounter}] CurrentAnimationStates: \n" +
+                    if (DEBUG_INPUT_CALLS) Debug.Log($"[{SimClock.TickCounter}] CurrentAnimationStates: \n" +
                         $"Is turretState name '{actionAnimState + " Turret"}':{turretAnimationState.IsName(actionAnimState + " Turret")}\n" +
                         $"Is hullState name '{actionAnimState + " Hull"}':{hullAnimationState.IsName(actionAnimState + " Hull")}\n" + 
                         $"normalizedLeadTime: {normalizedLeadTime} animatorNormalizedTime:(turret-{turretAnimationState.normalizedTime} hull-{hullAnimationState.normalizedTime})");

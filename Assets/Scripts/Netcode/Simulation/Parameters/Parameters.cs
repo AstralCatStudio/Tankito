@@ -35,7 +35,7 @@ namespace Tankito.Netcode
         /// <summary>
         /// Latency of ping (HRTT).
         /// </summary>
-        public static double CURRENT_LATENCY { get =>  Math.Abs((NetworkManager.Singleton.ServerTime - NetworkManager.Singleton.LocalTime).Time); }
+        public static double CURRENT_LATENCY { get => NetworkManager.Singleton.IsConnectedClient ? Math.Abs((NetworkManager.Singleton.ServerTime - NetworkManager.Singleton.LocalTime).Time) : -1; }
 
         [SerializeField] bool DEBUG_LATENCY = false;
         [SerializeField] bool DEBUG_PARAMS = false;
