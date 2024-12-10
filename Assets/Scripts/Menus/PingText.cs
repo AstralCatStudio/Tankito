@@ -21,7 +21,15 @@ public class PingText : MonoBehaviour
         m_timeAccumulator += Time.deltaTime;
         if(m_timeAccumulator >= m_logRate)
         {
-            text.text = (int)(SimulationParameters.CURRENT_LATENCY * 1000) + "ms";
+            int pingMS = (int)(SimulationParameters.CURRENT_LATENCY * 1000);
+            if (pingMS > 0)
+            {
+                text.text = pingMS + "ms";
+            }
+            else
+            {
+                text.text = "";
+            }
             m_timeAccumulator = 0;
         }
     }

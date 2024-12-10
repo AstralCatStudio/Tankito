@@ -603,7 +603,7 @@ namespace Tankito
         {
             if (IsServer)
             {
-                EndGameClientRpc();
+                //EndGameClientRpc();
 
                 ClockSignal signal = new ClockSignal();
                 signal.header = ClockSignalHeader.Stop;
@@ -612,7 +612,11 @@ namespace Tankito
 
             if (DEBUG) Debug.Log("Fin de la partida");
             m_startedGame = false;
-            //RoundUI.Instance.ActivateRankingGUI(false);
+            RoundUI.Instance.ActivateRankingGUI(false);
+
+            RoundUI.Instance.InitWinScreen(m_players.Values.OrderByDescending(tank => tank.Points).ToList());
+            RoundUI.Instance.ActivateWinScreen(true);
+
             RoundUI.Instance.ActivateEndExitButton(true);
             RoundUI.Instance.ActivatePlayAgainGUI(true);
         }
@@ -662,6 +666,8 @@ namespace Tankito
             RoundUI.Instance.ActivateEndExitButton(false);
             RoundUI.Instance.ActivateRankingGUI(false);
             RoundUI.Instance.ActivatePlayAgainGUI(false);
+            RoundUI.Instance.ActivateWinScreen(false);
+            RoundUI.Instance.ResetWinScreen();
 
             RoundUI.Instance.ActivateInitExitButton(true);
             RoundUI.Instance.ActivateSettingsButton(true);

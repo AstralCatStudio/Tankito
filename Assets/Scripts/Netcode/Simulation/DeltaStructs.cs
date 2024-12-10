@@ -97,6 +97,7 @@ namespace Tankito.Netcode.Simulation
         public readonly float lifeTimeDiff;
         public readonly int bouncesLeftDiff;
         public readonly long ownerIdDiff;
+        public readonly long lastShooterObjIdDiff;
 #endif
         public BulletDelta(Vector2 posDiff, Vector2 velDiff, float lifeTimeDiff, int bouncesLeftDiff, long ownerIdDiff, long lastShooterObjIdDiff)
         {
