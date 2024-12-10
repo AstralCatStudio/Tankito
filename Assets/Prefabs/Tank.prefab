@@ -101,7 +101,7 @@ Animator:
   m_Controller: {fileID: 9100000, guid: b551736d57379c34bab0861b51ef1085, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
-  m_ApplyRootMotion: 0
+  m_ApplyRootMotion: 1
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_WarningMessage: 
@@ -463,6 +463,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   m_hullAnimator: {fileID: 5873195794702409541}
   m_turretAnimator: {fileID: 6117245905817614025}
+  m_fishAnimator: {fileID: 0}
   m_playerState: 0
   DEBUG_INPUT_CALLS: 0
   DEBUG_DASH: 0
