@@ -15,6 +15,7 @@ public class WinMenu : MonoBehaviour
     [SerializeField] private GameObject prefabSprite;
     [SerializeField] private GameObject prefabMarcador;
     [SerializeField] private GameObject prefabPuesto;
+    [SerializeField] private GameObject prefabIconoPowerUp;
 
     [SerializeField] private GameObject spritesParent;
     [SerializeField] private GameObject marcadoresParent;
@@ -31,9 +32,9 @@ public class WinMenu : MonoBehaviour
 
     private void Awake()
     {
-        spritesList = new List<GameObject>();
-        marcadoresList = new List<GameObject>();
-        puestosList = new List<GameObject>();
+        //spritesList = new List<GameObject>();
+        //marcadoresList = new List<GameObject>();
+        //puestosList = new List<GameObject>();
     }
 
     void Start()
@@ -57,6 +58,10 @@ public class WinMenu : MonoBehaviour
 
     public void InitWinMenu(int playersCount)
     {
+        spritesList = new List<GameObject>();
+        marcadoresList = new List<GameObject>();
+        puestosList = new List<GameObject>();
+
         for (int i = 0; i < playersCount; i++)
         {
             GameObject newSprite = Instantiate(prefabSprite, spritesParent.transform);
@@ -73,25 +78,33 @@ public class WinMenu : MonoBehaviour
 
     public void InitWinMenu(List<TankData> tanks)
     {
-        Debug.LogWarning("AAAAAA");
+        m_num_players = tanks.Count;
+
+        spritesList = new List<GameObject>();
+        marcadoresList = new List<GameObject>();
+        puestosList = new List<GameObject>();
+
         for (int i = 0; i < tanks.Count; i++)
         {
-            Debug.LogWarning("EEEE "+ i);
             GameObject newSprite = Instantiate(prefabSprite, spritesParent.transform);
             newSprite.transform.GetChild(0).gameObject.SetActive(false);
-            if (newSprite.transform.GetChild(0).GetComponent<Image>().sprite != null) Debug.LogWarning("Encontrado");
-            newSprite.GetComponentInChildren<Image>().sprite = ClientData.Instance.characters[tanks[i].SkinSelected].data.sprite;
+            newSprite.transform.GetChild(0).gameObject.GetComponent<Image>().sprite = ClientData.Instance.characters[tanks[i].SkinSelected].data.sprite;
             spritesList.Add(newSprite);
 
             GameObject newMarcador = Instantiate(prefabMarcador, marcadoresParent.transform);
             newMarcador.transform.GetChild(0).gameObject.SetActive(false);
             newMarcador.transform.GetChild(0).GetChild(0).gameObject.GetComponent<TextMeshProUGUI>().text = tanks[i].Username;
             newMarcador.transform.GetChild(0).GetChild(1).gameObject.GetComponent<TextMeshProUGUI>().text = tanks[i].Points + " points";
+            for(int j = 0; j < tanks[i].GetComponent<ModifiersController>().modifiers.Count; j++)
+            {
+                GameObject newPowerUpIcon = Instantiate(prefabIconoPowerUp, newMarcador.transform.GetChild(0).GetChild(2).GetChild(0));
+                newPowerUpIcon.GetComponent<Image>().sprite = tanks[i].GetComponent<ModifiersController>().modifiers[j].GetSprite();
+            }
             marcadoresList.Add(newMarcador);
 
             GameObject newPuesto = Instantiate(prefabPuesto, puestosParent.transform);
             newPuesto.transform.GetChild(0).gameObject.SetActive(false);
-            newPuesto.transform.GetComponentInChildren<TextMeshProUGUI>().text = (i + 1).ToString();
+            newPuesto.transform.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>().text = (i + 1).ToString();
             puestosList.Add(newPuesto);
         }
     }
@@ -122,5 +135,26 @@ public class WinMenu : MonoBehaviour
             marcador.gameObject.SetActive(true);
             LeanTween.scale(marcador, Vector3.one, scaleDuration).setEase(LeanTweenType.easeOutBack);
         }
+    }
+
+    public void ResetMenu()
+    {
+        foreach (GameObject obj in spritesList)
+        {
+            Destroy(obj);
+        }
+        spritesList.Clear();
+
+        foreach (GameObject obj in marcadoresList)
+        {
+            Destroy(obj);
+        }
+        marcadoresList.Clear();
+
+        foreach (GameObject obj in puestosList)
+        {
+            Destroy(obj);
+        }
+        puestosList.Clear();
     }
 }

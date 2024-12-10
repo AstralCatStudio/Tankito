@@ -17,7 +17,6 @@ public class RoundUI : Singleton<RoundUI>
     public GameObject PanelRankingFinal;
     public GameObject CurrentRound;
     public GameObject CountdownText;
-    public GameObject BackButton;
     public GameObject InitExitButton;
     public GameObject EndExitButton;
     public GameObject ScenarySelection;
@@ -192,17 +191,19 @@ public class RoundUI : Singleton<RoundUI>
 
     #region WinScreen
 
-    public void ActivateWinScreen(bool active, List<TankData> tanks)
+    public void InitWinScreen(List<TankData> tanks)
     {
-        if(active)
-        {
-            WinScreen.GetComponent<WinMenu>().InitWinMenu(tanks);
-            WinScreen.SetActive(active);
-        }
-        else
-        {
+        WinScreen.GetComponent<WinMenu>().InitWinMenu(tanks);
+    }
 
-        }
+    public void ResetWinScreen()
+    {
+        WinScreen.GetComponent<WinMenu>().ResetMenu();
+    }
+
+    public void ActivateWinScreen(bool active)
+    {
+        WinScreen.SetActive(active);
     }
 
     #endregion
