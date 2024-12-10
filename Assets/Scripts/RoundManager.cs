@@ -10,7 +10,7 @@ namespace Tankito
 {
     public class RoundManager : NetworkBehaviour
     {
-        private int m_currentRound = 0;
+        [SerializeField] private int m_currentRound = 0;
         public int m_maxRounds = 5;
         [SerializeField]
         float timeToCountdown = 5f;
@@ -19,7 +19,7 @@ namespace Tankito
         private Dictionary<ulong, TankData> m_players;
         public bool m_startedGame;
         public bool IsGameStarted => m_startedGame;
-        private bool m_startedRound;
+        [SerializeField] private bool m_startedRound;
 
         public GameObject m_localPlayerInputObject;
         [SerializeField] private bool DEBUG = false;
@@ -69,7 +69,7 @@ namespace Tankito
         [ClientRpc]
         private void InitPlayersDictionaryClientRpc(NetworkBehaviourReference[] tankDataReferences)
         {
-            foreach(var tankDataRef in tankDataReferences)
+            foreach (var tankDataRef in tankDataReferences)
             {
                 TankData tankData;
                 tankDataRef.TryGet(out tankData);
@@ -93,7 +93,7 @@ namespace Tankito
         {
             playerList.Add(player);
             m_players.Add(player.OwnerClientId, player);
-            foreach(TankData playerdata in m_players.Values)
+            foreach (TankData playerdata in m_players.Values)
             {
                 playerdata.GetComponent<TankSkinController>().SetOwnedSkin();
             }
@@ -109,12 +109,14 @@ namespace Tankito
 
         public void TankDeath(TankData t)
         {
+            if (!m_startedRound) return;
+
             if (IsServer)
             {
-                t.AwardPoints(m_players.Count - AliveTanks.Count()); // -1 porque no deberia darte puntos por estar tu mismo muerto
+                t.AwardPoints(m_players.Count - AliveTanks.Count());
             }
 
-            if (AliveTanks.Count()!=1) // Cuando muere un bicho y no es el ultimo
+            if (AliveTanks.Count() != 1) // Cuando muere un bicho y no es el ultimo
             {
                 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                 FasePartidaClientRpc(AliveTanks.Count(), m_players.Count); // primero jugadores vivos, despues jugadores totales
@@ -231,11 +233,11 @@ namespace Tankito
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        
+
         [ClientRpc]
         private void SemaforoSoundClientRpc(int sound)
         {
-            if (m_currentRound==0)
+            if (m_currentRound == 0)
             {
                 MusicManager.Instance.MuteSong();
             }
@@ -255,7 +257,7 @@ namespace Tankito
         {
             MusicManager.Instance.InitPartida(biome); // 0 - playa, 1 - sushi, 2 - barco
         }
-        
+
         [ClientRpc]
         private void FasePartidaClientRpc(int vivos, int totales)
         {
@@ -300,7 +302,7 @@ namespace Tankito
         {
             RespawnTanks();
             //ScenarySelector scenarySelector = FindObjectOfType<ScenarySelector>();
-            if(ScenarySelector.Instance != null)
+            if (ScenarySelector.Instance != null)
             {
                 ScenarySelector.Instance.SetRandomMap();
             }
@@ -321,7 +323,7 @@ namespace Tankito
             {
                 tank.ResetTank();
             }
-            
+
             foreach (var item in m_players)
             {
                 item.Value.gameObject.SetActive(true);
@@ -341,7 +343,7 @@ namespace Tankito
         // pero no he cambiado los callsites de la funcion, porque con tal de que se actualice me da igual xd
         private void UpdateRoundCounterGUI()
         {
-            RoundUI.Instance.SetCurrentRound(m_currentRound+1);
+            RoundUI.Instance.SetCurrentRound(m_currentRound + 1);
         }
 
         private void SetActiveTankInputs(TankData tank)
@@ -363,19 +365,19 @@ namespace Tankito
 
 
         public void StartRound()
-        {            
+        {
             if (IsServer)
             {
                 StartRoundClientRpc();
             }
-            
+
             m_startedRound = true;
             RoundUI.Instance.ActivateLobbyInfoGUI(false);
             RoundUI.Instance.ActivateCountdownGUI(false);
             //RoundUI.Instance.ActivateInitExitButton(false);
             RoundUI.Instance.ActivateAliveTanksGUI(true);
 
-            if(!RoundUI.Instance.SettingsMenu.activeSelf) m_localPlayerInputObject.SetActive(true);
+            if (!RoundUI.Instance.SettingsMenu.activeSelf) m_localPlayerInputObject.SetActive(true);
 
             PlayerListUpdate();
         }
@@ -401,17 +403,17 @@ namespace Tankito
             m_startedRound = false;
             m_currentRound++;
 
-            if(RoundUI.Instance.SettingsMenu.activeSelf)
+            if (RoundUI.Instance.SettingsMenu.activeSelf)
             {
                 RoundUI.Instance.ActivateSettingsMenu(false);
             }
 
-            if(RoundUI.Instance.SettingsButton.activeSelf)
+            if (RoundUI.Instance.SettingsButton.activeSelf)
             {
                 RoundUI.Instance.ActivateSettingsButton(false);
             }
-            
-            if (m_currentRound==m_maxRounds)
+
+            if (m_currentRound == m_maxRounds)
             {
                 MusicManager.Instance.FinPartida();
             }
@@ -518,8 +520,8 @@ namespace Tankito
             RoundUI.Instance.SetRankingText(GenerateRanking());
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            
-            if (m_currentRound==m_maxRounds)
+
+            if (m_currentRound == m_maxRounds)
             {
                 List<TankData> lista = GetTankOrder();
                 MusicManager.Instance.Resultados(lista[lista.Count - 1].GetComponent<NetworkObject>().OwnerClientId == NetworkManager.Singleton.LocalClientId);
@@ -647,7 +649,7 @@ namespace Tankito
                     ResetTanksModifiersClientRpc(clientId);
                 }
 
-                foreach(var tank in m_players)
+                foreach (var tank in m_players)
                 {
                     tank.Value.ResetPoints();
                 }
