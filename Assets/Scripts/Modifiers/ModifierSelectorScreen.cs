@@ -167,5 +167,12 @@ namespace Tankito
             modifierSelectors[modifierSelectorId].available = false;
             BulletCannonRegistry.Instance[playerClientId].transform.parent.parent.parent.GetComponent<ModifiersController>().AddModifier(modifierSelectors[modifierSelectorId].GetModifier());
         }
+        public void ResetModifiers()
+        {
+            foreach (var item in tanksInOrder)
+            {
+                BulletCannonRegistry.Instance[item].transform.parent.parent.parent.GetComponent<ModifiersController>().ResetModifiers();
+            }
+        }
     }
 }

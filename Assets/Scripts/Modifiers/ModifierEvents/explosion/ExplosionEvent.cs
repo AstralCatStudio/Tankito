@@ -19,6 +19,7 @@ namespace Tankito
         float timeUntilBig = 0.5f;
         public override void StartEvent(BulletController bullet)
         {
+            MusicManager.Instance.PlaySoundPitch("snd_explosion", 0.15f);
             // Avoid spawning explosion VFX on client as a result of rollback (during rollback the SimClock is stopped).
             if (SimClock.Instance.Active == false) return;
 

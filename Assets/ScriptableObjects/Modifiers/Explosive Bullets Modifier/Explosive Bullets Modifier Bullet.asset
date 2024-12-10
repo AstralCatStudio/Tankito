@@ -20,7 +20,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: e4b5820f1df6f914cadd6e67a0a35f49, type: 2}
   bulletStatsModifier:
     speedMultiplier: 1
-    sizeMultiplier: {x: 1, y: 1}
+    sizeMultiplier: {x: 2, y: 2}
     accelerationAdded: 0
     BouncesAdded: 0
     lifeTimeAdded: 0
@@ -29,3 +29,8 @@ MonoBehaviour:
     amountMultiplier: 1
     spreadMultiplier: 1
     reloadTimeAdded: 0
+    BulletDirections: []
+    lifeTimeMultiplier: 1
+  bulletSprite: {fileID: 21300000, guid: 68a29799d08f3f84a988cd07ea3d549d, type: 3}
+  bulletSpritePriority: 50
+  ShootSound: 

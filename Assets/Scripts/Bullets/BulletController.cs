@@ -28,7 +28,6 @@ namespace Tankito {
                                         OnDetonate = (ABullet) => { };
         [SerializeField] private bool PREDICT_DESTRUCTION = true;
         public Sprite bulletSprite;
-        int maxBulletSpritePriority =0;
 
         private void Awake()
         {
@@ -48,8 +47,9 @@ namespace Tankito {
 
             transform.position = BulletCannonRegistry.Instance[m_simObj.OwnerId].Properties.startingPosition;
             m_bouncesLeft = BulletCannonRegistry.Instance[m_simObj.OwnerId].Properties.bouncesTotal;
-            m_rb.velocity = BulletCannonRegistry.Instance[m_simObj.OwnerId].Properties.velocity * BulletCannonRegistry.Instance[m_simObj.OwnerId].Properties.direction.normalized;
-
+            m_rb.velocity = BulletCannonRegistry.Instance[m_simObj.OwnerId].Properties.velocity * BulletCannonRegistry.Instance[m_simObj.OwnerId].Properties.direction.normalized*0.3f;
+            Debug.Log(BulletCannonRegistry.Instance[m_simObj.OwnerId].Properties.scaleMultiplier);
+            transform.localScale = BulletCannonRegistry.Instance[m_simObj.OwnerId].Properties.scaleMultiplier;
             // BERNAT: estoy super empanado ahora, probablmente ohay una forma mejor de 
             // hacerlo sin tener que cambiar nada pero no soy capaz de pensar en ella ahora mismo la verdad
             SetLastShooterObjId(BulletCannonRegistry.Instance[m_simObj.OwnerId].GetComponentInParent<TankSimulationObject>().SimObjId);
@@ -58,17 +58,17 @@ namespace Tankito {
             foreach (var modifier in Tankito.BulletCannonRegistry.Instance[m_simObj.OwnerId].Modifiers)
             {
                 modifier.BindBulletEvents(this);
-                if (modifier.bulletSpritePriority > maxBulletSpritePriority)
-                {
-                    maxBulletSpritePriority = modifier.bulletSpritePriority;
-                    if (modifier.bulletSprite != null)
-                    {
-                        bulletSprite = modifier.bulletSprite;
-                    }
-                }
+                
             }
-            maxBulletSpritePriority = 0;
-            GetComponent<SpriteRenderer>().sprite = bulletSprite;
+            if(BulletCannonRegistry.Instance[m_simObj.OwnerId].bulletSpriteModifier!= null)
+            {
+                GetComponent<SpriteRenderer>().sprite = BulletCannonRegistry.Instance[m_simObj.OwnerId].bulletSpriteModifier?.bulletSprite;
+            }
+            else
+            {
+                GetComponent<SpriteRenderer>().sprite = bulletSprite;
+            }
+            
             if (triggerOnSpawnEvents) OnSpawn?.Invoke(this);
         }
 

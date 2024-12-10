@@ -42,6 +42,7 @@ namespace Tankito
         int spawnTickTime = 0;
         [SerializeField]
         float m_shootRadius, m_shootSpreadAngle, m_scatterAngle;
+        public BulletModifier bulletSpriteModifier;
         //public Queue<GameObject> simulatedBullets = new Queue<GameObject>();
         public List<BulletModifier> Modifiers { get => m_bulletModifiers; }
         public BulletProperties Properties { get => m_bulletProperties; }
@@ -71,10 +72,13 @@ namespace Tankito
             m_bulletAmount = baseBulletAmount;
             m_bulletProperties = BulletCannonRegistry.Instance.BaseProperties;
             m_reloadTime = m_baseReloadTime;
+            int maxBulletSpritePriority = 0;
             foreach (BulletModifier modifier in m_bulletModifiers)
             {
                 m_bulletProperties.velocity *= modifier.bulletStatsModifier.speedMultiplier;
+                
                 m_bulletProperties.scaleMultiplier *= modifier.bulletStatsModifier.sizeMultiplier;
+                
                 m_bulletProperties.acceleration += modifier.bulletStatsModifier.accelerationAdded;
                 m_bulletProperties.bouncesTotal += modifier.bulletStatsModifier.BouncesAdded;
                 m_bulletProperties.lifetimeTotal += modifier.bulletStatsModifier.lifeTimeAdded;
@@ -83,6 +87,22 @@ namespace Tankito
                 m_bulletAmount += modifier.bulletStatsModifier.amountAdded;
                 m_bulletAmount *= modifier.bulletStatsModifier.amountMultiplier;
                 m_reloadTime += modifier.bulletStatsModifier.reloadTimeAdded;
+                if (modifier.bulletSpritePriority > maxBulletSpritePriority)
+                {
+                    maxBulletSpritePriority = modifier.bulletSpritePriority;
+                    if (modifier.bulletSprite != null)
+                    {
+                        bulletSpriteModifier = modifier;
+                    }
+                }
+            }
+            if (m_bulletProperties.scaleMultiplier.x < 0.1f)
+            {
+                m_bulletProperties.scaleMultiplier = new Vector2(0.1f, 0.1f);
+            }
+            else if (m_bulletProperties.scaleMultiplier.x > 3)
+            {
+                m_bulletProperties.scaleMultiplier = new Vector2(3, 3);
             }
         }
 
