@@ -28,9 +28,13 @@ public class HoverButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        LeanTween.cancel(gameObject, tweenId.id);
-        LeanTween.scale(gameObject, Vector2.one, time).setEase(LeanTweenType.easeOutCubic);
-        gameObject.GetComponent<Image>().color = color;        
+        if(tweenId != null)
+        {
+            LeanTween.cancel(gameObject, tweenId.id);
+            LeanTween.scale(gameObject, Vector2.one, time).setEase(LeanTweenType.easeOutCubic);
+            gameObject.GetComponent<Image>().color = color;
+        }
+             
     }
 
     // Update is called once per frame

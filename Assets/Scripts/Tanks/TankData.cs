@@ -35,6 +35,7 @@ namespace Tankito
         public float damageBufferTime = 0.5f;
         public float damageBuffer =0;
         public GameObject tankExplosion;
+        public GameObject tankDamagedExplosion;
         public int CompareTo(object obj)
         {
             var a = this;
@@ -100,7 +101,7 @@ namespace Tankito
         public void TakeDamage(int damage)
         {
             //OnDamaged(this);
-
+            Instantiate(tankDamagedExplosion, transform.position, transform.rotation);
             if (SimClock.Instance.Active && NetworkManager.Singleton.IsClient)
                 MusicManager.Instance.PlayDamage();
 
