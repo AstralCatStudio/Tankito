@@ -24,8 +24,9 @@ namespace Tankito
             tankConnected = RoundManager.Instance.Players[OwnerClientId];
             modifiersController = tankConnected.GetComponent<ModifiersController>();
             characterImage.sprite = ClientData.Instance.characters[tankConnected.SkinSelected].data.sprite;
+            Debug.Log(tankConnected.Username);
             userName.text = tankConnected.Username;
-            pointsText.text = "Points: " + tankConnected.Points;
+            pointsText.text = "Points: " + tankConnected.Points.ToString();
             SetModifiers(modifiersController.modifiers);
             if (IsServer)
             {
@@ -35,8 +36,11 @@ namespace Tankito
         [ClientRpc]
         void SetValuesClientRpc(ulong owner)
         {
-            ownerId = owner;
-            SetValues();
+            if (!IsServer)
+            {
+                ownerId = owner;
+                SetValues();
+            }
         }
         public void SetUserName(string name)
         {
@@ -55,18 +59,23 @@ namespace Tankito
             if (modifiers.Count != modifierImages.Count)
             {
                 modifierImages.Clear();
-                modifierImages = new List<Image>(modifiers.Count);
             }
             for (int i = 0; i < modifiers.Count; i++)
             {
+                
                 if (modifierImagesParent.GetChild(i)!=null)
                 {
                     modifierImagesParent.GetChild(i).gameObject.SetActive(true);
+                    modifierImages.Add(modifierImagesParent.GetChild(i).gameObject.GetComponent<Image>());
+
                     modifierImages[i] = modifierImagesParent.GetChild(i).gameObject.GetComponent<Image>();
                 }
                 else
                 {
-                    modifierImages[i] = Instantiate<GameObject>(new GameObject(), modifierImagesParent).AddComponent<Image>(); 
+                    GameObject modifierImage = Instantiate<GameObject>(new GameObject(), modifierImagesParent);
+                    modifierImage.AddComponent<Image>();
+                    modifierImages.Add(modifierImagesParent.GetChild(i).gameObject.GetComponent<Image>());
+                    modifierImages[i] = modifierImage.GetComponent<Image>(); 
                 }
                 modifierImages[i].sprite = modifiers[i].GetSprite();
             }

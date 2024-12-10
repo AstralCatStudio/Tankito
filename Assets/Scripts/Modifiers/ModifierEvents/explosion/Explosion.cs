@@ -12,34 +12,30 @@ namespace Tankito
         public float timeUntilBig = 0.5f;
         public float timeUntilDead = 1;
         public bool damages = false;
+        private void Start()
+        {
+            transform.localScale = Vector3.one*size;
+        }
         private void Update()
         {
             timer += Time.deltaTime;
-                if (timer >= timeUntilDead)
+                if (timer >= timeUntilBig)
                 {
                     //GetComponent<NetworkObject>().Despawn();
-                    Destroy(gameObject);
+                    GetComponent<CircleCollider2D>().enabled = false;
                 }
-            
-            
-            if (timer <= timeUntilBig)
+            if (timer >= timeUntilDead)
             {
-                transform.localScale = Mathf.Lerp(0, 1, timer / timeUntilBig) * Vector3.one * size;
+                Destroy(gameObject);
             }
-            else
-            {
-                transform.localScale = Mathf.Lerp(0, 1, (timeUntilDead - timeUntilBig) - (timer- timeUntilBig) / (timeUntilDead- timeUntilBig)) * Vector3.one * size;
-            }
-            
+
         }
 
         private void OnTriggerEnter2D(Collider2D collision)
         {
-            
-            if (collision.gameObject.CompareTag("Player"))
+            if (damages && collision.gameObject.CompareTag("Player"))
             {
                 collision.GetComponent<TankData>().TakeDamage(1);
-                Destroy(gameObject);
             }
         }
     }

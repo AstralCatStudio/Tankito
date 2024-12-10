@@ -52,9 +52,6 @@ namespace Tankito.SyncronizedButtons
 
             UpdateText();
             UpdateLocalText();
-
-            ///////////////////////////////////////////////////////////////////// sound effect
-            MusicManager.Instance.PlaySound("aceptar");
         }
 
         protected override void UpdateText()
@@ -96,7 +93,8 @@ namespace Tankito.SyncronizedButtons
         {
             if (IsServer)
             {
-                RoundUI.Instance.PanelPowerUps = Instantiate(RoundUI.Instance.PowerUpsPrefab, GameInstanceParent.Instance.transform);
+                Debug.Log("creando modificadores");
+                RoundUI.Instance.PanelPowerUps = Instantiate(RoundUI.Instance.PowerUpsPrefab, RoundUI.Instance.transform);
                 RoundUI.Instance.PanelPowerUps.GetComponent<NetworkObject>().Spawn();
                 RoundManager.Instance.StartRoundCountdown();
             }

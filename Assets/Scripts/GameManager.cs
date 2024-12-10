@@ -9,6 +9,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using Tankito.Netcode.Messaging;
+using Tankito.ScenarySelection;
 
 namespace Tankito
 {
@@ -142,6 +143,7 @@ namespace Tankito
             NetworkManager.Singleton.CustomMessagingManager.RegisterNamedMessageHandler(MessageName.ClockSignal, MessageHandlers.Instance.ReceiveClockSignal);
             NetworkManager.Singleton.CustomMessagingManager.RegisterNamedMessageHandler(MessageName.InputWindow, MessageHandlers.Instance.ReceiveInputWindow);
             NetworkManager.Singleton.CustomMessagingManager.RegisterNamedMessageHandler(MessageName.RelayInputWindow, MessageHandlers.Instance.ReceiveRelayedInputWindow);
+            //NetworkManager.Singleton.CustomMessagingManager.RegisterNamedMessageHandler(MessageName.AcnowledgeInputs, MessageHandlers.Instance.ReceiveInputAcknowledgement);
             NetworkManager.Singleton.CustomMessagingManager.RegisterNamedMessageHandler(MessageName.SimulationSnapshot, MessageHandlers.Instance.ReceiveSimulationSnapshot);
         }
 

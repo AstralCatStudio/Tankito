@@ -52,7 +52,7 @@ public class AdjustItems : MonoBehaviour
                 {
                     if (GetComponent<TextMeshProUGUI>())
                     {
-                        widthProportion = 0.15f;
+                        widthProportion = 0.3f;
                         rectTransform.anchoredPosition = new Vector2(rectTransform.anchoredPosition.x, 50);
                     }
                     else

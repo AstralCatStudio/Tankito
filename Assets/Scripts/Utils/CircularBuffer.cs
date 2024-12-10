@@ -38,7 +38,15 @@ namespace Tankito.Utils
             count = 0;
         }
 
+        /// <summary>
+        /// Oldest element in buffer
+        /// </summary>
         public T First => lastAddedIdx == null ? default(T) : this[(int)lastAddedIdx-(count-1)];
+        
+        /// <summary>
+        /// Newest element in buffer
+        /// </summary>
+        public T Last => lastAddedIdx == null ? default(T) : this[(int)lastAddedIdx];
 
         /// <summary>
         /// Gets the number of items in the circular buffer.
@@ -70,16 +78,18 @@ namespace Tankito.Utils
             {
                 throw new ArgumentOutOfRangeException("Index is out of the bounds of the buffer.");
             }
+
             if (buffer[idx].Equals(default(T)) && count < size)
             {
                 count++;
             }
+            
             buffer[idx] = item;
             lastAddedIdx = idx;
         }
 
         /// <summary>
-        /// Gets an item from the circular buffer at a specific index (clamped to buffer size).
+        /// Gets an item from the circular buffer at a specific index (wrapped into to buffer size).
         /// </summary>
         /// <param name="idx"></param>
         /// <returns></returns>

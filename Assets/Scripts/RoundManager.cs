@@ -4,10 +4,10 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Tankito.ScenarySelection;
 
 namespace Tankito
 {
-
     public class RoundManager : NetworkBehaviour
     {
         private int m_currentRound = 0;
@@ -29,7 +29,8 @@ namespace Tankito
 
         public static RoundManager Instance { get; private set; }
         public IEnumerable<TankData> AliveTanks { get => m_players.Where(p => p.Value.Alive == true).Select(p => p.Value); }
-
+        public bool IsAlive(ulong clientId) => m_players[clientId].Alive;
+        public List<TankData> playerList;
         public Dictionary<ulong, TankData> Players { get => m_players; }
         private void Awake()
         {
@@ -90,6 +91,7 @@ namespace Tankito
 
         public void AddPlayer(TankData player)
         {
+            playerList.Add(player);
             m_players.Add(player.OwnerClientId, player);
             foreach(TankData playerdata in m_players.Values)
             {
@@ -219,7 +221,7 @@ namespace Tankito
 
             if (m_currentRound == 0)
             {
-                InitPartidaMusicClientRpc(GameObject.FindObjectOfType<ScenarySelector>().GetActiveBiome()); ////////////////////////////////////////////////////////////////////////////////////////
+                InitPartidaMusicClientRpc(ScenarySelector.Instance.GetActiveBiome()); ////////////////////////////////////////////////////////////////////////////////////////
             }
             FasePartidaClientRpc(AliveTanks.Count(), m_players.Count); ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             //Debug.Log($"Music manager: {AliveTanks.Count()}, {m_players.Count}");
@@ -297,7 +299,15 @@ namespace Tankito
         private void ResetPlayers()
         {
             RespawnTanks();
-            FindObjectOfType<SpawnManager>().ResetSpawnPoints();
+            //ScenarySelector scenarySelector = FindObjectOfType<ScenarySelector>();
+            if(ScenarySelector.Instance != null)
+            {
+                ScenarySelector.Instance.SetRandomMap();
+            }
+            else
+            {
+                Debug.LogWarning("Selector de escenario no encontrado");
+            }
         }
 
         private void RespawnTanks()
@@ -619,6 +629,8 @@ namespace Tankito
         }
         #endregion
 
+
+
         #region GameReset
 
         public void ResetGame()
@@ -668,6 +680,8 @@ namespace Tankito
         }
 
         #endregion
+
+
 
         #region DEBUG Methods
         [ContextMenu("TestDamageLocalPlayer")]

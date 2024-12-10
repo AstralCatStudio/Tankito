@@ -49,12 +49,20 @@ public class DisconnectHandler : NetworkBehaviour
 
     private void UnregisterMessageHandler()
     {
-        Debug.Log("Unregistering in Message Handler");
-        // De-register when the associated NetworkObject is despawned.
-        NetworkManager.Singleton.CustomMessagingManager.UnregisterNamedMessageHandler(MessageName.ClockSignal);
-        NetworkManager.Singleton.CustomMessagingManager.UnregisterNamedMessageHandler(MessageName.InputWindow);
-        NetworkManager.Singleton.CustomMessagingManager.UnregisterNamedMessageHandler(MessageName.RelayInputWindow);
-        NetworkManager.Singleton.CustomMessagingManager.UnregisterNamedMessageHandler(MessageName.SimulationSnapshot);
+        //Debug.Log("Unregistering in Message Handler");
+
+        if (NetworkManager.Singleton.CustomMessagingManager != null)
+        {
+            // De-register when the associated NetworkObject is despawned.
+            NetworkManager.Singleton.CustomMessagingManager.UnregisterNamedMessageHandler(MessageName.ClockSignal);
+            NetworkManager.Singleton.CustomMessagingManager.UnregisterNamedMessageHandler(MessageName.InputWindow);
+            NetworkManager.Singleton.CustomMessagingManager.UnregisterNamedMessageHandler(MessageName.RelayInputWindow);
+            NetworkManager.Singleton.CustomMessagingManager.UnregisterNamedMessageHandler(MessageName.SimulationSnapshot);
+        }
+        else
+        {
+            Debug.LogWarning("Must have been disconnected, skipping message unregistering.");
+        }
     }
 
     [ClientRpc]

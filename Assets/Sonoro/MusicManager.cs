@@ -669,7 +669,18 @@ public class MusicManager : MonoBehaviour
 
         string disparoSound = soundNames[Random.Range(0, soundNames.Length)];
 
-        PlaySound(disparoSound);
+        PlaySoundPitch(disparoSound);
+        PlaySoundPitch("snd_bala_impacta");
+    }
+    public void PlayBulletDestroy()
+    {
+        PlaySoundPitch("snd_disparo");
+    }
+
+    
+    public void PlayDamage()
+    {
+        PlaySoundPitch("snd_rango_danio");
     }
 
 

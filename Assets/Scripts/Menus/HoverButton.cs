@@ -26,13 +26,15 @@ public class HoverButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         MusicManager.Instance.PlaySoundPitch("bip",0.1f);
     }
 
-    
-
     public void OnPointerExit(PointerEventData eventData)
     {
-        LeanTween.cancel(gameObject, tweenId.id);
-        LeanTween.scale(gameObject, Vector2.one, time).setEase(LeanTweenType.easeOutCubic);
-        gameObject.GetComponent<Image>().color = color;        
+        if(tweenId != null)
+        {
+            LeanTween.cancel(gameObject, tweenId.id);
+            LeanTween.scale(gameObject, Vector2.one, time).setEase(LeanTweenType.easeOutCubic);
+            gameObject.GetComponent<Image>().color = color;
+        }
+             
     }
 
     // Update is called once per frame

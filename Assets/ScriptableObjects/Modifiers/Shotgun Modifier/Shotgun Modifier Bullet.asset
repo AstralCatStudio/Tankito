@@ -19,12 +19,12 @@ MonoBehaviour:
   onDetonateEvents: []
   bulletStatsModifier:
     speedMultiplier: 1
-    sizeMultiplier: {x: 1, y: 1}
-    accelerationAdded: 0
+    sizeMultiplier: {x: 0.2, y: 0.2}
+    accelerationAdded: -0.05
     BouncesAdded: 0
-    lifeTimeAdded: -9
+    lifeTimeAdded: -7
     boomerangEffect: 0
-    amountAdded: 5
+    amountAdded: 3
     amountMultiplier: 1
     spreadMultiplier: 1
     reloadTimeAdded: 0

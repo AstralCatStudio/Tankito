@@ -7,14 +7,15 @@ using Tankito;
 using NUnit.Framework;
 using Tankito.Netcode.Simulation;
 using UnityEngine.Rendering;
+using System.Linq;
 
 namespace Tankito
 {
-    public class TankData : NetworkBehaviour
+    public class TankData : NetworkBehaviour, IComparable
     {
         public delegate void TankDestroyedHandler(TankData tank);
         public event TankDestroyedHandler OnTankDestroyed = (TankData tank) => { };
-
+        public int playerNumber;
         [SerializeField]
         public Color playerColor;
         //public Action<TankData> OnDamaged = (TankData damagedTank) => { };
@@ -28,7 +29,25 @@ namespace Tankito
         public int Points => m_points;
         public string Username => m_username;
         public int SkinSelected => m_skinSelected;
+        public int position;
+        public GameObject playerInfo;
+        private Color[] colors = { Color.blue, Color.red, Color.green, Color.yellow };
+        public float damageBufferTime = 0.5f;
+        public float damageBuffer =0;
+        public GameObject tankExplosion;
+        public GameObject tankDamagedExplosion;
+        public int CompareTo(object obj)
+        {
+            var a = this;
+            var b = obj as TankData;
 
+            if (a.m_points < b.m_points)
+                return 1;
+            else if (a.m_points > b.m_points)
+                return -1;
+
+            return 0;
+        }
         void Start()
         {
             if (IsServer)
@@ -43,8 +62,9 @@ namespace Tankito
             {
                 DieClientRpc();
             }
-
+            Instantiate(tankExplosion, transform.position,transform.rotation);
             OnTankDestroyed.Invoke(this);
+            MusicManager.Instance.PlaySound("snd_muere");
             UnityEngine.Debug.LogWarning("TODO: Trigger tank death animation");
             gameObject.SetActive(false);
         }
@@ -60,32 +80,9 @@ namespace Tankito
         private void OnEnable()
         {
             OnTankDestroyed += RoundManager.Instance.TankDeath;
-            if(IsOwner)
-            {
-                m_username = ClientData.Instance.name;
-                m_skinSelected = ClientData.Instance.characters.IndexOf(ClientData.Instance.GetCharacterSelected());
-                SetClientDataServerRpc(m_username, m_skinSelected);
-            }
+            
         }
-        [ServerRpc]
-        void SetClientDataServerRpc(string username, int skinSelected)
-        {
-            if (!IsOwner)
-            {
-                m_username = username;
-                m_skinSelected = skinSelected;
-                SetClientDataClientRpc(username, skinSelected);
-            }
-        }
-        [ClientRpc]
-        void SetClientDataClientRpc(string username, int skinSelected)
-        {
-            if (!IsOwner && !IsServer)
-            {
-                m_username = username;
-                m_skinSelected = skinSelected;
-            }
-        }
+
         private void OnDisable()
         {
 
@@ -95,12 +92,22 @@ namespace Tankito
         private void Update()
         {
             //Debug.Log("Vida actual: "+ m_health);
+            if (IsServer)
+            {
+                damageBuffer += Time.deltaTime;
+            }
+            
         }
         public void TakeDamage(int damage)
         {
             //OnDamaged(this);
-            if (IsServer)
+            Instantiate(tankDamagedExplosion, transform.position, transform.rotation);
+            if (SimClock.Instance.Active && NetworkManager.Singleton.IsClient)
+                MusicManager.Instance.PlayDamage();
+
+            if (IsServer && damageBuffer>=damageBufferTime)
             {
+                damageBuffer = 0;
                 m_health -= damage;
 
                 if (m_health <= 0)
@@ -176,6 +183,45 @@ namespace Tankito
             if (!IsServer)
             {
                 ResetPoints();
+            }
+        }
+        #endregion
+
+        #region username
+        public override void OnNetworkSpawn()
+        {
+            base.OnNetworkSpawn();
+            if (IsOwner)
+            {
+                m_username = ClientData.Instance.username;
+                m_skinSelected = ClientData.Instance.characters.IndexOf(ClientData.Instance.GetCharacterSelected());
+                if(RoundManager.Instance.playerList.IndexOf(this)<4 && RoundManager.Instance.playerList.IndexOf(this) >= 0)
+                {
+                    playerColor = colors[RoundManager.Instance.playerList.IndexOf(this)];
+                }
+                else
+                {
+                    playerColor = new Color(1,1,1,1);
+                }
+                
+                SetClientDataServerRpc(m_username, m_skinSelected, playerColor);
+            }
+        }
+        [ServerRpc]
+        public void SetClientDataServerRpc(string username, int skinSelected, Color color)
+        {
+                m_username = username;
+                m_skinSelected = skinSelected;
+                SetClientDataClientRpc(username, skinSelected, color);
+            
+        }
+        [ClientRpc]
+        void SetClientDataClientRpc(string username, int skinSelected, Color color)
+        {
+            if (!IsOwner && !IsServer)
+            {
+                m_username = username;
+                m_skinSelected = skinSelected;
             }
         }
         #endregion

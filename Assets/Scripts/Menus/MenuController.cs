@@ -34,6 +34,7 @@ namespace Tankito
         public float bgParallaxFactor = 1.2f, mgParallaxFactor = 1f, fgParallaxFactor = 0.7f;
 
         public UnityEvent<Vector2,GameObject,GameObject> menuChanged;
+        public UnityEvent<int, int> onIndexChanged;
 
         // Start is called before the first frame update
         void Start()
@@ -56,6 +57,7 @@ namespace Tankito
             menus[newMenuIndex].gameObject.SetActive(true);
             
             MoveBG(newMenuIndex);
+            onIndexChanged?.Invoke(currentMenuIndex, newMenuIndex);
             currentMenuIndex = newMenuIndex;
 
             MusicManager.Instance.MenuChange(newMenuIndex);

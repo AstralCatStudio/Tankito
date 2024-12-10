@@ -1,3 +1,4 @@
+using System;
 using Tankito.Netcode;
 using Tankito.Utils;
 using Unity.Netcode;
@@ -11,8 +12,15 @@ namespace Tankito
     // He puesto una interfaz porque asi se puede modularizar el uso del simulador de inputs para el Dead Reckoning
     public interface ITankInput
     {
+        /// <summary>
+        /// Must implement conditional getter that also works correctly in replay mode.
+        /// </summary>
+
         InputPayload GetInput();
-        InputPayload GetCurrentInput();
+        /// <summary>
+        /// Must implement conditional getter that also works correctly in replay mode.
+        /// </summary>
+        InputPayload LastInput { get; }
 
         /// <summary>
         /// Makes the <see cref="TankPlayerInput.GetInput()" /> method return cached input, starting from the given timestamp.
@@ -41,11 +49,10 @@ namespace Tankito
         [SerializeField] private int m_inputReplayTick = NO_REPLAY;
         private const int NO_REPLAY = -1;
 
+        public InputPayload LastInput => m_inputReplayTick == NO_REPLAY ?  m_inputCache.Get(SimClock.TickCounter) : m_inputCache.Get(m_inputReplayTick);
         private InputPayload m_currentInput;
         [SerializeField]
         private TankController m_tankController;
-        [SerializeField]
-        private Animator m_turretAnimator, m_hullAnimator;
         [SerializeField]
         private Rigidbody2D m_turretRB;
         [SerializeField] private bool DEBUG = false;
@@ -61,21 +68,9 @@ namespace Tankito
         {
             m_inputCache = new CircularBuffer<InputPayload>(INPUT_CACHE_SIZE);
             if (m_turretRB == null) Debug.LogWarning("Turret Rigidbody2D reference not set.");
-            if (m_turretAnimator == null) Debug.LogWarning("Turret Animator reference not set!");
-            if (m_hullAnimator == null) Debug.LogWarning("Hull Animator reference not set!");
             if (m_tankController == null) m_tankController = GetComponent<TankController>();
             if (m_tankController == null) Debug.LogWarning("Tank Controller reference not set!");
             m_inputReplayTick = NO_REPLAY;
-        }
-
-        private void OnEnable()
-        {
-            m_tankController.OnDashEnd += this.DashEnd;
-        }
-
-        private void OnDisable()
-        {
-            m_tankController.OnDashEnd -= this.DashEnd;
         }
 
         /// <summary>
@@ -85,38 +80,44 @@ namespace Tankito
         /// <returns></returns>
         public InputPayload GetInput()
         {
-            
-            InputPayload gotPayload;
             if (m_inputReplayTick == NO_REPLAY)
             {
                 // Live Input Mode
-                Aim();
                 m_currentInput.timestamp = SimClock.TickCounter;
                 m_inputCache.Add(m_currentInput, SimClock.TickCounter);
                 InputWindowBuffer.Instance.AddInputToWindow(m_currentInput);
                 
-                gotPayload = m_currentInput;
+                var newInput = m_currentInput;
+                
+                // The internal state of m_currentInput must be reset back to TankAction.None,
+                // in order to avoid continuously posting the same action after all ticks.
+                if (m_currentInput.action == TankAction.Fire || m_currentInput.action == TankAction.Dash || m_currentInput.action == TankAction.Parry)
+                {
+                    m_currentInput.action = TankAction.None;
+                }
+
+                if (DEBUG)
+                {
+                    Debug.Log($"GetInput{(m_inputReplayTick != NO_REPLAY ? ("["+m_inputReplayTick+"]") : "")}:" + newInput);
+                }
+
+                return newInput;
             }
             else
             {
-                m_inputReplayTick++;
                 // Input Replay Mode
-                var replayedInput = m_inputCache.Get(m_inputReplayTick);
-                gotPayload = replayedInput;
-            }
-            
-            if (DEBUG)
-            {
-                Debug.Log("GetInput:" + m_currentInput);
-            }
-            m_currentInput.action = TankAction.None;
+                // We set the input replay tick as the next from the rollback tick because otherwise we will be replaying ipnut that
+                // is lagged by 1 tick (since we don't have to simulate the incoming snapshot tick).
+                m_inputReplayTick++;
+                var newInput = m_inputCache.Get(m_inputReplayTick);
 
-            return gotPayload;
-        }
+                if (DEBUG)
+                {
+                    Debug.Log($"GetInput{(m_inputReplayTick != NO_REPLAY ? ("["+m_inputReplayTick+"]") : "")}:" + newInput);
+                }
 
-        public InputPayload GetCurrentInput()
-        {
-            return m_currentInput;
+                return newInput;
+            }
         }
 
         public void StartInputReplay(int timestamp)
@@ -126,7 +127,7 @@ namespace Tankito
         
         public int StopInputReplay()
         {
-            var lastReplayTick = m_inputReplayTick;
+            var lastReplayTick = m_inputReplayTick - 1;
             m_inputReplayTick = NO_REPLAY;
             return lastReplayTick;
         }
@@ -136,6 +137,50 @@ namespace Tankito
             if(m_currentInput.action == TankAction.Dash)
             {
                 m_currentInput.action = TankAction.None;
+            }
+        }
+        
+        void Aim()
+        {
+            Vector2 lookVector;
+            if (mousePosition != null)
+            {
+                
+                lookVector = (Vector2)mousePosition - (Vector2)Camera.main.WorldToScreenPoint(m_turretRB.position);
+                
+                if (lookVector.sqrMagnitude > 1)
+                {
+                    lookVector.Normalize();
+                }
+                m_currentInput.aimVector = lookVector;
+            }
+        }
+
+        public void OnAim(InputAction.CallbackContext ctx)
+        {
+            var input = ctx.ReadValue<Vector2>();
+            Vector2 lookVector;
+
+            // Avoid sending "null"  inputs
+            if (input.sqrMagnitude < 0.05) return;
+
+            if (ctx.control.path != "/Mouse/position")
+            {
+                lookVector = new Vector2(input.x, input.y);
+                mousePosition = null;
+
+                if (lookVector.sqrMagnitude > 1)
+                {
+                    lookVector.Normalize();
+                }
+
+                m_currentInput.aimVector = lookVector;
+            }
+            else
+            {
+                // Mouse control fallback/input processing
+                mousePosition = input;
+                Aim();
             }
         }
 
@@ -153,65 +198,12 @@ namespace Tankito
         {
             m_currentInput.action = TankAction.Dash; 
         }
-        void Aim()
-        {
-            Vector2 lookVector;
-            if (mousePosition != null)
-            {
-                
-                lookVector = (Vector2)mousePosition - (Vector2)Camera.main.WorldToScreenPoint(m_turretRB.position);
-                
-                if (lookVector.sqrMagnitude > 1)
-                {
-                    lookVector.Normalize();
-                }
-                m_currentInput.aimVector = lookVector;
-            }
-        }
-        public void OnAim(InputAction.CallbackContext ctx)
-        {
-            var input = ctx.ReadValue<Vector2>();
-            Vector2 lookVector;
-
-            if (ctx.control.path != "/Mouse/position")
-            {
-                lookVector = new Vector2(input.x, input.y);
-                mousePosition = null;
-                if (lookVector.sqrMagnitude > 1)
-                {
-                    lookVector.Normalize();
-                }
-                m_currentInput.aimVector = lookVector;
-            }
-            else
-            {
-                // Mouse control fallback/input processing
-                mousePosition = input;
-                Aim();
-                
-            }
-
-            
-
-            
-            
-        }
-
 
         public void OnParry(InputAction.CallbackContext ctx)
         {
-            // CAMBIAR POR CHECKS DE DISPARO?
-            // (comprobar si el valor de ctx.ReadValue == 1
-            // es redundante y ademas entra en conflicto con
-            // el threshold de activacion configurado por el input system,
-            // en otras palabras no activa la accion para controles analogicos como el trigger de un mando)
-
             if (ctx.performed)
             {
-                //m_parrying = true; // Solo se utiliza para la animacion no lo entiendo ????
                 m_currentInput.action = TankAction.Parry;
-                m_turretAnimator.SetTrigger("Parry");
-                m_hullAnimator.SetTrigger("Parry");
             }
             else
             {
@@ -224,7 +216,6 @@ namespace Tankito
             if (ctx.performed)
             {
                 m_currentInput.action = TankAction.Fire;
-                //m_cannon.Shoot(); // Esto va a haber que cambiarlo a que se realice el evento de disparo a golpe de simulacion, no cuando se haga el input!
             }
             else
             {
@@ -232,5 +223,9 @@ namespace Tankito
             }
         }
 
+        internal void RemoveUnacknowledgedInputs(int firstInWindow, int lastInWindow)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

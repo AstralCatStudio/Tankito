@@ -11,10 +11,11 @@ namespace Tankito.Netcode.Simulation
     {
         private int INPUT_CACHE_SIZE => SimulationParameters.SNAPSHOT_BUFFER_SIZE;
         private CircularBuffer<InputPayload> m_inputBuffer;
-        private float m_attenuationSeconds = 0.5f;
+        private float m_attenuationSeconds = 5f;
         [SerializeField] private int m_attenuationTicks;
         private InputPayload m_currentInput;
-        //private InputPayload m_lastReceivedInput;
+        
+        public InputPayload LastInput => m_inputReplayTick==NO_REPLAY ? m_inputBuffer.Get(SimClock.TickCounter) : m_inputBuffer.Get(m_inputReplayTick);
 
         [SerializeField] private bool DEBUG = false;
 
@@ -22,8 +23,8 @@ namespace Tankito.Netcode.Simulation
         private int m_inputReplayTick = NO_REPLAY;
         private const int NO_REPLAY = -1;
 
-        public ulong ClientId { get => ClientSimulationManager.Instance.emulatedInputTanks.First(compIdPair => compIdPair.Value == this).Key; }
-
+        public ulong ClientId { get => ClientSimulationManager.Instance.emulatedInputTankComponents.First(compIdPair => compIdPair.Value == this).Key; }
+        
 
 
         void Awake()
@@ -38,24 +39,14 @@ namespace Tankito.Netcode.Simulation
 
         public void ReceiveInputWindow(InputPayload[] inputWindow)
         {
-            // int i = Array.FindIndex(inputWindow, m => m.timestamp == m_lastReceivedInput.timestamp); // Esto sencillamente no va a pasar. Por que ibas a tener la marca temporal del ultimo input recibido en la nueva ventana? Hay que asumir que los paquetes no llegan en orden.
-            // if (i == -1) i = 0;
-            // else i++;
-            // for (; i < inputWindow.Length; i++)
+            // if ((SimClock.TickCounter > INPUT_CACHE_SIZE &&
+            //     inputWindow.Count() >= INPUT_CACHE_SIZE &&
+            //     inputWindow.First() < (SimClock.TickCounter - INPUT_CACHE_SIZE)) ||
+            //     inputWindow.Last() > SimClock.TickCounter + INPUT_CACHE_SIZE)
             // {
-            //     m_inputBuffer.Add(inputWindow[i], inputWindow[i].timestamp);
+            //     if (DEBUG) Debug.Log($"[{SimClock.TickCounter}]Discarded InputWindow[{inputWindow.First().timestamp}-{inputWindow.Last().timestamp}]");
+            //     return; // En caso de que el input sea muy viejo no lo guardamos, porque puede machacarnos datos nuevos de prediccion, y viceversa.
             // }
-            // if(m_lastReceivedInput.timestamp < inputWindow[i-1].timestamp)
-            // {
-            //     m_lastReceivedInput = inputWindow[i - 1];
-            // }
-            if ((SimClock.TickCounter > INPUT_CACHE_SIZE &&
-                inputWindow.First() < (SimClock.TickCounter - INPUT_CACHE_SIZE)) ||
-                inputWindow.Last() > SimClock.TickCounter + INPUT_CACHE_SIZE)
-            {
-                if (DEBUG) Debug.Log($"[{SimClock.TickCounter}]Discarded InputWindow[{inputWindow.First().timestamp}-{inputWindow.Last().timestamp}]");
-                return; // En caso de que el input sea muy viejo no lo guardamos, porque puede machacarnos datos nuevos de prediccion, y viceversa.
-            }
 
             foreach(var input in inputWindow)
             {
@@ -68,35 +59,49 @@ namespace Tankito.Netcode.Simulation
             }
         }
 
+        public bool HasPayload(int atTick)
+        {
+            return m_inputBuffer.Select(input => input.timestamp).Contains(atTick);
+        }
+
         public InputPayload GetInput()
         {
-            InputPayload newInput;
-            bool inputFound = m_inputBuffer.TryGet(out newInput, SimClock.TickCounter);
-
-            if(inputFound && newInput.timestamp == SimClock.TickCounter)
+            if (m_inputReplayTick == NO_REPLAY)
             {
-                m_currentInput = newInput;
-
-                if (DEBUG) Debug.Log($"[{SimClock.TickCounter}] Tank({ClientId}): Input{m_currentInput}");
+                return GetInputAt(SimClock.TickCounter);
             }
             else
             {
-                m_currentInput = InterpolateInputAt(SimClock.TickCounter);
-            }
-
-            if (m_inputReplayTick != NO_REPLAY)
-            {
                 // Input Replay Mode
+                // We set the input replay tick as the next from the rollback tick because otherwise we will be replaying ipnut that
+                // is lagged by 1 tick (since we don't have to simulate the incoming snapshot tick).
                 m_inputReplayTick++;
+                var newInput = GetInputAt(m_inputReplayTick);
+                return newInput;
             }
-
-            return m_currentInput;
         }
 
-        public InputPayload GetCurrentInput()
+        private InputPayload GetInputAt(int tick)
         {
-            return m_currentInput;
+            if (m_inputBuffer.Select(input => input.timestamp).Contains(tick))
+            {
+                return m_inputBuffer.Get(tick);
+            }
+            else
+            {
+                // InputPayload actionReplay = new();
+                // actionReplay.action =  m_inputBuffer.Last.action;
+                // actionReplay.timestamp = tick;
+                // actionReplay.aimVector = m_inputBuffer.Last.aimVector;
+
+                InputPayload replay = m_inputBuffer.Last;
+                replay.timestamp = tick;
+                replay.moveVector = replay.moveVector * 0.1f;
+                
+                return replay;
+            }
         }
+
 
         private InputPayload InterpolateInputAt(int tick)
         {
@@ -114,7 +119,7 @@ namespace Tankito.Netcode.Simulation
                 debugLog += "AllInputs-[";
                 foreach(var i in m_inputBuffer)
                 {
-                    debugLog += i.timestamp + ((!i.Equals(pastInputs.Last())) ? ", " : "]\n");
+                    debugLog += i.timestamp + ((!i.Equals(m_inputBuffer.Last())) ? ", " : "]\n");
                 }
 
                 debugLog += "PastInputs-[";
@@ -136,29 +141,42 @@ namespace Tankito.Netcode.Simulation
             bool havePrevInput = !prevInput.Equals(default(InputPayload));
             bool haveNextInput = !nextInput.Equals(default(InputPayload));
 
-            if(!havePrevInput && haveNextInput)
+            if (!havePrevInput && haveNextInput)
             {
                 prevInput.timestamp = nextInput.timestamp - m_attenuationTicks;
-                if (DEBUG) Debug.Log($"[{SimClock.TickCounter}]EmulatedInput - Interpolation mode: Backwards extrapolation. From {prevInput} to {nextInput}");
+                // Copy aim direction
+                prevInput.aimVector = nextInput.aimVector;
+
+                if (DEBUG) Debug.Log($"[{tick}]EmulatedInput - Interpolation mode: Backwards extrapolation. From {prevInput} to {nextInput}");
             }
             else if (havePrevInput && !haveNextInput)
             {
                 nextInput.timestamp = prevInput.timestamp + m_attenuationTicks;
-                if (DEBUG) Debug.Log($"[{SimClock.TickCounter}]EmulatedInput - Interpolation mode: Forwards extrapolation. From {prevInput} to {nextInput}");
+                // Copy aim direction
+                nextInput.aimVector = prevInput.aimVector;
+
+                if (DEBUG) Debug.Log($"[{tick}]EmulatedInput - Interpolation mode: Forwards extrapolation. From {prevInput} to {nextInput}");
             }
             else if (!havePrevInput && !haveNextInput)
             {
-                if (DEBUG) Debug.Log($"[{SimClock.TickCounter}]EmulatedInput - Interpolation mode: NONE (default value): {default}");
-                return default;
+                InputPayload defaultInput = new();
+                // Copy LATEST aim  direction, this is better than nothing atleast
+                if (m_inputBuffer.Count() > 0) defaultInput.aimVector = m_inputBuffer.Last().aimVector;
+
+                if (DEBUG) Debug.Log($"[{tick}]EmulatedInput - Interpolation mode: NONE (default value): {defaultInput}");
+
+                return defaultInput;
             }
             else
             {
-                if (DEBUG) Debug.Log($"[{SimClock.TickCounter}]EmulatedInput - Interpolation mode: Full interpolation. From {prevInput} to {nextInput}");
+                if (DEBUG) Debug.Log($"[{tick}]EmulatedInput - Interpolation mode: Full interpolation. From {prevInput} to {nextInput}");
             }
 
             interpInput = prevInput;
 
-            interpInput.Interpolate(nextInput, SimClock.TickCounter);
+            interpInput.Interpolate(nextInput, tick);
+
+            if (DEBUG) Debug.Log($"Interpolation Result: {interpInput}");
 
             return interpInput;
         }
@@ -170,7 +188,7 @@ namespace Tankito.Netcode.Simulation
 
         public int StopInputReplay()
         {
-            var lastReplayTick = m_inputReplayTick;
+            var lastReplayTick = m_inputReplayTick - 1;
             m_inputReplayTick = NO_REPLAY;
             return lastReplayTick;
         }
