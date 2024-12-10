@@ -74,6 +74,11 @@ namespace Tankito
             var simObjId = SimExtensions.HashSimObj(ownerId, tick, spawnN);
             return Get(position, ownerId, simObjId);
         }
+        public BulletSimulationObject Get(Vector2 position, ulong ownerId, int tick, int spawnN, ulong spawnerId)
+        {
+            var simObjId = SimExtensions.HashSimObj(spawnerId, tick, spawnN);
+            return Get(position, ownerId, simObjId);
+        }
 
         /// <summary>
         /// Gets and (if <paramref name="autoSpawn"/> is true) adds a new bullet object to the local <see cref="NetSimulationManager"/>.<br />

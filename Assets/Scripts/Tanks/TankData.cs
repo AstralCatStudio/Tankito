@@ -195,12 +195,15 @@ namespace Tankito
             {
                 m_username = ClientData.Instance.username;
                 m_skinSelected = ClientData.Instance.characters.IndexOf(ClientData.Instance.GetCharacterSelected());
+                Debug.Log("Soy el jugador " + RoundManager.Instance.playerList.IndexOf(this));
                 if(RoundManager.Instance.playerList.IndexOf(this)<4 && RoundManager.Instance.playerList.IndexOf(this) >= 0)
                 {
                     playerColor = colors[RoundManager.Instance.playerList.IndexOf(this)];
+                    
                 }
                 else
                 {
+                    Debug.Log("Color default");
                     playerColor = new Color(1,1,1,1);
                 }
                 

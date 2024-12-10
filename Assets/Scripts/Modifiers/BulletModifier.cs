@@ -49,6 +49,7 @@ namespace Tankito
         public BulletStatsModifier bulletStatsModifier = new BulletStatsModifier(1,Vector2.one,0,0,0,0,0,1,1,0,1);
         public Sprite bulletSprite;
         public int bulletSpritePriority;
+        public string ShootSound ="";
         public void BindBulletEvents(BulletController newBullet)
         {
             newBullet.OnSpawn += OnSpawn;

@@ -4,6 +4,7 @@ using Tankito.Netcode;
 using Tankito.Netcode.Simulation;
 using UnityEngine;
 using Tankito.Utils;
+using Unity.Netcode;
 
 namespace Tankito
 {
@@ -291,7 +292,8 @@ namespace Tankito
                     {
 
                     }
-                    
+                    MoveTank(input.moveVector, deltaTime);
+                    AimTank(aimVector, deltaTime);
                     //MoveTank(input.moveVector, deltaTime);
 
                     if (fireTick >= FIRE_TICK_DURATION)
@@ -336,7 +338,7 @@ namespace Tankito
                     {
 
                     }
-                    
+                    MoveTank(input.moveVector, deltaTime);
                     AimTank(input.moveVector, deltaTime);
 
                     if (parryTick >= m_parryTicks)
@@ -426,7 +428,11 @@ namespace Tankito
             if (DEBUG_FIRE) Debug.Log($"[{SimClock.TickCounter}] FireTank({GetComponent<TankSimulationObject>().SimObjId}) called.");
 
             if (SimClock.Instance.Active)
-                MusicManager.Instance.PlayDisparo("snd_bala_impacta");
+            {
+                string sonido= BulletCannonRegistry.Instance[GetComponent<NetworkObject>().OwnerClientId].bulletSpriteModifier?.ShootSound;
+                MusicManager.Instance.PlayDisparo();
+            }
+                
             m_cannon.Shoot(m_turretRB.position, m_turretRB.transform.right, inputTick);
         }
 
