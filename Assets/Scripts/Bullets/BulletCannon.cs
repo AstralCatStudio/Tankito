@@ -112,13 +112,19 @@ namespace Tankito
 
         void ShootBullet(Vector2 position, Vector2 direction, int spawnN, int tick)
         {
-            
             m_bulletProperties.direction = direction;
             m_bulletProperties.startingPosition = position;
             m_bulletProperties.spawnTickTime = tick; // NO se puede usar SimClock.TickCounter porque no funciona durante input replay/Rollback
             var newBullet = BulletPool.Instance.Get(position, OwnerClientId, tick, spawnN);
         }
 
+        public void ShootBulletFromBullet(Vector2 position, Vector2 direction, int spawnN, int tick, ulong originalBulletId)
+        {
+            m_bulletProperties.direction = direction;
+            m_bulletProperties.startingPosition = position;
+            m_bulletProperties.spawnTickTime = tick; // NO se puede usar SimClock.TickCounter porque no funciona durante input replay/Rollback
+            var newBullet = BulletPool.Instance.Get(position, originalBulletId, tick, spawnN);
+        }
         [ContextMenu("TestSpawning")]
         void TestSpawning()
         {
