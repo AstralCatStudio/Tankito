@@ -13,7 +13,7 @@ namespace Tankito
         [SerializeField] private GameObject m_bulletPrefab;
         [SerializeField] private int m_prewarmCount;
         private ObjectPool<BulletSimulationObject> m_pool;
-        [SerializeField] private bool DEBUG = false;
+        private bool DEBUG;
 
         [ContextMenu("InitializePool")]
         public void Start()

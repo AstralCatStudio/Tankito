@@ -11,7 +11,7 @@ public class HoverButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     public float time= 0.5f;
     private LTDescr tweenId;
     private Color color;
-    private float hoverColorFactor = 0.9f;
+    private float hoverColorFactor = 1f;
     // Start is called before the first frame update
     void Start()
     {
@@ -25,8 +25,6 @@ public class HoverButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         gameObject.GetComponent<Image>().color = newColor;
         MusicManager.Instance.PlaySoundPitch("bip",0.1f);
     }
-
-    
 
     public void OnPointerExit(PointerEventData eventData)
     {

@@ -419,6 +419,8 @@ namespace Tankito
         {
             if (DEBUG_FIRE) Debug.Log($"[{SimClock.TickCounter}] FireTank({GetComponent<TankSimulationObject>().SimObjId}) called.");
 
+            if (SimClock.Instance.Active)
+                MusicManager.Instance.PlayDisparo();
             m_cannon.Shoot(m_turretRB.position, m_turretRB.transform.right, inputTick);
         }
 

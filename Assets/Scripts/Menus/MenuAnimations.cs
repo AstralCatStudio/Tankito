@@ -21,16 +21,7 @@ public class MenuAnimations : MonoBehaviour
 
     private void Awake()
     {
-        int childCount = gameObject.transform.childCount;
-        for(int i=0; i<childCount; i++)
-        {
-            uiElements.Add(gameObject.transform.GetChild(i).GetComponent<RectTransform>());
-            originalRTransforms.Add(uiElements[i].anchoredPosition);
-            if (uiElements[i].transform.GetComponent<Button>() == true)
-            {
-                uiElements[i].transform.GetComponent<Button>().interactable = false;
-            }
-        }
+        CheckUiElementsInside();
 
         if(uiElements != null)
         {
@@ -39,6 +30,21 @@ public class MenuAnimations : MonoBehaviour
                 Vector2 newPosition = CalculateNewPosition(element);
                 newPositions.Add(newPosition);
                 element.anchoredPosition = newPosition;
+            }
+        }
+    }
+
+    private void CheckUiElementsInside()
+    {
+        int childCount = gameObject.transform.childCount;
+        for (int i = 0; i < childCount; i++)
+        {
+            uiElements.Add(gameObject.transform.GetChild(i).GetComponent<RectTransform>());
+            originalRTransforms.Add(uiElements[i].anchoredPosition);
+
+            if (uiElements[i].transform.GetComponent<Button>() == true)
+            {
+                uiElements[i].transform.GetComponent<Button>().interactable = false;
             }
         }
     }

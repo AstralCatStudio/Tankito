@@ -3,21 +3,29 @@ using System.Collections;
 using System.Collections.Generic;
 using Tankito;
 using TMPro;
-using Unity.Netcode;
+using Tankito.SyncronizedButtons;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using Tankito.ScenarySelection;
 
 public class RoundUI : Singleton<RoundUI>
 {
+    public GameObject PowerUpsPrefab;
+
     public GameObject PanelRanking;
     public GameObject PanelPowerUps;
     public GameObject PanelRankingFinal;
-    public GameObject PanelAlivePlayers;
+    public GameObject CurrentRound;
     public GameObject CountdownText;
     public GameObject BackButton;
     public GameObject InitExitButton;
     public GameObject EndExitButton;
     public GameObject ScenarySelection;
     public GameObject LobbyInfo;
+    public GameObject SettingsButton;
+    public GameObject SettingsMenu;
+    public GameObject Ready;
+    public GameObject PlayAgain;
 
     #region Ranking
     public void ActivateRankingGUI(bool active)
@@ -36,6 +44,7 @@ public class RoundUI : Singleton<RoundUI>
 
     public void SetActivePowerUps(bool active)
     {
+        
         PanelPowerUps.SetActive(active);
     }
 
@@ -54,12 +63,12 @@ public class RoundUI : Singleton<RoundUI>
 
     public void SetCurrentRound(int roundNumber)
     {
-        PanelAlivePlayers.GetComponentInChildren<TextMeshProUGUI>().text = $"Round: {roundNumber}/{RoundManager.Instance.m_maxRounds}";
+        CurrentRound.GetComponentInChildren<TextMeshProUGUI>().text = $"Round: {roundNumber}/{RoundManager.Instance.m_maxRounds}";
     }
 
     public void ActivateAliveTanksGUI(bool active)
     {
-        PanelAlivePlayers.SetActive(active);
+        CurrentRound.SetActive(active);
     }
 
     #endregion
@@ -94,6 +103,9 @@ public class RoundUI : Singleton<RoundUI>
     {
         Debug.Log("Pulsaste Exit");
 
+        ///////////////////////////////////////////////////////////////////// sound effect
+        MusicManager.Instance.PlaySound("aceptar2");
+
         DisconnectHandler.Instance.ExitGame();
     }
 
@@ -111,10 +123,70 @@ public class RoundUI : Singleton<RoundUI>
         ScenarySelection.GetComponentInChildren<TextMeshProUGUI>().text = newText;
     }
 
+    public void NextScenary()
+    {
+        ScenarySelector.Instance.NextScenary();
+    }
+    
+    public void PreviousScenary()
+    {
+        ScenarySelector.Instance.PreviousScenary();
+    }
+
+    #endregion
+
+    #region LobbyInfo
     internal void ActivateLobbyInfoGUI(bool active)
     {
         LobbyInfo.SetActive(active);
     }
 
     #endregion
+
+    #region Settings
+
+    public void ActivateSettingsButton(bool active)
+    {
+        SettingsButton.SetActive(active);
+    }
+
+    public void ActivateSettingsMenu(bool active)
+    {
+        ///////////////////////////////////////////////////////////////////// sound effect
+        MusicManager.Instance.PlaySound("aceptar");
+
+        SettingsMenu.SetActive(active);
+    }
+
+    public void CloseSettingsButton()
+    {
+        if (RoundManager.Instance.IsGameStarted)
+        {
+            ///////////////////////////////////////////////////////////////////// sound effect
+            MusicManager.Instance.PlaySound("aceptar2");
+
+            FindObjectOfType<PlayerInput>(true).gameObject.SetActive(true);
+        }
+    }
+
+    #endregion
+
+    #region Ready
+
+    public void ActivateReadyGUI(bool active)
+    {
+        Ready.GetComponent<ReadyButton>().ActivateButton(active);
+    }
+
+    #endregion
+
+    #region PlayAgain
+
+    public void ActivatePlayAgainGUI(bool active)
+    {
+        PlayAgain.GetComponent<PlayAgainButton>().ActivateButton(active);
+    }
+
+    #endregion
+
 }

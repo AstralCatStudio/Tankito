@@ -73,4 +73,13 @@ public class DisconnectHandler : NetworkBehaviour
             Disconnect();
         }
     }
+
+    [ClientRpc]
+    public void DisconnectClientRpc(ulong clientId)
+    {
+        if(clientId == NetworkManager.Singleton.LocalClientId)
+        {
+            Disconnect();
+        }
+    }
 }

@@ -6,7 +6,6 @@ using Unity.Netcode;
 using Tankito.Netcode;
 using UnityEngine.UIElements;
 using Tankito.Netcode.Simulation;
-using System.Linq;
 
 namespace Tankito {
 
@@ -15,6 +14,7 @@ namespace Tankito {
     {
         BulletSimulationObject m_simObj;
         public int m_bouncesLeft = 0;
+        public GameObject explosionVisual;
         public float LifeTime { get => m_lifetime; set => m_lifetime = value; }
         private float m_lifetime = 0; // Life Time counter
         protected Vector2 lastCollisionNormal = Vector2.zero;
@@ -27,6 +27,8 @@ namespace Tankito {
                                         OnHit = (ABullet) => { }, OnBounce = (ABullet) => { },
                                         OnDetonate = (ABullet) => { };
         [SerializeField] private bool PREDICT_DESTRUCTION = true;
+        public Sprite bulletSprite;
+        int maxBulletSpritePriority =0;
 
         private void Awake()
         {
@@ -44,6 +46,7 @@ namespace Tankito {
         {
             GetComponent<BulletSimulationObject>().OnComputeKinematics += MoveBullet;
 
+            transform.position = BulletCannonRegistry.Instance[m_simObj.OwnerId].Properties.startingPosition;
             m_bouncesLeft = BulletCannonRegistry.Instance[m_simObj.OwnerId].Properties.bouncesTotal;
             m_rb.velocity = BulletCannonRegistry.Instance[m_simObj.OwnerId].Properties.velocity * BulletCannonRegistry.Instance[m_simObj.OwnerId].Properties.direction.normalized;
 
@@ -51,11 +54,21 @@ namespace Tankito {
             // hacerlo sin tener que cambiar nada pero no soy capaz de pensar en ella ahora mismo la verdad
             SetLastShooterObjId(BulletCannonRegistry.Instance[m_simObj.OwnerId].GetComponentInParent<TankSimulationObject>().SimObjId);
 
+            transform.rotation = Quaternion.LookRotation(new Vector3(0, 0, 1), m_rb.velocity.normalized);
             foreach (var modifier in Tankito.BulletCannonRegistry.Instance[m_simObj.OwnerId].Modifiers)
             {
                 modifier.BindBulletEvents(this);
+                if (modifier.bulletSpritePriority > maxBulletSpritePriority)
+                {
+                    maxBulletSpritePriority = modifier.bulletSpritePriority;
+                    if (modifier.bulletSprite != null)
+                    {
+                        bulletSprite = modifier.bulletSprite;
+                    }
+                }
             }
-
+            maxBulletSpritePriority = 0;
+            GetComponent<SpriteRenderer>().sprite = bulletSprite;
             if (triggerOnSpawnEvents) OnSpawn?.Invoke(this);
         }
 
@@ -101,8 +114,13 @@ namespace Tankito {
 
         public void Detonate(bool lifeTimeOver = false)
         {
+            Instantiate(explosionVisual, transform.position, transform.rotation);
             OnDetonate.Invoke(this);
-            
+
+            if (SimClock.Instance.Active && NetworkManager.Singleton.IsClient)
+                MusicManager.Instance.PlayBulletDestroy();
+
+
             if (NetworkManager.Singleton.IsServer)
             {
                 BulletSimulationObject bulletSimObj = GetComponent<BulletSimulationObject>();
@@ -146,6 +164,7 @@ namespace Tankito {
                     }
                     else
                     {
+                        collision.gameObject.GetComponent<TankData>().TakeDamage(1);
                         Detonate();
                     }
                     break;

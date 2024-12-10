@@ -101,11 +101,6 @@ public class DropdownSelectionCharacter : MonoBehaviour
         messageText.GetComponent<TextMeshProUGUI>().color = val;
     }
 
-    private void UpdateSkin()
-    {
-        
-    }
-
     private IEnumerator DisableMessage()
     {
         float i = 0f;

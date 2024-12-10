@@ -77,7 +77,7 @@ namespace Tankito.Netcode.Simulation
 
         public void QueueForDespawn(ulong simObjId)
         {
-            //Debug.Log($"Queued [{simObjId}] for despawn");
+            Debug.Log($"Queued [{simObjId}] for despawn");
             if (m_simulationObjects.ContainsKey(simObjId))
             {
                 m_removeFromSimQueue.Add(simObjId);

@@ -9,6 +9,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using Tankito.Netcode.Messaging;
+using Tankito.ScenarySelection;
 
 namespace Tankito
 {
@@ -21,8 +22,6 @@ namespace Tankito
 
         //[SerializeField]
         private GameObject m_playerPrefab;
-
-        private string m_playerName = "Invited";
 
         // SceneManagementEvents
         public bool m_loadingSceneFlag { get; private set; } = true;
@@ -101,6 +100,27 @@ namespace Tankito
 
             if (IsServer)
             {
+                // Desconecta al jugador si ya ha empezado la partida
+                if (RoundManager.Instance.IsGameStarted)
+                {
+                    Debug.Log($"Rejecting client {clientId} - Game already in progress");
+                    DisconnectHandler.Instance.DisconnectClientRpc(clientId);
+                    return;
+                }
+
+                // Desconecta al jugador si ya hay 4 jugadores
+                int connectedClients = NetworkManager.Singleton.ConnectedClientsIds.Count;
+                if (connectedClients > 4)
+                {
+                    Debug.Log($"Rejecting client {clientId} - Server full (4 players maximum)");
+                    DisconnectHandler.Instance.DisconnectClientRpc(clientId);
+                    return;
+                }
+            }
+
+
+            if (IsServer)
+            {
                 // IMPORTANTE: Siempre instanciar objetos con la sobrecarga de parentesco para asegurar la escena en la que residen
                 // (evitando su destruccion no intencionada al cargarse sobre escenas aditivas que se descargan posteriormente eg. LA PANTALLA DE CARGA)
                 var newPlayer = Instantiate(m_playerPrefab, GameInstanceParent.Instance.transform).GetComponent<NetworkObject>();
@@ -115,21 +135,6 @@ namespace Tankito
                 RoundManager.Instance.AddPlayer(tankData);
                 RoundManager.Instance.UpdateRemoteClientPlayerList();
             }
-            //else
-            //{
-            //    if(clientId != NetworkManager.Singleton.LocalClientId)
-            //    {
-            //        if (RoundManager.Instance == null)
-            //        {
-            //            Debug.Log("ES EL ROUND MANAGER");
-            //        }
-            //        else if (m_playerPrefab.GetComponent<TankData>() == null)
-            //        {
-            //            Debug.Log("ES EL OBJETO");
-            //        }
-            //        RoundManager.Instance.AddPlayer(NetworkManager.LocalClient.PlayerObject.GetComponent<TankData>());
-            //    }
-            //}
 
             if (clientId != NetworkManager.Singleton.LocalClientId) return;
 
@@ -229,18 +234,6 @@ namespace Tankito
             m_inputActions.Player.Parry.canceled -= localTankInput.OnParry;
             m_inputActions.Player.Fire.performed -= localTankInput.OnFire;
             m_inputActions.Player.Fire.canceled -= localTankInput.OnFire;
-        }
-
-
-        public void SetPlayerName(string name)
-        {
-            m_playerName = name;
-            //Debug.Log("GameManager guarda el nombre:" + m_playerName);
-        }
-
-        public string GetPlayerName()
-        {
-            return m_playerName;
         }
 
         public void AutoPhysics2DUpdate(bool auto)

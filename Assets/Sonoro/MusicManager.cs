@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 
 public class MusicManager : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class MusicManager : MonoBehaviour
     [SerializeField] private AudioClip[] menuClips;
     [SerializeField] private AudioClip[] pveClips;
     [SerializeField] private AudioClip[] victoryClips;
+    [SerializeField] private AudioClip[] loseClips;
 
     [Range(0, 1)] public float volMusic = 1.0f;
     [Range(0, 1)] public float volSounds = 1.0f;
@@ -66,6 +68,7 @@ public class MusicManager : MonoBehaviour
             Debug.LogWarning("No se encontró una AudioReverbZone en el GameObject.");
         }
 
+
         songs["PLAYA"] = playaClips;
         songs["SUSHI"] = sushiClips;
         songs["BARCO"] = barcoClips;
@@ -73,6 +76,7 @@ public class MusicManager : MonoBehaviour
         songs["MENU"] = menuClips;
         songs["PVE"] = pveClips;
         songs["VICTORY"] = victoryClips;
+        songs["LOSE"] = loseClips;
 
         InitializeSoundPool();
     }
@@ -467,7 +471,7 @@ public class MusicManager : MonoBehaviour
     }
 
 
-    private void SetReverbZone(int phase, float minDistance, float maxDistance)
+    public void SetReverbZone(int phase, float minDistance, float maxDistance)
     {
         if (reverbZone == null)
         {
@@ -523,6 +527,15 @@ public class MusicManager : MonoBehaviour
                 reverbZone.reverb = 400; // Reverberación posterior definida
                 break;
 
+            case 4: // Sushi
+                reverbZone.room = -1000; // Sin reverberación
+                reverbZone.roomHF = -10000; // Sin frecuencias altas
+                reverbZone.decayTime = 0.1f; // Decaimiento mínimo
+                reverbZone.decayHFRatio = 0.1f;
+                reverbZone.reflections = -10000;
+                reverbZone.reverb = -10000;
+                break;
+
             default: // Sin reverberación
                 reverbZone.room = -10000; // Sin reverberación
                 reverbZone.roomHF = -10000; // Sin frecuencias altas
@@ -537,6 +550,138 @@ public class MusicManager : MonoBehaviour
     }
 
 
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public void Semaforo0()
+    {
+        PlaySound("snd_sem1");
+    }
+    public void Semaforo1()
+    {
+        PlaySound("snd_sem2");
+    }
+
+    public void InitPartida(int escenario)
+    {
+        // escenario = 0 -> playa
+        // escenario = 1 -> sushi
+        // escenario = 2 -> barco
+
+        switch (escenario)
+        {
+            case 0:
+                SetSong("PLAYA");
+                break;
+            case 1:
+                SetSong("SUSHI");
+                break;
+            case 2:
+                SetSong("BARCO");
+                break;
+            default:
+                Debug.LogWarning($"Escenario desconocido: {escenario}. No se puede inicializar la música.");
+                break;
+        }
+
+    }
+
+
+
+
+
+    public void FasePartida(int jugadoresVivos, int jugadoresTotales)
+    {
+        // ERRORES
+        if (jugadoresTotales < 2 || jugadoresTotales > 4)
+        {
+            Debug.LogError("El número total de jugadores debe estar entre 2 y 4.");
+            return;
+        }
+
+        // Caso especial: si hay 2 jugadores totales, siempre será la fase máxima 5
+        if (jugadoresTotales == 2)
+        {
+            SetPhase(5);
+            return;
+        }
+
+        // Fase mínima por defecto es 1
+        int fase = 1;
+
+        // Fase 1 si todos los jugadores están vivos
+        if (jugadoresVivos == jugadoresTotales)
+        {
+            fase = 1;
+        }
+        else if (jugadoresVivos == 2)
+        {
+            // Fase 5 cuando quedan solo 2 jugadores vivos
+            fase = 5;
+        }
+        else
+        {
+            // Calcular la fase proporcionalmente (1 a 5)
+            float ratioEliminados = (float)(jugadoresTotales - jugadoresVivos) / (jugadoresTotales - 2);
+            fase = Mathf.Clamp(Mathf.RoundToInt(ratioEliminados * 4) + 1, 1, 5);
+        }
+
+        // Llamar a SetPhase con la fase calculada
+        SetPhase(fase);
+        //Debug.LogError($"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA FASE DE MUSICA: {fase}");
+    }
+
+
+
+    public void FaseEntrerrondas()
+    {
+        SetPhase(0);
+    }
+
+
+    public void FinPartida()
+    {
+        PlaySound("snd_endbattle");
+    }
+
+    public void Resultados(bool resultado)
+    {
+        // 0 - pierde
+        // 1 - gana
+        if (resultado==false)
+        {
+            SetSong("LOSE");
+        }
+        else
+        {
+            SetSong("VICTORY");
+        }
+    }
+
+
+
+    public void PlayDisparo()
+    {
+        string[] soundNames = {
+        "golpe_aire1", "golpe_aire2", "golpe_aire3",
+        "golpe_aire4", "golpe_aire5", "golpe_aire6",
+        "golpe_aire7", "golpe_aire8", "golpe_aire9"
+        };
+
+        string disparoSound = soundNames[Random.Range(0, soundNames.Length)];
+
+        PlaySoundPitch(disparoSound);
+        PlaySoundPitch("snd_bala_impacta");
+    }
+    public void PlayBulletDestroy()
+    {
+        PlaySoundPitch("snd_disparo");
+    }
+
+    
+    public void PlayDamage()
+    {
+        PlaySoundPitch("snd_rango_danio");
+    }
 
 
 
