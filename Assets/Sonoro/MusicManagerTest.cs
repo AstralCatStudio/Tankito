@@ -165,7 +165,7 @@ public class MusicManagerTest : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.KeypadEnter))
         {
             Debug.Log("Emitiendo sonido");
-            MusicManager.Instance.PlayDisparo();
+            MusicManager.Instance.PlayDisparo("snd_bala_impacta");
         }
 
         //*/
