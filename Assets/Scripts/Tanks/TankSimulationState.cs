@@ -14,8 +14,26 @@ namespace Tankito.Netcode.Simulation
         public Vector2 Velocity { get => velocity; }
         public float TurretRotation { get => turretRotation; }
         public TankAction PerformedAction { get => performedAction; }
+
+        // VAMOS A ABANDONAR POR EL MOMENTO EL ENCODING RELATIVO AL NUMERO DE TIMESTAMP DEL SNAPSHOT PORQUE ES MAS DIFICIL DE LO QUE PARECE HACERLO BIEN,
+        // y el beneficio tan solo es ahorar unos pocos bytes (int vs ushort) en los snapshots realmente que probablemente se ahorren mejor con algun algoritmo de compresion
+        // como zlib o z standard
+        /*
+        /// <summary>
+        /// Used to calculate absolute ticks (fire, parry, dash).
+        /// <para/>NOT MEANT TO BE SERIALIZED DIRECTLY. Use
+        /// <see cref="Timestamp"/> instead. 
+        /// </summary>
+        private int m_timestamp;
+        public int Timestamp { private get => (m_timestamp >= 0) ? m_timestamp : throw new InvalidOperationException("m_timestamp is uninitialized");
+                                        set => m_timestamp = value; }
+        */
+
+        public int LastFireTick { get => lastFireTick; }
+        public int LastDashTick { get => lastDashTick; }
+        public int LastParryTick { get => lastParryTick; }
+
         public PlayerState PlayerState { get => playerState; }
-        public int StateInitTick { get => stateInitTick; }
 
         private Vector2 position;
         private float hullRotation;
@@ -23,13 +41,11 @@ namespace Tankito.Netcode.Simulation
         private float turretRotation;
         private TankAction performedAction;
         private PlayerState playerState;
-        private int stateInitTick;
+        private int lastFireTick;
+        private int lastDashTick;
+        private int lastParryTick;
 
-        //private TankTolerance tolerances;
-
-        public const int MAX_SERIALIZED_SIZE = sizeof(float)*2 + sizeof(float)*2*2;
-
-        public TankSimulationState(Vector2 position, float hullRotation, Vector2 velocity, float turretRotation, TankAction performedAction, PlayerState playerState, int stateInitTick)
+        public TankSimulationState(Vector2 position, float hullRotation, Vector2 velocity, float turretRotation, TankAction performedAction, PlayerState playerState, int lastFireTick, int lastDashTick, int lastParryTick)
         {
             this.position = position;
             this.hullRotation = hullRotation;
@@ -37,8 +53,21 @@ namespace Tankito.Netcode.Simulation
             this.turretRotation = turretRotation;
             this.performedAction = performedAction;
             this.playerState = playerState;
-            this.stateInitTick = stateInitTick;
+            this.lastFireTick = lastFireTick;
+            this.lastDashTick = lastDashTick;
+            this.lastParryTick = lastParryTick;
         }
+
+        public static int SerializedSize =>
+                    FastBufferWriter.GetWriteSize(Vector2.one) + // position
+                    sizeof(float) + // hullRotation
+                    FastBufferWriter.GetWriteSize(Vector2.one) + // velocity
+                    sizeof(float) + // turretRotation
+                    sizeof(TankAction) + // performed
+                    sizeof(PlayerState) + // PlayerState
+                    sizeof(int) + // lastFireTick
+                    sizeof(int) + // lastDashTick
+                    sizeof(int); // lastParryTick
 
         internal void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
         {
@@ -48,7 +77,24 @@ namespace Tankito.Netcode.Simulation
             serializer.SerializeValue(ref turretRotation);
             serializer.SerializeValue(ref performedAction);
             serializer.SerializeValue(ref playerState);
-            serializer.SerializeValue(ref stateInitTick);
+            serializer.SerializeValue(ref lastFireTick);
+            serializer.SerializeValue(ref lastDashTick);
+            serializer.SerializeValue(ref lastParryTick);
+        }
+
+        public override string ToString()
+        {
+            return "[ " +
+                    $"position: {position} | " +
+                    $"hullRotation: {hullRotation} | " +
+                    $"velocity: {velocity} | " +
+                    $"turretRotation: {turretRotation} | " +
+                    $"performedAction: {performedAction} | " +
+                    $"playerState: {playerState} | " +
+                    $"lastFireTick: {lastFireTick} | " +
+                    $"lastDashTick: {lastDashTick} | " +
+                    $"lastParryTick: {lastParryTick}" + 
+                    " ]";
         }
     }
 }

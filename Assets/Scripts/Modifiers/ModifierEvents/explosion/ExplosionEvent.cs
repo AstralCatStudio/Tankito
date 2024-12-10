@@ -19,6 +19,10 @@ namespace Tankito
         float timeUntilBig = 0.5f;
         public override void StartEvent(BulletController bullet)
         {
+            // Avoid spawning explosion VFX on client as a result of rollback (during rollback the SimClock is stopped).
+            if (SimClock.Instance.Active == false) return;
+
+            // TODO: Replace with explosion pool
             GameObject explosion = Instantiate<GameObject>(explosionPrefab, bullet.transform.position, bullet.transform.rotation);
             explosion.GetComponent<Explosion>().size *= size;
             explosion.transform.position += relativePosition;

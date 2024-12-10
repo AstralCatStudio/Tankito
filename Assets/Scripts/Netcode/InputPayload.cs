@@ -48,11 +48,12 @@ namespace Tankito.Netcode
 
         internal void Interpolate(InputPayload targetInput, int interpolationTick)
         {
-            float factor = Mathf.Clamp01((interpolationTick - timestamp) /(float)targetInput.timestamp);
+            float factor = Mathf.Clamp01((interpolationTick - timestamp)/(float)(targetInput.timestamp - timestamp));
+            Debug.Log("interpolate factor: " + factor + "/1");
             
-            moveVector = Vector2.Lerp(targetInput.moveVector, moveVector, factor);
-            aimVector = Vector2.Lerp(targetInput.aimVector, aimVector, factor);
-            action = (factor == 0) ? action : (factor == 1) ? targetInput.action : TankAction.None;
+            moveVector = Vector2.Lerp(moveVector, targetInput.moveVector, factor);
+            aimVector = Vector2.Lerp(aimVector, targetInput.aimVector, factor);
+            action = (factor < 0.5) ? action : targetInput.action;
         }
 
         public static bool operator <(InputPayload left, int right)
@@ -74,19 +75,5 @@ namespace Tankito.Netcode
         {
             return left.CompareTo(right) >= 0;
         }
-
-        // Probablemente habria q repensar como hacer esto:
-
-        //void Serialize(FastBufferWriter writer)
-        //{
-        //    if (!writer.TryBeginWrite(GetSerializationSize()))
-        //    {
-        //        throw new OverflowException("Not enough space in the buffer");
-        //    }
-        //    writer.WriteValue(timestamp);
-        //    writer.WriteValue(moveVector);
-        //    writer.WriteValue(aimVector);
-        //    writer.WriteValue(action);
-        //}
     }
 }

@@ -11,7 +11,9 @@ namespace Tankito.Netcode.Simulation
     {
         private SortedSet<InputPayload> m_inputBuffer = new SortedSet<InputPayload>(new ByTimestamp());
         private InputPayload m_replayInput;
-        [SerializeField] private bool DEBUG;
+        public InputPayload LastInput => m_replayInput;
+        
+        [SerializeField] private bool DEBUG = false;
 
         //const int N_IDEAL_INPUT = 10;
         public int IdealBufferSize { get => SimulationParameters.SERVER_IDEAL_INPUT_BUFFER_SIZE; }
@@ -65,12 +67,14 @@ namespace Tankito.Netcode.Simulation
             {
                 m_inputBuffer.Remove(m_inputBuffer.First());
                 m_replayInput = input;
-            }            
-            return m_replayInput;
-        }
-        
-        public InputPayload GetCurrentInput()
-        {
+            }
+            else
+            {
+                m_replayInput.timestamp = SimClock.TickCounter;
+            }
+
+            if (DEBUG) Debug.Log($"Popping Input: {m_replayInput}");
+
             return m_replayInput;
         }
 

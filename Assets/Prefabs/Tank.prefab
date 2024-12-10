@@ -101,7 +101,7 @@ Animator:
   m_Controller: {fileID: 9100000, guid: b551736d57379c34bab0861b51ef1085, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
-  m_ApplyRootMotion: 0
+  m_ApplyRootMotion: 1
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_WarningMessage: 
@@ -135,7 +135,7 @@ Transform:
   m_GameObject: {fileID: 3509251233807743631}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.233, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -193,6 +193,73 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &3746389055667861761
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8048835386829078892}
+  - component: {fileID: 9122990806937936538}
+  m_Layer: 0
+  m_Name: ParryHitbox
+  m_TagString: Parry
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8048835386829078892
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3746389055667861761}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6924379706836283280}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!58 &9122990806937936538
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3746389055667861761}
+  m_Enabled: 0
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 256
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 1.05
 --- !u!1 &5904161972637957731
 GameObject:
   m_ObjectHideFlags: 0
@@ -233,6 +300,7 @@ Transform:
   m_Children:
   - {fileID: 848276271257576674}
   - {fileID: 468154111747707519}
+  - {fileID: 8048835386829078892}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8019476000441952616
@@ -314,7 +382,7 @@ CircleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.12, y: 0}
+  m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.45
 --- !u!114 &1979050206698400908
@@ -332,7 +400,7 @@ MonoBehaviour:
   m_simObjId: 0
   m_tankRB: {fileID: 8520293575514935909}
   m_turretRB: {fileID: 8342253699622009969}
-  m_controller: {fileID: 258216026692416356}
+  m_tankController: {fileID: 0}
 --- !u!114 &258216026692416356
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -350,6 +418,7 @@ MonoBehaviour:
   m_speed: 8
   m_rotationSpeed: 270
   m_aimSpeed: 1080
+  m_parryHitbox: {fileID: 9122990806937936538}
   m_dashSpeedCurve:
     serializedVersion: 2
     m_Curve:
@@ -392,11 +461,15 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  stateInitTick: 0
-  playerState: 0
-  DEBUGCONT: 0
-  DEBUGDASh: 1
-  cannon: {fileID: 792954130975718086}
+  m_hullAnimator: {fileID: 5873195794702409541}
+  m_turretAnimator: {fileID: 6117245905817614025}
+  m_fishAnimator: {fileID: 0}
+  m_playerState: 0
+  DEBUG_INPUT_CALLS: 0
+  DEBUG_DASH: 0
+  DEBUG_PARRY: 0
+  DEBUG_FIRE: 0
+  m_cannon: {fileID: 792954130975718086}
 --- !u!114 &5903910165241873950
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -411,8 +484,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_inputReplayTick: -1
   m_tankController: {fileID: 258216026692416356}
-  m_turretAnimator: {fileID: 6117245905817614025}
-  m_hullAnimator: {fileID: 5873195794702409541}
   m_turretRB: {fileID: 8342253699622009969}
   DEBUG: 0
 --- !u!114 &8799390587279230347
@@ -661,9 +732,8 @@ MonoBehaviour:
     bouncesTotal: 1
     lifetimeTotal: 10
     spawnTickTime: 0
-    ownerID: 0
   m_bulletModifiers: []
-  baseInterval: 0.5
+  m_baseReloadTime: 0.5
   baseBulletAmount: 1
   m_bulletAmount: 0
   m_shootRadius: 1

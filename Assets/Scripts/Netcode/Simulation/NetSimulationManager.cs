@@ -40,7 +40,7 @@ namespace Tankito.Netcode.Simulation
         public virtual void AddToSim(ASimulationObject obj)
         {
             if (obj.SimObjId == default) Debug.LogWarning($"[{SimClock.TickCounter}]SimObjId has not been initialized!!!");
-            m_simulationObjects.TryAdd(obj.SimObjId, obj);
+            m_simulationObjects.Add(obj.SimObjId, obj);
         }
  
         public virtual void RemoveFromSim(ASimulationObject obj)
@@ -90,24 +90,27 @@ namespace Tankito.Netcode.Simulation
 
 
         /// <summary>
-        /// Advance the simulation forward by 1 simulation tick (simulation tick is determined by <see cref="SimClock.SimDeltaTime" />).
+        /// Advance the simulation forward by 1 simulation tick (simulation tick time is determined by <see cref="SimClock.SimDeltaTime" />).
         /// </summary>
         public virtual void Simulate()
         {
-            //List<ASimulationObject> simulationObjectsSnapshot = m_simulationObjects.Values.ToList<ASimulationObject>();
+            //Debug.Log($"[{CaptureSnapshotTick}] Simulating");
             foreach (var obj in m_simulationObjects.Values)
             {
+                //Debug.Log("computing kinematics for " + obj);
                 obj.ComputeKinematics(SimClock.SimDeltaTime);
             }
 
+            // This is placed here in order to act on SimObjs created during the ComputeKinematics phase (like bullets)
             foreach(var newObj in m_addToSimQueue)
             {
+                //Debug.Log("adding " + newObj + " to sim and computing its kinematics");
                 newObj.OnNetworkSpawn();
                 newObj.ComputeKinematics(SimClock.SimDeltaTime);
             }
-            
             m_addToSimQueue.Clear();
-
+            
+            //Debug.Log($"[{CaptureSnapshotTick}] Calling Physics2D.Simulate on simulation scene");
             Physics2D.Simulate(SimClock.SimDeltaTime);
 
             foreach (var objId in m_removeFromSimQueue)
@@ -115,7 +118,7 @@ namespace Tankito.Netcode.Simulation
                 var obj = m_simulationObjects[objId];
                 if (obj is BulletSimulationObject bullet)
                 {
-                    //Debug.Log($"[{SimClock.TickCounter}]Called Despawn for {objId}");
+                    //Debug.Log("removing " + objId + " from simulation scene");
                     bullet.OnNetworkDespawn();
                 }
                 else
@@ -126,17 +129,19 @@ namespace Tankito.Netcode.Simulation
             m_removeFromSimQueue.Clear();
         }
 
-        public SimulationSnapshot CaptureSnapshot()
+        public SimulationSnapshot  CaptureSnapshot()
         {
             var newSnapshot = new SimulationSnapshot();
             newSnapshot.Initialize();
-            newSnapshot.timestamp = CaptureSnapshotTick;
+            newSnapshot.SetTimestamp(CaptureSnapshotTick);
 
             //Debug.Log(m_simulationObjects.Values.Count);
             foreach(var simObj in m_simulationObjects.Values)
             {
                 newSnapshot[simObj] = (simObj.SimObjType, simObj.GetSimState());
             }
+
+            //Debug.Log($"\t[{CaptureSnapshotTick}] Captured Snapshot: {newSnapshot}");
             
             return newSnapshot;
         }

@@ -1,39 +1,28 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using Tankito.Netcode;
-using Tankito;
 
 public class PingText : MonoBehaviour
 {
     TextMeshProUGUI text;
-    int m_currentTick;
-    int m_ticksToDebug;
+    float m_timeAccumulator;
+    [SerializeField] float m_logRate = 3;
 
-    private void OnEnable()
-    {
-        SimClock.OnTick += Debug;
-    }
-
-    private void OnDisable()
-    {
-        SimClock.OnTick -= Debug;
-    }
 
     void Start()
     {
         text = GetComponent<TextMeshProUGUI>();
-        m_ticksToDebug = SimulationParameters.SIM_TICK_RATE;
+        m_logRate = SimulationParameters.SIM_TICK_RATE;
     }
 
-    void Debug()
+    void Update()
     {
-        m_currentTick++;
-        if(m_currentTick >= m_ticksToDebug)
+
+        m_timeAccumulator += Time.deltaTime;
+        if(m_timeAccumulator >= m_logRate)
         {
             text.text = (int)(SimulationParameters.CURRENT_LATENCY * 1000) + "ms";
-            m_currentTick = 0;
+            m_timeAccumulator = 0;
         }
     }
 

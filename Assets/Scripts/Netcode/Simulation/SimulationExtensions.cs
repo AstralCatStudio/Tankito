@@ -52,8 +52,6 @@ namespace Tankito.Netcode.Simulation
                 }
             }
 
-            throw new NotImplementedException("TODO: falta recoger los objetos que estan presentes en el snapshot B pero no en el A");
-
             return snapshotDeltas;
         }
 
@@ -66,6 +64,7 @@ namespace Tankito.Netcode.Simulation
             }
             else if(a is BulletSimulationState bulletStateA && b is BulletSimulationState bulletStateB)
             {
+                //Debug.Log($"[{SimClock.TickCounter}] Comparing States: {bulletStateA} ~= {bulletStateB}");
                 return ComputeBulletStateDelta(in bulletStateA, in bulletStateB);
             }
 
@@ -90,21 +89,49 @@ namespace Tankito.Netcode.Simulation
         private static TankDelta ComputeTankStateDelta(in TankSimulationState a, in TankSimulationState b)
         {
             Vector2 positionDiff = b.Position - a.Position;
-            float hullRotationDiff = b.HullRotation - a.HullRotation;
+            float hullRotationDiff = Mathf.Repeat(b.HullRotation, 360) - Mathf.Repeat(a.HullRotation, 360);
             Vector2 velocityDiff = b.Velocity - a.Velocity;
-            float turretRotationDiff = b.TurretRotation - a.TurretRotation;
+            float turretRotationDiff = Mathf.Repeat(b.TurretRotation, 360) - Mathf.Repeat(a.TurretRotation, 360);
             int actionDiff = b.PerformedAction - a.PerformedAction;
+            int playerStateDiff = b.PlayerState - a.PlayerState;
+            int lastFireTickDiff = b.LastFireTick - a.LastFireTick;
+            int lastDashTickDiff = b.LastDashTick - a.LastDashTick;
+            int lastParryTickDiff = b.LastParryTick - a.LastParryTick;
 
-            return new TankDelta(positionDiff, hullRotationDiff, velocityDiff, turretRotationDiff, actionDiff);
+            var deltas = new TankDelta(positionDiff,
+                                hullRotationDiff,
+                                velocityDiff,
+                                turretRotationDiff,
+                                (short)actionDiff,
+                                (short)playerStateDiff,
+                                lastFireTickDiff,
+                                lastDashTickDiff,
+                                lastParryTickDiff);
+
+            //Debug.Log("TankDeltas: " + deltas);
+
+            return deltas;
         }
 
         private static BulletDelta ComputeBulletStateDelta(in BulletSimulationState a, in BulletSimulationState b)
         {
             Vector2 positionDiff = b.Position - a.Position;
-            float rotationDiff = b.Rotation - a.Rotation;
             Vector2 velocityDiff = b.Velocity - a.Velocity;
+            float lifeTimeDiff = b.LifeTime - a.LifeTime;
+            int bouncesLeftDiff = b.BouncesLeft - a.BouncesLeft;
+            long ownerIdDiff = (long)b.OwnerId - (long)a.OwnerId;
+            long lastShooterObjIdDiff = (long)b.LastShooterObjId - (long)a.LastShooterObjId;
 
-            return new BulletDelta(positionDiff, rotationDiff, velocityDiff);
+            var deltas = new BulletDelta(positionDiff,
+                                    velocityDiff,
+                                    lifeTimeDiff,
+                                    bouncesLeftDiff,
+                                    ownerIdDiff,
+                                    lastShooterObjIdDiff);
+
+            //Debug.Log("BulletDeltas: " + deltas);
+
+            return deltas;
         }
 
         public static bool CompareDeltas(in IStateDelta a, in IStateDelta b)
@@ -127,9 +154,11 @@ namespace Tankito.Netcode.Simulation
                     Mathf.Abs(a.hullRotDiff) > Mathf.Abs(b.hullRotDiff) ||
                     a.velDiff.sqrMagnitude > b.velDiff.sqrMagnitude ||
                     Mathf.Abs(a.turrRotDiff) > Mathf.Abs(b.turrRotDiff) ||
-                    a.actionDiff > b.actionDiff;
-
-            //Debug.Log($"A:{a} >? B:{b}");
+                    Mathf.Abs(a.actionDiff) > Mathf.Abs(b.actionDiff) ||
+                    Mathf.Abs(a.playerStateDiff) > Mathf.Abs(b.playerStateDiff) ||
+                    Mathf.Abs(a.lastFireTickDiff) > Mathf.Abs(b.lastFireTickDiff) ||
+                    Mathf.Abs(a.lastDashTickDiff) > Mathf.Abs(b.lastDashTickDiff) ||
+                    Mathf.Abs(a.lastParryTickDiff) > Mathf.Abs(b.lastParryTickDiff);
 
             return  deltaComparison;
         }
@@ -137,8 +166,11 @@ namespace Tankito.Netcode.Simulation
         private static bool CompareBulletStateDeltas(in BulletDelta a, in BulletDelta b)
         {
             return  a.posDiff.sqrMagnitude > b.posDiff.sqrMagnitude ||
-                    a.rotDiff > b.rotDiff ||
-                    a.velDiff.sqrMagnitude > b.velDiff.sqrMagnitude;
+                    a.velDiff.sqrMagnitude > b.velDiff.sqrMagnitude ||
+                    Mathf.Abs(a.lifeTimeDiff) > Mathf.Abs(b.lifeTimeDiff) ||
+                    Mathf.Abs(a.bouncesLeftDiff) > Mathf.Abs(b.bouncesLeftDiff) ||
+                    Mathf.Abs(a.ownerIdDiff) > Mathf.Abs(b.ownerIdDiff) ||
+                    Mathf.Abs(a.lastShooterObjIdDiff) > Mathf.Abs(b.lastShooterObjIdDiff);
         }
     }
 }

@@ -33,7 +33,7 @@ namespace Tankito
 
             void ActionOnGet(BulletSimulationObject bulletObject)
             {
-                if (DEBUG) Debug.Log($"ActionOnGet called on {bulletObject}");
+                if (DEBUG) Debug.Log($"ActionOnGet called on {bulletObject} *PRE-HASHING STEP (hash is stale from prev. use)");
                 bulletObject.gameObject.SetActive(true);
             }
 
@@ -67,16 +67,18 @@ namespace Tankito
         }
 
 
-        public BulletSimulationObject Get(Vector2 position, Vector2 rotation, ulong ownerId, int tick, int spawnN)
+        public BulletSimulationObject Get(Vector2 position, ulong ownerId, int tick, int spawnN)
         {   
-            float rotationDeg = Mathf.Atan2(rotation.x, rotation.y);
+            if (DEBUG) Debug.Log($"[{SimClock.TickCounter}]Get called, Arguments: pos({position}) | ownerId({ownerId}) | tick({tick}) | spawnN({spawnN})");
+
             var simObjId = SimExtensions.HashSimObj(ownerId, tick, spawnN);
-            return Get(position, rotationDeg, ownerId, simObjId);
+            return Get(position, ownerId, simObjId);
         }
 
         /// <summary>
         /// Gets and (if <paramref name="autoSpawn"/> is true) adds a new bullet object to the local <see cref="NetSimulationManager"/>.<br />
-        /// If <paramref name="autoSpawn"/> is false, you must call <see cref="BulletSimulationObject.OnNetworkSpawn()"/> 
+        /// If <paramref name="autoSpawn"/> is true the spawning is handled by simulation manager with the spawn queue.
+        /// If it is false you must call <see cref="BulletSimulationObject.OnNetworkSpawn()" manually to add it to the local sim manager./> 
         /// </summary>
         /// <param name="position"></param>
         /// <param name="rotation"></param>
@@ -84,9 +86,9 @@ namespace Tankito
         /// <param name="simObjId"></param>
         /// <param name="autoSpawn"></param>
         /// <returns></returns>
-        public BulletSimulationObject Get(Vector2 position, float rotation, ulong ownerId, ulong simObjId, bool autoSpawn = true)
+        public BulletSimulationObject Get(Vector2 position, ulong ownerId, ulong simObjId, bool autoSpawn = true)
         {   
-            if (DEBUG) Debug.Log($"[{SimClock.TickCounter}]Get called, Arguments: position");
+            if (DEBUG && !autoSpawn) Debug.Log($"[{SimClock.TickCounter}]Get called, Arguments: pos({position}) | ownerId({ownerId}) | simObjId({simObjId}) | autoSpawn({autoSpawn})");
 
 
             var bulletObj = m_pool.Get();
@@ -95,7 +97,7 @@ namespace Tankito
             // We dont use rigidbody transformations because they won't be changed until after the next physics update
             //objRB.transform.position = position;
             //objRB.rotation = rotation;
-            bulletObj.transform.SetPositionAndRotation(position, Quaternion.AngleAxis(rotation,Vector3.forward));
+            bulletObj.transform.position = position;
 
             bulletObj.SetOwner(ownerId);
             bulletObj.GetComponent<BulletController>().InitializeProperties();
@@ -117,7 +119,6 @@ namespace Tankito
 
         public void Release(BulletSimulationObject bullet)
         {
-            if (DEBUG) Debug.Log($"[{SimClock.TickCounter}]Release called on {bullet.SimObjId}!");
             m_pool.Release(bullet);
         }
     }

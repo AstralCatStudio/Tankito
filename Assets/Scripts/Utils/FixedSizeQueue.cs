@@ -16,12 +16,12 @@ namespace Tankito.Utils
 
         public new void Enqueue(T value)
         {
-            while (Count > Capacity-1)
+            base.Enqueue(value);
+            
+            while (Count > Capacity)
             {
                 Dequeue();
             }
-
-            base.Enqueue(value);
         }
 
         public override string ToString()

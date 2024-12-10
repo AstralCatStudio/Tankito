@@ -8,9 +8,8 @@ namespace Tankito.Netcode.Messaging
         Start,
         Stop,
         Sync,
+        SyncRequest,
         Throttle,
-        ACK_Start,
-        ACK_Stop
     }
 
     public struct ClockSignal : INetworkSerializable
