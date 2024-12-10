@@ -668,6 +668,8 @@ public class MusicManager : MonoBehaviour
         "golpe_aire4", "golpe_aire5", "golpe_aire6",
         "golpe_aire7", "golpe_aire8", "golpe_aire9"
         };
+        
+        if (snd == "") { snd = "snd_bala_impacta"; }
 
         string disparoSound = soundNames[Random.Range(0, soundNames.Length)];
 
