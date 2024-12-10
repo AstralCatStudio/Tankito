@@ -184,8 +184,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_bouncesLeft: 0
-  m_lifetime: 0
   selfCollisionTreshold: 0.2
+  PREDICT_DESTRUCTION: 1
 --- !u!114 &3728107581918949035
 MonoBehaviour:
   m_ObjectHideFlags: 0

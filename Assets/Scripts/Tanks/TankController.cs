@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Tankito.Netcode;
 using Tankito.Netcode.Simulation;
 using UnityEngine;
+using Tankito.Utils;
 
 namespace Tankito
 {
@@ -30,7 +31,6 @@ namespace Tankito
             );
         private List<HullModifier> m_modifiers = new List<HullModifier>();
         public List<HullModifier> Modifiers => m_modifiers;
-
         [SerializeField] private Rigidbody2D m_tankRB;
         [SerializeField] private Rigidbody2D m_turretRB;
         [SerializeField] private float m_speed;
@@ -55,7 +55,7 @@ namespace Tankito
 
         // Used to calculate dash movement *NOT Animation!
         [SerializeField] private AnimationCurve m_dashSpeedCurve;
-        [SerializeField] private Animator m_hullAnimator, m_turretAnimator;
+        [SerializeField] private Animator m_hullAnimator, m_turretAnimator, m_fishAnimator;
         private float m_dashSpeedMultiplier;
         private float m_dashDistance;
         int m_dashTicks;
@@ -133,6 +133,10 @@ namespace Tankito
             // Subscribe to SimulationObject Kinematics
             var tankSimObj = GetComponent<TankSimulationObject>();
             tankSimObj.OnComputeKinematics += ProcessInput;
+
+            m_hullAnimator.SetFloat("Duration", ACTION_LEAD_SECONDS);
+            m_turretAnimator.SetFloat("Duration", ACTION_LEAD_SECONDS);
+            m_fishAnimator.SetFloat("Duration", ACTION_LEAD_SECONDS);
 
             //Subscribe to Round Countdown Start
             //RoundManager.Instance.OnPreRoundStart += ApplyModifierList;
@@ -274,8 +278,11 @@ namespace Tankito
                     break;
 
                 case PlayerState.Firing:
+                    const string shootAnimTrigger = "Shoot";
+                    const string shootAnimState = "Shoot";
                     int fireTick = input.timestamp - m_lastFireTick - ACTION_LEAD_TICKS;
-                    Debug.Log($"[{input.timestamp}] FireTick: ({fireTick}/FIRE_TICK_DURATION)");
+
+                    Debug.Log($"[{input.timestamp}] FireTick: ({fireTick}/{FIRE_TICK_DURATION})");
 
                     if (fireTick >= 0)
                     {
@@ -284,14 +291,34 @@ namespace Tankito
                     // ACTION LEAD TIME PHASE
                     else
                     {
-                        // DEBUG
-                        m_turretAnimator.SetTrigger("Shoot");
-                        m_hullAnimator.SetTrigger("Shoot");
+                        if (SimClock.Instance.Active)
+                        {
+                            float normalizedLeadTime = (fireTick + ACTION_LEAD_TICKS)/(float)ACTION_LEAD_TICKS;
+                            var turretAnimationState = m_turretAnimator.GetCurrentAnimatorStateInfo(0);
+                            var hullAnimationState = m_hullAnimator.GetCurrentAnimatorStateInfo(0);
+                            Debug.Log($"[{SimClock.TickCounter}] FIRE - CurrentAnimationStates: \n" +
+                                $"Is turretState name '{shootAnimState + " Turret"}':{turretAnimationState.IsName(shootAnimState + " Turret")}\n" +
+                                $"Is hullState name '{shootAnimState + " Hull"}':{hullAnimationState.IsName(shootAnimState + " Hull")}\n" + 
+                                $"normalizedLeadTime: {normalizedLeadTime} animatorNormalizedTime:(turret-{turretAnimationState.normalizedTime} hull-{hullAnimationState.normalizedTime})");
+
+                            if (!turretAnimationState.IsName(shootAnimState + " Turret") && !m_turretAnimator.GetBool(shootAnimTrigger) ||
+                                Mathf.Abs(normalizedLeadTime - turretAnimationState.normalizedTime) > 0.2f)
+                            {
+                                m_turretAnimator.ResetAllTriggers();
+                                m_turretAnimator.Play(shootAnimState + " Turret", 0, normalizedLeadTime);
+                            }
+
+                            if (!hullAnimationState.IsName(shootAnimState + " Hull") && !m_hullAnimator.GetBool(shootAnimTrigger) ||
+                                Mathf.Abs(normalizedLeadTime - hullAnimationState.normalizedTime) > 0.2f)
+                            {
+                                m_hullAnimator.ResetAllTriggers();
+                                m_hullAnimator.Play(shootAnimState + " Hull", 0, normalizedLeadTime);
+                                //Debug.Break();
+                            }
+                        }
                     }
                     //MoveTank(input.moveVector, deltaTime);
-                    //AimTank(aimVector, deltaTime);
 
-                    // Reset state to movement for next tick (firing is considered to only take 0 ticks right now)
                     if (fireTick >= FIRE_TICK_DURATION)
                     {
                         m_playerState = PlayerState.Moving;
@@ -299,6 +326,7 @@ namespace Tankito
                     break;
 
                 case PlayerState.Dashing:
+                    const string dashAnimTrigger = "Dash";
                     // Action lead ticks  must be taken into account when computing the action tick, since they do count as part of the action.
                     int dashTick =  input.timestamp - m_lastDashTick - ACTION_LEAD_TICKS;
 
@@ -310,9 +338,34 @@ namespace Tankito
                     // ACTION LEAD TIME PHASE
                     else
                     {
-                        // DEBUG
-                        m_turretAnimator.SetTrigger("Dash");
-                        m_hullAnimator.SetTrigger("Dash");
+                        float normalizedLeadTime = (dashTick + ACTION_LEAD_TICKS)/(float)ACTION_LEAD_TICKS;
+
+                        Debug.Log($"[{SimClock.TickCounter}] DASH - normalizedLeadTime: {normalizedLeadTime}");
+
+                        if ( SimClock.Instance.Active)
+                        {
+                            if (!m_turretAnimator.GetBool(dashAnimTrigger) || !m_hullAnimator.GetBool(dashAnimTrigger))
+                            {
+                                m_turretAnimator.ResetAllTriggers();
+                                m_hullAnimator.ResetAllTriggers();
+
+                                m_turretAnimator.SetTrigger(dashAnimTrigger);
+                                m_hullAnimator.SetTrigger(dashAnimTrigger);
+                            }
+
+                            var turretAnimationState = m_turretAnimator.GetCurrentAnimatorStateInfo(0);
+                            var hullAnimationState = m_hullAnimator.GetCurrentAnimatorStateInfo(0);
+
+                            // JSAJSAJSAJAAAAAAAAAA APPROXIMATELY 🤣😂😁😀
+                            if (!Mathf.Approximately(turretAnimationState.normalizedTime, normalizedLeadTime))
+                            {
+                                m_turretAnimator.Play(turretAnimationState.shortNameHash, 0, normalizedLeadTime);
+                            }
+                            if (!Mathf.Approximately(hullAnimationState.normalizedTime, normalizedLeadTime))
+                            {
+                                m_hullAnimator.Play(hullAnimationState.shortNameHash, 0, normalizedLeadTime);
+                            }
+                        }
                     }
                     AimTank(aimVector, deltaTime);
 
@@ -323,6 +376,7 @@ namespace Tankito
                     break;
 
                 case PlayerState.Parrying:
+                    const string parryAnimTrigger = "Parry";
                     int parryTick = input.timestamp - m_lastParryTick - ACTION_LEAD_TICKS;
                     
                     // Only execute dash behaviour past action lead time
@@ -333,9 +387,15 @@ namespace Tankito
                     // ACTION LEAD TIME PHASE
                     else
                     {
-                        MoveTank(input.moveVector, deltaTime);
-                        m_turretAnimator.SetTrigger("Parry");
-                        m_hullAnimator.SetTrigger("Parry");
+                        if ( SimClock.Instance.Active &&
+                            (!m_turretAnimator.GetBool(parryAnimTrigger) || !m_hullAnimator.GetBool(parryAnimTrigger)))
+                        {
+                            m_turretAnimator.ResetAllTriggers();
+                            m_hullAnimator.ResetAllTriggers();
+
+                            m_turretAnimator.SetTrigger(parryAnimTrigger);
+                            m_hullAnimator.SetTrigger(parryAnimTrigger);
+                        }
                     }
                     MoveTank(input.moveVector, deltaTime);
 
