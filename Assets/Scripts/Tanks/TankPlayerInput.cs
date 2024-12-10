@@ -3,6 +3,7 @@ using Tankito.Netcode;
 using Tankito.Utils;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.Windows;
 using static Tankito.TankController;
@@ -58,7 +59,7 @@ namespace Tankito
         [SerializeField] private bool DEBUG = false;
 
         private Vector2? mousePosition;
-
+        string lastInputPath;
         void Awake()
         {
             m_inputCache = new CircularBuffer<InputPayload>(INPUT_CACHE_SIZE);
@@ -131,14 +132,6 @@ namespace Tankito
             m_inputReplayTick = NO_REPLAY;
             return lastReplayTick;
         }
-
-        private void DashEnd()
-        {
-            if(m_currentInput.action == TankAction.Dash)
-            {
-                m_currentInput.action = TankAction.None;
-            }
-        }
         
         void Aim()
         {
@@ -155,17 +148,24 @@ namespace Tankito
                 m_currentInput.aimVector = lookVector;
             }
         }
-
+        private void Update()
+        {
+            if (lastInputPath == "/Mouse/position" )
+            {
+                Aim();
+            }
+        }
         public void OnAim(InputAction.CallbackContext ctx)
         {
+            
             var input = ctx.ReadValue<Vector2>();
             Vector2 lookVector;
-
-            // Avoid sending "null"  inputs
-            if (input.sqrMagnitude < 0.05) return;
-
+            lastInputPath = ctx.control.path;
             if (ctx.control.path != "/Mouse/position")
             {
+                // Avoid sending "null"  inputs
+                if (input.sqrMagnitude < 0.05) return;
+
                 lookVector = new Vector2(input.x, input.y);
                 mousePosition = null;
 
@@ -178,6 +178,7 @@ namespace Tankito
             }
             else
             {
+                
                 // Mouse control fallback/input processing
                 mousePosition = input;
                 Aim();
