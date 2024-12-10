@@ -430,7 +430,7 @@ namespace Tankito
             if (SimClock.Instance.Active)
             {
                 string sonido= BulletCannonRegistry.Instance[GetComponent<NetworkObject>().OwnerClientId].bulletSpriteModifier?.ShootSound;
-                MusicManager.Instance.PlayDisparo();
+                MusicManager.Instance.PlayDisparo(sonido);
             }
                 
             m_cannon.Shoot(m_turretRB.position, m_turretRB.transform.right, inputTick);
