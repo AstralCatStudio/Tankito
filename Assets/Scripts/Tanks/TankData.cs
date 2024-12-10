@@ -15,7 +15,7 @@ namespace Tankito
     {
         public delegate void TankDestroyedHandler(TankData tank);
         public event TankDestroyedHandler OnTankDestroyed = (TankData tank) => { };
-
+        public int playerNumber;
         [SerializeField]
         public Color playerColor;
         //public Action<TankData> OnDamaged = (TankData damagedTank) => { };
@@ -34,6 +34,7 @@ namespace Tankito
         private Color[] colors = { Color.blue, Color.red, Color.green, Color.yellow };
         public float damageBufferTime = 0.5f;
         public float damageBuffer =0;
+        public GameObject tankExplosion;
         public int CompareTo(object obj)
         {
             var a = this;
@@ -60,7 +61,7 @@ namespace Tankito
             {
                 DieClientRpc();
             }
-
+            Instantiate(tankExplosion, transform.position,transform.rotation);
             OnTankDestroyed.Invoke(this);
             MusicManager.Instance.PlaySound("snd_muere");
             UnityEngine.Debug.LogWarning("TODO: Trigger tank death animation");
@@ -193,9 +194,9 @@ namespace Tankito
             {
                 m_username = ClientData.Instance.username;
                 m_skinSelected = ClientData.Instance.characters.IndexOf(ClientData.Instance.GetCharacterSelected());
-                if((int)OwnerClientId<4 && (int)OwnerClientId >= 0)
+                if(RoundManager.Instance.playerList.IndexOf(this)<4 && RoundManager.Instance.playerList.IndexOf(this) >= 0)
                 {
-                    playerColor = colors[(int)OwnerClientId];
+                    playerColor = colors[RoundManager.Instance.playerList.IndexOf(this)];
                 }
                 else
                 {

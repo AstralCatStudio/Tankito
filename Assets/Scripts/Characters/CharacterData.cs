@@ -9,6 +9,7 @@ public class CharacterData : ScriptableObject
     public Sprite sprite;
     public Sprite tankHead;
     public Sprite tankBody;
+    public Sprite characterIcon;
     public Animation[] animations;
     public string characterName;
     [TextArea(5,10)]

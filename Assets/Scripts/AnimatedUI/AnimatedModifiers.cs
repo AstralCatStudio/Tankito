@@ -125,7 +125,7 @@ namespace Tankito
         {
             
             OtherP_LoadInfo otherP = player.playerInfo.GetComponent<OtherP_LoadInfo>();
-            otherP.icon.sprite = ClientData.Instance.characters[player.SkinSelected].data.sprite;
+            otherP.icon.sprite = ClientData.Instance.characters[player.SkinSelected].data.characterIcon;
             Debug.Log(player.Username);
             otherP.username.text = player.Username;
             otherP.username.color = player.playerColor;

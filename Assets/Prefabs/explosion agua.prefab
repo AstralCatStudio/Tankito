@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 5347370050766593311}
   - component: {fileID: -2896217669203355960}
   m_Layer: 0
-  m_Name: Explosion
+  m_Name: explosion agua
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -103,7 +103,7 @@ MonoBehaviour:
   timer: 0
   timeUntilBig: 0.1
   timeUntilDead: 0.3
-  damages: 1
+  damages: 0
 --- !u!58 &-2896217669203355960
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -188,13 +188,21 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3183748258609426988, guid: 9278256356d828e4f931e8912b31b4e8, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 1291189784, guid: 2dd9860b5538321499139e9d13f371c3, type: 3}
+    - target: {fileID: 3183748258609426988, guid: 9278256356d828e4f931e8912b31b4e8, type: 3}
       propertyPath: m_SortingOrder
-      value: 25
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 4183035422671411241, guid: 9278256356d828e4f931e8912b31b4e8, type: 3}
       propertyPath: m_Name
       value: Explosion
       objectReference: {fileID: 0}
+    - target: {fileID: 6729468716845807181, guid: 9278256356d828e4f931e8912b31b4e8, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 252e7ecc2522d3c48a71c117a2ea4f5b, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

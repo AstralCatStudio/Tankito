@@ -29,7 +29,7 @@ namespace Tankito
 
         public static RoundManager Instance { get; private set; }
         public IEnumerable<TankData> AliveTanks { get => m_players.Where(p => p.Value.Alive == true).Select(p => p.Value); }
-
+        public List<TankData> playerList;
         public Dictionary<ulong, TankData> Players { get => m_players; }
         private void Awake()
         {
@@ -90,6 +90,7 @@ namespace Tankito
 
         public void AddPlayer(TankData player)
         {
+            playerList.Add(player);
             m_players.Add(player.OwnerClientId, player);
             foreach(TankData playerdata in m_players.Values)
             {

@@ -14,6 +14,7 @@ namespace Tankito {
     {
         BulletSimulationObject m_simObj;
         public int m_bouncesLeft = 0;
+        public GameObject explosionVisual;
         public float LifeTime { get => m_lifetime; }
         public float m_lifetime = 0; // Life Time counter
         protected Vector2 lastCollisionNormal = Vector2.zero;
@@ -99,7 +100,7 @@ namespace Tankito {
 
         public void Detonate(bool lifeTimeOver = false)
         {
-            
+            Instantiate(explosionVisual, transform.position, transform.rotation);
             OnDetonate.Invoke(this);
 
             if (SimClock.Instance.Active && NetworkManager.Singleton.IsClient)

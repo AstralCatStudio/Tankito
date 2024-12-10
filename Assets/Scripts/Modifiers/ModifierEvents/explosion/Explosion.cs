@@ -33,7 +33,7 @@ namespace Tankito
 
         private void OnTriggerEnter2D(Collider2D collision)
         {
-            if (collision.gameObject.CompareTag("Player"))
+            if (damages && collision.gameObject.CompareTag("Player"))
             {
                 collision.GetComponent<TankData>().TakeDamage(1);
             }
