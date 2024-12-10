@@ -603,6 +603,8 @@ namespace Tankito
             if (DEBUG) Debug.Log("Fin de la partida");
             m_startedGame = false;
             //RoundUI.Instance.ActivateRankingGUI(false);
+            RoundUI.Instance.ActivateWinScreen(true, m_players.Values.OrderByDescending(tank => tank.Points).ToList());
+
             RoundUI.Instance.ActivateEndExitButton(true);
             RoundUI.Instance.ActivatePlayAgainGUI(true);
         }

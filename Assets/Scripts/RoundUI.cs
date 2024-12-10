@@ -25,6 +25,7 @@ public class RoundUI : Singleton<RoundUI>
     public GameObject SettingsMenu;
     public GameObject Ready;
     public GameObject PlayAgain;
+    public GameObject WinScreen;
 
     #region Ranking
     public void ActivateRankingGUI(bool active)
@@ -173,6 +174,23 @@ public class RoundUI : Singleton<RoundUI>
     public void ActivatePlayAgainGUI(bool active)
     {
         PlayAgain.GetComponent<PlayAgainButton>().ActivateButton(active);
+    }
+
+    #endregion
+
+    #region WinScreen
+
+    public void ActivateWinScreen(bool active, List<TankData> tanks)
+    {
+        if(active)
+        {
+            WinScreen.GetComponent<WinMenu>().InitWinMenu(tanks);
+            WinScreen.SetActive(active);
+        }
+        else
+        {
+
+        }
     }
 
     #endregion

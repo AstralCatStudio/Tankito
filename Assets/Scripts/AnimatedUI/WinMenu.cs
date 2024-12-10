@@ -3,6 +3,9 @@ using NUnit.Framework;
 using UnityEditor;
 using UnityEngine;
 using System.Collections.Generic;
+using Tankito;
+using UnityEngine.UI;
+using TMPro;
 
 public class WinMenu : MonoBehaviour
 {
@@ -35,7 +38,7 @@ public class WinMenu : MonoBehaviour
 
     void Start()
     {
-        InitWinMenu(m_num_players);
+        //InitWinMenu(m_num_players);
     }
 
     private void Update()
@@ -49,7 +52,7 @@ public class WinMenu : MonoBehaviour
 
     private void OnEnable()
     {
-        //StartCoroutine(AnimateSprites());
+        StartCoroutine(AnimateSprites());
     }
 
     public void InitWinMenu(int playersCount)
@@ -64,6 +67,31 @@ public class WinMenu : MonoBehaviour
             marcadoresList.Add(newMarcador);
             GameObject newPuesto = Instantiate(prefabPuesto, puestosParent.transform);
             newPuesto.transform.GetChild(0).gameObject.SetActive(false);
+            puestosList.Add(newPuesto);
+        }
+    }
+
+    public void InitWinMenu(List<TankData> tanks)
+    {
+        Debug.LogWarning("AAAAAA");
+        for (int i = 0; i < tanks.Count; i++)
+        {
+            Debug.LogWarning("EEEE "+ i);
+            GameObject newSprite = Instantiate(prefabSprite, spritesParent.transform);
+            newSprite.transform.GetChild(0).gameObject.SetActive(false);
+            if (newSprite.transform.GetChild(0).GetComponent<Image>().sprite != null) Debug.LogWarning("Encontrado");
+            newSprite.GetComponentInChildren<Image>().sprite = ClientData.Instance.characters[tanks[i].SkinSelected].data.sprite;
+            spritesList.Add(newSprite);
+
+            GameObject newMarcador = Instantiate(prefabMarcador, marcadoresParent.transform);
+            newMarcador.transform.GetChild(0).gameObject.SetActive(false);
+            newMarcador.transform.GetChild(0).GetChild(0).gameObject.GetComponent<TextMeshProUGUI>().text = tanks[i].Username;
+            newMarcador.transform.GetChild(0).GetChild(1).gameObject.GetComponent<TextMeshProUGUI>().text = tanks[i].Points + " points";
+            marcadoresList.Add(newMarcador);
+
+            GameObject newPuesto = Instantiate(prefabPuesto, puestosParent.transform);
+            newPuesto.transform.GetChild(0).gameObject.SetActive(false);
+            newPuesto.transform.GetComponentInChildren<TextMeshProUGUI>().text = (i + 1).ToString();
             puestosList.Add(newPuesto);
         }
     }
