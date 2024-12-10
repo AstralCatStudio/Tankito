@@ -352,6 +352,12 @@ namespace Tankito
             // Only execute parry behaviour past action lead time
             m_parryHitbox.enabled = (m_playerState == PlayerState.Parrying) &&
                                     (input.timestamp >= (m_lastParryTick + ACTION_LEAD_TICKS));
+
+            // PATCH FOR FLOATING TANKS - Will have to remove to actually leverage Unity Physics System
+            m_tankRB.velocity = Vector2.zero;
+            m_tankRB.angularVelocity = 0;
+            m_turretRB.velocity = Vector2.zero;
+            m_turretRB.angularVelocity = 0;
         }
 
         private void SetActionAnimation()
@@ -470,11 +476,12 @@ namespace Tankito
 
             float dashSpeed = m_dashSpeedMultiplier * m_dashSpeedCurve.Evaluate((float)dashTick/m_dashTicks);
 
-            if(moveVector.sqrMagnitude > 0.1f)
-            {
-                m_tankRB.MovePosition(m_tankRB.position + moveVector * deltaTime * dashSpeed);
-            }
-            else
+            // if(moveVector.sqrMagnitude > 0.1f)
+            // {
+            //     // Dash Active Input
+            //     m_tankRB.MovePosition(m_tankRB.position + moveVector * deltaTime * dashSpeed);
+            // }
+            // else
             {
                 //m_tankRB.MovePosition(m_tankRB.position + m_lastMoveVector * deltaTime * dashSpeed); // Queda raro el dash asi en teclado
                 m_tankRB.MovePosition(m_tankRB.position + (Vector2)m_tankRB.transform.right * deltaTime * dashSpeed);
