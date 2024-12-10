@@ -3578,6 +3578,7 @@ MonoBehaviour:
   m_tickDeltaTime: 0
   m_tickCounter: 0
   m_active: 0
+  m_throttleInterval: 5
   DEBUG: 0
 --- !u!4 &1057322879
 Transform:
@@ -4528,6 +4529,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d84467528403b74e990b735871db64a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_logRate: 3
 --- !u!114 &1182785242
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5784,6 +5786,7 @@ MonoBehaviour:
   m_startedGame: 0
   m_localPlayerInputObject: {fileID: 0}
   DEBUG: 1
+  playerList: []
 --- !u!4 &1603395879
 Transform:
   m_ObjectHideFlags: 0
@@ -6219,14 +6222,13 @@ MonoBehaviour:
   m_baseBulletProperties:
     scaleMultiplier: {x: 0, y: 0}
     startingPosition: {x: 0, y: 0}
-    velocity: 5
+    velocity: 6.5
     acceleration: 0
     direction: {x: 0, y: 0}
     rotationSpeed: 0
     bouncesTotal: 0
     lifetimeTotal: 10
     spawnTickTime: 0
-    ownerID: 0
 --- !u!4 &1672948430
 Transform:
   m_ObjectHideFlags: 0
@@ -7148,10 +7150,17 @@ MonoBehaviour:
     velDiff: {x: 0.1, y: 0.1}
     turrRotDiff: 180
     actionDiff: 0
+    playerStateDiff: 0
+    lastFireTickDiff: 0
+    lastDashTickDiff: 0
+    lastParryTickDiff: 0
   m_bulletSimulationTolerance:
     posDiff: {x: 0.05, y: 0.05}
-    rotDiff: 1
     velDiff: {x: 0.1, y: 0.1}
+    lifeTimeDiff: 0
+    bouncesLeftDiff: 0
+    ownerIdDiff: 0
+    lastShooterObjIdDiff: 0
   DEBUG: 0
 --- !u!114 &1965550685
 MonoBehaviour:

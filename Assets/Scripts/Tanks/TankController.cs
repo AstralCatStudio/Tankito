@@ -291,7 +291,8 @@ namespace Tankito
                     {
 
                     }
-                    
+                    MoveTank(input.moveVector, deltaTime);
+                    AimTank(aimVector, deltaTime);
                     //MoveTank(input.moveVector, deltaTime);
 
                     if (fireTick >= FIRE_TICK_DURATION)
@@ -336,7 +337,7 @@ namespace Tankito
                     {
 
                     }
-                    
+                    MoveTank(input.moveVector, deltaTime);
                     AimTank(input.moveVector, deltaTime);
 
                     if (parryTick >= m_parryTicks)
