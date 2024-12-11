@@ -529,7 +529,6 @@ namespace Tankito
             if (m_currentRound == m_maxRounds)
             {
                 List<TankData> lista = GetTankOrder();
-                Debug.Log($"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA: Resultados: {lista[lista.Count - 1].GetComponent<NetworkObject>().OwnerClientId == NetworkManager.Singleton.LocalClientId}");
                 MusicManager.Instance.Resultados(lista[lista.Count - 1].GetComponent<NetworkObject>().OwnerClientId == NetworkManager.Singleton.LocalClientId);
                 //Debug.Log($"Resultados {lista[lista.Count - 1].GetComponent<NetworkObject>().OwnerClientId == NetworkManager.Singleton.LocalClientId}");
             }

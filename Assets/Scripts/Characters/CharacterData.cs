@@ -10,8 +10,7 @@ public class CharacterData : ScriptableObject
     public Sprite tankHead;
     public Sprite tankBody;
     public Sprite characterIcon;
-    public Sprite fishSprite;
-    public RuntimeAnimatorController fishAnimator;
+    public Animation[] animations;
     public string characterName;
     [TextArea(5,10)]
     public string description;
