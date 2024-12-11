@@ -4,12 +4,16 @@ using System.Security.Cryptography;
 using Unity.Collections;
 using UnityEngine;
 
+
 namespace Tankito.Netcode.Simulation
 {
+    using SimObjT = SimulationObjectType;
+    using ISimS = ISimulationState;
+    using TankSimS = TankSimulationState;
+    using BullSimS = BulletSimulationState;
+
     public static class SimExtensions
     {
-
-        
         public static unsafe ulong HashSimObj(ulong ownerId, int spawnTick, int spawnN)
         {
             // Allocate unmanaged memory for the input data
@@ -117,7 +121,7 @@ namespace Tankito.Netcode.Simulation
         {
             Vector2 positionDiff = b.Position - a.Position;
             Vector2 velocityDiff = b.Velocity - a.Velocity;
-            float lifeTimeDiff = b.LifeTime - a.LifeTime;
+            float lifeTimeDiff = b.Lifetime - a.Lifetime;
             int bouncesLeftDiff = b.BouncesLeft - a.BouncesLeft;
             long ownerIdDiff = (long)b.OwnerId - (long)a.OwnerId;
             long lastShooterObjIdDiff = (long)b.LastShooterObjId - (long)a.LastShooterObjId;
@@ -171,6 +175,72 @@ namespace Tankito.Netcode.Simulation
                     Mathf.Abs(a.bouncesLeftDiff) > Mathf.Abs(b.bouncesLeftDiff) ||
                     Mathf.Abs(a.ownerIdDiff) > Mathf.Abs(b.ownerIdDiff) ||
                     Mathf.Abs(a.lastShooterObjIdDiff) > Mathf.Abs(b.lastShooterObjIdDiff);
+        }
+
+        public static (SimObjT type, ISimS state) InterpolateTo(this (SimObjT type, ISimS state) typeStatePair, (SimObjT type, ISimS state) nextStatePair, float t)
+        {
+            if (typeStatePair.type != nextStatePair.type)
+            {
+                throw new InvalidOperationException();
+            }
+
+            ISimS interpolatedState;
+
+            switch(typeStatePair.type)
+            {
+                case SimObjT.Tank:
+                    interpolatedState = ((TankSimS)typeStatePair.state).InterpolateTo((TankSimS)nextStatePair.state, t);
+                    break;
+
+                case SimObjT.Bullet:
+                    interpolatedState = ((BullSimS)typeStatePair.state).InterpolateTo((BullSimS)nextStatePair.state, t);
+                    break;
+
+                default:
+                    throw new InvalidOperationException();
+            }
+
+            return (typeStatePair.type, interpolatedState);
+        }
+
+        public static TankSimS InterpolateTo(this TankSimS state, TankSimS nextState, float t)
+        {
+            var position = Vector2.Lerp(state.Position, nextState.Position, t);
+            var hullRotation = Mathf.Lerp(state.HullRotation, nextState.HullRotation, t);
+            var velocity = Vector2.Lerp(state.Velocity, nextState.Velocity, t);
+            var turretRotation = Mathf.Lerp(state.TurretRotation, nextState.TurretRotation, t);
+
+            TankSimS interpolatedState =
+                new TankSimS(
+                    position,
+                    hullRotation,
+                    velocity,
+                    turretRotation,
+                    state.PerformedAction,
+                    state.PlayerState,
+                    state.LastFireTick,
+                    state.LastDashTick,
+                    state.LastParryTick);
+
+            return interpolatedState;
+        }
+
+        public static BullSimS InterpolateTo(this BullSimS state, BullSimS nextState, float t)
+        {
+            var position = Vector2.Lerp(state.Position, nextState.Position, t);
+            var velocity = Vector2.Lerp(state.Velocity, nextState.Velocity, t);
+            var lifetime = Mathf.Lerp(state.Lifetime, nextState.Lifetime, t);
+            
+            BullSimS interpolatedState = 
+                new BullSimS(
+                    position,
+                    velocity,
+                    lifetime,
+                    state.BouncesLeft,
+                    state.OwnerId,
+                    state.LastShooterObjId);
+
+            return interpolatedState;
         }
     }
 }

@@ -58,7 +58,7 @@ namespace Tankito.Netcode.Simulation
                 //Debug.Log($"SetSimState to: pos({bulletState.Position}), vel({bulletState.Velocity}), LifeTime({bulletState.LifeTime}), BouncesLeft({bulletState.BouncesLeft})");
                 transform.position = bulletState.Position;
                 m_rigidbody.velocity = bulletState.Velocity;
-                m_bulletController.LifeTime = bulletState.LifeTime;
+                m_bulletController.LifeTime = bulletState.Lifetime;
                 m_bulletController.m_bouncesLeft = bulletState.BouncesLeft;
                 m_ownerId = bulletState.OwnerId;
                 m_bulletController.SetLastShooterObjId(bulletState.LastShooterObjId);

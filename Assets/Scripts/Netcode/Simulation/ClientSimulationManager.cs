@@ -36,6 +36,12 @@ namespace Tankito.Netcode.Simulation
         private int m_lastAuthSnapshotTimestamp;//Por como funciona el rollback, igual esto no hace falta y unicamente podemos necesitar 
         private int m_desyncCounter = 0;
 
+        // Interpolation Parameters
+        [SerializeField] private float m_interpolationTime;
+        [SerializeField] private bool m_interpolatedStateFlag = false;
+        [SerializeField] private bool m_simulatingFlag = true;
+        [SerializeField] private (int tick, float t) m_interpolationCursor;
+
         //que se guarde el timestamp. EDIT: Vale, en efecto, lo estoy cambiando para desligar
         //el tamaño del snapshot buffer de nuestra capacidad de recordar el último AuthSnapshot
         //recibido (o al menos su timestamp que es realmente lo único que nos interesa).
@@ -78,19 +84,76 @@ namespace Tankito.Netcode.Simulation
 
         public override void Simulate()
         {
+            if (m_interpolatedStateFlag)
+            {
+                Debug.Log($"[{SimClock.TickCounter}] Stopping interrpolation");
+
+                m_interpolatedStateFlag = false;
+                SimClock.Instance.StopClock();
+                SetSimulation(m_snapshotBuffer.Last);
+                SimClock.Instance.ResumeClock();
+            }
+
+            m_simulatingFlag = true;
+
             // We don't want HOSTs to execute Simulate twice per tick.
             // They should only Simulate with server logic, no need for prediciton and/or simulation throttling.
-            if (!NetworkManager.Singleton.IsServer)
+            if (NetworkManager.Singleton.IsServer)
             {
-                //Debug.Log($"[{CaptureSnapshotTick}] Simulating {(m_rollbackTick == NO_ROLLBACK ? "Forward" : "Reconciliating")}");
-                base.Simulate();
+                Debug.LogWarning("Simulating Client-Side but is SERVER!");
+                return;
+            }
 
-                // Cache Simulation Snapshot for prediction Rollback
-                SimulationSnapshot newSnapshot = CaptureSnapshot();
-                newSnapshot.SetStatus(SnapshotStatus.Predicted);
-                m_snapshotBuffer.Add(newSnapshot, newSnapshot.Timestamp);
+            base.Simulate();
+
+            // Cache Simulation Snapshot for prediction Rollback
+            SimulationSnapshot newSnapshot = CaptureSnapshot();
+            newSnapshot.SetStatus(SnapshotStatus.Predicted);
+            m_snapshotBuffer.Add(newSnapshot, newSnapshot.Timestamp);
+
+            m_simulatingFlag = false;
+        }
+
+        void Update()
+        {
+            // Snapshot Interpolation
+            if (m_simulatingFlag)
+            {
+                Debug.LogWarning($"[{SimClock.TickCounter}] Can't Interpolate right now, because the client is busy simulating");
+                return;
+            }
+
+            // Interpolation cursor initialization
+            if (m_interpolationCursor.tick == 0 && SimClock.TickCounter/SimClock.SimDeltaTime > m_interpolationTime)
+            {
+                m_interpolationCursor.tick = SimClock.TickCounter - Mathf.FloorToInt(m_interpolationTime/SimClock.SimDeltaTime);
+            }
+
+            if (m_interpolationCursor.tick != 0 || m_interpolationCursor.t != 0)
+            {
+                Interpolate(Time.deltaTime);
+            }
+        }
+
+
+        private void Interpolate(float deltaTime)
+        {
+            m_interpolationCursor.t = deltaTime/SimClock.SimDeltaTime;
+            SimulationSnapshot previousSnapshot = m_snapshotBuffer[m_interpolationCursor.tick];
+            SimulationSnapshot nextSnapshot = m_snapshotBuffer[m_interpolationCursor.tick + 1];
+
+            SimulationSnapshot interpolatedSnapshot = previousSnapshot.InterpolateTo(nextSnapshot, m_interpolationCursor.t);
+            
+            if (m_interpolationCursor.t >= 1)
+            {
+                m_interpolationCursor.tick++;
+                m_interpolationCursor.t = 0;
             }
             
+            SimClock.Instance.StopClock();
+            SetSimulation(interpolatedSnapshot);
+            SimClock.Instance.ResumeClock();
+            m_interpolatedStateFlag = true;
         }
 
         /// <summary>
@@ -122,7 +185,6 @@ namespace Tankito.Netcode.Simulation
                     return;
                 }
             }
-            
         }
 
         public void EvaluateForReconciliation(SimulationSnapshot newAuthSnapshot)
@@ -332,7 +394,7 @@ namespace Tankito.Netcode.Simulation
                         // If it's the bullet's first tick of lifetime then we reject the spawn attempt,
                         // because it must mean it will be spawned this same tick after calling Simulate's
                         // kinematic functions (from which bullets spawn).
-                        if (bulletState.LifeTime >= SimClock.SimDeltaTime*2)
+                        if (bulletState.Lifetime >= SimClock.SimDeltaTime*2)
                         {
                             var ownerId =  ((BulletSimulationState)snapshotToSet[objId].state).OwnerId;
                             var newBullet = BulletPool.Instance.Get(bulletState.Position, ownerId, objId, autoSpawn:false);

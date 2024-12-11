@@ -113,7 +113,7 @@ namespace Tankito.Netcode.Simulation
         {
             posDiff = bulletState.Position;
             velDiff = bulletState.Velocity;
-            lifeTimeDiff = bulletState.LifeTime;
+            lifeTimeDiff = bulletState.Lifetime;
             bouncesLeftDiff = bulletState.BouncesLeft;
             ownerIdDiff = (long)bulletState.OwnerId;
             lastShooterObjIdDiff = (long)bulletState.LastShooterObjId;

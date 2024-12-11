@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Unity.Netcode;
 
@@ -133,6 +134,28 @@ namespace Tankito.Netcode.Simulation
             str += $"---- end of snapshot({Timestamp}) ----";
 
             return str;
+        }
+
+        internal SimulationSnapshot InterpolateTo(SimulationSnapshot nextSnapshot, float t)
+        {
+            SimulationSnapshot interpolatedSnapshot = new SimulationSnapshot();
+            interpolatedSnapshot.Initialize();
+            interpolatedSnapshot.SetStatus(nextSnapshot.Status);
+            interpolatedSnapshot.SetTimestamp(Timestamp);
+
+            foreach(var pair in nextSnapshot.m_objectStates)
+            {
+                if (m_objectStates.ContainsKey(pair.Key))
+                {
+                    interpolatedSnapshot[pair.Key] = m_objectStates[pair.Key].InterpolateTo(pair.Value, t);
+                }
+                else
+                {
+                    interpolatedSnapshot[pair.Key] = pair.Value;
+                }
+            }
+
+            return interpolatedSnapshot;
         }
     }
 }

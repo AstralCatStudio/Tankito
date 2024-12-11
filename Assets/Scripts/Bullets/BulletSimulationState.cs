@@ -13,7 +13,7 @@ namespace Tankito.Netcode.Simulation
 
         public Vector2 Position { get => position; }
         public Vector2 Velocity { get => velocity; }
-        public float LifeTime { get => lifeTime; }
+        public float Lifetime { get => lifeTime; }
         public int BouncesLeft { get => bouncesLeft; }
         public ulong OwnerId { get => ownerId; }
         public ulong LastShooterObjId { get => lastShooterObjId; }
