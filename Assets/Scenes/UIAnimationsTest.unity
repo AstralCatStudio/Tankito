@@ -1177,8 +1177,8 @@ Canvas:
   m_GameObject: {fileID: 1041035962}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
-  m_Camera: {fileID: 0}
+  m_RenderMode: 1
+  m_Camera: {fileID: 973522717}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
@@ -1682,7 +1682,6 @@ MonoBehaviour:
   row1: {fileID: 502019989}
   row2: {fileID: 1626000450}
   shells: []
-  modifierList: {fileID: 11400000, guid: bdc2da7642e83d3488ae0ade52a57a9b, type: 2}
   icons:
   - {fileID: 21300000, guid: 38ddcc09d337d0f48993d2a0b149ccbc, type: 3}
   - {fileID: 21300000, guid: 2249e6241017e5e41861f33d937595ee, type: 3}

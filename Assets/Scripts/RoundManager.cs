@@ -104,6 +104,7 @@ namespace Tankito
 
         public void RemovePlayer(ulong clientId)
         {
+            playerList.Remove(NetworkManager.Singleton.ConnectedClients[clientId].PlayerObject.GetComponent<TankData>());
             m_players.Remove(clientId);
             PlayerListUpdate();
         }
@@ -146,6 +147,23 @@ namespace Tankito
         #endregion
 
 
+        #region ClientDataProvisional
+
+        [ClientRpc]
+        private void InitRankingClientRpc()
+        {
+            RoundUI.Instance.InitRanking(playerList);
+        }
+
+        //private void SetColors()
+        //{
+        //    for(int i = 0; i < m_players.Count; i++)
+        //    {
+        //        playerList[i].SetClientDataColor(i);
+        //    }
+        //}
+
+        #endregion
 
         #region Countdown
         /// <summary>
@@ -159,6 +177,9 @@ namespace Tankito
             }
 
             RoundUI.Instance.SetActiveScenarySelection(false);
+
+            InitRankingClientRpc();
+            
             StartRoundCountdown(m_currentRound);
         }
 
@@ -522,7 +543,7 @@ namespace Tankito
             }
 
             RoundUI.Instance.ActivateRankingGUI(true);
-            RoundUI.Instance.SetRankingText(GenerateRanking());
+            //RoundUI.Instance.SetRankingText(GenerateRanking());
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -545,26 +566,26 @@ namespace Tankito
             }
         }
 
-        private void ShowFinalRanking()
-        {
-            if (IsServer)
-            {
-                ShowFinalRankingClientRpc();
-            }
+        //private void ShowFinalRanking()
+        //{
+        //    if (IsServer)
+        //    {
+        //        ShowFinalRankingClientRpc();
+        //    }
 
-            if (DEBUG) Debug.Log("Se muestra el ranking final");
-            RoundUI.Instance.SetActiveRankingFinal(true);
-            RoundUI.Instance.SetRankingText(GenerateRanking());
-        }
+        //    if (DEBUG) Debug.Log("Se muestra el ranking final");
+        //    RoundUI.Instance.SetActiveRankingFinal(true);
+        //    RoundUI.Instance.SetRankingText(GenerateRanking());
+        //}
 
-        [ClientRpc]
-        private void ShowFinalRankingClientRpc()
-        {
-            if (!IsServer)
-            {
-                ShowFinalRanking();
-            }
-        }
+        //[ClientRpc]
+        //private void ShowFinalRankingClientRpc()
+        //{
+        //    if (!IsServer)
+        //    {
+        //        ShowFinalRanking();
+        //    }
+        //}
 
 
 

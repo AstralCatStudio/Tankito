@@ -33,7 +33,7 @@ namespace Tankito
         public GameObject playerInfo;
         private Color[] colors = { Color.blue, Color.red, Color.green, Color.yellow };
         public float damageBufferTime = 0.5f;
-        public float damageBuffer =0;
+        public float damageBuffer = 0;
         public GameObject tankExplosion;
         public GameObject tankDamagedExplosion;
         public int CompareTo(object obj)
@@ -62,7 +62,7 @@ namespace Tankito
             {
                 DieClientRpc();
             }
-            Instantiate(tankExplosion, transform.position,transform.rotation);
+            Instantiate(tankExplosion, transform.position, transform.rotation);
             OnTankDestroyed.Invoke(this);
             MusicManager.Instance.PlaySound("snd_muere");
             UnityEngine.Debug.LogWarning("TODO: Trigger tank death animation");
@@ -80,7 +80,7 @@ namespace Tankito
         private void OnEnable()
         {
             OnTankDestroyed += RoundManager.Instance.TankDeath;
-            
+
         }
 
         private void OnDisable()
@@ -88,7 +88,7 @@ namespace Tankito
 
             OnTankDestroyed -= RoundManager.Instance.TankDeath;
         }
-        
+
         private void Update()
         {
             //Debug.Log("Vida actual: "+ m_health);
@@ -96,7 +96,7 @@ namespace Tankito
             {
                 damageBuffer += Time.deltaTime;
             }
-            
+
         }
         public void TakeDamage(int damage)
         {
@@ -105,7 +105,7 @@ namespace Tankito
             if (SimClock.Instance.Active && NetworkManager.Singleton.IsClient)
                 MusicManager.Instance.PlayDamage();
 
-            if (IsServer && damageBuffer>=damageBufferTime)
+            if (IsServer && damageBuffer >= damageBufferTime)
             {
                 damageBuffer = 0;
                 m_health -= damage;
@@ -195,31 +195,63 @@ namespace Tankito
             {
                 m_username = ClientData.Instance.username;
                 m_skinSelected = ClientData.Instance.characters.IndexOf(ClientData.Instance.GetCharacterSelected());
-                Debug.Log("Soy el jugador " + RoundManager.Instance.playerList.IndexOf(this));
-                if(RoundManager.Instance.playerList.IndexOf(this)<4 && RoundManager.Instance.playerList.IndexOf(this) >= 0)
+                //Debug.Log("Soy el jugador " + RoundManager.Instance.playerList.IndexOf(this));
+                if (RoundManager.Instance.playerList.IndexOf(this) < 4 && RoundManager.Instance.playerList.IndexOf(this) >= 0)
                 {
                     playerColor = colors[RoundManager.Instance.playerList.IndexOf(this)];
-                    
+
                 }
                 else
                 {
                     Debug.Log("Color default");
-                    playerColor = new Color(1,1,1,1);
+                    playerColor = new Color(1, 1, 1, 1);
                 }
-                
-                SetClientDataServerRpc(m_username, m_skinSelected, playerColor);
+
+                SetClientDataServerRpc(m_username, m_skinSelected);
+            }
+            if (IsServer)
+            {
+                AssignColor();
+
             }
         }
-        [ServerRpc]
-        public void SetClientDataServerRpc(string username, int skinSelected, Color color)
+
+        public override void OnNetworkDespawn()
         {
-                m_username = username;
-                m_skinSelected = skinSelected;
-                SetClientDataClientRpc(username, skinSelected, color);
-            
+            base.OnNetworkDespawn();
+            if (IsServer)
+            {
+                AssignColor();
+            }
+        }
+
+        private void AssignColor()
+        {
+            var clients = NetworkManager.Singleton.ConnectedClientsList;
+
+            for (int i = 0; i < clients.Count; i++)
+            {
+                var client = clients[i];
+                var playerObject = client.PlayerObject;
+
+                if (playerObject != null && playerObject.TryGetComponent(out TankData tank))
+                {
+                    Color assignedColor = (i < colors.Length) ? colors[i] : Color.white;
+                    tank.SetClientDataColor(assignedColor);
+                }
+            }
+        }
+
+        [ServerRpc]
+        public void SetClientDataServerRpc(string username, int skinSelected)
+        {
+            m_username = username;
+            m_skinSelected = skinSelected;
+            SetClientDataClientRpc(username, skinSelected);
+
         }
         [ClientRpc]
-        void SetClientDataClientRpc(string username, int skinSelected, Color color)
+        void SetClientDataClientRpc(string username, int skinSelected)
         {
             if (!IsOwner && !IsServer)
             {
@@ -227,6 +259,23 @@ namespace Tankito
                 m_skinSelected = skinSelected;
             }
         }
+
+        public void SetClientDataColor(Color color)
+        {
+            if (IsServer)
+            {
+                SetClientDataColorClientRpc(color);
+            }
+        }
+        
+        [ClientRpc]
+        private void SetClientDataColorClientRpc(Color color)
+        {
+            
+                playerColor = color;
+            
+        }
+
         #endregion
     }
 }
