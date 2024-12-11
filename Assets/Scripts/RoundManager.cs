@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Tankito.ScenarySelection;
+using Tankito.Mobile;
 
 namespace Tankito
 {
@@ -371,6 +372,7 @@ namespace Tankito
                 StartRoundClientRpc();
             }
 
+            FindObjectOfType<TouchControlManager>().ReleaseForceHideTouchGUI();
             m_startedRound = true;
             RoundUI.Instance.ActivateLobbyInfoGUI(false);
             RoundUI.Instance.ActivateCountdownGUI(false);
@@ -458,8 +460,11 @@ namespace Tankito
             }
         }
 
+        // Client + Server
         private void BetweenRounds()
         {
+            FindObjectOfType<TouchControlManager>().ForceHideTouchGUI();
+
             if (m_currentRound < m_maxRounds && m_players.Count > 1)
             {
                 ShowRanking();
