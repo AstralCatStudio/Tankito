@@ -39,8 +39,6 @@ namespace Tankito
     [CreateAssetMenu(menuName = "Modificadores/ModificadorBalas", order = 2, fileName = "Nuevo Modificador Balas")]
     public class BulletModifier : ScriptableObject
     {
-        
-
         public List<ABulletModifierEvent> onSpawnEvents;
         public List<ABulletModifierEvent> onFlyEvents;
         public List<ABulletModifierEvent> onHitEvents;

@@ -137,7 +137,22 @@ namespace Tankito {
             else
             {
             }
-        }   
+        }
+
+        private void Bounce(bool consumeBounce)   
+        {
+            if (consumeBounce)
+            {
+                m_bouncesLeft--;
+            }
+
+            if (NetworkManager.Singleton.IsClient && SimClock.Instance.Active)
+            {
+                MusicManager.Instance.PlaySoundPitch("snd_boing");
+            }
+
+            OnBounce.Invoke(this);
+        }
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
@@ -152,11 +167,11 @@ namespace Tankito {
                     }
                     else
                     {
-                        m_bouncesLeft--;
+                        Bounce(true);
                     }
                     break;
                 case "BouncyWall":
-
+                    Bounce(false);
                     break;
 
                 case "Player":
