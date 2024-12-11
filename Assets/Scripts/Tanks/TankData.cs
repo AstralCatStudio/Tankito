@@ -227,6 +227,24 @@ namespace Tankito
                 m_skinSelected = skinSelected;
             }
         }
+
+        public void SetClientDataColor(int index)
+        {
+            if (IsServer)
+            {
+                SetClientDataColorClientRpc(index);
+            }
+        }
+
+        [ClientRpc]
+        private void SetClientDataColorClientRpc(int index)
+        {
+            if(index >= 0 && index < 4)
+            {
+                playerColor = colors[(int)index];
+            }
+        }
+
         #endregion
     }
 }

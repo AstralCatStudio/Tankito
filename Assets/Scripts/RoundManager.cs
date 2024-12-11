@@ -146,11 +146,24 @@ namespace Tankito
         }
         #endregion
 
+
+        #region ClientDataProvisional
+
         [ClientRpc]
         private void InitRankingClientRpc()
         {
             RoundUI.Instance.InitRanking(playerList);
         }
+
+        private void SetColors()
+        {
+            for(int i = 0; i < m_players.Count; i++)
+            {
+                playerList[i].SetClientDataColor(i);
+            }
+        }
+
+        #endregion
 
         #region Countdown
         /// <summary>
@@ -164,7 +177,17 @@ namespace Tankito
             }
 
             RoundUI.Instance.SetActiveScenarySelection(false);
+
+
+            SetColors();
             InitRankingClientRpc();
+
+            if (RoundUI.Instance.PanelPowerUps == null)
+            {
+                RoundUI.Instance.PanelPowerUps = Instantiate(RoundUI.Instance.PowerUpsPrefab, RoundUI.Instance.transform);
+                RoundUI.Instance.PanelPowerUps.GetComponent<NetworkObject>().Spawn();
+            }
+            
             StartRoundCountdown(m_currentRound);
         }
 
