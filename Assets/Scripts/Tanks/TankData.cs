@@ -260,27 +260,11 @@ namespace Tankito
             }
         }
 
-        public void SetClientDataColor(int index)
-        {
-            if (IsServer)
-            {
-                SetClientDataColorClientRpc(index);
-            }
-        }
         public void SetClientDataColor(Color color)
         {
             if (IsServer)
             {
                 SetClientDataColorClientRpc(color);
-            }
-        }
-
-        [ClientRpc]
-        private void SetClientDataColorClientRpc(int index)
-        {
-            if (index >= 0 && index < 4)
-            {
-                playerColor = colors[(int)index];
             }
         }
         

@@ -178,15 +178,7 @@ namespace Tankito
 
             RoundUI.Instance.SetActiveScenarySelection(false);
 
-
-            //SetColors();
             InitRankingClientRpc();
-
-            //if (RoundUI.Instance.PanelPowerUps == null)
-            //{
-            //    RoundUI.Instance.PanelPowerUps = Instantiate(RoundUI.Instance.PowerUpsPrefab, RoundUI.Instance.transform);
-            //    RoundUI.Instance.PanelPowerUps.GetComponent<NetworkObject>().Spawn();
-            //}
             
             StartRoundCountdown(m_currentRound);
         }
