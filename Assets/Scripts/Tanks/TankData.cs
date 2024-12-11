@@ -195,7 +195,7 @@ namespace Tankito
             {
                 m_username = ClientData.Instance.username;
                 m_skinSelected = ClientData.Instance.characters.IndexOf(ClientData.Instance.GetCharacterSelected());
-                Debug.Log("Soy el jugador " + RoundManager.Instance.playerList.IndexOf(this));
+                //Debug.Log("Soy el jugador " + RoundManager.Instance.playerList.IndexOf(this));
                 if (RoundManager.Instance.playerList.IndexOf(this) < 4 && RoundManager.Instance.playerList.IndexOf(this) >= 0)
                 {
                     playerColor = colors[RoundManager.Instance.playerList.IndexOf(this)];
@@ -207,19 +207,51 @@ namespace Tankito
                     playerColor = new Color(1, 1, 1, 1);
                 }
 
-                SetClientDataServerRpc(m_username, m_skinSelected, playerColor);
+                SetClientDataServerRpc(m_username, m_skinSelected);
+            }
+            if (IsServer)
+            {
+                AssignColor();
+
             }
         }
+
+        public override void OnNetworkDespawn()
+        {
+            base.OnNetworkDespawn();
+            if (IsServer)
+            {
+                AssignColor();
+            }
+        }
+
+        private void AssignColor()
+        {
+            var clients = NetworkManager.Singleton.ConnectedClientsList;
+
+            for (int i = 0; i < clients.Count; i++)
+            {
+                var client = clients[i];
+                var playerObject = client.PlayerObject;
+
+                if (playerObject != null && playerObject.TryGetComponent(out TankData tank))
+                {
+                    Color assignedColor = (i < colors.Length) ? colors[i] : Color.white;
+                    tank.SetClientDataColor(assignedColor);
+                }
+            }
+        }
+
         [ServerRpc]
-        public void SetClientDataServerRpc(string username, int skinSelected, Color color)
+        public void SetClientDataServerRpc(string username, int skinSelected)
         {
             m_username = username;
             m_skinSelected = skinSelected;
-            SetClientDataClientRpc(username, skinSelected, color);
+            SetClientDataClientRpc(username, skinSelected);
 
         }
         [ClientRpc]
-        void SetClientDataClientRpc(string username, int skinSelected, Color color)
+        void SetClientDataClientRpc(string username, int skinSelected)
         {
             if (!IsOwner && !IsServer)
             {
@@ -235,14 +267,29 @@ namespace Tankito
                 SetClientDataColorClientRpc(index);
             }
         }
+        public void SetClientDataColor(Color color)
+        {
+            if (IsServer)
+            {
+                SetClientDataColorClientRpc(color);
+            }
+        }
 
         [ClientRpc]
         private void SetClientDataColorClientRpc(int index)
         {
-            if(index >= 0 && index < 4)
+            if (index >= 0 && index < 4)
             {
                 playerColor = colors[(int)index];
             }
+        }
+        
+        [ClientRpc]
+        private void SetClientDataColorClientRpc(Color color)
+        {
+            
+                playerColor = color;
+            
         }
 
         #endregion

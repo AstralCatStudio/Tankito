@@ -94,7 +94,8 @@ namespace Tankito.SyncronizedButtons
             if (IsServer)
             {
                 Debug.Log("creando modificadores");
-                
+                RoundUI.Instance.PanelPowerUps = Instantiate(RoundUI.Instance.PowerUpsPrefab, RoundUI.Instance.transform);
+                RoundUI.Instance.PanelPowerUps.GetComponent<NetworkObject>().Spawn();
                 RoundManager.Instance.StartRoundCountdown();
             }
         }

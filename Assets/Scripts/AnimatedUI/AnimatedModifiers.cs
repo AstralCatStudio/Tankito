@@ -81,15 +81,15 @@ namespace Tankito
                 GenerateNewModifiers();
             }
             //Instancia los objetos donde irá la información del resto de jugadores
-            foreach (TankData player in players)
-            {
+            //foreach (TankData player in players)
+            //{
                 
-                if (player.IsOwner)
-                {
+            //    if (player.IsOwner)
+            //    {
                     
-                    player.SetClientDataServerRpc(player.Username, player.SkinSelected, player.playerColor);
-                }
-            }
+            //        player.SetClientDataServerRpc(player.Username, player.SkinSelected, player.playerColor);
+            //    }
+            //}
             foreach (TankData player in players)
             {
                 GameObject instance;
