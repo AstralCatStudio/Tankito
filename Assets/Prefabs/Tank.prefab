@@ -69,6 +69,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1198667003595154927}
+  - component: {fileID: 8044611115013358560}
   m_Layer: 0
   m_Name: Interpolated Hull
   m_TagString: Untagged
@@ -93,6 +94,20 @@ Transform:
   - {fileID: 468154111747707519}
   m_Father: {fileID: 6924379706836283280}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8044611115013358560
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 242831026152165196}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b542fc84ffa58240b9b0e20390a14bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_targetRigidbody: {fileID: 4296128112268542503}
+  m_interpolationSpeed: 1
 --- !u!1 &516088852390469953
 GameObject:
   m_ObjectHideFlags: 0
@@ -423,8 +438,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6924379706836283280}
-  - component: {fileID: 8019476000441952616}
-  - component: {fileID: 3543077957626894512}
+  - component: {fileID: 1338514872623607562}
+  - component: {fileID: 6015036230149487748}
+  - component: {fileID: 3108015038160174756}
+  - component: {fileID: 6013740087781888850}
+  - component: {fileID: 7142272299817811776}
+  - component: {fileID: 6657983836992637468}
   m_Layer: 0
   m_Name: Tank
   m_TagString: Player
@@ -449,7 +468,7 @@ Transform:
   - {fileID: 1198667003595154927}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8019476000441952616
+--- !u!114 &1338514872623607562
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -469,7 +488,7 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 0
---- !u!114 &3543077957626894512
+--- !u!114 &6015036230149487748
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -483,8 +502,74 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_simObjId: 0
   m_tankRB: {fileID: 4296128112268542503}
-  m_turretRB: {fileID: 0}
-  m_tankController: {fileID: 0}
+  m_turretRB: {fileID: 4629867492096546326}
+  m_tankController: {fileID: 3727413298749160509}
+--- !u!114 &3108015038160174756
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5904161972637957731}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ff19012e515e554cb488adae31a349c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_inputReplayTick: -1
+  m_tankController: {fileID: 3727413298749160509}
+  m_turretRB: {fileID: 4629867492096546326}
+  DEBUG: 0
+--- !u!114 &6013740087781888850
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5904161972637957731}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bdb1e6acf157e54419aec1f3788466b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerNumber: 0
+  playerColor: {r: 1, g: 1, b: 1, a: 1}
+  position: 0
+  playerInfo: {fileID: 0}
+  damageBufferTime: 0.5
+  damageBuffer: 0
+  tankExplosion: {fileID: 0}
+  tankDamagedExplosion: {fileID: 0}
+--- !u!114 &7142272299817811776
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5904161972637957731}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55665caebe1719447a25224cdf51b420, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hull: {fileID: 2091983495115637899}
+  cannon: {fileID: 6606327937572388032}
+  fish: {fileID: 0}
+--- !u!114 &6657983836992637468
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5904161972637957731}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f3fe6949ed78184f8a55d21f67e9bc3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  modifiers: []
+  m_bulletCannon: {fileID: 1150693991829146166}
+  m_tankController: {fileID: 3727413298749160509}
 --- !u!1 &6459951814770460290
 GameObject:
   m_ObjectHideFlags: 0
@@ -530,6 +615,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b542fc84ffa58240b9b0e20390a14bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_targetRigidbody: {fileID: 4629867492096546326}
+  m_interpolationSpeed: 1
 --- !u!1 &6485839344623953803
 GameObject:
   m_ObjectHideFlags: 0
@@ -625,12 +712,7 @@ GameObject:
   - component: {fileID: 541478650938003075}
   - component: {fileID: 4296128112268542503}
   - component: {fileID: 2145439050195616819}
-  - component: {fileID: 3942173969114399133}
   - component: {fileID: 3727413298749160509}
-  - component: {fileID: 2231693945843793018}
-  - component: {fileID: 4127318937076670197}
-  - component: {fileID: 8439434382750063982}
-  - component: {fileID: 7582844017508176529}
   m_Layer: 0
   m_Name: Physics Hull
   m_TagString: Player
@@ -717,22 +799,6 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.45
---- !u!114 &3942173969114399133
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8730106702904386662}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a651c3c3c8b279e4f81772302254b6dc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_simObjId: 0
-  m_tankRB: {fileID: 4296128112268542503}
-  m_turretRB: {fileID: 0}
-  m_tankController: {fileID: 0}
 --- !u!114 &3727413298749160509
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -745,12 +811,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6cdd9da2576f6654890f582649fea450, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_tankSimulationObject: {fileID: 6015036230149487748}
   m_tankRB: {fileID: 4296128112268542503}
-  m_turretRB: {fileID: 0}
+  m_turretRB: {fileID: 4629867492096546326}
   m_speed: 8
   m_rotationSpeed: 270
   m_aimSpeed: 1080
-  m_parryHitbox: {fileID: 0}
+  m_parryHitbox: {fileID: 9122990806937936538}
   m_dashSpeedCurve:
     serializedVersion: 2
     m_Curve:
@@ -793,81 +860,15 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  m_hullAnimator: {fileID: 0}
-  m_turretAnimator: {fileID: 0}
+  m_hullAnimator: {fileID: 5873195794702409541}
+  m_turretAnimator: {fileID: 6117245905817614025}
   m_fishAnimator: {fileID: 0}
   m_playerState: 0
   DEBUG_INPUT_CALLS: 0
   DEBUG_DASH: 0
   DEBUG_PARRY: 0
   DEBUG_FIRE: 0
-  m_cannon: {fileID: 0}
+  m_cannon: {fileID: 1150693991829146166}
   m_fireLeadTimeMultiplier: 1
   m_dashLeadTimeMultiplier: 0.5
   m_parryLeadTimeMultiplier: 0.5
---- !u!114 &2231693945843793018
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8730106702904386662}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2ff19012e515e554cb488adae31a349c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_inputReplayTick: -1
-  m_tankController: {fileID: 3727413298749160509}
-  m_turretRB: {fileID: 0}
-  DEBUG: 0
---- !u!114 &4127318937076670197
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8730106702904386662}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f3fe6949ed78184f8a55d21f67e9bc3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  modifiers: []
-  m_bulletCannon: {fileID: 0}
-  m_tankController: {fileID: 3727413298749160509}
---- !u!114 &8439434382750063982
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8730106702904386662}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bdb1e6acf157e54419aec1f3788466b9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerNumber: 0
-  playerColor: {r: 1, g: 1, b: 1, a: 1}
-  position: 0
-  playerInfo: {fileID: 0}
-  damageBufferTime: 0.5
-  damageBuffer: 0
-  tankExplosion: {fileID: 0}
-  tankDamagedExplosion: {fileID: 0}
---- !u!114 &7582844017508176529
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8730106702904386662}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 55665caebe1719447a25224cdf51b420, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  hull: {fileID: 0}
-  cannon: {fileID: 0}
-  fish: {fileID: 0}

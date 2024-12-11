@@ -9,11 +9,14 @@ namespace Tankito.Netcode.Simulation
         [SerializeField] private Rigidbody2D m_tankRB;
         [SerializeField] private Rigidbody2D m_turretRB;
         [SerializeField] private ITankInput m_inputComponent;
+        public ITankInput InputComponent => m_inputComponent;
         [SerializeField] private TankController m_tankController;
         public void StartInputReplay(int timestamp) { m_inputComponent.StartInputReplay(timestamp); }
         public int StopInputReplay() { return m_inputComponent.StopInputReplay(); }
         public override SimulationObjectType SimObjType => SimulationObjectType.Tank;
-        
+
+        public TankData TankData { get => GetComponent<TankData>(); }
+
         void Start()
         {
             if (m_tankRB == null)
@@ -24,6 +27,7 @@ namespace Tankito.Netcode.Simulation
                     Debug.Log("Error tank Rigibody2D reference not set.");
                 }
             }
+
             if(m_tankController == null)
             {
                 m_tankController = GetComponent<TankController>();
@@ -78,7 +82,7 @@ namespace Tankito.Netcode.Simulation
                 ClientSimulationManager.Instance.emulatedInputTankComponents[OwnerClientId] = (EmulatedTankInput)m_inputComponent;
             }
 
-            GetComponent<TankController>().BindInputSource(m_inputComponent);
+            m_tankController.BindInputSource(m_inputComponent);
         }
 
         public override void OnNetworkDespawn()

@@ -131,6 +131,10 @@ namespace Tankito
                 spawnManager.SetPlayerInSpawn(clientId);
 
                 var tankData = newPlayer.GetComponent<TankData>();
+                if (tankData == null)
+                {
+                    Debug.LogException(new InvalidOperationException("Tank Data component not found!"));
+                }
                 Debug.Log($"TankData = {tankData}");
                 RoundManager.Instance.AddPlayer(tankData);
                 RoundManager.Instance.UpdateRemoteClientPlayerList();
