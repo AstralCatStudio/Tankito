@@ -470,6 +470,9 @@ MonoBehaviour:
   DEBUG_PARRY: 0
   DEBUG_FIRE: 0
   m_cannon: {fileID: 792954130975718086}
+  m_fireLeadTimeMultiplier: 1
+  m_dashLeadTimeMultiplier: 0.5
+  m_parryLeadTimeMultiplier: 0.5
 --- !u!114 &5903910165241873950
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -728,7 +731,7 @@ MonoBehaviour:
   m_bulletProperties:
     scaleMultiplier: {x: 0, y: 0}
     startingPosition: {x: 0, y: 0}
-    velocity: 10
+    velocity: 6.5
     acceleration: 0
     direction: {x: 0, y: 0}
     rotationSpeed: 0
@@ -742,3 +745,4 @@ MonoBehaviour:
   m_shootRadius: 1
   m_shootSpreadAngle: 120
   m_scatterAngle: 0
+  bulletSpriteModifier: {fileID: 0}

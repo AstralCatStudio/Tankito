@@ -23,6 +23,7 @@ namespace Tankito.Mobile
         private GraphicRaycaster m_graphicRaycaster;
 
         private bool m_delayedGUIRemoval = false;
+        private bool m_forcedHide = false;
 
         
         void OnEnable()
@@ -36,13 +37,27 @@ namespace Tankito.Mobile
         void OnDisable()
         {
             EnhancedTouchSupport.Disable();
+            
             InputUser.onChange -= OnInputDeviceChange;
             UnityEngine.InputSystem.EnhancedTouch.Touch.onFingerDown -= (Finger f) => ActivateTouchGUI();
+        }
+
+        public void ForceHideTouchGUI()
+        {
+            m_canvas.gameObject.SetActive(false);
+            m_forcedHide = true;
+        }
+
+        public void ReleaseForceHideTouchGUI()
+        {
+            m_forcedHide = false;
         }
 
         private void ActivateTouchGUI()
         {
             Debug.Log("ActivateTouchGUI() called.");
+            if (m_forcedHide) return;
+            
             if (ETouch.Touch.activeTouches.Count > 0)
             {
                 m_canvas.gameObject.SetActive(true);

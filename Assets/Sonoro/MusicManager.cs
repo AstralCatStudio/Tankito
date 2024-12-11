@@ -659,19 +659,25 @@ public class MusicManager : MonoBehaviour
 
 
 
-    public void PlayDisparo()
+    public void PlayDisparo(string snd)
     {
+        // "snd_bala_impacta"
+
         string[] soundNames = {
         "golpe_aire1", "golpe_aire2", "golpe_aire3",
         "golpe_aire4", "golpe_aire5", "golpe_aire6",
         "golpe_aire7", "golpe_aire8", "golpe_aire9"
         };
+        
+        if (snd == "") { snd = "snd_bala_impacta"; }
 
         string disparoSound = soundNames[Random.Range(0, soundNames.Length)];
 
         PlaySoundPitch(disparoSound);
-        PlaySoundPitch("snd_bala_impacta");
+        PlaySoundPitch(snd);
     }
+
+
     public void PlayBulletDestroy()
     {
         PlaySoundPitch("snd_disparo");

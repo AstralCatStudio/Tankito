@@ -15,6 +15,7 @@ namespace Tankito
         private void Start()
         {
             transform.localScale = Vector3.one*size;
+            
         }
         private void Update()
         {

@@ -17,7 +17,6 @@ public class RoundUI : Singleton<RoundUI>
     public GameObject PanelRankingFinal;
     public GameObject CurrentRound;
     public GameObject CountdownText;
-    public GameObject BackButton;
     public GameObject InitExitButton;
     public GameObject EndExitButton;
     public GameObject ScenarySelection;
@@ -26,6 +25,7 @@ public class RoundUI : Singleton<RoundUI>
     public GameObject SettingsMenu;
     public GameObject Ready;
     public GameObject PlayAgain;
+    public GameObject WinScreen;
 
     #region Ranking
     public void ActivateRankingGUI(bool active)
@@ -185,6 +185,25 @@ public class RoundUI : Singleton<RoundUI>
     public void ActivatePlayAgainGUI(bool active)
     {
         PlayAgain.GetComponent<PlayAgainButton>().ActivateButton(active);
+    }
+
+    #endregion
+
+    #region WinScreen
+
+    public void InitWinScreen(List<TankData> tanks)
+    {
+        WinScreen.GetComponent<WinMenu>().InitWinMenu(tanks);
+    }
+
+    public void ResetWinScreen()
+    {
+        WinScreen.GetComponent<WinMenu>().ResetMenu();
+    }
+
+    public void ActivateWinScreen(bool active)
+    {
+        WinScreen.SetActive(active);
     }
 
     #endregion

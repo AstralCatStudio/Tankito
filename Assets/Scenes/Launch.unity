@@ -153,10 +153,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Median_Latency: 0.16
-  Worst_Case_Latency: 0.2
-  Client_Jitter_Buffer_Time: 0.016
+  Worst_Case_Latency: 0.325
+  Client_Jitter_Buffer_Time: 0.008
   Client_Max_Desync_Count: 25
-  Sim_Tick_Rate: 45
+  Sim_Tick_Rate: 60
   DEBUG_LATENCY: 0
   DEBUG_PARAMS: 0
   m_debugRate: 2
@@ -305,7 +305,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DEBUG: 0
-  m_startingScene: 1
+  m_startingScene: 0
 --- !u!4 &1609486872
 Transform:
   m_ObjectHideFlags: 0
@@ -535,7 +535,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 9b352c424ad0c5d448c42ed32cabad08, type: 2}
   selectionSkinButton: {fileID: 0}
   money: 0
-  numShopContent: 4
+  numShopContent: 8
   username: 
   accountT: 0
   firstLoad: 1

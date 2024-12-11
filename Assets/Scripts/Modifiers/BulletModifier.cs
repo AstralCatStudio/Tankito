@@ -39,8 +39,6 @@ namespace Tankito
     [CreateAssetMenu(menuName = "Modificadores/ModificadorBalas", order = 2, fileName = "Nuevo Modificador Balas")]
     public class BulletModifier : ScriptableObject
     {
-        
-
         public List<ABulletModifierEvent> onSpawnEvents;
         public List<ABulletModifierEvent> onFlyEvents;
         public List<ABulletModifierEvent> onHitEvents;
@@ -49,6 +47,7 @@ namespace Tankito
         public BulletStatsModifier bulletStatsModifier = new BulletStatsModifier(1,Vector2.one,0,0,0,0,0,1,1,0,1);
         public Sprite bulletSprite;
         public int bulletSpritePriority;
+        public string ShootSound ="";
         public void BindBulletEvents(BulletController newBullet)
         {
             newBullet.OnSpawn += OnSpawn;

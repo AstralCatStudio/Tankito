@@ -21,7 +21,7 @@ public class ModifiersController : MonoBehaviour
 
     public void ResetModifiers()
     {
-        for (int i = modifiers.Count - 1; i > 0; i--)
+        for (int i = modifiers.Count - 1; i >= 0; i--)
         {
             Debug.LogWarning("Eliminando modifier "+i);
             modifiers.RemoveAt(i);

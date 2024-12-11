@@ -4,6 +4,7 @@ using Tankito.Netcode;
 using Tankito.Netcode.Simulation;
 using UnityEngine;
 using Tankito.Utils;
+using Unity.Netcode;
 
 namespace Tankito
 {
@@ -80,6 +81,10 @@ namespace Tankito
         /// </summary>
         private int ACTION_LEAD_TICKS => Mathf.CeilToInt((float)(SimulationParameters.WORST_CASE_LATENCY * 2 / SimulationParameters.SIM_DELTA_TIME));
         private float ACTION_LEAD_SECONDS => (float)SimulationParameters.WORST_CASE_LATENCY * 2;
+        [SerializeField] private float m_fireLeadTimeMultiplier = 1;
+        [SerializeField] private float m_dashLeadTimeMultiplier = 0.5f;
+        [SerializeField] private float m_parryLeadTimeMultiplier = 0.5f;
+
         /// <summary>
         /// Tick when the fire action was last triggered.
         /// </summary>
@@ -239,7 +244,7 @@ namespace Tankito
                     break;
 
                 case TankAction.Parry:
-                    if (input.timestamp >= ParryReloadTick && m_playerState != PlayerState.Dashing && m_playerState != PlayerState.Firing)
+                    if ( (input.timestamp >= ParryReloadTick && m_playerState != PlayerState.Dashing) && m_playerState != PlayerState.Dashing && m_playerState != PlayerState.Firing)
                     {
                         m_playerState = PlayerState.Parrying;
                         m_lastParryTick = input.timestamp;
@@ -247,7 +252,7 @@ namespace Tankito
                     break;
 
                 case TankAction.Dash:
-                    if (input.timestamp >= DashReloadTick && m_playerState != PlayerState.Firing && m_playerState != PlayerState.Parrying)
+                    if ( (input.timestamp >= DashReloadTick && m_playerState != PlayerState.Dashing) && m_playerState != PlayerState.Firing && m_playerState != PlayerState.Parrying)
                     {
                         m_playerState = PlayerState.Dashing;
                         m_lastDashTick = input.timestamp;
@@ -255,7 +260,7 @@ namespace Tankito
                     break;
 
                 case TankAction.Fire:
-                    if (input.timestamp >= FireReloadTick && m_playerState != PlayerState.Dashing && m_playerState != PlayerState.Parrying)
+                    if ( (input.timestamp >= FireReloadTick && m_playerState != PlayerState.Firing) && m_playerState != PlayerState.Dashing && m_playerState != PlayerState.Parrying)
                     {
                         m_playerState = PlayerState.Firing;
                         m_lastFireTick = input.timestamp;
@@ -269,6 +274,8 @@ namespace Tankito
             // Hack para joysticks 😅
             var aimVector = (input.aimVector.sqrMagnitude > 0.1) ? input.aimVector : m_lastAimVector;
 
+            m_parryHitbox.enabled = false;
+
             switch(m_playerState)
             {
                 // Moving the tank must always precede aiming, because opposite aim rotation is applied whenever rotating while moving.
@@ -278,9 +285,9 @@ namespace Tankito
                     break;
 
                 case PlayerState.Firing:
-                    int fireTick = input.timestamp - m_lastFireTick - ACTION_LEAD_TICKS;
+                    int fireTick = (int)(input.timestamp - m_lastFireTick - ACTION_LEAD_TICKS * m_fireLeadTimeMultiplier);
 
-                    Debug.Log($"[{input.timestamp}] FireTick: ({fireTick}/{FIRE_TICK_DURATION})");
+                    if (DEBUG_FIRE) Debug.Log($"[{input.timestamp}] FireTick: ({fireTick}/{FIRE_TICK_DURATION})");
 
                     if (fireTick >= 0)
                     {
@@ -303,7 +310,7 @@ namespace Tankito
 
                 case PlayerState.Dashing:
                     // Action lead ticks  must be taken into account when computing the action tick, since they do count as part of the action.
-                    int dashTick =  input.timestamp - m_lastDashTick - ACTION_LEAD_TICKS;
+                    int dashTick =  (int)(input.timestamp - m_lastDashTick - ACTION_LEAD_TICKS * m_dashLeadTimeMultiplier);
 
                     // Only execute dash behaviour past action lead time
                     if (dashTick >= 0)
@@ -325,7 +332,7 @@ namespace Tankito
                     break;
 
                 case PlayerState.Parrying:
-                    int parryTick = input.timestamp - m_lastParryTick - ACTION_LEAD_TICKS;
+                    int parryTick = (int)(input.timestamp - m_lastParryTick - ACTION_LEAD_TICKS * m_parryLeadTimeMultiplier);
                     
                     // Only execute dash behaviour past action lead time
                     if (parryTick >= 0)
@@ -337,6 +344,7 @@ namespace Tankito
                     {
 
                     }
+
                     MoveTank(input.moveVector, deltaTime);
                     AimTank(input.moveVector, deltaTime);
 
@@ -349,10 +357,6 @@ namespace Tankito
 
             // Action Animations Logic Handling 
             SetActionAnimation();
-
-            // Only execute parry behaviour past action lead time
-            m_parryHitbox.enabled = (m_playerState == PlayerState.Parrying) &&
-                                    (input.timestamp >= (m_lastParryTick + ACTION_LEAD_TICKS));
 
             // PATCH FOR FLOATING TANKS - Will have to remove to actually leverage Unity Physics System
             m_tankRB.velocity = Vector2.zero;
@@ -375,8 +379,13 @@ namespace Tankito
             {
                 if (SimClock.Instance.Active)
                 {
-                    int actionTick = SimClock.TickCounter - lastActionTick - ACTION_LEAD_TICKS;
-                    float normalizedLeadTime = (actionTick + ACTION_LEAD_TICKS)/(float)ACTION_LEAD_TICKS;
+                    float leadTimeMultiplier = 
+                            currentState == PlayerState.Firing ? m_fireLeadTimeMultiplier
+                            : currentState == PlayerState.Dashing ? m_dashLeadTimeMultiplier
+                            : currentState == PlayerState.Parrying ? m_parryLeadTimeMultiplier
+                            : 1;
+                    int actionTick = (int)(SimClock.TickCounter - lastActionTick - ACTION_LEAD_TICKS * leadTimeMultiplier);
+                    float normalizedLeadTime = (actionTick + ACTION_LEAD_TICKS * leadTimeMultiplier)/(ACTION_LEAD_TICKS * leadTimeMultiplier);
                     var turretAnimationState = m_turretAnimator.GetCurrentAnimatorStateInfo(0);
                     var hullAnimationState = m_hullAnimator.GetCurrentAnimatorStateInfo(0);
 
@@ -391,7 +400,7 @@ namespace Tankito
                             : currentState == PlayerState.Parrying ? "Parry"
                             : "";
 
-                    Debug.Log($"[{SimClock.TickCounter}] CurrentAnimationStates: \n" +
+                    if (DEBUG_INPUT_CALLS) Debug.Log($"[{SimClock.TickCounter}] CurrentAnimationStates: \n" +
                         $"Is turretState name '{actionAnimState + " Turret"}':{turretAnimationState.IsName(actionAnimState + " Turret")}\n" +
                         $"Is hullState name '{actionAnimState + " Hull"}':{hullAnimationState.IsName(actionAnimState + " Hull")}\n" + 
                         $"normalizedLeadTime: {normalizedLeadTime} animatorNormalizedTime:(turret-{turretAnimationState.normalizedTime} hull-{hullAnimationState.normalizedTime})");
@@ -420,6 +429,9 @@ namespace Tankito
         private void ParryTank(int parryTick)
         {
             if (DEBUG_PARRY) Debug.LogWarning($"[{SimClock.TickCounter}] Parry progressTicks( {parryTick}/{m_parryTicks} )");
+
+            // Only execute parry behaviour past action lead time
+            m_parryHitbox.enabled = true;
         }
 
         private void FireTank(Vector2 aimVector, int inputTick)
@@ -427,7 +439,11 @@ namespace Tankito
             if (DEBUG_FIRE) Debug.Log($"[{SimClock.TickCounter}] FireTank({GetComponent<TankSimulationObject>().SimObjId}) called.");
 
             if (SimClock.Instance.Active)
-                MusicManager.Instance.PlayDisparo();
+            {
+                string sonido = BulletCannonRegistry.Instance[GetComponent<NetworkObject>().OwnerClientId].bulletSpriteModifier?.ShootSound;
+                MusicManager.Instance.PlayDisparo(sonido);
+            }
+                
             m_cannon.Shoot(m_turretRB.position, m_turretRB.transform.right, inputTick);
         }
 
