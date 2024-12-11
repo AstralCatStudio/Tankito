@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Explosive Bullets Modifier Bullet
   m_EditorClassIdentifier: 
   onSpawnEvents: []
-  onFlyEvents: []
+  onFlyEvents:
+  - {fileID: 11400000, guid: 2fda9134924041f4eb48f22ab5264d92, type: 2}
   onHitEvents: []
   onBounceEvents: []
   onDetonateEvents:

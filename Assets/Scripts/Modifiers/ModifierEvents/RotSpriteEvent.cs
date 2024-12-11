@@ -11,7 +11,7 @@ namespace Tankito
         public override void StartEvent(BulletController bullet)
         {
             if (SimClock.Instance.Active == false) return;
-            Debug.Log($"[{SimClock.TickCounter}]: Nuevo angulo: {SimClock.TickCounter * rotSpeed * SimClock.SimDeltaTime}");   
+            if(!bullet.IsStiCked) 
             bullet.transform.GetChild(0).transform.localRotation = Quaternion.Euler(0, 0, SimClock.TickCounter * rotSpeed * SimClock.SimDeltaTime);
         }
     }
