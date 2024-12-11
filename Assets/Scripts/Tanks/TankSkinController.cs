@@ -8,6 +8,7 @@ public class TankSkinController : NetworkBehaviour
 {
     [SerializeField]
     SpriteRenderer hull, cannon, fish;
+    [SerializeField] Animator fishAnimator;
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
@@ -32,6 +33,9 @@ public class TankSkinController : NetworkBehaviour
         CharacterData data = ClientData.Instance.characters[index].data;
         hull.sprite = data.tankBody;
         cannon.sprite = data.tankHead;
+        //fish.sprite = data.fishSprite;
+        fishAnimator.runtimeAnimatorController = data.fishAnimator;
+
         if (IsOwner)
         {
             SetSkinServerRpc(index);

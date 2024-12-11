@@ -9,7 +9,7 @@ using Tankito.Netcode.Simulation;
 
 namespace Tankito {
 
-    
+    public enum BulletMoveType { Normal, Boomerang }
     public class BulletController : MonoBehaviour
     {
         BulletSimulationObject m_simObj;
@@ -28,6 +28,16 @@ namespace Tankito {
                                         OnDetonate = (ABullet) => { };
         [SerializeField] private bool PREDICT_DESTRUCTION = true;
         public Sprite bulletSprite;
+
+        #region Boomerang
+        BulletMoveType bulletType = BulletMoveType.Normal;
+        public BulletMoveType BulletType { get => bulletType; set => bulletType = value; }
+        [SerializeField] float spinbackTime = 1.5f;
+        [SerializeField] float boomeramgEffectDuration = 1f;
+        int boomerangTicks;
+        [SerializeField] float amplitude = 1.5f;
+        [SerializeField] float rotAngle = 270;
+        #endregion
 
         private void Awake()
         {
@@ -62,14 +72,15 @@ namespace Tankito {
             }
             if(BulletCannonRegistry.Instance[m_simObj.OwnerId].bulletSpriteModifier!= null)
             {
-                GetComponent<SpriteRenderer>().sprite = BulletCannonRegistry.Instance[m_simObj.OwnerId].bulletSpriteModifier?.bulletSprite;
+                transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = BulletCannonRegistry.Instance[m_simObj.OwnerId].bulletSpriteModifier?.bulletSprite;
             }
             else
             {
-                GetComponent<SpriteRenderer>().sprite = bulletSprite;
+                transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = bulletSprite;
             }
             
             if (triggerOnSpawnEvents) OnSpawn?.Invoke(this);
+            Debug.Log(m_rb.velocity.magnitude);
         }
 
         private void OnDisable()
@@ -91,6 +102,21 @@ namespace Tankito {
                 gameObject.layer = 0;
             }
             m_rb.velocity += (BulletCannonRegistry.Instance[m_simObj.OwnerId].Properties.acceleration != 0f) ? BulletCannonRegistry.Instance[m_simObj.OwnerId].Properties.acceleration * m_rb.velocity.normalized : Vector2.zero;
+            if(bulletType == BulletMoveType.Boomerang)
+            {
+                if(m_lifetime >= spinbackTime && m_lifetime <= spinbackTime + boomeramgEffectDuration)
+                {
+                    boomerangTicks = (int)(boomeramgEffectDuration / SimClock.SimDeltaTime);
+                    float anglePerTick = rotAngle / boomerangTicks;
+                    Debug.Log(anglePerTick + " " + boomerangTicks);
+
+                    float speed = m_rb.velocity.magnitude;
+                    float angleInRadians = anglePerTick * Mathf.Deg2Rad;
+                    float rotatedX = m_rb.velocity.x * Mathf.Cos(angleInRadians) - m_rb.velocity.y * Mathf.Sin(angleInRadians);
+                    float rotatedY = m_rb.velocity.x * Mathf.Sin(angleInRadians) + m_rb.velocity.y * Mathf.Cos(angleInRadians);
+                    m_rb.velocity = new Vector2(rotatedX, rotatedY).normalized * speed;
+                }              
+            }
             m_lifetime += deltaTime;
             OnFly.Invoke(this);
             if (m_lifetime >= BulletCannonRegistry.Instance[m_simObj.OwnerId].Properties.lifetimeTotal)
@@ -110,6 +136,7 @@ namespace Tankito {
             OnHit = (ABullet) => {};
             OnBounce = (ABullet) => {};
             OnDetonate = (ABullet) => {};
+            bulletType = BulletMoveType.Normal;
         }
 
         public void Detonate(bool lifeTimeOver = false)

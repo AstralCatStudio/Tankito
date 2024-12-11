@@ -124,7 +124,7 @@ namespace Tankito
         }
         void GenerateNewModifiers()
         {
-            modifiers = ModifierRegistry.Instance.GetRandomModifiers(6);
+            modifiers = ModifierRegistry.Instance.GetRandomModifiers(modifierSelectors.Count);
             List<int> indexModificadores = new List<int>();
             for (int i = 0; i < modifierSelectors.Count; i++)
             {
@@ -144,19 +144,28 @@ namespace Tankito
         {
             if (tankorder == tanksInOrder.IndexOf(playerClientId) && selectedModifier.available)
             {
-                Debug.Log("poniendo modificador");
-                selectedModifier.available = false;
-                AddModifierClientRpc(playerClientId, modifierSelectors.IndexOf(selectedModifier));
-                tankorder++;
-                if (tankorder >= tanksInOrder.Count)
+                if (!BulletCannonRegistry.Instance[playerClientId].transform.parent.parent.parent.GetComponent<ModifiersController>().modifiers.Contains(selectedModifier.GetModifier()) || selectedModifier.GetModifier().stackable)
                 {
-                    Debug.Log("terminao");
-                    RoundManager.Instance.EndPowerUpSelection();
+
+
+                    Debug.Log("poniendo modificador");
+                    selectedModifier.available = false;
+                    AddModifierClientRpc(playerClientId, modifierSelectors.IndexOf(selectedModifier));
+                    tankorder++;
+                    if (tankorder >= tanksInOrder.Count)
+                    {
+                        Debug.Log("terminao");
+                        RoundManager.Instance.EndPowerUpSelection();
+                    }
+                    else
+                    {
+                        Debug.Log("siguiente");
+                        SetSelectorPlayer(tankorder);
+                    }
                 }
                 else
                 {
-                    Debug.Log("siguiente");
-                    SetSelectorPlayer(tankorder);
+                    Debug.LogWarning("El modificador no es stackable y ya lo tienes - TODO: que salga por pantalla en vez de esto");
                 }
             }
         }

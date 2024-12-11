@@ -16,7 +16,8 @@ MonoBehaviour:
   tankHead: {fileID: 21300000, guid: 723b8e88d732d084da7c4feb05c7a032, type: 3}
   tankBody: {fileID: 21300000, guid: 18c5428f8ace915488f4f4801bf24e80, type: 3}
   characterIcon: {fileID: 21300000, guid: 5ddb0a56c2f1b3443916407d3913cb9c, type: 3}
-  animations: []
+  fishSprite: {fileID: 0}
+  fishAnimator: {fileID: 9100000, guid: c5ea757600191ad4f985716820dca71f, type: 2}
   characterName: Limpet
   description: "It can extend its lips a distance of 3 meters... \r\nAmazing\u2026"
   price: 700
