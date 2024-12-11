@@ -213,6 +213,17 @@ namespace Tankito {
                     }
                     break;
                 
+                
+
+                default:
+                    Detonate();
+                    break;
+            }
+        }
+        private void OnTriggerEnter2D(Collider2D collision)
+        {
+            switch (collision.gameObject.tag)
+            {
                 case "Parry":
                     m_lifetime = 0;
                     m_bouncesLeft = BulletCannonRegistry.Instance[m_simObj.OwnerId].Properties.bouncesTotal;
@@ -241,13 +252,9 @@ namespace Tankito {
 
                     // We want the bullet to fly faster than before
                     m_rb.velocity = BulletCannonRegistry.Instance[m_simObj.OwnerId].Properties.velocity * PARRY_SPEED_BOOST * parriedDirection;
-                    
+
                     // Update the last shooter variable before returning the bullet
                     SetLastShooterObjId(collision.gameObject.GetComponent<ASimulationObject>().SimObjId);
-                    break;
-
-                default:
-                    Detonate();
                     break;
             }
         }
