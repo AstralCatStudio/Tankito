@@ -104,6 +104,10 @@ namespace Tankito
             {
                 m_bulletProperties.scaleMultiplier = new Vector2(3, 3);
             }
+            if (maxBulletSpritePriority == 0)
+            {
+                bulletSpriteModifier = null;
+            }
         }
 
         public void Shoot(Vector2 originPosition, Vector2 aimVector, int tick)

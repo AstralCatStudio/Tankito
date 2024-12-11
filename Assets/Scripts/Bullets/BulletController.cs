@@ -47,9 +47,9 @@ namespace Tankito {
 
             transform.position = BulletCannonRegistry.Instance[m_simObj.OwnerId].Properties.startingPosition;
             m_bouncesLeft = BulletCannonRegistry.Instance[m_simObj.OwnerId].Properties.bouncesTotal;
-            m_rb.velocity = BulletCannonRegistry.Instance[m_simObj.OwnerId].Properties.velocity * BulletCannonRegistry.Instance[m_simObj.OwnerId].Properties.direction.normalized*0.3f;
+            m_rb.velocity = BulletCannonRegistry.Instance[m_simObj.OwnerId].Properties.velocity * BulletCannonRegistry.Instance[m_simObj.OwnerId].Properties.direction.normalized;
             Debug.Log(BulletCannonRegistry.Instance[m_simObj.OwnerId].Properties.scaleMultiplier);
-            transform.localScale = BulletCannonRegistry.Instance[m_simObj.OwnerId].Properties.scaleMultiplier;
+            transform.localScale = BulletCannonRegistry.Instance[m_simObj.OwnerId].Properties.scaleMultiplier * 0.3f;
             // BERNAT: estoy super empanado ahora, probablmente ohay una forma mejor de 
             // hacerlo sin tener que cambiar nada pero no soy capaz de pensar en ella ahora mismo la verdad
             SetLastShooterObjId(BulletCannonRegistry.Instance[m_simObj.OwnerId].GetComponentInParent<TankSimulationObject>().SimObjId);
