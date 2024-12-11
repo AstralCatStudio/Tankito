@@ -106,7 +106,7 @@ public class AnimatedScores : MonoBehaviour
     {
         SliderLoadInfo infoToLoad = instance.GetComponent<SliderLoadInfo>();
         infoToLoad.icon.sprite = ClientData.Instance.characters[tank.SkinSelected].data.sprite;
-        infoToLoad.name.text = tank.name;
+        infoToLoad.name.text = tank.Username;
         infoToLoad.name.color = tank.playerColor;
         infoToLoad.fill.color = tank.playerColor;
         infoToLoad.slider.value = tank.Points;
@@ -168,10 +168,22 @@ public class AnimatedScores : MonoBehaviour
     {
         LeanTween.scale(panelRT, Vector2.zero, popupTime).setEase(LeanTweenType.easeInBack);
         //Invoke("Disable", popupTime);
+        ResetScreen();
     }
 
     private void Disable()
     {
         gameObject.SetActive(false);
+    }
+
+    private void ResetScreen()
+    {
+        foreach(GameObject slider in sliderScores)
+        {
+            Destroy(slider);
+        }
+        sliderScores.Clear();
+
+        tankList.Clear();
     }
 }

@@ -12,9 +12,8 @@ public class RoundUI : Singleton<RoundUI>
 {
     public GameObject PowerUpsPrefab;
 
-    public GameObject PanelRanking;
+    public GameObject SlidersRanking;
     public GameObject PanelPowerUps;
-    public GameObject PanelRankingFinal;
     public GameObject CurrentRound;
     public GameObject CountdownText;
     public GameObject InitExitButton;
@@ -28,14 +27,20 @@ public class RoundUI : Singleton<RoundUI>
     public GameObject WinScreen;
 
     #region Ranking
+
+    public void InitRanking(List<TankData> tanks)
+    {
+        SlidersRanking.GetComponent<AnimatedScores>().InitScoreSliders(tanks);
+    }
+
     public void ActivateRankingGUI(bool active)
     {
-        PanelRanking.SetActive(active);
+        SlidersRanking.SetActive(active);
     }
 
     public void SetRankingText(string text)
     {
-        PanelRanking.GetComponentInChildren<TextMeshProUGUI>().text = text;
+        SlidersRanking.GetComponentInChildren<TextMeshProUGUI>().text = text;
     }
 
     #endregion
@@ -46,15 +51,6 @@ public class RoundUI : Singleton<RoundUI>
     {
         
         PanelPowerUps.SetActive(active);
-    }
-
-    #endregion
-
-    #region RankingFinal
-
-    public void SetActiveRankingFinal(bool active)
-    {
-        PanelRankingFinal.SetActive(active);
     }
 
     #endregion
