@@ -48,13 +48,19 @@ namespace Tankito
         }
         public List<Modifier> GetRandomModifiers(int number)
         {
+            bool notStackableUsed =false;
             List<Modifier> modifiersUsed = new List<Modifier>();
             for (int i = 0; i < number; i++)
             {
                 Modifier newModifier = GetRandomModifier();
-                while (modifiersUsed.Contains(newModifier) || modifiersUsed.Count>= modifierList.modifiers.Count)
+
+                while (modifiersUsed.Contains(newModifier) || modifiersUsed.Count>= modifierList.modifiers.Count || notStackableUsed)
                 {
                     newModifier = GetRandomModifier();
+                }
+                if (!newModifier.stackable)
+                {
+                    notStackableUsed = true;
                 }
                 modifiersUsed.Add(newModifier);
             }
