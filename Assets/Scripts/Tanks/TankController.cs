@@ -147,7 +147,7 @@ namespace Tankito
             var animSpeedScale = 1/(float)ACTION_LEAD_SECONDS;
             m_hullAnimator.SetFloat("Speed Multiplier", animSpeedScale);
             m_turretAnimator.SetFloat("Speed Multiplier", animSpeedScale);
-            //m_fishAnimator.SetFloat("Speed Multiplier", animSpeedScale);
+            m_fishAnimator.SetFloat("Speed Multiplier", animSpeedScale);
         }
 
         void OnDisable()
@@ -387,6 +387,7 @@ namespace Tankito
                     float normalizedLeadTime = (actionTick + ACTION_LEAD_TICKS * leadTimeMultiplier)/(ACTION_LEAD_TICKS * leadTimeMultiplier);
                     var turretAnimationState = m_turretAnimator.GetCurrentAnimatorStateInfo(0);
                     var hullAnimationState = m_hullAnimator.GetCurrentAnimatorStateInfo(0);
+                    var fishAnimationState = m_fishAnimator.GetCurrentAnimatorStateInfo(0);
 
                     string actionAnimTrigger = 
                             currentState == PlayerState.Firing ? "Shoot"
@@ -405,12 +406,15 @@ namespace Tankito
                         $"normalizedLeadTime: {normalizedLeadTime} animatorNormalizedTime:(turret-{turretAnimationState.normalizedTime} hull-{hullAnimationState.normalizedTime})");
 
                     if (!turretAnimationState.IsName(actionAnimState + " Turret") && !m_turretAnimator.GetBool(actionAnimTrigger) ||
-                        !hullAnimationState.IsName(actionAnimState + " Hull") && !m_hullAnimator.GetBool(actionAnimTrigger))
+                        !hullAnimationState.IsName(actionAnimState + " Hull") && !m_hullAnimator.GetBool(actionAnimTrigger) ||
+                        !fishAnimationState.IsName(actionAnimState + " Fish") && !m_fishAnimator.GetBool(actionAnimTrigger))
                     {
                         m_turretAnimator.ResetAllTriggers();
                         m_hullAnimator.ResetAllTriggers();
+                        m_fishAnimator.ResetAllTriggers();
                         m_turretAnimator.SetBool(actionAnimTrigger, true);
                         m_hullAnimator.SetBool(actionAnimTrigger, true);
+                        m_fishAnimator.SetBool(actionAnimTrigger, true);
                         RecordAnimTrigger();
                     }
                     // JSAJSAJSAJAAAAAAAAAA APPROXIMATELY 🤣😂😁😀
