@@ -36,6 +36,7 @@ namespace Tankito
         public float damageBuffer = 0;
         public GameObject tankExplosion;
         public GameObject tankDamagedExplosion;
+        
         public int CompareTo(object obj)
         {
             var a = this;
