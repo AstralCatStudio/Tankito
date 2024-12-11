@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Tankito;
 
 //Clase para probar 
 public class PlayerTest : IComparable
@@ -41,14 +42,15 @@ public class AnimatedScores : MonoBehaviour
     [SerializeField] private RectTransform panelRT;
     [SerializeField] private GameObject sliderPrefab;
     [SerializeField] private List<GameObject> sliderScores;
+    [SerializeField] private List<TankData> tankList;
     #endregion
 
-    #region removeThis
-    [Header("Remove this params")]
-    private List<PlayerTest> players = new();  //Esto se podrá eliminar
-    private Color[] colors = { Color.blue, Color.red, Color.green, Color.yellow };
-    [SerializeField] private Sprite[] icons;
-    #endregion
+    //#region removeThis
+    //[Header("Remove this params")]
+    //private List<PlayerTest> players = new();  //Esto se podrá eliminar
+    //private Color[] colors = { Color.blue, Color.red, Color.green, Color.yellow };
+    //[SerializeField] private Sprite[] icons;
+    //#endregion
 
 
     #region UnityFunctions
@@ -56,37 +58,60 @@ public class AnimatedScores : MonoBehaviour
     {
         //-------------------------
         //Esto habrá que eliminarlo
-        for (int i= 0; i < numPlayers;i++)
-        {
-            PlayerTest player = new PlayerTest();
-            player.name = "Player " + (i+1).ToString();
-            player.color = colors[i];
-            player.icon = icons[i];
-            player.score = 0;
-            players.Add(player);
-        }
+        //for (int i= 0; i < numPlayers;i++)
+        //{
+        //    PlayerTest player = new PlayerTest();
+        //    player.name = "Player " + (i+1).ToString();
+        //    player.color = colors[i];
+        //    player.icon = icons[i];
+        //    player.score = 0;
+        //    players.Add(player);
+        //}
         //Esto habrá que eliminarlo
         //-------------------------
 
-        foreach (PlayerTest player in players)   //Cambiarlo para que se haga por cada jugador que haya en partida (Creo que por los TankDatas)
-        {
-            GameObject instance = Instantiate(sliderPrefab, panelRT);
-            LoadInfo(instance, player);
-            sliderScores.Add(instance);
-        }
-        LeanTween.scale(panelRT, Vector2.zero, 0f);
+        //foreach (PlayerTest player in players)   //Cambiarlo para que se haga por cada jugador que haya en partida (Creo que por los TankDatas)
+        //{
+        //    GameObject instance = Instantiate(sliderPrefab, panelRT);
+        //    LoadInfo(instance, player);
+        //    sliderScores.Add(instance);
+        //}
+        //LeanTween.scale(panelRT, Vector2.zero, 0f);
     }
 
     private void OnEnable()
     {
         LeanTween.scale(panelRT, Vector2.one, popupTime).setEase(LeanTweenType.easeOutElastic);
-        for (int i = 0; i < players.Count; i++)  //numero de jugadores
-        {
-            players[i].score += UnityEngine.Random.Range(0, 4); //Añadir puntuación
-        }
+        //for (int i = 0; i < sliderScores.Count; i++)  //numero de jugadores
+        //{
+        //    players[i].score += UnityEngine.Random.Range(0, 4);
+        //}
         Invoke("AnimateScores", waitTime);
     }
     #endregion
+
+    public void InitScoreSliders(List<TankData> tanks)
+    {
+        foreach (TankData tank in tanks)
+        {
+            GameObject newSlider = Instantiate(sliderPrefab, panelRT);
+            LoadInfo(newSlider, tank);
+            sliderScores.Add(newSlider);
+            tankList.Add(tank);
+        }
+        LeanTween.scale(panelRT, Vector2.zero, 0f);
+    }
+
+    private void LoadInfo(GameObject instance, TankData tank)
+    {
+        SliderLoadInfo infoToLoad = instance.GetComponent<SliderLoadInfo>();
+        infoToLoad.icon.sprite = ClientData.Instance.characters[tank.SkinSelected].data.sprite;
+        infoToLoad.name.text = tank.name;
+        infoToLoad.name.color = tank.playerColor;
+        infoToLoad.fill.color = tank.playerColor;
+        infoToLoad.slider.value = tank.Points;
+        infoToLoad.score.text = tank.Points.ToString();
+    }
 
     /// <summary>
     /// Carga la información del slider del jugador
@@ -106,9 +131,9 @@ public class AnimatedScores : MonoBehaviour
 
     public void AnimateScores()
     {
-        for(int i=0; i<players.Count; i++)  //numero de jugadores
+        for (int i = 0; i < tankList.Count; i++)  //numero de jugadores
         {
-            AnimateSlider(players[i], sliderScores[i]);
+            AnimateSlider(tankList[i], sliderScores[i]);
         }
     }
 
@@ -118,10 +143,16 @@ public class AnimatedScores : MonoBehaviour
         StartCoroutine(LerpSlider(sliderInfo, sliderInfo.slider.value, player.score, sliderTime));
     }
 
+    private void AnimateSlider(TankData tank, GameObject slider) //Cambiar a TankData
+    {
+        SliderLoadInfo sliderInfo = slider.GetComponent<SliderLoadInfo>();
+        StartCoroutine(LerpSlider(sliderInfo, sliderInfo.slider.value, tank.Points, sliderTime));
+    }
+
     private IEnumerator LerpSlider(SliderLoadInfo sliderInfo, float from, float to, float time)
     {
         float i = 0;
-        while(i < time)
+        while (i < time)
         {
             sliderInfo.slider.value = Mathf.Lerp(from, to, i / time);
             sliderInfo.score.text = Mathf.Round(sliderInfo.slider.value).ToString();
@@ -136,7 +167,7 @@ public class AnimatedScores : MonoBehaviour
     private void Disappear()
     {
         LeanTween.scale(panelRT, Vector2.zero, popupTime).setEase(LeanTweenType.easeInBack);
-        Invoke("Disable", popupTime);
+        //Invoke("Disable", popupTime);
     }
 
     private void Disable()
