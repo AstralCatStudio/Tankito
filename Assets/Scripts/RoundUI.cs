@@ -156,7 +156,7 @@ public class RoundUI : Singleton<RoundUI>
 
     public void CloseSettingsButton()
     {
-        if (RoundManager.Instance.IsGameStarted)
+        if (RoundManager.Instance.IsRoundStarted)
         {
             ///////////////////////////////////////////////////////////////////// sound effect
             MusicManager.Instance.PlaySound("aceptar2");

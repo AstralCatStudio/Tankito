@@ -21,6 +21,7 @@ namespace Tankito
         public bool m_startedGame;
         public bool IsGameStarted => m_startedGame;
         [SerializeField] private bool m_startedRound;
+        public bool IsRoundStarted => m_startedRound;
 
         public GameObject m_localPlayerInputObject;
         [SerializeField] private bool DEBUG = false;
