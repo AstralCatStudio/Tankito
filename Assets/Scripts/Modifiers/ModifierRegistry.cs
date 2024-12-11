@@ -54,7 +54,7 @@ namespace Tankito
             {
                 Modifier newModifier = GetRandomModifier();
 
-                while (modifiersUsed.Contains(newModifier) || modifiersUsed.Count>= modifierList.modifiers.Count || notStackableUsed)
+                while (modifiersUsed.Contains(newModifier) || modifiersUsed.Count>= modifierList.modifiers.Count || (!newModifier.stackable && notStackableUsed))
                 {
                     newModifier = GetRandomModifier();
                 }
