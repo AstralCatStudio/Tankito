@@ -8,6 +8,7 @@ namespace Tankito.Netcode.Simulation
     {
         public ulong SimObjId => m_simObjId;
         public abstract SimulationObjectType SimObjType { get; }
+        public abstract Vector2 Position { get; }
 
         [SerializeField] // <-- FOR DEBUG ONLY (don't modify, just observe)
         private ulong m_simObjId;

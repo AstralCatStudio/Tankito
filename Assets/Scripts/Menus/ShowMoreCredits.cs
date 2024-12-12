@@ -38,7 +38,7 @@ public class ShowMoreCredits : MonoBehaviour
         creditsSize = new Vector2(rect.sizeDelta.x, rect.sizeDelta.y);
         initialPos = new Vector2(rect.anchoredPosition.x, rect.anchoredPosition.y);
         StartCoroutine(MoveCredits());
-        MusicManager.Instance.SetPhase(4);
+        MusicManager.Instance.SetPhase(5);
     }
 
     private IEnumerator MoveCredits()

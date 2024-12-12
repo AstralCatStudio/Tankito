@@ -19,19 +19,23 @@ namespace Tankito
         float timeUntilBig = 0.5f;
         public override void StartEvent(BulletController bullet)
         {
-            MusicManager.Instance.PlaySoundPitch("snd_explosion", 0.15f);
+            // ONLY PLACE THINGS PERTAINING TO SIMULATION (must be done durring rollback) under this comment
+
+
             // Avoid spawning explosion VFX on client as a result of rollback (during rollback the SimClock is stopped).
             if (SimClock.Instance.Active == false) return;
 
+            MusicManager.Instance.PlaySoundPitch("snd_explosion", 0.15f);
+
             // TODO: Replace with explosion pool
-            GameObject explosion = Instantiate<GameObject>(explosionPrefab, bullet.transform.position, bullet.transform.rotation);
-            explosion.GetComponent<Explosion>().size *= size;
+            Explosion explosion = Instantiate<GameObject>(explosionPrefab, bullet.transform.position, bullet.transform.rotation).GetComponent<Explosion>();
+            explosion.size *= size;
             explosion.transform.position += relativePosition;
-            explosion.GetComponent<Explosion>().timeUntilBig = timeUntilBig;
-            explosion.GetComponent<Explosion>().timeUntilDead = totalLifetime;
+            explosion.timeUntilBig = timeUntilBig;
+            explosion.timeUntilDead = totalLifetime;
             if (NetworkManager.Singleton.IsServer)
             {
-                explosion.GetComponent<Explosion>().damages = true;
+                explosion.damages = true;
             }
         }
     }

@@ -53,6 +53,7 @@ public class AnimatedScores : MonoBehaviour
 
     public void AnimateScores()
     {
+        MusicManager.Instance.PlaySound("snd_slider");
         for (int i = 0; i < tankList.Count; i++)  //numero de jugadores
         {
             AnimateSlider(tankList[i], sliderScores[i]);

@@ -6,7 +6,7 @@ namespace Tankito.Utils
     {
         public static void ResetAllTriggers(this Animator animator)
         {
-            Debug.Log("Called Triggers Reset");
+            //Debug.Log("Called Triggers Reset");
             
             foreach (var trigger in animator.parameters)
             {

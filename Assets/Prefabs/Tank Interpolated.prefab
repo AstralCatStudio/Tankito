@@ -108,7 +108,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_targetRigidbody: {fileID: 4296128112268542503}
-  m_interpolationSpeed: 38
+  m_interpolationSpeed: 36
 --- !u!1 &337363653370340269
 GameObject:
   m_ObjectHideFlags: 0
@@ -454,7 +454,7 @@ CircleCollider2D:
     m_Bits: 4294967295
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 0
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2
@@ -641,6 +641,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerNumber: 0
   playerColor: {r: 1, g: 1, b: 1, a: 1}
+  m_health: 0
   position: 0
   playerInfo: {fileID: 0}
   damageBufferTime: 0.5
@@ -929,6 +930,11 @@ MonoBehaviour:
   m_aimSpeed: 1080
   dashParticles: {fileID: 8967917461059218661, guid: 754a426917180904c9714d8d76a11f7c, type: 3}
   dashParticleOffset: -1.8
+  fireParticles: {fileID: 7122963674773380504, guid: 9982a63f9f909bc4bacf54c7e2dabab3, type: 3}
+  fireParticleOffset: 2
+  parryParticles: {fileID: 1393315595571650996, guid: 662fd437c210c87479107a33e92828fd, type: 3}
+  parryParticleOffset: 0
+  animationTimingOffsetParry: -0.2
   m_parryHitbox: {fileID: 9122990806937936538}
   m_dashSpeedCurve:
     serializedVersion: 2

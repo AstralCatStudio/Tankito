@@ -17,6 +17,7 @@ namespace Tankito.Netcode.Simulation
 
         public TankData TankData { get => GetComponent<TankData>(); }
         public TankController TankController { get => m_tankController; }
+        public override Vector2 Position { get => m_tankRB.position; }
 
         void Start()
         {

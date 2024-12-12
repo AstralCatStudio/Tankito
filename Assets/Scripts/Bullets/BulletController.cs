@@ -50,7 +50,7 @@ namespace Tankito {
         public void SetLastShooterObjId(ulong simObjId)
         {
             m_lastShooterObjId = simObjId;
-            //Debug.Log($"[{SimClock.TickCounter}] LastShooterSimObjId[{LastShooterObjId}]");
+            Debug.Log($"[{SimClock.TickCounter}] LastShooterSimObjId[{LastShooterObjId}]");
         }
 
         public void InitializeProperties(bool triggerOnSpawnEvents = true)
@@ -60,7 +60,7 @@ namespace Tankito {
             transform.position = BulletCannonRegistry.Instance[m_simObj.OwnerId].Properties.startingPosition;
             m_bouncesLeft = BulletCannonRegistry.Instance[m_simObj.OwnerId].Properties.bouncesTotal;
             m_rb.velocity = BulletCannonRegistry.Instance[m_simObj.OwnerId].Properties.velocity * BulletCannonRegistry.Instance[m_simObj.OwnerId].Properties.direction.normalized;
-            Debug.Log(BulletCannonRegistry.Instance[m_simObj.OwnerId].Properties.scaleMultiplier);
+            //Debug.Log(BulletCannonRegistry.Instance[m_simObj.OwnerId].Properties.scaleMultiplier);
             transform.localScale = BulletCannonRegistry.Instance[m_simObj.OwnerId].Properties.scaleMultiplier * 0.3f;
             // BERNAT: estoy super empanado ahora, probablmente ohay una forma mejor de 
             // hacerlo sin tener que cambiar nada pero no soy capaz de pensar en ella ahora mismo la verdad
@@ -82,7 +82,7 @@ namespace Tankito {
             }
             
             if (triggerOnSpawnEvents) OnSpawn?.Invoke(this);
-            Debug.Log(m_rb.velocity.magnitude);
+            //Debug.Log(m_rb.velocity.magnitude);
         }
 
         private void OnDisable()
@@ -110,7 +110,7 @@ namespace Tankito {
                 {
                     boomerangTicks = (int)(boomeramgEffectDuration / SimClock.SimDeltaTime);
                     float anglePerTick = rotAngle / boomerangTicks;
-                    Debug.Log(anglePerTick + " " + boomerangTicks);
+                    //Debug.Log(anglePerTick + " " + boomerangTicks);
 
                     float speed = m_rb.velocity.magnitude;
                     float angleInRadians = anglePerTick * Mathf.Deg2Rad;
@@ -149,8 +149,10 @@ namespace Tankito {
             OnDetonate.Invoke(this);
 
             if (SimClock.Instance.Active && NetworkManager.Singleton.IsClient)
+            {
                 MusicManager.Instance.PlayBulletDestroy();
-
+                Instantiate(explosionVisual, transform.position, transform.rotation);
+            }
 
             if (NetworkManager.Singleton.IsServer)
             {
@@ -163,10 +165,10 @@ namespace Tankito {
                 // Debug.Log("LifeTimeOver?=>" + lifeTimeOver);
                 BulletSimulationObject bulletSimObj = GetComponent<BulletSimulationObject>();
                 ClientSimulationManager.Instance.QueueForDespawn(bulletSimObj.SimObjId);
-                Instantiate(explosionVisual, transform.position, transform.rotation);
             }
             else
             {
+                
             }
         }
 
@@ -190,6 +192,7 @@ namespace Tankito {
             OnHit.Invoke(this);
             lastCollisionNormal = collision.GetContact(0).normal;
             //Debug.Log($"[{SimClock.TickCounter}]Collided with: {collision.collider.name}(tag:{collision.collider.tag}) at {collision.contacts.First().point}");
+            // DON'T get the Tag from gameObject because it will yield unexpected results (gets tag from parent etc.)
             switch (collision.collider.tag)
             {
                 case "NormalWall":
@@ -231,45 +234,60 @@ namespace Tankito {
                     break;
             }
         }
-        private void OnTriggerEnter2D(Collider2D collision)
+        private void OnTriggerEnter2D(Collider2D collided)
         {
-            switch (collision.gameObject.tag)
+            //Debug.Log($"[{SimClock.TickCounter}] Entered Trigger of {collider}(tag:{collider.tag})");
+            switch (collided.tag)
             {
                 case "Parry":
+                    //Debug.Log("Entered Parry Trigger");
                     m_lifetime = 0;
                     m_bouncesLeft = BulletCannonRegistry.Instance[m_simObj.OwnerId].Properties.bouncesTotal;
 
                     Vector2 parriedDirection;
 
                     // If we are parrying our own bullet, then keep it flying in the same direction and just apply the speed boost
-                    if (LastShooterObjId == collision.gameObject.GetComponent<ASimulationObject>().SimObjId)
+                    if (LastShooterObjId == collided.GetComponentInParent<ASimulationObject>().SimObjId)
                     {
-                        parriedDirection = m_rb.velocity.normalized;
+                        // Avoid SelfParry loops with frequency under 0.3s
+                        if (m_lifetime <= selfCollisionTreshold)
+                        {
+                            return;
+                        }
+
+                        Debug.Log("Parried your own bullet!");
+
+                        var incomingDirection = m_rb.velocity.normalized;
+                        var collisionNormal = (m_rb.position - (Vector2)collided.transform.position).normalized;
+
+                        parriedDirection = Vector2.Reflect(incomingDirection, collisionNormal);
                     }
                     else
                     {
+                        Debug.Log($"Parried [{LastShooterObjId}]'s bullet!");
                         Vector2 newTargetPosition;
                         if (NetworkManager.Singleton.IsServer)
                         {
-                            newTargetPosition = ServerSimulationManager.Instance.GetSimObj(LastShooterObjId).transform.position;
+                            newTargetPosition = ServerSimulationManager.Instance.GetSimObj(LastShooterObjId).Position;
                         }
                         else
                         {
-                            newTargetPosition = ClientSimulationManager.Instance.GetSimObj(LastShooterObjId).transform.position;
+                            newTargetPosition = ClientSimulationManager.Instance.GetSimObj(LastShooterObjId).Position;
                         }
 
                         parriedDirection = (newTargetPosition - m_rb.position).normalized;
                     }
 
+                    Debug.Log($"Parried in direction: {parriedDirection}");
+
                     // We want the bullet to fly faster than before
                     m_rb.velocity = BulletCannonRegistry.Instance[m_simObj.OwnerId].Properties.velocity * PARRY_SPEED_BOOST * parriedDirection;
 
                     // Update the last shooter variable before returning the bullet
-                    SetLastShooterObjId(collision.gameObject.GetComponent<ASimulationObject>().SimObjId);
+                    SetLastShooterObjId(collided.GetComponentInParent<ASimulationObject>().SimObjId);
                     break;
                 
                 default:
-                    Detonate();
                     break;
             }
         }
