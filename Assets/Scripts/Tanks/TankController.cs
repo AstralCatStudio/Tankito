@@ -453,7 +453,13 @@ namespace Tankito
                     break;
 
                 case PlayerState.Dashing:
-
+                    MusicManager.Instance.PlayDisparo("snd_dash");
+                    break;
+                    
+                case PlayerState.Parrying:
+                    MusicManager.Instance.PlayDisparo("snd_parry");
+                    Debug.Log("PARRU SONIDOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
+                    break;
             }
         }
 
@@ -511,7 +517,6 @@ namespace Tankito
                 if (SimClock.Instance.Active)
                 {
                     Instantiate(dashParticles, transform.position + transform.right * dashParticleOffset, transform.rotation);
-                    MusicManager.Instance.PlaySoundPitch("snd_dash");
                 }
 
             }
