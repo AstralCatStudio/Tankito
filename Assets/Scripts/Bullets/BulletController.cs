@@ -33,6 +33,10 @@ namespace Tankito {
         //public bool IsStuck { get => m_rb.constraints == RigidbodyConstraints2D.FreezeAll; }
         public Vector2 Velocity => m_rb.velocity;
 
+        public Animator animator;
+        [SerializeField] Sprite explosiveSprite;
+        [SerializeField] Sprite stickieSprite;
+
         #region Boomerang
         BulletMoveType bulletType = BulletMoveType.Normal;
         public BulletMoveType BulletType { get => bulletType; set => bulletType = value; }
@@ -47,6 +51,7 @@ namespace Tankito {
         {
             m_simObj = GetComponent<BulletSimulationObject>();
             m_rb = GetComponent<Rigidbody2D>();
+            animator = GetComponent<Animator>();
         }
 
         public void SetLastShooterObjId(ulong simObjId)
@@ -82,7 +87,24 @@ namespace Tankito {
             {
                 transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = bulletSprite;
             }
-            
+
+            // Animacion explosivos
+            if (BulletCannonRegistry.Instance[m_simObj.OwnerId].bulletSpriteModifier != null)
+            {
+                if (BulletCannonRegistry.Instance[m_simObj.OwnerId].bulletSpriteModifier.bulletSprite.name == explosiveSprite.name) // Explosivo
+                {
+                    animator.SetInteger("ExplosionAnimation", 1);
+                }
+                else if (BulletCannonRegistry.Instance[m_simObj.OwnerId].bulletSpriteModifier.bulletSprite.name == stickieSprite.name) // Stickie
+                {
+                    animator.SetInteger("ExplosionAnimation", 2);
+                }
+                else
+                {
+                    animator.SetInteger("ExplosionAnimation", 0);
+                }
+            }
+
             if (triggerOnSpawnEvents) OnSpawn?.Invoke(this);
             //Debug.Log(m_rb.velocity.magnitude);
         }
