@@ -36,7 +36,7 @@ namespace Tankito
         {
             if (damages && collision.gameObject.CompareTag("Player"))
             {
-                collision.GetComponent<TankData>().TakeDamage(1);
+                collision.GetComponentInParent<TankData>().TakeDamage(1);
             }
         }
     }
