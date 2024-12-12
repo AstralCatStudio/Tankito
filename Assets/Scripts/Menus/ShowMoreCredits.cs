@@ -22,7 +22,6 @@ public class ShowMoreCredits : MonoBehaviour
     {
         if (Input.GetMouseButton(0))
         {
-            Debug.Log("hola");
             creditsSpeed *= 1.02f;
         }
         if (Input.GetMouseButtonUp(0))
