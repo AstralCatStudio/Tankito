@@ -71,7 +71,7 @@ namespace Tankito {
             transform.localScale = BulletCannonRegistry.Instance[m_simObj.OwnerId].Properties.scaleMultiplier * 0.3f;
             // BERNAT: estoy super empanado ahora, probablmente ohay una forma mejor de 
             // hacerlo sin tener que cambiar nada pero no soy capaz de pensar en ella ahora mismo la verdad
-            SetLastShooterObjId(BulletCannonRegistry.Instance[m_simObj.OwnerId].GetComponentInParent<TankSimulationObject>().SimObjId);
+            SetLastShooterObjId(BulletCannonRegistry.Instance[m_simObj.OwnerId].GetComponentInParent<TankSimulationObject>(true).SimObjId);
 
             transform.rotation = Quaternion.LookRotation(new Vector3(0, 0, 1), m_rb.velocity.normalized);
             foreach (var modifier in Tankito.BulletCannonRegistry.Instance[m_simObj.OwnerId].Modifiers)
