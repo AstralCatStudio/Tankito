@@ -59,7 +59,8 @@ public class MenuAnimations : MonoBehaviour
         {
             var signx = Mathf.Sign(element.anchoredPosition.x);
             var signy = Mathf.Sign(element.anchoredPosition.y);
-            newPosition = element.anchoredPosition + new Vector2(signx * ((Camera.main.scaledPixelWidth) - (Mathf.Abs(element.anchoredPosition.x) + element.sizeDelta.x)), signy * ((Camera.main.scaledPixelHeight) - (Mathf.Abs(element.anchoredPosition.y) + element.sizeDelta.y)));
+            //newPosition = element.anchoredPosition + new Vector2(signx * ((Camera.main.pixelWidth) - (Mathf.Abs(element.anchoredPosition.x) + element.sizeDelta.x)), signy * ((Camera.main.pixelHeight) - (Mathf.Abs(element.anchoredPosition.y) + element.sizeDelta.y)));
+            newPosition = element.anchoredPosition + new Vector2(signx * ((Camera.main.pixelWidth)), signy * ((Camera.main.pixelHeight)));
         }
         else
         {

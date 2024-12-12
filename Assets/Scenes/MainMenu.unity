@@ -183,11 +183,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7aec2b786d1e8404d8bba4ecae1ec98b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enterDuration: 1
+  enterDuration: 1.3
   exitDuration: 0.3
   enableTime: 0
-  disableTime: 2
-  delay: 0.1
+  disableTime: 1.2
+  delay: 0.05
 --- !u!1 &14269766
 GameObject:
   m_ObjectHideFlags: 0
@@ -1996,7 +1996,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
   m_AnchoredPosition: {x: -263.9394, y: -100}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: 400, y: 400}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &223027171
 GameObject:
@@ -4713,11 +4713,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7aec2b786d1e8404d8bba4ecae1ec98b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enterDuration: 1
+  enterDuration: 1.3
   exitDuration: 0.3
   enableTime: 0
-  disableTime: 2
-  delay: 0.2
+  disableTime: 1.2
+  delay: 0.05
 --- !u!1 &490272717
 GameObject:
   m_ObjectHideFlags: 0
@@ -4769,11 +4769,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7aec2b786d1e8404d8bba4ecae1ec98b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enterDuration: 1
+  enterDuration: 1.3
   exitDuration: 0.3
   enableTime: 0
-  disableTime: 2
-  delay: 0.1
+  disableTime: 1.2
+  delay: 0.05
 --- !u!1 &499400411
 GameObject:
   m_ObjectHideFlags: 0
@@ -6455,11 +6455,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7aec2b786d1e8404d8bba4ecae1ec98b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enterDuration: 1
+  enterDuration: 1.3
   exitDuration: 0.3
   enableTime: 0
-  disableTime: 2
-  delay: 0.1
+  disableTime: 1.2
+  delay: 0.05
 --- !u!1 &668254630
 GameObject:
   m_ObjectHideFlags: 0
@@ -6522,11 +6522,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7aec2b786d1e8404d8bba4ecae1ec98b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enterDuration: 1
+  enterDuration: 1.3
   exitDuration: 0.3
   enableTime: 0
-  disableTime: 2
-  delay: 0.1
+  disableTime: 1.2
+  delay: 0.05
 --- !u!114 &668254633
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6930,11 +6930,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7aec2b786d1e8404d8bba4ecae1ec98b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enterDuration: 1
+  enterDuration: 1.3
   exitDuration: 0.3
   enableTime: 0
-  disableTime: 2
-  delay: 0.1
+  disableTime: 1.2
+  delay: 0.05
 --- !u!1 &713372928
 GameObject:
   m_ObjectHideFlags: 0
@@ -7807,7 +7807,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 1130, y: -500.00714}
+  m_AnchoredPosition: {x: 1130, y: -500.00708}
   m_SizeDelta: {x: 993.5, y: 1000}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &777533131
@@ -8732,11 +8732,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7aec2b786d1e8404d8bba4ecae1ec98b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enterDuration: 1
+  enterDuration: 1.3
   exitDuration: 0.3
   enableTime: 0
-  disableTime: 2
-  delay: 0.1
+  disableTime: 1.2
+  delay: 0.05
 --- !u!114 &839094638
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19205,11 +19205,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7aec2b786d1e8404d8bba4ecae1ec98b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enterDuration: 1
+  enterDuration: 1.3
   exitDuration: 0.3
   enableTime: 0
-  disableTime: 2
-  delay: 0.1
+  disableTime: 1.2
+  delay: 0.05
 --- !u!114 &1395563653
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24630,7 +24630,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 1130, y: -1290.0358}
+  m_AnchoredPosition: {x: 1130, y: -1290.0356}
   m_SizeDelta: {x: 1500, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1850606241
@@ -26681,11 +26681,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7aec2b786d1e8404d8bba4ecae1ec98b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enterDuration: 1
+  enterDuration: 1.3
   exitDuration: 0.3
   enableTime: 0
-  disableTime: 2
-  delay: 0.1
+  disableTime: 1.2
+  delay: 0.05
 --- !u!225 &2028730314
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -28152,11 +28152,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7aec2b786d1e8404d8bba4ecae1ec98b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enterDuration: 1
+  enterDuration: 1.3
   exitDuration: 0.3
   enableTime: 0
-  disableTime: 2
-  delay: 0.1
+  disableTime: 1.2
+  delay: 0.05
 --- !u!1 &2109599603
 GameObject:
   m_ObjectHideFlags: 0
