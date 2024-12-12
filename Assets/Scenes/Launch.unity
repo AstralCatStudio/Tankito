@@ -156,6 +156,7 @@ MonoBehaviour:
   Worst_Case_Latency: 0.325
   Client_Jitter_Buffer_Time: 0.008
   Client_Max_Desync_Count: 5
+  Server_Max_Desync_Count: 10
   Sim_Tick_Rate: 60
   DEBUG_LATENCY: 0
   DEBUG_PARAMS: 0
@@ -305,7 +306,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DEBUG: 0
-  m_startingScene: 1
+  m_startingScene: 0
 --- !u!4 &1609486872
 Transform:
   m_ObjectHideFlags: 0
