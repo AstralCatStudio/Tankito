@@ -392,7 +392,7 @@ namespace Tankito
                     : currentState == PlayerState.Parrying ? m_lastParryTick
                     : throw new ArgumentOutOfRangeException();
 
-            if (m_lastAnimTrigger.action != currentState || m_lastAnimTrigger.timestamp <= lastActionTick)
+            if (m_lastAnimTrigger.action != currentState || m_lastAnimTrigger.timestamp < lastActionTick)
             {
                 if (SimClock.Instance.Active)
                 {
