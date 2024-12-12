@@ -41,6 +41,11 @@ namespace Tankito
         [SerializeField] private float m_aimSpeed = 900f;
         [SerializeField] public GameObject dashParticles;
         [SerializeField] public float dashParticleOffset = 1;
+        [SerializeField] public GameObject fireParticles;
+        [SerializeField] public float fireParticleOffset = 2f;
+        [SerializeField] public GameObject parryParticles;
+        [SerializeField] public float parryParticleOffset = 0;
+        [SerializeField] public float animationTimingOffsetParry = -0.2f;
 
 
         /// <summary>
@@ -309,6 +314,16 @@ namespace Tankito
                     AimTank(aimVector, deltaTime);
                     //MoveTank(input.moveVector, deltaTime);
 
+                    // VFX
+                    if (SimClock.Instance.Active)
+                    {
+                        int particleSpawnTick = 0;
+                        if (fireTick == particleSpawnTick)
+                        {
+                            Instantiate(fireParticles, m_turretRB.transform.position + m_turretRB.transform.right * fireParticleOffset, m_turretRB.transform.rotation);
+                        }
+                    }
+
                     if (fireTick >= FIRE_TICK_DURATION)
                     {
                         m_playerState = PlayerState.Moving;
@@ -335,7 +350,7 @@ namespace Tankito
                     // VFX
                     if (SimClock.Instance.Active)
                     {
-                        int particleSpawnTick = (int)(dashTick/(float)m_dashTicks * 0.1); 
+                        int particleSpawnTick = (int)(dashTick/(float)m_dashTicks * 0.25); 
                         if (dashTick == particleSpawnTick)
                         {
                             Instantiate(dashParticles, transform.position + transform.right * dashParticleOffset, transform.rotation);
@@ -364,6 +379,17 @@ namespace Tankito
 
                     MoveTank(input.moveVector, deltaTime);
                     AimTank(input.moveVector, deltaTime);
+
+
+                    // VFX
+                    if (SimClock.Instance.Active)
+                    {
+                        int particleSpawnTick = (int)(parryTick / (float)m_parryTicks * animationTimingOffsetParry);
+                        if (parryTick == particleSpawnTick)
+                        {
+                            Instantiate(parryParticles, transform.position + transform.right * parryParticleOffset, transform.rotation);
+                        }
+                    }
 
                     if (parryTick >= m_parryTicks)
                     {
@@ -476,7 +502,6 @@ namespace Tankito
                     
                 case PlayerState.Parrying:
                     MusicManager.Instance.PlayDisparo("snd_parry");
-                    Debug.Log("PARRU SONIDOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
                     break;
             }
         }
