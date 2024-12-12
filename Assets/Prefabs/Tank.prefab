@@ -413,11 +413,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6cdd9da2576f6654890f582649fea450, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_tankSimulationObject: {fileID: 0}
   m_tankRB: {fileID: 8520293575514935909}
   m_turretRB: {fileID: 8342253699622009969}
   m_speed: 8
   m_rotationSpeed: 270
   m_aimSpeed: 1080
+  dashParticles: {fileID: 0}
+  dashParticleOffset: 1
   m_parryHitbox: {fileID: 9122990806937936538}
   m_dashSpeedCurve:
     serializedVersion: 2
@@ -519,12 +522,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerNumber: 0
   playerColor: {r: 1, g: 1, b: 1, a: 1}
+  m_health: 0
   position: 0
   playerInfo: {fileID: 0}
-  damageBufferTime: 0.5
+  damageBufferTime: 0.2
   damageBuffer: 0
   tankExplosion: {fileID: 1623344447312403577, guid: 5e74ccdca0df7814382d4d833481040c, type: 3}
   tankDamagedExplosion: {fileID: 1623344447312403577, guid: 32a0da30b702d234c8ec58a4e4a17bb0, type: 3}
+  tankController: {fileID: 0}
 --- !u!114 &5467474100561306828
 MonoBehaviour:
   m_ObjectHideFlags: 0

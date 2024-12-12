@@ -140,6 +140,7 @@ namespace Tankito {
             OnDetonate = (ABullet) => {};
             bulletType = BulletMoveType.Normal;
             m_rb.constraints = RigidbodyConstraints2D.None;
+            transform.GetChild(0).localRotation = Quaternion.identity;
         }
 
         public void Detonate(bool lifeTimeOver = false)

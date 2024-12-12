@@ -134,9 +134,14 @@ namespace Tankito
             }
             SyncronizeModifiersClientRpc(indexModificadores.ToArray());
         }
+        bool selectionSent;
         public void ConfirmSelection()
         {
-            ConfirmSelectionServerRpc(NetworkManager.LocalClientId);
+            if (!selectionSent)
+            {
+                ConfirmSelectionServerRpc(NetworkManager.LocalClientId);
+                selectionSent = true;
+            }
         }
 
         [ServerRpc(RequireOwnership = false)]
@@ -168,8 +173,13 @@ namespace Tankito
                     Debug.LogWarning("El modificador no es stackable y ya lo tienes - TODO: que salga por pantalla en vez de esto");
                 }
             }
+            SelectionReceivedClientRpc();
         }
-
+        [ClientRpc]
+        void SelectionReceivedClientRpc()
+        {
+            selectionSent = false;
+        }
         [ClientRpc]
         void AddModifierClientRpc(ulong playerClientId, int modifierSelectorId)
         {
