@@ -74,7 +74,7 @@ namespace Tankito
         {
             if (IsServer)
             {
-                DieClientRpc();
+                DieClientRpc(true);
             }
             if (ultimojugador)
             {
@@ -85,7 +85,14 @@ namespace Tankito
             
             gameObject.SetActive(false);
         }
-
+        [ClientRpc]
+        public void DieClientRpc(bool ultimojugador)
+        {
+            if (!IsServer)
+            {
+                Die(true);
+            }
+        }
         [ClientRpc]
         public void DieClientRpc()
         {
