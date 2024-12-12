@@ -483,7 +483,9 @@ namespace Tankito
             switch (nAlive)
             {
                 case 1:
+
                     var winner = AliveTanks.First();
+                    winner.Die(true);
                     winner.AwardPoints(m_players.Count);
                     if (DEBUG) Debug.Log($"{winner} ha ganado la ronda");
                     if (IsServer) EndRound();
