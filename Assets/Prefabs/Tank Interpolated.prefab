@@ -677,7 +677,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f3fe6949ed78184f8a55d21f67e9bc3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  modifiers: []
+  modifiers:
+  - {fileID: 11400000, guid: 7e0a6855d18046545933cd661f7ac059, type: 2}
   m_bulletCannon: {fileID: 1150693991829146166}
   m_tankController: {fileID: 3727413298749160509}
 --- !u!1 &6459951814770460290

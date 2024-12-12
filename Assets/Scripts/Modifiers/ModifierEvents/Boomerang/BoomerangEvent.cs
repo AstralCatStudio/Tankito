@@ -9,7 +9,6 @@ namespace Tankito
     {
         public override void StartEvent(BulletController bullet)
         {
-            if (SimClock.Instance.Active == false) return;
             bullet.BulletType = BulletMoveType.Boomerang;
         }
     }

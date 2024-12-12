@@ -227,7 +227,7 @@ namespace Tankito {
                     if (m_bouncesLeft <= 0)
                     {
                         if (bulletType != BulletMoveType.Sticky) Detonate();
-                        else m_rb.constraints = RigidbodyConstraints2D.FreezeAll;
+                        else m_rb.velocity = Vector2.zero;
                     }
                     else
                     {
@@ -253,7 +253,7 @@ namespace Tankito {
                 case "Bullet":
                     if (bulletType == BulletMoveType.Sticky &&
                         collision.gameObject.GetComponent<BulletController>().BulletType == BulletMoveType.Sticky)
-                        m_rb.constraints = RigidbodyConstraints2D.FreezeAll;
+                        m_rb.velocity = Vector2.zero;
                     else Detonate();
                     break;
 
@@ -314,7 +314,11 @@ namespace Tankito {
                     // Update the last shooter variable before returning the bullet
                     SetLastShooterObjId(collided.GetComponentInParent<ASimulationObject>().SimObjId);
                     break;
-                
+
+                case "Explosion":
+                    Detonate();
+                    break;
+
                 default:
                     break;
             }
