@@ -332,6 +332,16 @@ namespace Tankito
 
                     AimTank(aimVector, deltaTime);
 
+                    // VFX
+                    if (SimClock.Instance.Active)
+                    {
+                        int particleSpawnTick = (int)(dashTick/(float)m_dashTicks * 0.1); 
+                        if (dashTick == particleSpawnTick)
+                        {
+                            Instantiate(dashParticles, transform.position + transform.right * dashParticleOffset, transform.rotation);
+                        }
+                    }
+
                     if (dashTick >= m_dashTicks)
                     {
                         m_playerState = PlayerState.Moving;
@@ -391,8 +401,16 @@ namespace Tankito
                             : currentState == PlayerState.Dashing ? m_dashLeadTimeMultiplier
                             : currentState == PlayerState.Parrying ? m_parryLeadTimeMultiplier
                             : 1;
+
+                    int actionDurationTicks = 
+                            currentState == PlayerState.Firing ? FIRE_TICK_DURATION
+                            : currentState == PlayerState.Dashing ? m_dashTicks
+                            : currentState == PlayerState.Parrying ? m_parryTicks
+                            : 0;
+                            
                     int actionTick = (int)(SimClock.TickCounter - lastActionTick - ACTION_LEAD_TICKS * leadTimeMultiplier);
-                    float normalizedLeadTime = (actionTick + ACTION_LEAD_TICKS * leadTimeMultiplier)/(ACTION_LEAD_TICKS * leadTimeMultiplier);
+
+                    float normalizedActionTime = (actionTick + ACTION_LEAD_TICKS * leadTimeMultiplier)/(ACTION_LEAD_TICKS * leadTimeMultiplier + actionDurationTicks);
                     var turretAnimationState = m_turretAnimator.GetCurrentAnimatorStateInfo(0);
                     var hullAnimationState = m_hullAnimator.GetCurrentAnimatorStateInfo(0);
                     var fishAnimationState = m_fishAnimator.GetCurrentAnimatorStateInfo(0);
@@ -411,7 +429,7 @@ namespace Tankito
                     if (DEBUG_INPUT_CALLS) Debug.Log($"[{SimClock.TickCounter}] CurrentAnimationStates: \n" +
                         $"Is turretState name '{actionAnimState + " Turret"}':{turretAnimationState.IsName(actionAnimState + " Turret")}\n" +
                         $"Is hullState name '{actionAnimState + " Hull"}':{hullAnimationState.IsName(actionAnimState + " Hull")}\n" + 
-                        $"normalizedLeadTime: {normalizedLeadTime} animatorNormalizedTime:(turret-{turretAnimationState.normalizedTime} hull-{hullAnimationState.normalizedTime})");
+                        $"normalizedLeadTime: {normalizedActionTime} animatorNormalizedTime:(turret-{turretAnimationState.normalizedTime} hull-{hullAnimationState.normalizedTime})");
 
                     if (!turretAnimationState.IsName(actionAnimState + " Turret") && !m_turretAnimator.GetBool(actionAnimTrigger) ||
                         !hullAnimationState.IsName(actionAnimState + " Hull") && !m_hullAnimator.GetBool(actionAnimTrigger) ||
@@ -428,12 +446,12 @@ namespace Tankito
                         PlaySound(currentState);
                     }
                     // JSAJSAJSAJAAAAAAAAAA APPROXIMATELY 🤣😂😁😀
-                    else if (!Mathf.Approximately(turretAnimationState.normalizedTime, normalizedLeadTime) ||
-                            !Mathf.Approximately(hullAnimationState.normalizedTime, normalizedLeadTime))
+                    else if (!Mathf.Approximately(turretAnimationState.normalizedTime, normalizedActionTime) ||
+                            !Mathf.Approximately(hullAnimationState.normalizedTime, normalizedActionTime))
                     {
-                        m_turretAnimator.Play(turretAnimationState.shortNameHash, -1, normalizedLeadTime);
-                        m_hullAnimator.Play(hullAnimationState.shortNameHash, -1, normalizedLeadTime);
-                        m_fishAnimator.Play(fishAnimationState.shortNameHash, -1, normalizedLeadTime);
+                        m_turretAnimator.Play(turretAnimationState.shortNameHash, -1, normalizedActionTime);
+                        m_hullAnimator.Play(hullAnimationState.shortNameHash, -1, normalizedActionTime);
+                        m_fishAnimator.Play(fishAnimationState.shortNameHash, -1, normalizedActionTime);
                         RecordAnimTrigger();
 
                         //PlaySound(currentState);
@@ -453,7 +471,7 @@ namespace Tankito
                     break;
 
                 case PlayerState.Dashing:
-                    MusicManager.Instance.PlayDisparo("snd_dash");
+                    MusicManager.Instance.PlaySoundPitch("snd_dash");
                     break;
                     
                 case PlayerState.Parrying:
@@ -512,15 +530,6 @@ namespace Tankito
         /// <param name="dashTick"></param>
         private void DashTank(Vector2 moveVector, int dashTick, float deltaTime)
         {
-            if (dashTick == 0)
-            {
-                if (SimClock.Instance.Active)
-                {
-                    Instantiate(dashParticles, transform.position + transform.right * dashParticleOffset, transform.rotation);
-                }
-
-            }
-
             if (DEBUG_DASH)
             {
                 if (dashTick == 0)
