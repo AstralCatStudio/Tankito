@@ -10,18 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b8b3a5143a39cad4b84f6da055a79388, type: 3}
-  m_Name: Boomerang Modifier Bullet
+  m_Name: Sticky Modifier Bullet
   m_EditorClassIdentifier: 
   onSpawnEvents:
-  - {fileID: 11400000, guid: 0f1e39052909ade49bd3806905cc6963, type: 2}
+  - {fileID: 11400000, guid: cd8b323b83ec7184f9649ab0680a61ac, type: 2}
   onFlyEvents:
   - {fileID: 11400000, guid: 2fda9134924041f4eb48f22ab5264d92, type: 2}
   onHitEvents: []
   onBounceEvents: []
-  onDetonateEvents: []
+  onDetonateEvents:
+  - {fileID: 11400000, guid: e4b5820f1df6f914cadd6e67a0a35f49, type: 2}
   bulletStatsModifier:
     speedMultiplier: 1
-    sizeMultiplier: {x: 1, y: 1}
+    sizeMultiplier: {x: 2, y: 2}
     accelerationAdded: 0
     BouncesAdded: 0
     lifeTimeAdded: 0
@@ -31,7 +32,7 @@ MonoBehaviour:
     spreadMultiplier: 1
     reloadTimeAdded: 0
     BulletDirections: []
-    lifeTimeMultiplier: 1
-  bulletSprite: {fileID: 21300000, guid: fa1eae30366a15d4a9cae74fed7edd8f, type: 3}
-  bulletSpritePriority: 20
+    lifeTimeMultiplier: 2
+  bulletSprite: {fileID: 21300000, guid: 6b0c6f805212eff4da80391beb4ce8ff, type: 3}
+  bulletSpritePriority: 40
   ShootSound: 

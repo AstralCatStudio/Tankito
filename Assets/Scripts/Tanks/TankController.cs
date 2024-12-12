@@ -27,9 +27,10 @@ namespace Tankito
                 health: 2,
                 parryTime: 0.2f,
                 parryCooldown: 1.5f,
-                dashSpeed: 4f,
-                dashDistance: 1.5f,
-                dashCooldown: 2f
+                dashSpeed: 6f,
+                dashDistance: 1f,
+                dashCooldown: 2f,
+                invencibleDash : false
             );
         private List<HullModifier> m_modifiers = new List<HullModifier>();
         public List<HullModifier> Modifiers => m_modifiers;
@@ -38,7 +39,10 @@ namespace Tankito
         [SerializeField] private float m_speed;
         [SerializeField] private float m_rotationSpeed;
         [SerializeField] private float m_aimSpeed = 900f;
-        
+        [SerializeField] public GameObject dashParticles;
+        [SerializeField] public float dashParticleOffset = 1;
+
+
         /// <summary>
         /// Parry collider, must be set on a physics layer to not interfere with tanks and so on.
         /// </summary>
@@ -60,6 +64,8 @@ namespace Tankito
         [SerializeField] private Animator m_hullAnimator, m_turretAnimator, m_fishAnimator;
         private float m_dashSpeedMultiplier;
         private float m_dashDistance;
+        private bool invencibleDash = false;
+        public bool InvencibleDash { get => invencibleDash; set => invencibleDash = value; }
         int m_dashTicks;
         int m_dashCooldownTicks;
         int m_parryTicks;
@@ -158,6 +164,7 @@ namespace Tankito
 
         public void ApplyModifierList(int nRound = 0)
         {
+            invencibleDash = false;
             ApplyModifier(BaseTankStats, true);
             foreach(var mod in m_modifiers)
             {
@@ -180,6 +187,7 @@ namespace Tankito
                 m_rotationSpeed *= mod.rotationSpeedMultiplier;
                 m_tankSimulationObject.TankData.AddHealth(mod.extraHealth);
             }
+            if (mod.invencibleDash) InvencibleDash = true;
             SetParryTicks(mod.extraParryTime, mod.parryCooldownTimeAdded, reset);
             SetDashParams(mod.dashDistanceMultiplier, mod.dashSpeedMultiplier, mod.dashCooldownTimeAdded, reset);
         }
@@ -485,6 +493,12 @@ namespace Tankito
         /// <param name="dashTick"></param>
         private void DashTank(Vector2 moveVector, int dashTick, float deltaTime)
         {
+            if (dashTick == 0)
+            {
+                if (SimClock.Instance.Active)
+                    Instantiate(dashParticles, transform.position + transform.right * dashParticleOffset, transform.rotation);
+            }
+
             if (DEBUG_DASH)
             {
                 if (dashTick == 0)
