@@ -424,6 +424,8 @@ namespace Tankito
                         m_hullAnimator.SetBool(actionAnimTrigger, true);
                         m_fishAnimator.SetBool(actionAnimTrigger, true);
                         RecordAnimTrigger();
+                        
+                        PlaySound(currentState);
                     }
                     // JSAJSAJSAJAAAAAAAAAA APPROXIMATELY 🤣😂😁😀
                     else if (!Mathf.Approximately(turretAnimationState.normalizedTime, normalizedLeadTime) ||
@@ -431,9 +433,27 @@ namespace Tankito
                     {
                         m_turretAnimator.Play(turretAnimationState.shortNameHash, -1, normalizedLeadTime);
                         m_hullAnimator.Play(hullAnimationState.shortNameHash, -1, normalizedLeadTime);
+                        m_fishAnimator.Play(fishAnimationState.shortNameHash, -1, normalizedLeadTime);
                         RecordAnimTrigger();
+                        
+                        PlaySound(currentState);
                     }
                 }
+            }
+        }
+
+        private void PlaySound(PlayerState currentState)
+        {
+            switch (currentState)
+            {
+                case PlayerState.Firing:
+                    string sonido = BulletCannonRegistry.Instance[m_tankSimulationObject.OwnerClientId].bulletSpriteModifier?.ShootSound;
+                    if (sonido == null) { sonido = ""; }
+                    MusicManager.Instance.PlayDisparo(sonido);
+                    break;
+
+                case PlayerState.Dashing:
+
             }
         }
 
@@ -448,13 +468,6 @@ namespace Tankito
         private void FireTank(Vector2 aimVector, int inputTick)
         {
             if (DEBUG_FIRE) Debug.Log($"[{SimClock.TickCounter}] FireTank({m_tankSimulationObject.SimObjId}) called.");
-
-            if (SimClock.Instance.Active)
-            {
-                string sonido = BulletCannonRegistry.Instance[m_tankSimulationObject.OwnerClientId].bulletSpriteModifier?.ShootSound;
-                if (sonido == null) { sonido = ""; }
-                MusicManager.Instance.PlayDisparo(sonido);
-            }
                 
             m_cannon.Shoot(m_turretRB.position, m_turretRB.transform.right, inputTick);
         }
