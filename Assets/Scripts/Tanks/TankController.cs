@@ -5,6 +5,7 @@ using Tankito.Netcode.Simulation;
 using UnityEngine;
 using Tankito.Utils;
 using Unity.Netcode;
+using UnityEditor;
 
 namespace Tankito
 {
@@ -138,6 +139,8 @@ namespace Tankito
         public int LastDashTick { get => m_lastDashTick; set => m_lastDashTick = value; }
         public int LastParryTick { get => m_lastParryTick; set => m_lastParryTick = value; }
 
+        [SerializeField]
+        Transform tankTransform , cannonTransform;
         void Start()
         {
             if (m_tankRB == null)
@@ -419,6 +422,8 @@ namespace Tankito
             }
 
             // Action Animations Logic Handling 
+            tankTransform.localRotation = Quaternion.identity;
+            cannonTransform.localRotation = Quaternion.identity;
             SetActionAnimation();
 
             // PATCH FOR FLOATING TANKS - Will have to remove to actually leverage Unity Physics System
