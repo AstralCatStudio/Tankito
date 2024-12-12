@@ -139,8 +139,9 @@ namespace Tankito
         {
             if (!selectionSent)
             {
-                ConfirmSelectionServerRpc(NetworkManager.LocalClientId);
                 selectionSent = true;
+                ConfirmSelectionServerRpc(NetworkManager.LocalClientId);
+                
             }
         }
 
