@@ -103,7 +103,7 @@ namespace Tankito {
             {
                 gameObject.layer = 0;
             }
-            m_rb.velocity += (BulletCannonRegistry.Instance[m_simObj.OwnerId].Properties.acceleration != 0f) ? BulletCannonRegistry.Instance[m_simObj.OwnerId].Properties.acceleration * m_rb.velocity.normalized : Vector2.zero;
+            m_rb.velocity += (BulletCannonRegistry.Instance[m_simObj.OwnerId].Properties.acceleration != 0f) ? BulletCannonRegistry.Instance[m_simObj.OwnerId].Properties.acceleration / 20 * m_rb.velocity.normalized : Vector2.zero;
             if(bulletType == BulletMoveType.Boomerang)
             {
                 if(m_lifetime >= spinbackTime && m_lifetime <= spinbackTime + boomeramgEffectDuration)

@@ -981,6 +981,9 @@ MonoBehaviour:
   m_hullAnimator: {fileID: 5873195794702409541}
   m_turretAnimator: {fileID: 6117245905817614025}
   m_fishAnimator: {fileID: 3100549466779949718}
+  wallLayer:
+    serializedVersion: 2
+    m_Bits: 64
   m_playerState: 0
   DEBUG_INPUT_CALLS: 0
   DEBUG_DASH: 0
