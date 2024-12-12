@@ -377,7 +377,8 @@ MonoBehaviour:
   - {fileID: 5686654317190340676}
   - {fileID: 6714994281287985161}
   - {fileID: 8884984602972789320}
-  tankData: {fileID: 0}
+  tankData: {fileID: 6013740087781888850}
+  rotationSpeed: 30
 --- !u!1 &516088852390469953
 GameObject:
   m_ObjectHideFlags: 0
@@ -1631,8 +1632,6 @@ MonoBehaviour:
   m_speed: 8
   m_rotationSpeed: 270
   m_aimSpeed: 1080
-  dashParticles: {fileID: 8967917461059218661, guid: 754a426917180904c9714d8d76a11f7c, type: 3}
-  dashParticleOffset: -1.7
   m_parryHitbox: {fileID: 9122990806937936538}
   m_dashSpeedCurve:
     serializedVersion: 2
@@ -1678,7 +1677,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   m_hullAnimator: {fileID: 5873195794702409541}
   m_turretAnimator: {fileID: 6117245905817614025}
-  m_fishAnimator: {fileID: 3100549466779949718}
+  m_fishAnimator: {fileID: 0}
   m_playerState: 0
   DEBUG_INPUT_CALLS: 0
   DEBUG_DASH: 0
