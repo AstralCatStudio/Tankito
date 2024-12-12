@@ -16,6 +16,7 @@ namespace Tankito.Netcode.Simulation
         public override SimulationObjectType SimObjType => SimulationObjectType.Tank;
 
         public TankData TankData { get => GetComponent<TankData>(); }
+        public TankController TankController { get => m_tankController; }
 
         void Start()
         {
