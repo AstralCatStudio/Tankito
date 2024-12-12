@@ -12,7 +12,7 @@ namespace Tankito.Netcode.Simulation
     public class ClientSimulationManager : NetSimulationManager<ClientSimulationManager>
     {
         int SNAPSHOT_BUFFER_SIZE { get => SimulationParameters.SNAPSHOT_BUFFER_SIZE; }
-        int MAX_DESYNC_COUNT { get => SimulationParameters.MAX_DESYNC_COUNT; }
+        int MAX_DESYNC_COUNT { get => SimulationParameters.CLIENT_MAX_DESYNC_COUNT; }
         CircularBuffer<SimulationSnapshot> m_snapshotBuffer;
 
         /// <summary>
@@ -137,7 +137,7 @@ namespace Tankito.Netcode.Simulation
                 
                 // Desync detection, sort of a patch but meh
                 m_desyncCounter++;
-                if (m_desyncCounter > MAX_DESYNC_COUNT)
+                if (m_desyncCounter >= MAX_DESYNC_COUNT)
                 {
                     MessageHandlers.Instance.RequestSync();
                     m_desyncCounter = 0;
@@ -160,6 +160,10 @@ namespace Tankito.Netcode.Simulation
                 m_snapshotBuffer.Add(newAuthSnapshot, newAuthSnapshot.Timestamp);
 
                 SimClock.Instance.ResumeClock();
+
+                // NO LO SE A LO MEJOR AYUDA ????????????????????????
+                m_desyncCounter++;
+                
                 return;
             }
 

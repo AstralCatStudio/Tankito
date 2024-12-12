@@ -147,7 +147,9 @@ namespace Tankito {
                     m_rb.velocity = new Vector2(rotatedX, rotatedY).normalized * speed;
                 }
             }
+
             m_lifetime += deltaTime;
+            
             OnFly.Invoke(this);
             if (m_lifetime >= BulletCannonRegistry.Instance[m_simObj.OwnerId].Properties.lifetimeTotal)
             {

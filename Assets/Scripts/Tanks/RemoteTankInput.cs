@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Tankito.Netcode.Messaging;
 using Tankito.Utils;
 using Unity.Services.Matchmaker.Models;
 using UnityEngine;
@@ -14,6 +15,7 @@ namespace Tankito.Netcode.Simulation
         public InputPayload LastInput => m_replayInput;
         
         [SerializeField] private bool DEBUG = false;
+        private int m_desyncCounter = 0;
 
         //const int N_IDEAL_INPUT = 10;
         public int IdealBufferSize { get => SimulationParameters.SERVER_IDEAL_INPUT_BUFFER_SIZE; }
@@ -56,6 +58,21 @@ namespace Tankito.Netcode.Simulation
             while( m_inputBuffer.Count > 0 && m_inputBuffer.First() < SimClock.TickCounter)
             {
                 m_inputBuffer.Remove(m_inputBuffer.First());
+            }
+
+            // DESYNC CHECKING
+            if (m_inputBuffer.Count == 0)
+            {
+                m_desyncCounter++;
+            }
+            else
+            {
+                m_desyncCounter = 0;
+            }
+
+            if (m_desyncCounter >= SimulationParameters.SERVER_MAX_DESYNC_COUNT)
+            {
+                MessageHandlers.Instance.SendSynchronizationSignal(ServerSimulationManager.Instance.remoteInputTankComponents.Where(kvp => kvp.Value == this).Select(kvp => kvp.Key).ToArray());
             }
         }
 

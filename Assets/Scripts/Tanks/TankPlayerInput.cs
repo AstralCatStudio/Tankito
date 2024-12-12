@@ -186,13 +186,13 @@ namespace Tankito
         }
 
         public void OnMove(InputAction.CallbackContext ctx)
-        {           
+        {
             var input = ctx.ReadValue<Vector2>();
 
             if (input.sqrMagnitude > 1) input.Normalize();
 
             m_currentInput.moveVector = input;
-            m_currentInput.action = TankAction.None;
+            //m_currentInput.action = TankAction.None;
         }
 
         public void OnDash(InputAction.CallbackContext ctx)
