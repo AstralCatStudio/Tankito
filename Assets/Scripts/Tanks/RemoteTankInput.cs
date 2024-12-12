@@ -61,7 +61,7 @@ namespace Tankito.Netcode.Simulation
             }
 
             // DESYNC CHECKING
-            if (m_inputBuffer.Count == 0)
+            if (m_inputBuffer.Count < 1)
             {
                 m_desyncCounter++;
             }
