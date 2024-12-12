@@ -25,7 +25,7 @@ namespace Tankito
                 speed: 3f,
                 rotSpeed: 360f,
                 health: 2,
-                parryTime: 0.3f,
+                parryTime: 0.45f,
                 parryCooldown: 1.5f,
                 dashSpeed: 6f,
                 dashDistance: 1f,
