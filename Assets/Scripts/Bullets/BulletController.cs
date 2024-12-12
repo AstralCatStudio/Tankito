@@ -149,8 +149,10 @@ namespace Tankito {
             OnDetonate.Invoke(this);
 
             if (SimClock.Instance.Active && NetworkManager.Singleton.IsClient)
+            {
                 MusicManager.Instance.PlayBulletDestroy();
-
+                Instantiate(explosionVisual, transform.position, transform.rotation);
+            }
 
             if (NetworkManager.Singleton.IsServer)
             {
@@ -163,10 +165,10 @@ namespace Tankito {
                 // Debug.Log("LifeTimeOver?=>" + lifeTimeOver);
                 BulletSimulationObject bulletSimObj = GetComponent<BulletSimulationObject>();
                 ClientSimulationManager.Instance.QueueForDespawn(bulletSimObj.SimObjId);
-                Instantiate(explosionVisual, transform.position, transform.rotation);
             }
             else
             {
+                
             }
         }
 
