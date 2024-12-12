@@ -398,15 +398,16 @@ namespace Tankito
                     MoveTank(input.moveVector, deltaTime);
                     AimTank(input.moveVector, deltaTime);
 
-
                     // VFX
-                    if (SimClock.Instance.Active)
+                    if (SimClock.Instance.Active || m_lastAnimTrigger.timestamp != m_lastParryTick)
                     {
-                        int particleSpawnTick = (int)( (parryTick + addedLeadTicks) / (m_parryTicks + addedLeadTicks) );
-                        Debug.Log($"[{SimClock.TickCounter}] ParticleSpawnTick({particleSpawnTick}) / {m_parryTicks + addedLeadTicks} ParryVFXtick: {(m_parryTicks + addedLeadTicks) * animationTimingOffsetParry}");
-                        if ( particleSpawnTick == ((m_parryTicks + addedLeadTicks) * animationTimingOffsetParry) )
+                        int absoluteParryTick = parryTick + addedLeadTicks;
+                        int totalParryDuration = m_parryTicks + addedLeadTicks;
+                        int parryVFXtick = (int)(totalParryDuration * animationTimingOffsetParry);
+                        //Debug.Log($"[{SimClock.TickCounter}] AddedLeadTicks({addedLeadTicks}) parryTick({parryTick}) ParticleSpawnTick({absoluteParryTick}) / {m_parryTicks + addedLeadTicks} ParryVFXtick: {parryVFXtick}");
+                        if ( absoluteParryTick == parryVFXtick )
                         {
-                            Instantiate(parryParticles, transform.position + transform.right * parryParticleOffset, transform.rotation);
+                            Instantiate(parryParticles, transform.position + transform.right * parryParticleOffset, m_turretRB.transform.rotation);
                         }
                     }
 
