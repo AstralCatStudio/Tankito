@@ -496,7 +496,11 @@ namespace Tankito
             if (dashTick == 0)
             {
                 if (SimClock.Instance.Active)
+                {
                     Instantiate(dashParticles, transform.position + transform.right * dashParticleOffset, transform.rotation);
+                    MusicManager.Instance.PlaySoundPitch("snd_dash");
+                }
+
             }
 
             if (DEBUG_DASH)
