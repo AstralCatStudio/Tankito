@@ -475,7 +475,11 @@ namespace Tankito
                 EndRound();
             }
         }
-
+        [ClientRpc]
+        void DeactivateTankClientRpc(ulong tank)
+        {
+            m_players[tank].gameObject.SetActive(false);
+        }
         private void CheckForWinner()
         {
             var nAlive = AliveTanks.Count();
@@ -490,6 +494,7 @@ namespace Tankito
                     
                     if (DEBUG) Debug.Log($"{winner} ha ganado la ronda");
                     if (IsServer) EndRound();
+                    DeactivateTankClientRpc(winner.OwnerClientId);
                     winner.gameObject.SetActive(false);
                     break;
 
