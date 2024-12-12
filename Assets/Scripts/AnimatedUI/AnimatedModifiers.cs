@@ -87,7 +87,7 @@ namespace Tankito
                 if (player.IsOwner)
                 {
                     
-                    player.SetClientDataServerRpc(player.Username, player.SkinSelected, player.playerColor);
+                    player.SetClientDataServerRpc(player.Username, player.SkinSelected);
                 }
             }
             foreach (TankData player in players)

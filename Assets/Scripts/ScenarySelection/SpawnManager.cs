@@ -65,7 +65,7 @@ namespace Tankito.ScenarySelection
 
                     // Coloca al jugador ya conectado en el punto de spawn
                     GameObject player = NetworkManager.Singleton.ConnectedClients[(ulong)m_spawnPoints[i].clientId].PlayerObject.gameObject;
-                    GameManager.Instance.SetObjectPositionClientRpc(player, m_spawnPoints[i].transform.position, m_spawnPoints[i].transform.rotation, id);
+                    GameManager.Instance.SetTankPositionClientRpc(player, m_spawnPoints[i].transform.position, m_spawnPoints[i].transform.rotation, id);
                 }
             }
         }

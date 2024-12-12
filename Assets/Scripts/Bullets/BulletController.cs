@@ -9,7 +9,7 @@ using Tankito.Netcode.Simulation;
 
 namespace Tankito {
 
-    public enum BulletMoveType { Normal, Boomerang }
+    public enum BulletMoveType { Normal, Boomerang, Sticky }
     public class BulletController : MonoBehaviour
     {
         BulletSimulationObject m_simObj;
@@ -28,6 +28,8 @@ namespace Tankito {
                                         OnDetonate = (ABullet) => { };
         [SerializeField] private bool PREDICT_DESTRUCTION = true;
         public Sprite bulletSprite;
+
+        public bool IsStiCked { get => m_rb.constraints == RigidbodyConstraints2D.FreezeAll; }
 
         #region Boomerang
         BulletMoveType bulletType = BulletMoveType.Normal;
@@ -137,6 +139,7 @@ namespace Tankito {
             OnBounce = (ABullet) => {};
             OnDetonate = (ABullet) => {};
             bulletType = BulletMoveType.Normal;
+            m_rb.constraints = RigidbodyConstraints2D.None;
         }
 
         public void Detonate(bool lifeTimeOver = false)
@@ -183,6 +186,7 @@ namespace Tankito {
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
+            OnHit.Invoke(this);
             lastCollisionNormal = collision.GetContact(0).normal;
             //Debug.Log($"[{SimClock.TickCounter}]Collided with: {collision.collider.name}(tag:{collision.collider.tag}) at {collision.contacts.First().point}");
             switch (collision.collider.tag)
@@ -190,7 +194,8 @@ namespace Tankito {
                 case "NormalWall":
                     if (m_bouncesLeft <= 0)
                     {
-                        Detonate();
+                        if (bulletType != BulletMoveType.Sticky) Detonate();
+                        else m_rb.constraints = RigidbodyConstraints2D.FreezeAll;
                     }
                     else
                     {
@@ -208,12 +213,17 @@ namespace Tankito {
                     }
                     else
                     {
-                        collision.gameObject.GetComponent<TankData>().TakeDamage(1);
+                        collision.transform.parent.gameObject.GetComponent<TankData>().TakeDamage(1);
                         Detonate();
                     }
                     break;
-                
-                
+
+                case "Bullet":
+                    if (bulletType == BulletMoveType.Sticky &&
+                        collision.gameObject.GetComponent<BulletController>().BulletType == BulletMoveType.Sticky)
+                        m_rb.constraints = RigidbodyConstraints2D.FreezeAll;
+                    else Detonate();
+                    break;
 
                 default:
                     Detonate();
@@ -255,6 +265,10 @@ namespace Tankito {
 
                     // Update the last shooter variable before returning the bullet
                     SetLastShooterObjId(collision.gameObject.GetComponent<ASimulationObject>().SimObjId);
+                    break;
+                
+                default:
+                    Detonate();
                     break;
             }
         }

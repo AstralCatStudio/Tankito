@@ -131,6 +131,10 @@ namespace Tankito
                 spawnManager.SetPlayerInSpawn(clientId);
 
                 var tankData = newPlayer.GetComponent<TankData>();
+                if (tankData == null)
+                {
+                    Debug.LogException(new InvalidOperationException("Tank Data component not found!"));
+                }
                 Debug.Log($"TankData = {tankData}");
                 RoundManager.Instance.AddPlayer(tankData);
                 RoundManager.Instance.UpdateRemoteClientPlayerList();
@@ -272,18 +276,20 @@ namespace Tankito
         public void SetObjectPosition(GameObject targetObject, Vector3 newPosition, Quaternion newRotation)
         {
             NetworkObjectReference networkObjectReference = new NetworkObjectReference(targetObject);
-            SetObjectPositionClientRpc(networkObjectReference, newPosition, newRotation);
+            SetTankPositionClientRpc(networkObjectReference, newPosition, newRotation);
         }
 
         [ClientRpc]
-        private void SetObjectPositionClientRpc(NetworkObjectReference targetObjectReference, Vector3 newPosition, Quaternion newRotation)
+        private void SetTankPositionClientRpc(NetworkObjectReference targetObjectReference, Vector3 newPosition, Quaternion newRotation)
         {
             if (targetObjectReference.TryGet(out var targetObject))
             {
-                if (targetObject != null)
+                GameObject target = targetObject.GetComponent<TankSimulationObject>().TankController.gameObject;
+
+                if (target != null)
                 {
-                    targetObject.gameObject.GetComponent<Transform>().position = newPosition;
-                    targetObject.gameObject.GetComponent<Transform>().rotation = newRotation;
+                    target.gameObject.GetComponent<Transform>().position = newPosition;
+                    target.gameObject.GetComponent<Transform>().rotation = newRotation;
                     Debug.Log($"GameObject del jugador {targetObject.GetComponent<NetworkObject>().OwnerClientId} colocado en el punto {newPosition.ToString()}");
                 }
                 else
@@ -294,16 +300,18 @@ namespace Tankito
         }
 
         [ClientRpc]
-        public void SetObjectPositionClientRpc(NetworkObjectReference targetObjectReference, Vector3 newPosition, Quaternion newRotation, ulong clientId)
+        public void SetTankPositionClientRpc(NetworkObjectReference targetObjectReference, Vector3 newPosition, Quaternion newRotation, ulong clientId)
         {
             if (NetworkManager.Singleton.LocalClientId == clientId)
             {
                 if (targetObjectReference.TryGet(out var targetObject))
                 {
-                    if (targetObject != null)
+                    GameObject target = targetObject.GetComponent<TankSimulationObject>().TankController.gameObject;
+
+                    if (target != null)
                     {
-                        targetObject.gameObject.GetComponent<Transform>().position = newPosition;
-                        targetObject.gameObject.GetComponent<Transform>().rotation = newRotation;
+                        target.gameObject.GetComponent<Transform>().position = newPosition;
+                        target.gameObject.GetComponent<Transform>().rotation = newRotation;
                         Debug.Log($"GameObject del jugador {targetObject.GetComponent<NetworkObject>().OwnerClientId} colocado en el punto {newPosition.ToString()}");
                     }
                     else
