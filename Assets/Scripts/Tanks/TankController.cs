@@ -435,7 +435,14 @@ namespace Tankito
         private void SetActionAnimation()
         {
             var currentState = m_playerState;
-            if (currentState == PlayerState.Moving) return;
+            // Root Motion offset patch
+            if (currentState == PlayerState.Moving)
+            {
+                Debug.Log("Reiniciando animacion");
+                m_tankTransform.localRotation = Quaternion.identity;
+                m_cannonTransform.localRotation = Quaternion.identity;
+                return;
+            }
             int lastActionTick =
                     currentState == PlayerState.Firing ? m_lastFireTick
                     : currentState == PlayerState.Dashing ? m_lastDashTick
@@ -509,12 +516,7 @@ namespace Tankito
                 }
             }
 
-            // Root Motion offset patch
-            if (SimClock.Instance.Active && currentState == PlayerState.Moving)
-            {
-                m_tankTransform.localRotation = Quaternion.identity;
-                m_cannonTransform.localRotation = Quaternion.identity;
-            }
+            
         }
 
         private void PlaySound(PlayerState currentState)
