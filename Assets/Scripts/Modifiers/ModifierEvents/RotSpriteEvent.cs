@@ -14,7 +14,7 @@ namespace Tankito
 
             if(bullet.Velocity.sqrMagnitude > 0.05f)
             {
-                bullet.transform.GetChild(0).transform.localRotation = Quaternion.Euler(0, 0, SimClock.TickCounter * rotSpeed * bullet.Velocity.sqrMagnitude * SimClock.SimDeltaTime);
+                bullet.transform.GetChild(0).transform.Rotate(new Vector3(0, 0, rotSpeed * bullet.Velocity.sqrMagnitude * SimClock.SimDeltaTime));
             }
         }
     }
