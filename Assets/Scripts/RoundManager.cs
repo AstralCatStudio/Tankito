@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Tankito.ScenarySelection;
 using Tankito.Mobile;
+using Tankito.Netcode.Simulation;
 
 namespace Tankito
 {
@@ -422,6 +423,13 @@ namespace Tankito
                 EndRoundClientRpc();
                 // To avoid SimClocks diverging in the between rounds phase
                 MessageHandlers.Instance.SendSynchronizationSignal();
+
+                ClockSignal signal = new ClockSignal();
+                signal.header = ClockSignalHeader.Stop;
+                MessageHandlers.Instance.SendClockSignal(signal);
+
+                ServerSimulationManager.Instance.ClearBullets();
+                ClearSimObjClientRpc();
             }
 
             m_startedRound = false;
@@ -447,6 +455,15 @@ namespace Tankito
             m_localPlayerInputObject.SetActive(false);
             RoundUI.Instance.ActivateAliveTanksGUI(false);
             BetweenRounds();
+        }
+
+        [ClientRpc]
+        private void ClearSimObjClientRpc()
+        {
+            if(ClientSimulationManager.Instance != null)
+            {
+                ClientSimulationManager.Instance.ClearBullets();
+            }
         }
 
         [ClientRpc]
@@ -635,9 +652,9 @@ namespace Tankito
             {
                 //EndGameClientRpc();
 
-                ClockSignal signal = new ClockSignal();
+                /*ClockSignal signal = new ClockSignal();
                 signal.header = ClockSignalHeader.Stop;
-                MessageHandlers.Instance.SendClockSignal(signal);
+                MessageHandlers.Instance.SendClockSignal(signal);*/
             }
 
             if (DEBUG) Debug.Log("Fin de la partida");

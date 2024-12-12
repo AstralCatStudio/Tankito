@@ -145,5 +145,17 @@ namespace Tankito.Netcode.Simulation
             
             return newSnapshot;
         }
+
+        public void ClearBullets()
+        {
+            foreach(var obj in m_simulationObjects.Values)
+            {
+                if(obj is BulletSimulationObject bullet)
+                {
+                    bullet.OnNetworkDespawn();
+                }
+            }
+            m_removeFromSimQueue.Clear();
+        }
     }
 }
