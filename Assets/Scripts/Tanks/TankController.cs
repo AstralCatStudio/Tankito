@@ -490,10 +490,11 @@ namespace Tankito
         {
             if (dashTick == 0)
             {
-                Instantiate(dashParticles, transform.position + transform.right * dashParticleOffset, transform.rotation);
+                if (SimClock.Instance.Active)
+                    Instantiate(dashParticles, transform.position + transform.right * dashParticleOffset, transform.rotation);
             }
 
-                if (DEBUG_DASH)
+            if (DEBUG_DASH)
             {
                 if (dashTick == 0)
                 {
