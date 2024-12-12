@@ -148,30 +148,16 @@ namespace Tankito.Netcode.Simulation
 
         public void ClearBullets()
         {
-            foreach(var obj in m_simulationObjects.Values)
+            SimClock.Instance.StopClock();
+            List<ASimulationObject> despawnBullets = m_simulationObjects.Values.Where(obj => obj is BulletSimulationObject).ToList();
+            for(int i = 0; i < despawnBullets.Count; i++)
             {
-                if(obj is BulletSimulationObject bullet)
+                if (m_removeFromSimQueue.Contains(despawnBullets[i].SimObjId))
                 {
-                    if (!m_removeFromSimQueue.Contains(bullet.SimObjId))
-                    {
-                        QueueForDespawn(bullet.SimObjId);
-                    }
+                    m_removeFromSimQueue.Remove(despawnBullets[i].SimObjId);
                 }
+                despawnBullets[i].OnNetworkDespawn();
             }
-            foreach (var objId in m_removeFromSimQueue)
-            {
-                var obj = m_simulationObjects[objId];
-                if (obj is BulletSimulationObject bullet)
-                {
-                    //Debug.Log("removing " + objId + " from simulation scene");
-                    bullet.OnNetworkDespawn();
-                }
-                else
-                {
-                    throw new NotImplementedException();
-                }
-            }
-            m_removeFromSimQueue.Clear();
         }
     }
 }
