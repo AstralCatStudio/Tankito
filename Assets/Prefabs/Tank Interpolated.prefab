@@ -1632,6 +1632,8 @@ MonoBehaviour:
   m_speed: 8
   m_rotationSpeed: 270
   m_aimSpeed: 1080
+  dashParticles: {fileID: 8967917461059218661, guid: 754a426917180904c9714d8d76a11f7c, type: 3}
+  dashParticleOffset: -1.8
   m_parryHitbox: {fileID: 9122990806937936538}
   m_dashSpeedCurve:
     serializedVersion: 2
@@ -1677,7 +1679,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   m_hullAnimator: {fileID: 5873195794702409541}
   m_turretAnimator: {fileID: 6117245905817614025}
-  m_fishAnimator: {fileID: 0}
+  m_fishAnimator: {fileID: 3100549466779949718}
   m_playerState: 0
   DEBUG_INPUT_CALLS: 0
   DEBUG_DASH: 0
