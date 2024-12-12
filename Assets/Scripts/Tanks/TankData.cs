@@ -68,7 +68,6 @@ namespace Tankito
             Instantiate(tankExplosion, transform.GetChild(0).position, transform.rotation);
             OnTankDestroyed.Invoke(this);
             MusicManager.Instance.PlaySound("snd_muere");
-            UnityEngine.Debug.LogWarning("TODO: Trigger tank death animation");
             gameObject.SetActive(false);
         }
 
@@ -104,9 +103,11 @@ namespace Tankito
         public void TakeDamage(int damage)
         {
             // CLIENT LOGIC
-            Instantiate(tankDamagedExplosion, transform.GetChild(0).position, transform.rotation);
             if (SimClock.Instance.Active && NetworkManager.Singleton.IsClient)
+            {
                 MusicManager.Instance.PlayDamage();
+                Instantiate(tankDamagedExplosion, transform.GetChild(0).position, transform.rotation);
+            }
 
             // COMMON LOGIC
             if (tankController.PlayerState == PlayerState.Dashing && tankController.InvencibleDash) return;

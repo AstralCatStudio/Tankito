@@ -14,6 +14,8 @@ namespace Tankito.Netcode.Simulation
 
         public override SimulationObjectType SimObjType => SimulationObjectType.Bullet;
 
+        public override Vector2 Position => m_rigidbody.position;
+
         void Start()
         {
             if (m_bulletController == null)
