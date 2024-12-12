@@ -65,7 +65,7 @@ namespace Tankito
 
         public void ApplyModifierProperties(int nRound = 0)
         {
-            const float minimunLifetime = 1f;
+            const float minimunLifetime = 0.5f;
 
             BulletDirections.Clear();
             BulletDirections.Add(new Vector2(1,0)) ;
@@ -82,6 +82,7 @@ namespace Tankito
                 m_bulletProperties.acceleration += modifier.bulletStatsModifier.accelerationAdded;
                 m_bulletProperties.bouncesTotal += modifier.bulletStatsModifier.BouncesAdded;
                 m_bulletProperties.lifetimeTotal += modifier.bulletStatsModifier.lifeTimeAdded;
+                m_bulletProperties.lifetimeTotal *= modifier.bulletStatsModifier.lifeTimeMultiplier;
                 m_bulletProperties.lifetimeTotal = (m_bulletProperties.lifetimeTotal < minimunLifetime) ? minimunLifetime : m_bulletProperties.lifetimeTotal;
                 BulletDirections.AddRange(modifier.bulletStatsModifier.BulletDirections);
                 m_bulletAmount += modifier.bulletStatsModifier.amountAdded;

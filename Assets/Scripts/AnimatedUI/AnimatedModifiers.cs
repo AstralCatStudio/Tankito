@@ -5,7 +5,6 @@ using System.Linq;
 using Tankito;
 using TMPro;
 using Unity.Netcode;
-using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.UI;
 namespace Tankito
