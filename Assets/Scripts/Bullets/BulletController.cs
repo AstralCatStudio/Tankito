@@ -245,8 +245,8 @@ namespace Tankito {
                     }
                     else
                     {
-                        collision.transform.parent.gameObject.GetComponent<TankData>().TakeDamage(1);
                         Detonate();
+                        collision.transform.parent.gameObject.GetComponent<TankData>().TakeDamage(1);   
                     }
                     break;
 
