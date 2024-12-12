@@ -25,6 +25,7 @@ public class ShellAnimation : MonoBehaviour
     public GameObject modifierObject;
 
     public Action onAnimationFinished;
+    public GameObject notStackable;
 
     private void Awake()
     {
@@ -89,6 +90,14 @@ public class ShellAnimation : MonoBehaviour
             GetComponent<Image>().sprite = shellOpened;
             GetComponent<Button>().enabled = true;
             GetComponent<HoverButton>().enabled = true;
+            if (!modifier.stackable)
+            {
+                notStackable.SetActive(true);
+            }
+            else
+            {
+                notStackable.SetActive(false);
+            }
             description.SetActive(true);
             modifierObject.SetActive(true);
             modifierObject.transform.GetChild(0).GetComponent<Image>().sprite = modifier.GetSpriteNoBackground();  //obtiene el sprite del modificador y lo aplica en el icono del shell
