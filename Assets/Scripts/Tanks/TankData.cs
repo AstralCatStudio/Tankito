@@ -63,7 +63,7 @@ namespace Tankito
             {
                 DieClientRpc();
             }
-            Instantiate(tankExplosion, transform.position, transform.rotation);
+            Instantiate(tankExplosion, transform.GetChild(0).position, transform.rotation);
             OnTankDestroyed.Invoke(this);
             MusicManager.Instance.PlaySound("snd_muere");
             UnityEngine.Debug.LogWarning("TODO: Trigger tank death animation");
@@ -102,7 +102,7 @@ namespace Tankito
         public void TakeDamage(int damage)
         {
             //OnDamaged(this);
-            Instantiate(tankDamagedExplosion, transform.position, transform.rotation);
+            Instantiate(tankDamagedExplosion, transform.GetChild(0).position, transform.rotation);
             if (SimClock.Instance.Active && NetworkManager.Singleton.IsClient)
                 MusicManager.Instance.PlayDamage();
 
@@ -110,13 +110,18 @@ namespace Tankito
             {
                 damageBuffer = 0;
                 m_health -= damage;
-
+                SetHealthClientRpc(m_health);
                 if (m_health <= 0)
                 {
                     m_isAlive = false;
                     Die();
                 }
             }
+        }
+        [ClientRpc]
+        void SetHealthClientRpc(int health)
+        {
+            m_health = health;
         }
 
         public void AddHealth(int addedHealth)
