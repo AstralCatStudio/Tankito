@@ -70,6 +70,21 @@ namespace Tankito
             MusicManager.Instance.PlaySound("snd_muere");
             gameObject.SetActive(false);
         }
+        public void Die(bool ultimojugador)
+        {
+            if (IsServer)
+            {
+                DieClientRpc();
+            }
+            if (ultimojugador)
+            {
+                Instantiate(tankExplosion, transform.GetChild(0).position, transform.rotation);
+                OnTankDestroyed.Invoke(this);
+                MusicManager.Instance.PlaySound("snd_muere");
+            }
+            
+            gameObject.SetActive(false);
+        }
 
         [ClientRpc]
         public void DieClientRpc()
