@@ -152,7 +152,23 @@ namespace Tankito.Netcode.Simulation
             {
                 if(obj is BulletSimulationObject bullet)
                 {
+                    if (!m_removeFromSimQueue.Contains(obj.SimObjId))
+                    {
+                        QueueForDespawn(obj.SimObjId);
+                    }
+                }
+            }
+            foreach (var objId in m_removeFromSimQueue)
+            {
+                var obj = m_simulationObjects[objId];
+                if (obj is BulletSimulationObject bullet)
+                {
+                    //Debug.Log("removing " + objId + " from simulation scene");
                     bullet.OnNetworkDespawn();
+                }
+                else
+                {
+                    throw new NotImplementedException();
                 }
             }
             m_removeFromSimQueue.Clear();

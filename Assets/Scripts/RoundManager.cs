@@ -428,7 +428,8 @@ namespace Tankito
                 signal.header = ClockSignalHeader.Stop;
                 MessageHandlers.Instance.SendClockSignal(signal);
 
-                ServerSimulationManager.Instance.ClearBullets();
+                //SimClock.Instance.StopClock();
+                //ServerSimulationManager.Instance.ClearBullets();
                 ClearSimObjClientRpc();
             }
 
