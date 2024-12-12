@@ -36,6 +36,7 @@ namespace Tankito
         public float damageBuffer = 0;
         public GameObject tankExplosion;
         public GameObject tankDamagedExplosion;
+        [SerializeField] private TankController tankController;
         
         public int CompareTo(object obj)
         {
@@ -106,8 +107,9 @@ namespace Tankito
             if (SimClock.Instance.Active && NetworkManager.Singleton.IsClient)
                 MusicManager.Instance.PlayDamage();
 
+            if (tankController.PlayerState == PlayerState.Dashing && tankController.InvencibleDash) return;
             if (IsServer && damageBuffer >= damageBufferTime)
-            {
+            {     
                 damageBuffer = 0;
                 m_health -= damage;
 

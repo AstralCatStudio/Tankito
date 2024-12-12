@@ -15,8 +15,9 @@ namespace Tankito
         public float dashSpeedMultiplier;
         public float dashDistanceMultiplier;
         public float dashCooldownTimeAdded;
+        public bool invencibleDash;
 
-        public HullStatsModifier(float speed, float rotSpeed, float dashCooldown, int health, float parryTime, float parryCooldown, float dashSpeed, float dashDistance)
+        public HullStatsModifier(float speed, float rotSpeed, float dashCooldown, int health, float parryTime, float parryCooldown, float dashSpeed, float dashDistance, bool invencibleDash)
         {
             speedMultiplier = speed;
             rotationSpeedMultiplier = rotSpeed;
@@ -26,6 +27,8 @@ namespace Tankito
             parryCooldownTimeAdded = parryCooldown;
             dashSpeedMultiplier = dashSpeed;
             dashDistanceMultiplier = dashDistance;
+            this.invencibleDash = invencibleDash;
+
         }
     }
     [CreateAssetMenu(menuName = "Modificadores/ModificadorTanque", order = 3, fileName = "Nuevo Modificador Tanque")]

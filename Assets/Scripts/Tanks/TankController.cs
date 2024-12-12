@@ -29,7 +29,8 @@ namespace Tankito
                 parryCooldown: 1.5f,
                 dashSpeed: 6f,
                 dashDistance: 1f,
-                dashCooldown: 2f
+                dashCooldown: 2f,
+                invencibleDash : false
             );
         private List<HullModifier> m_modifiers = new List<HullModifier>();
         public List<HullModifier> Modifiers => m_modifiers;
@@ -63,6 +64,8 @@ namespace Tankito
         [SerializeField] private Animator m_hullAnimator, m_turretAnimator, m_fishAnimator;
         private float m_dashSpeedMultiplier;
         private float m_dashDistance;
+        private bool invencibleDash = false;
+        public bool InvencibleDash { get => invencibleDash; set => invencibleDash = value; }
         int m_dashTicks;
         int m_dashCooldownTicks;
         int m_parryTicks;
@@ -161,6 +164,7 @@ namespace Tankito
 
         public void ApplyModifierList(int nRound = 0)
         {
+            invencibleDash = false;
             ApplyModifier(BaseTankStats, true);
             foreach(var mod in m_modifiers)
             {
@@ -183,6 +187,7 @@ namespace Tankito
                 m_rotationSpeed *= mod.rotationSpeedMultiplier;
                 m_tankSimulationObject.TankData.AddHealth(mod.extraHealth);
             }
+            if (mod.invencibleDash) InvencibleDash = true;
             SetParryTicks(mod.extraParryTime, mod.parryCooldownTimeAdded, reset);
             SetDashParams(mod.dashDistanceMultiplier, mod.dashSpeedMultiplier, mod.dashCooldownTimeAdded, reset);
         }
