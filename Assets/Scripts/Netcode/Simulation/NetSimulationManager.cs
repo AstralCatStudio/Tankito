@@ -148,7 +148,7 @@ namespace Tankito.Netcode.Simulation
 
         public void ClearBullets()
         {
-            /*foreach(var obj in m_simulationObjects.Values)
+            foreach(var obj in m_simulationObjects.Values)
             {
                 if(obj is BulletSimulationObject bullet)
                 {
@@ -171,7 +171,7 @@ namespace Tankito.Netcode.Simulation
                     throw new NotImplementedException();
                 }
             }
-            m_removeFromSimQueue.Clear();*/
+            m_removeFromSimQueue.Clear();
         }
     }
 }
