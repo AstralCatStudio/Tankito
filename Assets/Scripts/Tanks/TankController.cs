@@ -38,7 +38,10 @@ namespace Tankito
         [SerializeField] private float m_speed;
         [SerializeField] private float m_rotationSpeed;
         [SerializeField] private float m_aimSpeed = 900f;
-        
+        [SerializeField] public GameObject dashParticles;
+        [SerializeField] public float dashParticleOffset = 1;
+
+
         /// <summary>
         /// Parry collider, must be set on a physics layer to not interfere with tanks and so on.
         /// </summary>
@@ -485,7 +488,12 @@ namespace Tankito
         /// <param name="dashTick"></param>
         private void DashTank(Vector2 moveVector, int dashTick, float deltaTime)
         {
-            if (DEBUG_DASH)
+            if (dashTick == 0)
+            {
+                Instantiate(dashParticles, transform.position + transform.right * dashParticleOffset, transform.rotation);
+            }
+
+                if (DEBUG_DASH)
             {
                 if (dashTick == 0)
                 {
