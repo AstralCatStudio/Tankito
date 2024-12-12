@@ -152,9 +152,9 @@ namespace Tankito.Netcode.Simulation
             {
                 if(obj is BulletSimulationObject bullet)
                 {
-                    if (!m_removeFromSimQueue.Contains(obj.SimObjId))
+                    if (!m_removeFromSimQueue.Contains(bullet.SimObjId))
                     {
-                        QueueForDespawn(obj.SimObjId);
+                        QueueForDespawn(bullet.SimObjId);
                     }
                 }
             }
