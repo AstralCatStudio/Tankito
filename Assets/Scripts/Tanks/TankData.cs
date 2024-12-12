@@ -19,6 +19,7 @@ namespace Tankito
         [SerializeField]
         public Color playerColor;
         //public Action<TankData> OnDamaged = (TankData damagedTank) => { };
+        [SerializeField]
         private int m_health;
         private bool m_isAlive;
         private int m_points;
@@ -144,6 +145,7 @@ namespace Tankito
 
         public void ResetTank()
         {
+            SetHealthClientRpc(m_health);
             //Debug.LogWarning("TODO: maybe play spawn animation?");
             gameObject.SetActive(true);
             if (IsServer)
@@ -219,6 +221,7 @@ namespace Tankito
             }
             if (IsServer)
             {
+                SetHealthClientRpc(m_health);
                 AssignColor();
 
             }
