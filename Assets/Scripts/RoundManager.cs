@@ -105,7 +105,7 @@ namespace Tankito
 
         public void RemovePlayer(ulong clientId)
         {
-            playerList.Remove(NetworkManager.Singleton.ConnectedClients[clientId].PlayerObject.GetComponent<TankData>());
+            playerList.Remove(m_players[clientId]);
             m_players.Remove(clientId);
             PlayerListUpdate();
         }
