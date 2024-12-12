@@ -22,8 +22,8 @@ MonoBehaviour:
   bulletStatsModifier:
     speedMultiplier: 1
     sizeMultiplier: {x: 2, y: 2}
-    accelerationAdded: -0.005
-    BouncesAdded: 5
+    accelerationAdded: -0.3
+    BouncesAdded: 10
     lifeTimeAdded: 0
     boomerangEffect: 0
     amountAdded: 0
@@ -31,7 +31,7 @@ MonoBehaviour:
     spreadMultiplier: 1
     reloadTimeAdded: 0
     BulletDirections: []
-    lifeTimeMultiplier: 0.5
+    lifeTimeMultiplier: 0.7
   bulletSprite: {fileID: 21300000, guid: 68a29799d08f3f84a988cd07ea3d549d, type: 3}
   bulletSpritePriority: 50
   ShootSound: bala11

@@ -20,7 +20,7 @@ MonoBehaviour:
   bulletStatsModifier:
     speedMultiplier: 1.2
     sizeMultiplier: {x: 0.4, y: 0.4}
-    accelerationAdded: -0.04
+    accelerationAdded: 0
     BouncesAdded: 0
     lifeTimeAdded: 0
     boomerangEffect: 0
@@ -29,7 +29,7 @@ MonoBehaviour:
     spreadMultiplier: 1
     reloadTimeAdded: 0
     BulletDirections: []
-    lifeTimeMultiplier: 0.08
+    lifeTimeMultiplier: 0
   bulletSprite: {fileID: 21300000, guid: f7d5f9893f3cc304aa52132f36708ec2, type: 3}
   bulletSpritePriority: 3
   ShootSound: snd_escopeta
