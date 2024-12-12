@@ -29,7 +29,13 @@ namespace Tankito {
         [SerializeField] private bool PREDICT_DESTRUCTION = true;
         public Sprite bulletSprite;
 
-        public bool IsStiCked { get => m_rb.constraints == RigidbodyConstraints2D.FreezeAll; }
+        // Lo quito porque no se reproduce para otros clientes, solo va en el owner, creo
+        //public bool IsStuck { get => m_rb.constraints == RigidbodyConstraints2D.FreezeAll; }
+        public Vector2 Velocity => m_rb.velocity;
+
+        public Animator animator;
+        [SerializeField] Sprite explosiveSprite;
+        [SerializeField] Sprite stickieSprite;
 
         #region Boomerang
         BulletMoveType bulletType = BulletMoveType.Normal;
@@ -45,12 +51,13 @@ namespace Tankito {
         {
             m_simObj = GetComponent<BulletSimulationObject>();
             m_rb = GetComponent<Rigidbody2D>();
+            animator = GetComponent<Animator>();
         }
 
         public void SetLastShooterObjId(ulong simObjId)
         {
             m_lastShooterObjId = simObjId;
-            Debug.Log($"[{SimClock.TickCounter}] LastShooterSimObjId[{LastShooterObjId}]");
+            //Debug.Log($"[{SimClock.TickCounter}] LastShooterSimObjId[{LastShooterObjId}]");
         }
 
         public void InitializeProperties(bool triggerOnSpawnEvents = true)
@@ -80,7 +87,24 @@ namespace Tankito {
             {
                 transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = bulletSprite;
             }
-            
+
+            // Animacion explosivos
+            if (BulletCannonRegistry.Instance[m_simObj.OwnerId].bulletSpriteModifier != null)
+            {
+                if (BulletCannonRegistry.Instance[m_simObj.OwnerId].bulletSpriteModifier.bulletSprite.name == explosiveSprite.name) // Explosivo
+                {
+                    animator.SetInteger("ExplosionAnimation", 1);
+                }
+                else if (BulletCannonRegistry.Instance[m_simObj.OwnerId].bulletSpriteModifier.bulletSprite.name == stickieSprite.name) // Stickie
+                {
+                    animator.SetInteger("ExplosionAnimation", 2);
+                }
+                else
+                {
+                    animator.SetInteger("ExplosionAnimation", 0);
+                }
+            }
+
             if (triggerOnSpawnEvents) OnSpawn?.Invoke(this);
             //Debug.Log(m_rb.velocity.magnitude);
         }
@@ -103,9 +127,11 @@ namespace Tankito {
             {
                 gameObject.layer = 0;
             }
+
             m_rb.velocity += (BulletCannonRegistry.Instance[m_simObj.OwnerId].Properties.acceleration != 0f) ?
                 BulletCannonRegistry.Instance[m_simObj.OwnerId].Properties.acceleration / 20f * m_rb.velocity.normalized
                 : Vector2.zero;
+
             if(bulletType == BulletMoveType.Boomerang)
             {
                 if(m_lifetime >= spinbackTime && m_lifetime <= spinbackTime + boomeramgEffectDuration)
@@ -119,7 +145,7 @@ namespace Tankito {
                     float rotatedX = m_rb.velocity.x * Mathf.Cos(angleInRadians) - m_rb.velocity.y * Mathf.Sin(angleInRadians);
                     float rotatedY = m_rb.velocity.x * Mathf.Sin(angleInRadians) + m_rb.velocity.y * Mathf.Cos(angleInRadians);
                     m_rb.velocity = new Vector2(rotatedX, rotatedY).normalized * speed;
-                }              
+                }
             }
             m_lifetime += deltaTime;
             OnFly.Invoke(this);

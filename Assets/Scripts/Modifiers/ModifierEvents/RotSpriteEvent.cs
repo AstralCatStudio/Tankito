@@ -11,8 +11,11 @@ namespace Tankito
         public override void StartEvent(BulletController bullet)
         {
             if (SimClock.Instance.Active == false) return;
-            if(!bullet.IsStiCked) 
-            bullet.transform.GetChild(0).transform.localRotation = Quaternion.Euler(0, 0, SimClock.TickCounter * rotSpeed * SimClock.SimDeltaTime);
+
+            if(bullet.Velocity.sqrMagnitude > 0.05f)
+            {
+                bullet.transform.GetChild(0).transform.localRotation = Quaternion.Euler(0, 0, SimClock.TickCounter * rotSpeed * bullet.Velocity.sqrMagnitude * SimClock.SimDeltaTime);
+            }
         }
     }
 }

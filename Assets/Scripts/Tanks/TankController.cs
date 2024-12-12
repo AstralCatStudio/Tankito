@@ -5,6 +5,7 @@ using Tankito.Netcode.Simulation;
 using UnityEngine;
 using Tankito.Utils;
 using Unity.Netcode;
+using UnityEditor;
 
 namespace Tankito
 {
@@ -138,6 +139,8 @@ namespace Tankito
         public int LastDashTick { get => m_lastDashTick; set => m_lastDashTick = value; }
         public int LastParryTick { get => m_lastParryTick; set => m_lastParryTick = value; }
 
+        [SerializeField]
+        Transform tankTransform , cannonTransform;
         void Start()
         {
             if (m_tankRB == null)
@@ -398,15 +401,16 @@ namespace Tankito
                     MoveTank(input.moveVector, deltaTime);
                     AimTank(input.moveVector, deltaTime);
 
-
                     // VFX
-                    if (SimClock.Instance.Active)
+                    if (SimClock.Instance.Active || m_lastAnimTrigger.timestamp != m_lastParryTick)
                     {
-                        int particleSpawnTick = (int)( (parryTick + addedLeadTicks) / (m_parryTicks + addedLeadTicks) );
-                        Debug.Log($"[{SimClock.TickCounter}] ParticleSpawnTick({particleSpawnTick}) / {m_parryTicks + addedLeadTicks} ParryVFXtick: {(m_parryTicks + addedLeadTicks) * animationTimingOffsetParry}");
-                        if ( particleSpawnTick == ((m_parryTicks + addedLeadTicks) * animationTimingOffsetParry) )
+                        int absoluteParryTick = parryTick + addedLeadTicks;
+                        int totalParryDuration = m_parryTicks + addedLeadTicks;
+                        int parryVFXtick = (int)(totalParryDuration * animationTimingOffsetParry);
+                        //Debug.Log($"[{SimClock.TickCounter}] AddedLeadTicks({addedLeadTicks}) parryTick({parryTick}) ParticleSpawnTick({absoluteParryTick}) / {m_parryTicks + addedLeadTicks} ParryVFXtick: {parryVFXtick}");
+                        if ( absoluteParryTick == parryVFXtick )
                         {
-                            Instantiate(parryParticles, transform.position + transform.right * parryParticleOffset, transform.rotation);
+                            Instantiate(parryParticles, transform.position + transform.right * parryParticleOffset, m_turretRB.transform.rotation);
                         }
                     }
 
@@ -418,6 +422,8 @@ namespace Tankito
             }
 
             // Action Animations Logic Handling 
+            tankTransform.localRotation = Quaternion.identity;
+            cannonTransform.localRotation = Quaternion.identity;
             SetActionAnimation();
 
             // PATCH FOR FLOATING TANKS - Will have to remove to actually leverage Unity Physics System

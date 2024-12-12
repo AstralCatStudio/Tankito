@@ -677,8 +677,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f3fe6949ed78184f8a55d21f67e9bc3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  modifiers:
-  - {fileID: 11400000, guid: ea21ca02f7b67da4a953781fdb2aa96c, type: 2}
+  modifiers: []
   m_bulletCannon: {fileID: 1150693991829146166}
   m_tankController: {fileID: 3727413298749160509}
 --- !u!1 &6459951814770460290
@@ -935,7 +934,7 @@ MonoBehaviour:
   fireParticleOffset: 2
   parryParticles: {fileID: 1393315595571650996, guid: 662fd437c210c87479107a33e92828fd, type: 3}
   parryParticleOffset: 0
-  animationTimingOffsetParry: -0.2
+  animationTimingOffsetParry: 0.333
   m_parryHitbox: {fileID: 9122990806937936538}
   m_dashSpeedCurve:
     serializedVersion: 2
@@ -994,6 +993,8 @@ MonoBehaviour:
   m_fireLeadTimeMultiplier: 1
   m_dashLeadTimeMultiplier: 0.5
   m_parryLeadTimeMultiplier: 0.5
+  tankTransform: {fileID: 848276271257576674}
+  cannonTransform: {fileID: 4254245572643475230}
 --- !u!1 &8853834840484056256
 GameObject:
   m_ObjectHideFlags: 0

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Tankito;
+using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
@@ -33,6 +34,12 @@ namespace Tankito
         [SerializeField] private Transform row2;
         [SerializeField] private List<GameObject> shells;
         List<Modifier> modifiers;
+        [SerializeField] private GameObject message;
+        [SerializeField] private GameObject yourTurn;
+        [SerializeField] private GameObject messageText;
+        public float openMessageDuration = 0.3f;
+        public float closeMessageDuration = 2f;
+        private Coroutine disableCoroutine;
         #endregion
 
         #region removeThis
@@ -161,6 +168,7 @@ namespace Tankito
                     players[i + 1].position = position;
                     i++;
                 }
+                Debug.Log("Jugador " + i + " tiene " + players[i].Points);
             }
         }
 
@@ -183,6 +191,7 @@ namespace Tankito
             if (player.OwnerClientId  == NetworkManager.Singleton.LocalClientId)
             {
                 Invoke("EnableButtonsModifiers", playerTransitionTime);
+                yourTurn.SetActive(true);
             }
             
         }
@@ -267,14 +276,26 @@ namespace Tankito
         public void TryNextTurn()
         {
             GameObject shellSelected = CheckSelected();
+            if (!yourTurn.activeSelf)
+            {
+                MusicManager.Instance.PlaySound("cancelar");
+                ShowMessage("It's not your turn");
+            } 
+            else
             if (shellSelected == null)
             {
-                Debug.LogWarning("You didn´t choose any modifier");
+                MusicManager.Instance.PlaySound("cancelar");
+                ShowMessage("You didn´t choose any modifier");
+            }
+            else 
+            if ((BulletCannonRegistry.Instance[NetworkManager.Singleton.LocalClientId].transform.parent.parent.parent.GetComponent<ModifiersController>().modifiers.Contains(shellSelected.GetComponent<ShellAnimation>().modifier) && !shellSelected.GetComponent<ShellAnimation>().modifier.stackable))
+            {
+                MusicManager.Instance.PlaySound("cancelar");
+                ShowMessage("You can't choose that modifier, It's not stackable");
             }
             else
             {
                 TryNextTurnServerRpc(shells.IndexOf(shellSelected), NetworkManager.Singleton.LocalClientId);
-                
             }
         }
 
@@ -282,7 +303,7 @@ namespace Tankito
         void TryNextTurnServerRpc(int shellSelected, ulong client)
         {
             int currentIndex = (numPlayers - 1) - turn;
-            if (players[currentIndex] == RoundManager.Instance.Players[client] && !shells[shellSelected].GetComponent<ShellAnimation>().alreadyTaken)
+            if (players[currentIndex] == RoundManager.Instance.Players[client] && !shells[shellSelected].GetComponent<ShellAnimation>().alreadyTaken && !(BulletCannonRegistry.Instance[client].transform.parent.parent.parent.GetComponent<ModifiersController>().modifiers.Contains(shells[shellSelected].GetComponent<ShellAnimation>().modifier) && !shells[shellSelected].GetComponent<ShellAnimation>().modifier.stackable))
             {
                 //turn++;
                 shells[shellSelected].GetComponent<ShellAnimation>().alreadyTaken = true;
@@ -295,6 +316,7 @@ namespace Tankito
         [ClientRpc]
         void goNextTurnClientRpc(int shellSelected)
         {
+            yourTurn.SetActive(false);
             shells[shellSelected].GetComponent<ShellAnimation>().SetAlreadyTaken(true);
             shells[shellSelected].GetComponent<ShellAnimation>().Disable(); //desactiva el potenciador elegido
             int currentIndex = (numPlayers - 1) - turn;
@@ -391,6 +413,54 @@ namespace Tankito
                 shells[i].GetComponent<ShellAnimation>().modifier = modifiers[i];
             }
             SyncronizeModifiersClientRpc(indexModificadores.ToArray());
+        }
+
+        private void ShowMessage(string text)
+        {
+            message.gameObject.SetActive(true);
+            message.GetComponentInChildren<TextMeshProUGUI>().text = text;
+            Transition();
+        }
+        private void Transition()
+        {
+
+            RectTransform messageRect = message.GetComponentInChildren<RectTransform>();
+            Color alphaZero = new Color(0, 0, 0, 0);
+            Color alphaOne = new Color(255, 255, 255, 1);
+
+            LeanTween.cancelAll();
+
+            LeanTween.alpha(messageRect, 1f, 0f);
+            LeanTween.value(messageText.gameObject, updateAlphaCallback, alphaZero, alphaOne, 0f);
+
+            LeanTween.scale(messageRect, Vector2.one, openMessageDuration).setEase(LeanTweenType.easeOutElastic);
+
+            LeanTween.alpha(messageRect, 0f, closeMessageDuration);
+            LeanTween.value(messageText.gameObject, updateAlphaCallback, alphaOne, alphaZero, closeMessageDuration);
+
+            if (disableCoroutine != null)
+            {
+                StopCoroutine(disableCoroutine);
+            }
+            disableCoroutine = StartCoroutine(DisableMessage());
+        }
+
+        private void updateAlphaCallback(Color val, object child)
+        {
+            messageText.GetComponent<TextMeshProUGUI>().color = val;
+        }
+
+        private IEnumerator DisableMessage()
+        {
+            float i = 0f;
+            float disableDuration = openMessageDuration + closeMessageDuration;
+            LeanTween.scale(message, Vector2.zero, 0f);
+            while (i < disableDuration)
+            {
+                i += Time.deltaTime;
+                yield return null;
+            }
+            message.gameObject.SetActive(false);
         }
     }
 }
