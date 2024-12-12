@@ -381,7 +381,8 @@ namespace Tankito
                     break;
 
                 case PlayerState.Parrying:
-                    int parryTick = (int)(input.timestamp - m_lastParryTick - ACTION_LEAD_TICKS * m_parryLeadTimeMultiplier);
+                    int addedLeadTicks = (int)(ACTION_LEAD_TICKS * m_parryLeadTimeMultiplier);
+                    int parryTick = (int)(input.timestamp - m_lastParryTick - addedLeadTicks);
                     
                     // Only execute dash behaviour past action lead time
                     if (parryTick >= 0)
@@ -401,8 +402,9 @@ namespace Tankito
                     // VFX
                     if (SimClock.Instance.Active)
                     {
-                        int particleSpawnTick = (int)(parryTick / (float)m_parryTicks * animationTimingOffsetParry);
-                        if (parryTick == particleSpawnTick)
+                        int particleSpawnTick = (int)( (parryTick + addedLeadTicks) / (m_parryTicks + addedLeadTicks) );
+                        Debug.Log($"[{SimClock.TickCounter}] ParticleSpawnTick({particleSpawnTick}) / {m_parryTicks + addedLeadTicks} ParryVFXtick: {(m_parryTicks + addedLeadTicks) * animationTimingOffsetParry}");
+                        if ( particleSpawnTick == ((m_parryTicks + addedLeadTicks) * animationTimingOffsetParry) )
                         {
                             Instantiate(parryParticles, transform.position + transform.right * parryParticleOffset, transform.rotation);
                         }
