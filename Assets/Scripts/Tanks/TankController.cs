@@ -140,7 +140,8 @@ namespace Tankito
         public int LastParryTick { get => m_lastParryTick; set => m_lastParryTick = value; }
 
         [SerializeField]
-        Transform tankTransform , cannonTransform;
+        Transform m_tankTransform , m_cannonTransform;
+
         void Start()
         {
             if (m_tankRB == null)
@@ -335,7 +336,7 @@ namespace Tankito
                     AimTank(hitPos.pos - m_turretRB.position, deltaTime);
 
                     // VFX
-                    if (SimClock.Instance.Active)
+                    if (SimClock.Instance.Active || m_lastAnimTrigger.timestamp != m_lastFireTick)
                     {
                         int particleSpawnTick = 0;
                         if (fireTick == particleSpawnTick)
@@ -368,7 +369,7 @@ namespace Tankito
                     AimTank(aimVector, deltaTime);
 
                     // VFX
-                    if (SimClock.Instance.Active)
+                    if (SimClock.Instance.Active || m_lastAnimTrigger.timestamp != m_lastDashTick)
                     {
                         int particleSpawnTick = (int)(dashTick/(float)m_dashTicks * 0.25); 
                         if (dashTick == particleSpawnTick)
@@ -399,7 +400,7 @@ namespace Tankito
                     }
 
                     MoveTank(input.moveVector, deltaTime);
-                    AimTank(input.moveVector, deltaTime);
+                    //AimTank(input.moveVector, deltaTime);
 
                     // VFX
                     if (SimClock.Instance.Active || m_lastAnimTrigger.timestamp != m_lastParryTick)
@@ -422,8 +423,6 @@ namespace Tankito
             }
 
             // Action Animations Logic Handling 
-            tankTransform.localRotation = Quaternion.identity;
-            cannonTransform.localRotation = Quaternion.identity;
             SetActionAnimation();
 
             // PATCH FOR FLOATING TANKS - Will have to remove to actually leverage Unity Physics System
@@ -445,7 +444,7 @@ namespace Tankito
 
             if (m_lastAnimTrigger.action != currentState || m_lastAnimTrigger.timestamp < lastActionTick)
             {
-                if (SimClock.Instance.Active)
+                //if (SimClock.Instance.Active)
                 {
                     float leadTimeMultiplier = 
                             currentState == PlayerState.Firing ? m_fireLeadTimeMultiplier
@@ -508,6 +507,13 @@ namespace Tankito
                         //PlaySound(currentState);
                     }
                 }
+            }
+
+            // Root Motion offset patch
+            if (SimClock.Instance.Active && currentState == PlayerState.Moving)
+            {
+                m_tankTransform.localRotation = Quaternion.identity;
+                m_cannonTransform.localRotation = Quaternion.identity;
             }
         }
 
