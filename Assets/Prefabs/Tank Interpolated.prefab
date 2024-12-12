@@ -677,7 +677,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f3fe6949ed78184f8a55d21f67e9bc3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  modifiers: []
+  modifiers:
+  - {fileID: 11400000, guid: ea21ca02f7b67da4a953781fdb2aa96c, type: 2}
   m_bulletCannon: {fileID: 1150693991829146166}
   m_tankController: {fileID: 3727413298749160509}
 --- !u!1 &6459951814770460290
@@ -981,6 +982,9 @@ MonoBehaviour:
   m_hullAnimator: {fileID: 5873195794702409541}
   m_turretAnimator: {fileID: 6117245905817614025}
   m_fishAnimator: {fileID: 3100549466779949718}
+  wallLayer:
+    serializedVersion: 2
+    m_Bits: 64
   m_playerState: 0
   DEBUG_INPUT_CALLS: 0
   DEBUG_DASH: 0

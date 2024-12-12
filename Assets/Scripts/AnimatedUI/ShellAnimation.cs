@@ -118,7 +118,7 @@ public class ShellAnimation : MonoBehaviour
     {
         if (!alreadyTaken)
         {
-            MusicManager.Instance.PlaySound("snd_concha_choose");
+            MusicManager.Instance.PlaySound("aceptar2");
 
             potenciadoresGameObject.DeselectAllModifiers();
             gameObject.GetComponent<Outline>().enabled = true;
