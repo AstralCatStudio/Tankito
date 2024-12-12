@@ -27,8 +27,8 @@ namespace Tankito
                 health: 2,
                 parryTime: 0.2f,
                 parryCooldown: 1.5f,
-                dashSpeed: 4f,
-                dashDistance: 1.5f,
+                dashSpeed: 6f,
+                dashDistance: 1f,
                 dashCooldown: 2f
             );
         private List<HullModifier> m_modifiers = new List<HullModifier>();
