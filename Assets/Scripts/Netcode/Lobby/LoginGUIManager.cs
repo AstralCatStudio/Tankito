@@ -259,7 +259,7 @@ namespace Tankito.Netcode
 
         private void CopyToClipboard(string text)
         {
-            CopyToClipboard copyToClipboard = new CopyToClipboard();
+            CopyToClipboard copyToClipboard = gameObject.AddComponent<CopyToClipboard>();
             copyToClipboard.CopyTextToClipboard(text);
         }
     }
