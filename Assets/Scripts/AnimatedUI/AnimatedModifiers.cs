@@ -142,7 +142,7 @@ namespace Tankito
 
         private void SortPlayers()
         {
-            MusicManager.Instance.PlaySound("snd_concha");
+            MusicManager.Instance.PlaySoundPitch("snd_concha");
             Debug.Log("sorting" + players.Count);
             players.Sort();
 
@@ -174,7 +174,7 @@ namespace Tankito
 
         private void AnimatePlayerEnable(TankData player)
         {
-            MusicManager.Instance.PlaySound("snd_concha_choose");
+            MusicManager.Instance.PlaySoundPitch("snd_concha_choose");
             originalPlayerPosition = player.playerInfo.GetComponent<RectTransform>().anchoredPosition;
             RectTransform playerRT = player.playerInfo.GetComponent<RectTransform>();
             LeanTween.move(playerRT, playerChoosingPosition.anchoredPosition, playerTransitionTime).setEase(LeanTweenType.easeInOutCubic);
@@ -196,7 +196,7 @@ namespace Tankito
 
         private void AnimatePlayerDisable(TankData player)
         {
-            MusicManager.Instance.PlaySound("snd_concha_select");
+            MusicManager.Instance.PlaySoundPitch("snd_concha_select");
             DisableButtonsModifiers();
             RectTransform playerRT = player.playerInfo.GetComponent<RectTransform>();
             LeanTween.move(playerRT, originalPlayerPosition, playerTransitionTime).setEase(LeanTweenType.easeInOutCubic);
