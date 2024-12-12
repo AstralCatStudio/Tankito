@@ -30,7 +30,7 @@ namespace Tankito.Netcode
         public double WorstCaseLatency => Worst_Case_Latency;
         [SerializeField] double Client_Jitter_Buffer_Time = 0.02;
         [SerializeField] int Client_Max_Desync_Count = 5;
-        [SerializeField]  int Server_Max_Desync_Count = 10;
+        [SerializeField]  int Server_Max_Desync_Count = 15;
         [SerializeField] int Sim_Tick_Rate = 30;
         public int SimTickRate => Sim_Tick_Rate;
 
