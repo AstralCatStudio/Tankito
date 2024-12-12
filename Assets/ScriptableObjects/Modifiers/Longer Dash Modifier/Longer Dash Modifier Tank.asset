@@ -15,9 +15,10 @@ MonoBehaviour:
   hullStatsModifier:
     speedMultiplier: 1
     rotationSpeedMultiplier: 1
-    dashCooldownTimeAdded: 0
     extraHealth: 0
     extraParryTime: 0
-    addParryReloadTime: 0
+    parryCooldownTimeAdded: 0
     dashSpeedMultiplier: 1
-    dashDistanceMultiplier: 1.3
+    dashDistanceMultiplier: 1.5
+    dashCooldownTimeAdded: 0
+    invencibleDash: 0
