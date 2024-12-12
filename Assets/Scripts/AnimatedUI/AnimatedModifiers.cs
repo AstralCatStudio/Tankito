@@ -267,9 +267,6 @@ namespace Tankito
         public void TryNextTurn()
         {
             GameObject shellSelected = CheckSelected();
-            
-            
-
             if (shellSelected == null)
             {
                 Debug.LogWarning("You didn´t choose any modifier");
@@ -285,9 +282,10 @@ namespace Tankito
         void TryNextTurnServerRpc(int shellSelected, ulong client)
         {
             int currentIndex = (numPlayers - 1) - turn;
-            if (players[currentIndex] == RoundManager.Instance.Players[client])
+            if (players[currentIndex] == RoundManager.Instance.Players[client] && !shells[shellSelected].GetComponent<ShellAnimation>().alreadyTaken)
             {
                 //turn++;
+                shells[shellSelected].GetComponent<ShellAnimation>().alreadyTaken = true;
                 BulletCannonRegistry.Instance[client].transform.parent.parent.parent.GetComponent<ModifiersController>().AddModifier(shells[shellSelected].GetComponent<ShellAnimation>().modifier);
                 AddModifierClientRpc(client, shellSelected);
                 goNextTurnClientRpc(shellSelected);

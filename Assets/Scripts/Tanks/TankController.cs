@@ -76,6 +76,11 @@ namespace Tankito
         int m_parryTicks;
         int m_parryCooldownTicks;
 
+        (Vector2 pos, int tick) hitPos;
+        const int MAX_DIS_RAY = 15;
+        float offset;
+        [SerializeField] LayerMask wallLayer;
+
         [SerializeField] private PlayerState m_playerState = PlayerState.Moving;
 
         [SerializeField] private ITankInput m_tankInput;
@@ -148,6 +153,7 @@ namespace Tankito
             {
                 Debug.LogWarning("Error tank turret reference not set.");
             }
+            offset = GetComponent<CircleCollider2D>().radius * 1.1f;
         }
 
         void OnEnable()
@@ -280,7 +286,7 @@ namespace Tankito
                     if ( (input.timestamp >= FireReloadTick && m_playerState != PlayerState.Firing) && m_playerState != PlayerState.Dashing && m_playerState != PlayerState.Parrying)
                     {
                         m_playerState = PlayerState.Firing;
-                        m_lastFireTick = input.timestamp;
+                        m_lastFireTick = input.timestamp;  
                     }
                     break;
 
@@ -306,9 +312,16 @@ namespace Tankito
 
                     if (DEBUG_FIRE) Debug.Log($"[{input.timestamp}] FireTick: ({fireTick}/{FIRE_TICK_DURATION})");
 
+                    if(hitPos.tick != m_lastFireTick)
+                    {
+                        Vector2 rayOrigin = m_turretRB.position + input.aimVector * offset;
+                        RaycastHit2D hit = Physics2D.Raycast(rayOrigin, input.aimVector, MAX_DIS_RAY, wallLayer);
+                        hitPos = (hit.point, m_lastFireTick);
+                    }                  
+
                     if (fireTick >= 0)
                     {
-                        FireTank(aimVector, input.timestamp);
+                        FireTank(hitPos.pos - m_turretRB.position, input.timestamp);
                     }
                     // ACTION LEAD TIME PHASE
                     else
@@ -316,7 +329,7 @@ namespace Tankito
 
                     }
                     MoveTank(input.moveVector, deltaTime);
-                    //AimTank(aimVector, deltaTime);
+                    AimTank(hitPos.pos - m_turretRB.position, deltaTime);
 
                     // VFX
                     if (SimClock.Instance.Active)
@@ -522,7 +535,7 @@ namespace Tankito
         {
             if (DEBUG_FIRE) Debug.Log($"[{SimClock.TickCounter}] FireTank({m_tankSimulationObject.SimObjId}) called.");
                 
-            m_cannon.Shoot(m_turretRB.position, m_turretRB.transform.right, inputTick);
+            m_cannon.Shoot(m_turretRB.position, aimVector, inputTick);
         }
 
         private void MoveTank(Vector2 moveVector, float deltaTime)
