@@ -103,7 +103,7 @@ namespace Tankito
                 // Desconecta al jugador si ya ha empezado la partida
                 if (RoundManager.Instance.IsGameStarted)
                 {
-                    Debug.Log($"Rejecting client {clientId} - Game already in progress");
+                    Debug.LogWarning($"Rejecting client {clientId} - Game already in progress");
                     DisconnectHandler.Instance.DisconnectClientRpc(clientId);
                     return;
                 }
@@ -112,7 +112,7 @@ namespace Tankito
                 int connectedClients = NetworkManager.Singleton.ConnectedClientsIds.Count;
                 if (connectedClients > 4)
                 {
-                    Debug.Log($"Rejecting client {clientId} - Server full (4 players maximum)");
+                    Debug.LogWarning($"Rejecting client {clientId} - Server full (4 players maximum)");
                     DisconnectHandler.Instance.DisconnectClientRpc(clientId);
                     return;
                 }
@@ -165,7 +165,7 @@ namespace Tankito
         [ClientRpc()]
         private void SetSimulationParametersClientRpc(float medianLatency, float worstCaseLatency, int simTickRate, ClientRpcParams clientRpcSendParams)
         {
-            Debug.Log("Received Simulation Parameters!");
+            //Debug.Log("Received Simulation Parameters!");
             SimulationParameters.Instance.SetParams(medianLatency, worstCaseLatency, simTickRate);
         }
 
@@ -268,7 +268,7 @@ namespace Tankito
         [ClientRpc]
         public void StartClocksClientRpc()
         {
-            Debug.Log("Starting client clocks...");
+            //Debug.Log("Starting client clocks...");
             SimClock.Instance.StartClock();
             AutoPhysics2DUpdate(false);
         }
@@ -290,7 +290,7 @@ namespace Tankito
                 {
                     target.gameObject.GetComponent<Transform>().position = newPosition;
                     target.gameObject.GetComponent<Transform>().rotation = newRotation;
-                    Debug.Log($"GameObject del jugador {targetObject.GetComponent<NetworkObject>().OwnerClientId} colocado en el punto {newPosition.ToString()}");
+                    //Debug.Log($"GameObject del jugador {targetObject.GetComponent<NetworkObject>().OwnerClientId} colocado en el punto {newPosition.ToString()}");
                 }
                 else
                 {
@@ -312,7 +312,7 @@ namespace Tankito
                     {
                         target.gameObject.GetComponent<Transform>().position = newPosition;
                         target.gameObject.GetComponent<Transform>().rotation = newRotation;
-                        Debug.Log($"GameObject del jugador {targetObject.GetComponent<NetworkObject>().OwnerClientId} colocado en el punto {newPosition.ToString()}");
+                        //Debug.Log($"GameObject del jugador {targetObject.GetComponent<NetworkObject>().OwnerClientId} colocado en el punto {newPosition.ToString()}");
                     }
                     else
                     {

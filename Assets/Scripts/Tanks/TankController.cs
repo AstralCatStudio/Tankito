@@ -25,7 +25,7 @@ namespace Tankito
                 speed: 3f,
                 rotSpeed: 360f,
                 health: 2,
-                parryTime: 0.2f,
+                parryTime: 0.3f,
                 parryCooldown: 1.5f,
                 dashSpeed: 6f,
                 dashDistance: 1f,
@@ -42,10 +42,6 @@ namespace Tankito
         [SerializeField] public GameObject dashParticles;
         [SerializeField] public float dashParticleOffset = 1;
 
-
-        /// <summary>
-        /// Parry collider, must be set on a physics layer to not interfere with tanks and so on.
-        /// </summary>
         [SerializeField] private Collider2D m_parryHitbox;
 
         /// <summary>
@@ -150,10 +146,10 @@ namespace Tankito
             // Subscribe to SimulationObject Kinematics
             m_tankSimulationObject.OnComputeKinematics += ProcessInput;
 
-            var animSpeedScale = 1/(float)ACTION_LEAD_SECONDS;
-            m_hullAnimator.SetFloat("Speed Multiplier", animSpeedScale);
-            m_turretAnimator.SetFloat("Speed Multiplier", animSpeedScale);
-            m_fishAnimator.SetFloat("Speed Multiplier", animSpeedScale);
+            // var animSpeedScale = 1/(float)ACTION_LEAD_SECONDS;
+            // m_hullAnimator.SetFloat("Speed Multiplier", animSpeedScale);
+            // m_turretAnimator.SetFloat("Speed Multiplier", animSpeedScale);
+            // m_fishAnimator.SetFloat("Speed Multiplier", animSpeedScale);
         }
 
         void OnDisable()
@@ -170,6 +166,11 @@ namespace Tankito
             {
                 ApplyModifier(mod.hullStatsModifier, false);
             }
+            
+            // Para poder hacer las acciones nada mas empezar
+            m_lastDashTick = -DashReloadTick;
+            m_lastParryTick = -ParryReloadTick;
+            m_lastFireTick = -FireReloadTick;
         }
 
         void ApplyModifier(HullStatsModifier mod, bool reset = false)
@@ -306,8 +307,7 @@ namespace Tankito
 
                     }
                     MoveTank(input.moveVector, deltaTime);
-                    AimTank(aimVector, deltaTime);
-                    //MoveTank(input.moveVector, deltaTime);
+                    //AimTank(aimVector, deltaTime);
 
                     if (fireTick >= FIRE_TICK_DURATION)
                     {
@@ -335,7 +335,7 @@ namespace Tankito
                     // VFX
                     if (SimClock.Instance.Active)
                     {
-                        int particleSpawnTick = (int)(dashTick/(float)m_dashTicks * 0.1); 
+                        int particleSpawnTick = (int)(dashTick/(float)m_dashTicks * 0.2); 
                         if (dashTick == particleSpawnTick)
                         {
                             Instantiate(dashParticles, transform.position + transform.right * dashParticleOffset, transform.rotation);
@@ -476,14 +476,13 @@ namespace Tankito
                     
                 case PlayerState.Parrying:
                     MusicManager.Instance.PlayDisparo("snd_parry");
-                    Debug.Log("PARRU SONIDOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
                     break;
             }
         }
 
         private void ParryTank(int parryTick)
         {
-            if (DEBUG_PARRY) Debug.LogWarning($"[{SimClock.TickCounter}] Parry progressTicks( {parryTick}/{m_parryTicks} )");
+            if (DEBUG_PARRY) Debug.Log($"[{SimClock.TickCounter}] Parry progressTicks( {parryTick}/{m_parryTicks} )");
 
             // Only execute parry behaviour past action lead time
             m_parryHitbox.enabled = true;
