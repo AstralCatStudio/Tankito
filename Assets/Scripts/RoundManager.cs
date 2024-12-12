@@ -486,9 +486,11 @@ namespace Tankito
 
                     var winner = AliveTanks.First();
                     //winner.Die();
-                    //winner.AwardPoints(m_players.Count);
+                    winner.AwardPoints(m_players.Count);
+                    
                     if (DEBUG) Debug.Log($"{winner} ha ganado la ronda");
                     if (IsServer) EndRound();
+                    winner.gameObject.SetActive(false);
                     break;
 
                 case 0:
