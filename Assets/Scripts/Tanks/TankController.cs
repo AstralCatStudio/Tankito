@@ -438,7 +438,6 @@ namespace Tankito
             // Root Motion offset patch
             if (currentState == PlayerState.Moving)
             {
-                Debug.Log("Reiniciando animacion");
                 m_tankTransform.localRotation = Quaternion.identity;
                 m_cannonTransform.localRotation = Quaternion.identity;
                 return;

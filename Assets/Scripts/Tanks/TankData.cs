@@ -220,8 +220,8 @@ namespace Tankito
                     Debug.Log("Color default");
                     playerColor = new Color(1, 1, 1, 1);
                 }
-
                 SetClientDataServerRpc(m_username, m_skinSelected);
+                ReloadPlayerInfoServerRpc();
             }
             if (IsServer)
             {
@@ -230,7 +230,14 @@ namespace Tankito
 
             }
         }
-
+        [ServerRpc(RequireOwnership = false)]
+        void ReloadPlayerInfoServerRpc()
+        {
+            foreach (var item in RoundManager.Instance.playerList)
+            {
+                item.SetClientDataServerRpc(item.Username, item.SkinSelected);
+            }
+        }
         public override void OnNetworkDespawn()
         {
             base.OnNetworkDespawn();
@@ -257,13 +264,13 @@ namespace Tankito
             }
         }
 
-        [ServerRpc]
+        [ServerRpc(RequireOwnership = false)]
         public void SetClientDataServerRpc(string username, int skinSelected)
         {
             m_username = username;
             m_skinSelected = skinSelected;
             SetClientDataClientRpc(username, skinSelected);
-
+            
         }
         [ClientRpc]
         void SetClientDataClientRpc(string username, int skinSelected)
