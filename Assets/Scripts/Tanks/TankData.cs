@@ -103,12 +103,15 @@ namespace Tankito
         }
         public void TakeDamage(int damage)
         {
-            //OnDamaged(this);
+            // CLIENT LOGIC
             Instantiate(tankDamagedExplosion, transform.GetChild(0).position, transform.rotation);
             if (SimClock.Instance.Active && NetworkManager.Singleton.IsClient)
                 MusicManager.Instance.PlayDamage();
 
+            // COMMON LOGIC
             if (tankController.PlayerState == PlayerState.Dashing && tankController.InvencibleDash) return;
+
+            // SERVER LOGIC
             if (IsServer && damageBuffer >= damageBufferTime)
             {     
                 damageBuffer = 0;

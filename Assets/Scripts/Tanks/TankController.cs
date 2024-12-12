@@ -435,8 +435,8 @@ namespace Tankito
                         m_hullAnimator.Play(hullAnimationState.shortNameHash, -1, normalizedLeadTime);
                         m_fishAnimator.Play(fishAnimationState.shortNameHash, -1, normalizedLeadTime);
                         RecordAnimTrigger();
-                        
-                        PlaySound(currentState);
+
+                        //PlaySound(currentState);
                     }
                 }
             }
