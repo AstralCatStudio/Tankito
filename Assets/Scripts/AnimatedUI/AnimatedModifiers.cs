@@ -389,7 +389,11 @@ namespace Tankito
 
         private void Disable()
         {
-            GenerateNewModifiers();
+            if (IsServer)
+            {
+                GenerateNewModifiers();
+            }
+            
             gameObject.SetActive(false);
             shells[0].GetComponent<ShellAnimation>().onAnimationFinished -= StartChoosing;
         }
@@ -405,7 +409,7 @@ namespace Tankito
         }
         void GenerateNewModifiers()
         {
-            modifiers = ModifierRegistry.Instance.GetRandomModifiers(6);
+            modifiers = ModifierRegistry.Instance.GetRandomModifiers(shells.Count);
             List<int> indexModificadores = new List<int>();
             for (int i = 0; i < shells.Count; i++)
             {
