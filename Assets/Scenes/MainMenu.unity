@@ -1971,7 +1971,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 220244113}
-  - component: {fileID: 220244114}
   m_Layer: 5
   m_Name: WebURL
   m_TagString: Untagged
@@ -1999,19 +1998,6 @@ RectTransform:
   m_AnchoredPosition: {x: -263.93933, y: -100}
   m_SizeDelta: {x: 400, y: 400}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &220244114
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 220244112}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2ca5f7fa3b9a1104e906d846542c6167, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  url: https://astralcatstudio.github.io/
 --- !u!1 &223027171
 GameObject:
   m_ObjectHideFlags: 0
@@ -4392,6 +4378,7 @@ GameObject:
   - component: {fileID: 478113598}
   - component: {fileID: 478113597}
   - component: {fileID: 478113600}
+  - component: {fileID: 478113601}
   m_Layer: 5
   m_Name: Button
   m_TagString: Untagged
@@ -4462,19 +4449,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 478113598}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 220244114}
-        m_TargetAssemblyTypeName: Tankito.Utils.CustomOpenLink, Assembly-CSharp
-        m_MethodName: OpenWindowButton
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &478113598
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4527,6 +4502,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scale: 1.2
   time: 0.5
+--- !u!114 &478113601
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 478113594}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17a650c7ac7543046a227d9c121804b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  url: https://astralcatstudio.github.io/
 --- !u!1 &482471050
 GameObject:
   m_ObjectHideFlags: 0
